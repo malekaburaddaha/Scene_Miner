@@ -1,0 +1,32 @@
+{
+  "n_scenes": 150,
+  "contaminated": false,
+  "corpus_mean_mAP": 0.451441625825978,
+  "topk": 30,
+  "rankers": {
+    "zeroshot_SigLIP2": {
+      "topk_mAP": 0.4545598320530964,
+      "topk_mAP_tight": 0.1723539183680263,
+      "topk_frac_low_vis": 0.3246891579311046,
+      "delta_vs_corpus": 0.003118206227118392
+    },
+    "logit_VLM_lookup": {
+      "topk_mAP": 0.4449412339662919,
+      "topk_mAP_tight": 0.17435664714175594,
+      "topk_frac_low_vis": 0.3424874590406661,
+      "delta_vs_corpus": -0.006500391859686094
+    },
+    "metadata_matched": {
+      "topk_mAP": 0.4476820380821736,
+      "topk_mAP_tight": 0.15529022163628828,
+      "topk_frac_low_vis": 0.32157198943652554,
+      "delta_vs_corpus": -0.0037595877438044156
+    },
+    "random": {
+      "topk_mAP": 0.4523920528385457,
+      "topk_mAP_tight": 0.1555569254968712,
+      "topk_frac_low_vis": 0.4052114394130247,
+      "delta_vs_corpus": 0.0009504270125677006
+    }
+  }
+}
