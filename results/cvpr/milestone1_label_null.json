@@ -1,0 +1,15 @@
+{
+  "atomic": {
+    "n_cols": 13,
+    "rank_ceiling": 13,
+    "erank_L": 8.959004715050034,
+    "n_distinct_configs": 104
+  },
+  "predicate": {
+    "n_cols": 22,
+    "rank_ceiling": 22,
+    "erank_L": 8.979611377121856,
+    "n_distinct_configs": 39,
+    "matrix_rank": 14
+  }
+}

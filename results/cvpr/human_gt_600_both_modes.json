@@ -1,0 +1,524 @@
+{
+  "mode_A": {
+    "n_scenes": 530,
+    "attributes": {
+      "droplets": {
+        "n_human_pos": 79,
+        "chance": 0.1490566037735849,
+        "vlm_classification": {
+          "TP": 76,
+          "FP": 41,
+          "FN": 3,
+          "TN": 410,
+          "precision": 0.6495726495726496,
+          "recall": 0.9620253164556962,
+          "F1": 0.7755102040816325,
+          "FPR": 0.09090909090909091,
+          "kappa": 0.7269128978616765
+        },
+        "rankers": {
+          "flat_VLM_lookup": {
+            "mAP": 0.6538286501500615
+          },
+          "logit_VLM_lookup": {
+            "mAP": 0.8245407095239841,
+            "P@5": 0.8,
+            "NDCG@10": 0.9148568823583791
+          },
+          "metadata_matched": {
+            "mAP": 0.7311980044272746,
+            "P@5": 1.0,
+            "NDCG@10": 1.0
+          },
+          "zeroshot_SigLIP2": {
+            "mAP": 0.9145865304956701,
+            "P@5": 1.0,
+            "NDCG@10": 1.0
+          },
+          "SceneMiner_D_final": {
+            "mAP": 0.8477766333469179,
+            "P@5": 1.0,
+            "NDCG@10": 1.0
+          },
+          "SceneMiner_rowE_5seed": {
+            "mAP": 0.9083915331015179,
+            "mAP_std": 0.0064153176228504295,
+            "n_seeds": 5
+          }
+        },
+        "vlm_fn_recovery": {
+          "logit_VLM_lookup": {
+            "median_rank_pct": 0.3471698113207547,
+            "n_in_top20pct": 0
+          },
+          "zeroshot_SigLIP2": {
+            "median_rank_pct": 0.23018867924528302,
+            "n_in_top20pct": 1
+          },
+          "SceneMiner_D_final": {
+            "median_rank_pct": 0.40943396226415096,
+            "n_in_top20pct": 0
+          },
+          "flat_VLM_lookup": {
+            "median_rank_pct": 0.6103773584905661,
+            "n_in_top20pct": 0,
+            "note": "FNs sit below the positive bucket by construction"
+          }
+        }
+      },
+      "glare": {
+        "n_human_pos": 41,
+        "chance": 0.07735849056603773,
+        "vlm_classification": {
+          "TP": 21,
+          "FP": 15,
+          "FN": 20,
+          "TN": 474,
+          "precision": 0.5833333333333334,
+          "recall": 0.5121951219512195,
+          "F1": 0.5454545454545454,
+          "FPR": 0.03067484662576687,
+          "kappa": 0.510011094088436
+        },
+        "rankers": {
+          "flat_VLM_lookup": {
+            "mAP": 0.3901887781877058
+          },
+          "logit_VLM_lookup": {
+            "mAP": 0.5893270461666811,
+            "P@5": 1.0,
+            "NDCG@10": 1.0
+          },
+          "metadata_matched": {
+            "mAP": 0.3131822894887233,
+            "P@5": 0.4,
+            "NDCG@10": 0.5193185983095429
+          },
+          "zeroshot_SigLIP2": {
+            "mAP": 0.4149503480050155,
+            "P@5": 0.4,
+            "NDCG@10": 0.4373524791503101
+          },
+          "SceneMiner_D_final": {
+            "mAP": 0.26265731876419945,
+            "P@5": 0.8,
+            "NDCG@10": 0.6274092458891773
+          },
+          "SceneMiner_rowE_5seed": {
+            "mAP": 0.20461834354383507,
+            "mAP_std": 0.05573828893531915,
+            "n_seeds": 5
+          }
+        },
+        "vlm_fn_recovery": {
+          "logit_VLM_lookup": {
+            "median_rank_pct": 0.2518867924528302,
+            "n_in_top20pct": 7
+          },
+          "zeroshot_SigLIP2": {
+            "median_rank_pct": 0.14245283018867924,
+            "n_in_top20pct": 13
+          },
+          "SceneMiner_D_final": {
+            "median_rank_pct": 0.36792452830188677,
+            "n_in_top20pct": 4
+          },
+          "flat_VLM_lookup": {
+            "median_rank_pct": 0.5339622641509434,
+            "n_in_top20pct": 0,
+            "note": "FNs sit below the positive bucket by construction"
+          }
+        }
+      },
+      "wet_road": {
+        "n_human_pos": 85,
+        "chance": 0.16037735849056603,
+        "vlm_classification": {
+          "TP": 84,
+          "FP": 39,
+          "FN": 1,
+          "TN": 406,
+          "precision": 0.6829268292682927,
+          "recall": 0.9882352941176471,
+          "F1": 0.8076923076923076,
+          "FPR": 0.08764044943820225,
+          "kappa": 0.7626777118549201
+        },
+        "rankers": {
+          "flat_VLM_lookup": {
+            "mAP": 0.6908323169032896
+          },
+          "logit_VLM_lookup": {
+            "mAP": 0.9653116217414102,
+            "P@5": 1.0,
+            "NDCG@10": 1.0
+          },
+          "metadata_matched": {
+            "mAP": 0.7255971215680903,
+            "P@5": 1.0,
+            "NDCG@10": 1.0
+          },
+          "zeroshot_SigLIP2": {
+            "mAP": 0.8478310459737859,
+            "P@5": 1.0,
+            "NDCG@10": 1.0
+          },
+          "SceneMiner_D_final": {
+            "mAP": 0.23245483184558027,
+            "P@5": 0.2,
+            "NDCG@10": 0.2200917662980802
+          },
+          "SceneMiner_rowE_5seed": {
+            "mAP": 0.48800192045614965,
+            "mAP_std": 0.14694920921071036,
+            "n_seeds": 5
+          }
+        },
+        "vlm_fn_recovery": {
+          "logit_VLM_lookup": {
+            "median_rank_pct": 0.23773584905660378,
+            "n_in_top20pct": 0
+          },
+          "zeroshot_SigLIP2": {
+            "median_rank_pct": 0.08867924528301886,
+            "n_in_top20pct": 1
+          },
+          "SceneMiner_D_final": {
+            "median_rank_pct": 0.0,
+            "n_in_top20pct": 1
+          },
+          "flat_VLM_lookup": {
+            "median_rank_pct": 0.6160377358490566,
+            "n_in_top20pct": 0,
+            "note": "FNs sit below the positive bucket by construction"
+          }
+        }
+      },
+      "low_contrast": {
+        "n_human_pos": 66,
+        "chance": 0.12452830188679245,
+        "vlm_classification": {
+          "TP": 49,
+          "FP": 49,
+          "FN": 17,
+          "TN": 415,
+          "precision": 0.5,
+          "recall": 0.7424242424242424,
+          "F1": 0.5975609756097561,
+          "FPR": 0.10560344827586207,
+          "kappa": 0.5271950692041524
+        },
+        "rankers": {
+          "flat_VLM_lookup": {
+            "mAP": 0.4452819354330848
+          },
+          "logit_VLM_lookup": {
+            "mAP": 0.5535886006543048,
+            "P@5": 0.6,
+            "NDCG@10": 0.5423247252962318
+          },
+          "metadata_matched": {
+            "mAP": 0.7565854563436832,
+            "P@5": 0.6,
+            "NDCG@10": 0.694765116060299
+          },
+          "zeroshot_SigLIP2": {
+            "mAP": 0.10776762623418185,
+            "P@5": 0.0,
+            "NDCG@10": 0.0
+          },
+          "SceneMiner_D_final": {
+            "mAP": 0.1603823989781229,
+            "P@5": 0.2,
+            "NDCG@10": 0.16815228646891087
+          },
+          "SceneMiner_rowE_5seed": {
+            "mAP": 0.09236650273688138,
+            "mAP_std": 0.029336751648193226,
+            "n_seeds": 5
+          }
+        },
+        "vlm_fn_recovery": {
+          "logit_VLM_lookup": {
+            "median_rank_pct": 0.2679245283018868,
+            "n_in_top20pct": 2
+          },
+          "zeroshot_SigLIP2": {
+            "median_rank_pct": 0.630188679245283,
+            "n_in_top20pct": 3
+          },
+          "SceneMiner_D_final": {
+            "median_rank_pct": 0.3867924528301887,
+            "n_in_top20pct": 3
+          },
+          "flat_VLM_lookup": {
+            "median_rank_pct": 0.5924528301886792,
+            "n_in_top20pct": 0,
+            "note": "FNs sit below the positive bucket by construction"
+          }
+        }
+      }
+    }
+  },
+  "mode_B": {
+    "n_scenes": 550,
+    "attributes": {
+      "droplets": {
+        "n_human_pos": 79,
+        "chance": 0.14363636363636365,
+        "vlm_classification": {
+          "TP": 76,
+          "FP": 42,
+          "FN": 3,
+          "TN": 429,
+          "precision": 0.6440677966101694,
+          "recall": 0.9620253164556962,
+          "F1": 0.7715736040609137,
+          "FPR": 0.08917197452229299,
+          "kappa": 0.724098722493479
+        },
+        "rankers": {
+          "flat_VLM_lookup": {
+            "mAP": 0.6426786826044749
+          },
+          "logit_VLM_lookup": {
+            "mAP": 0.8238017685557508,
+            "P@5": 0.8,
+            "NDCG@10": 0.9148568823583791
+          },
+          "metadata_matched": {
+            "mAP": 0.7080372757425715,
+            "P@5": 1.0,
+            "NDCG@10": 0.9363792118010483
+          },
+          "zeroshot_SigLIP2": {
+            "mAP": 0.9129275459510545,
+            "P@5": 1.0,
+            "NDCG@10": 1.0
+          },
+          "SceneMiner_D_final": {
+            "mAP": 0.8462850809277882,
+            "P@5": 1.0,
+            "NDCG@10": 1.0
+          },
+          "SceneMiner_rowE_5seed": {
+            "mAP": 0.90768799601727,
+            "mAP_std": 0.006303801496085487,
+            "n_seeds": 5
+          }
+        },
+        "vlm_fn_recovery": {
+          "logit_VLM_lookup": {
+            "median_rank_pct": 0.34545454545454546,
+            "n_in_top20pct": 0
+          },
+          "zeroshot_SigLIP2": {
+            "median_rank_pct": 0.22545454545454546,
+            "n_in_top20pct": 1
+          },
+          "SceneMiner_D_final": {
+            "median_rank_pct": 0.4090909090909091,
+            "n_in_top20pct": 0
+          },
+          "flat_VLM_lookup": {
+            "median_rank_pct": 0.6072727272727273,
+            "n_in_top20pct": 0,
+            "note": "FNs sit below the positive bucket by construction"
+          }
+        }
+      },
+      "glare": {
+        "n_human_pos": 41,
+        "chance": 0.07454545454545454,
+        "vlm_classification": {
+          "TP": 21,
+          "FP": 15,
+          "FN": 20,
+          "TN": 494,
+          "precision": 0.5833333333333334,
+          "recall": 0.5121951219512195,
+          "F1": 0.5454545454545454,
+          "FPR": 0.029469548133595286,
+          "kappa": 0.5113965175897257
+        },
+        "rankers": {
+          "flat_VLM_lookup": {
+            "mAP": 0.38825310929263224
+          },
+          "logit_VLM_lookup": {
+            "mAP": 0.5886638446257638,
+            "P@5": 1.0,
+            "NDCG@10": 1.0
+          },
+          "metadata_matched": {
+            "mAP": 0.3103622560541599,
+            "P@5": 0.4,
+            "NDCG@10": 0.5193185983095429
+          },
+          "zeroshot_SigLIP2": {
+            "mAP": 0.4143846277626952,
+            "P@5": 0.4,
+            "NDCG@10": 0.4373524791503101
+          },
+          "SceneMiner_D_final": {
+            "mAP": 0.261731016981754,
+            "P@5": 0.8,
+            "NDCG@10": 0.6274092458891773
+          },
+          "SceneMiner_rowE_5seed": {
+            "mAP": 0.20306634318940753,
+            "mAP_std": 0.055996697298427024,
+            "n_seeds": 5
+          }
+        },
+        "vlm_fn_recovery": {
+          "logit_VLM_lookup": {
+            "median_rank_pct": 0.24454545454545454,
+            "n_in_top20pct": 7
+          },
+          "zeroshot_SigLIP2": {
+            "median_rank_pct": 0.13727272727272727,
+            "n_in_top20pct": 14
+          },
+          "SceneMiner_D_final": {
+            "median_rank_pct": 0.36,
+            "n_in_top20pct": 4
+          },
+          "flat_VLM_lookup": {
+            "median_rank_pct": 0.5327272727272727,
+            "n_in_top20pct": 0,
+            "note": "FNs sit below the positive bucket by construction"
+          }
+        }
+      },
+      "wet_road": {
+        "n_human_pos": 85,
+        "chance": 0.15454545454545454,
+        "vlm_classification": {
+          "TP": 84,
+          "FP": 39,
+          "FN": 1,
+          "TN": 426,
+          "precision": 0.6829268292682927,
+          "recall": 0.9882352941176471,
+          "F1": 0.8076923076923076,
+          "FPR": 0.08387096774193549,
+          "kappa": 0.7646807145149213
+        },
+        "rankers": {
+          "flat_VLM_lookup": {
+            "mAP": 0.6896459433363524
+          },
+          "logit_VLM_lookup": {
+            "mAP": 0.9652501059933786,
+            "P@5": 1.0,
+            "NDCG@10": 1.0
+          },
+          "metadata_matched": {
+            "mAP": 0.6835196342283703,
+            "P@5": 1.0,
+            "NDCG@10": 0.9363792118010483
+          },
+          "zeroshot_SigLIP2": {
+            "mAP": 0.8433058865036837,
+            "P@5": 1.0,
+            "NDCG@10": 1.0
+          },
+          "SceneMiner_D_final": {
+            "mAP": 0.22486698944041195,
+            "P@5": 0.2,
+            "NDCG@10": 0.2200917662980802
+          },
+          "SceneMiner_rowE_5seed": {
+            "mAP": 0.48134933135431196,
+            "mAP_std": 0.14755042608101102,
+            "n_seeds": 5
+          }
+        },
+        "vlm_fn_recovery": {
+          "logit_VLM_lookup": {
+            "median_rank_pct": 0.2309090909090909,
+            "n_in_top20pct": 0
+          },
+          "zeroshot_SigLIP2": {
+            "median_rank_pct": 0.08545454545454545,
+            "n_in_top20pct": 1
+          },
+          "SceneMiner_D_final": {
+            "median_rank_pct": 0.0,
+            "n_in_top20pct": 1
+          },
+          "flat_VLM_lookup": {
+            "median_rank_pct": 0.6118181818181818,
+            "n_in_top20pct": 0,
+            "note": "FNs sit below the positive bucket by construction"
+          }
+        }
+      },
+      "low_contrast": {
+        "n_human_pos": 66,
+        "chance": 0.12,
+        "vlm_classification": {
+          "TP": 49,
+          "FP": 50,
+          "FN": 17,
+          "TN": 434,
+          "precision": 0.494949494949495,
+          "recall": 0.7424242424242424,
+          "F1": 0.5939393939393939,
+          "FPR": 0.10330578512396695,
+          "kappa": 0.5256301331067686
+        },
+        "rankers": {
+          "flat_VLM_lookup": {
+            "mAP": 0.4368557981103122
+          },
+          "logit_VLM_lookup": {
+            "mAP": 0.5521388576613958,
+            "P@5": 0.6,
+            "NDCG@10": 0.5423247252962318
+          },
+          "metadata_matched": {
+            "mAP": 0.7439831715366568,
+            "P@5": 0.6,
+            "NDCG@10": 0.694765116060299
+          },
+          "zeroshot_SigLIP2": {
+            "mAP": 0.1045141425862662,
+            "P@5": 0.0,
+            "NDCG@10": 0.0
+          },
+          "SceneMiner_D_final": {
+            "mAP": 0.15632458956309825,
+            "P@5": 0.2,
+            "NDCG@10": 0.16815228646891087
+          },
+          "SceneMiner_rowE_5seed": {
+            "mAP": 0.08876717278450877,
+            "mAP_std": 0.028103937789386867,
+            "n_seeds": 5
+          }
+        },
+        "vlm_fn_recovery": {
+          "logit_VLM_lookup": {
+            "median_rank_pct": 0.26,
+            "n_in_top20pct": 2
+          },
+          "zeroshot_SigLIP2": {
+            "median_rank_pct": 0.6254545454545455,
+            "n_in_top20pct": 3
+          },
+          "SceneMiner_D_final": {
+            "median_rank_pct": 0.38727272727272727,
+            "n_in_top20pct": 3
+          },
+          "flat_VLM_lookup": {
+            "median_rank_pct": 0.59,
+            "n_in_top20pct": 0,
+            "note": "FNs sit below the positive bucket by construction"
+          }
+        }
+      }
+    }
+  }
+}
