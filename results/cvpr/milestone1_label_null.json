@@ -1,15 +1,12 @@
 {
-  "atomic": {
-    "n_cols": 13,
-    "rank_ceiling": 13,
-    "erank_L": 8.959004715050034,
-    "n_distinct_configs": 104
-  },
-  "predicate": {
-    "n_cols": 22,
-    "rank_ceiling": 22,
-    "erank_L": 8.979611377121856,
-    "n_distinct_configs": 39,
-    "matrix_rank": 14
-  }
+ "atomic": {
+  "cols": 12,
+  "erank_L": 8.042404327639225
+ },
+ "predicate_full_suite": {
+  "cols": 233,
+  "erank_L": 22.391150729670066,
+  "matrix_rank": 38
+ },
+ "paper_claim": 47.6
 }
