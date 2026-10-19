@@ -1,0 +1,54 @@
+# ── large artefacts: never tracked ──────────────────────────────────
+*.pt
+*.pth
+*.npz
+*.pkl
+*.ckpt
+*.safetensors
+*.bin
+*.tar
+*.tar.gz
+*.zip
+
+# ── data & experiment trees ─────────────────────────────────────────
+datasets/
+data/
+work_dirs/
+conda_envs/
+hf_cache/
+BEVFormer/
+checkpoints/
+
+# ── scratch & logs ──────────────────────────────────────────────────
+logs/
+*.log
+nohup.out
+tmp/
+scratch/
+
+# ── python ──────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+.venv/
+
+# ── latex build products ────────────────────────────────────────────
+*.aux
+*.out
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.bbl
+*.blg
+
+# ── editor ──────────────────────────────────────────────────────────
+.vscode/
+.idea/
+.DS_Store
+
+# ── allow small, curated result tables ──────────────────────────────
+!results/cvpr/*.json
+!results/cvpr/*.md
+!benchmark_cvpr/*.json
