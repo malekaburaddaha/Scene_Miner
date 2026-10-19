@@ -1,0 +1,292 @@
+{
+  "mode_A": {
+    "n_scenes": 530,
+    "attributes": {
+      "droplets": {
+        "n_human_pos": 79,
+        "chance": 0.1490566037735849,
+        "rankers": {
+          "logit_VLM_lookup": {
+            "mAP": 0.8245407095239841,
+            "P@5": 0.8,
+            "NDCG@10": 0.9148568823583791
+          },
+          "v2_base_only(zero-shot prior)": {
+            "mAP": 0.7499876453384822,
+            "P@5": 0.6,
+            "NDCG@10": 0.7510916729774055
+          },
+          "SceneMiner_v2_5seed": {
+            "mAP": 0.914905778166154,
+            "mAP_std": 0.018795495682102443,
+            "P@5": 1.0,
+            "NDCG@10": 1.0,
+            "n_seeds": 5
+          }
+        },
+        "vlm_fn_recovery": {
+          "SceneMiner_v2": {
+            "median_rank_pct": 0.25660377358490566,
+            "n_in_top20pct": 0,
+            "n_missed": 3
+          },
+          "v2_base_only": {
+            "median_rank_pct": 0.3641509433962264,
+            "n_in_top20pct": 0,
+            "n_missed": 3
+          }
+        }
+      },
+      "glare": {
+        "n_human_pos": 41,
+        "chance": 0.07735849056603773,
+        "rankers": {
+          "logit_VLM_lookup": {
+            "mAP": 0.5893270461666811,
+            "P@5": 1.0,
+            "NDCG@10": 1.0
+          },
+          "v2_base_only(zero-shot prior)": {
+            "mAP": 0.5995219450087463,
+            "P@5": 1.0,
+            "NDCG@10": 1.0
+          },
+          "SceneMiner_v2_5seed": {
+            "mAP": 0.6423196288352128,
+            "mAP_std": 0.008758568009279995,
+            "P@5": 1.0,
+            "NDCG@10": 1.0,
+            "n_seeds": 5
+          }
+        },
+        "vlm_fn_recovery": {
+          "SceneMiner_v2": {
+            "median_rank_pct": 0.20471698113207548,
+            "n_in_top20pct": 10,
+            "n_missed": 20
+          },
+          "v2_base_only": {
+            "median_rank_pct": 0.18962264150943398,
+            "n_in_top20pct": 11,
+            "n_missed": 20
+          }
+        }
+      },
+      "wet_road": {
+        "n_human_pos": 85,
+        "chance": 0.16037735849056603,
+        "rankers": {
+          "logit_VLM_lookup": {
+            "mAP": 0.9653116217414102,
+            "P@5": 1.0,
+            "NDCG@10": 1.0
+          },
+          "v2_base_only(zero-shot prior)": {
+            "mAP": 0.8150817303734215,
+            "P@5": 1.0,
+            "NDCG@10": 1.0
+          },
+          "SceneMiner_v2_5seed": {
+            "mAP": 0.9670430584793455,
+            "mAP_std": 0.006715318103057494,
+            "P@5": 1.0,
+            "NDCG@10": 1.0,
+            "n_seeds": 5
+          }
+        },
+        "vlm_fn_recovery": {
+          "SceneMiner_v2": {
+            "median_rank_pct": 0.25660377358490566,
+            "n_in_top20pct": 0,
+            "n_missed": 1
+          },
+          "v2_base_only": {
+            "median_rank_pct": 0.20943396226415095,
+            "n_in_top20pct": 0,
+            "n_missed": 1
+          }
+        }
+      },
+      "low_contrast": {
+        "n_human_pos": 66,
+        "chance": 0.12452830188679245,
+        "rankers": {
+          "logit_VLM_lookup": {
+            "mAP": 0.5535886006543048,
+            "P@5": 0.6,
+            "NDCG@10": 0.5423247252962318
+          },
+          "v2_base_only(zero-shot prior)": {
+            "mAP": 0.3588779195251655,
+            "P@5": 0.4,
+            "NDCG@10": 0.5114531979843773
+          },
+          "SceneMiner_v2_5seed": {
+            "mAP": 0.513684263193943,
+            "mAP_std": 0.016641923453987007,
+            "P@5": 0.6,
+            "NDCG@10": 0.5455017237786199,
+            "n_seeds": 5
+          }
+        },
+        "vlm_fn_recovery": {
+          "SceneMiner_v2": {
+            "median_rank_pct": 0.24528301886792453,
+            "n_in_top20pct": 3,
+            "n_missed": 17
+          },
+          "v2_base_only": {
+            "median_rank_pct": 0.2943396226415094,
+            "n_in_top20pct": 2,
+            "n_missed": 17
+          }
+        }
+      }
+    }
+  },
+  "mode_B": {
+    "n_scenes": 550,
+    "attributes": {
+      "droplets": {
+        "n_human_pos": 79,
+        "chance": 0.14363636363636365,
+        "rankers": {
+          "logit_VLM_lookup": {
+            "mAP": 0.8238017685557508,
+            "P@5": 0.8,
+            "NDCG@10": 0.9148568823583791
+          },
+          "v2_base_only(zero-shot prior)": {
+            "mAP": 0.749824812767953,
+            "P@5": 0.6,
+            "NDCG@10": 0.7510916729774055
+          },
+          "SceneMiner_v2_5seed": {
+            "mAP": 0.9143040263254889,
+            "mAP_std": 0.018843563268277238,
+            "P@5": 1.0,
+            "NDCG@10": 1.0,
+            "n_seeds": 5
+          }
+        },
+        "vlm_fn_recovery": {
+          "SceneMiner_v2": {
+            "median_rank_pct": 0.25272727272727274,
+            "n_in_top20pct": 0,
+            "n_missed": 3
+          },
+          "v2_base_only": {
+            "median_rank_pct": 0.35454545454545455,
+            "n_in_top20pct": 0,
+            "n_missed": 3
+          }
+        }
+      },
+      "glare": {
+        "n_human_pos": 41,
+        "chance": 0.07454545454545454,
+        "rankers": {
+          "logit_VLM_lookup": {
+            "mAP": 0.5886638446257638,
+            "P@5": 1.0,
+            "NDCG@10": 1.0
+          },
+          "v2_base_only(zero-shot prior)": {
+            "mAP": 0.5994334696084156,
+            "P@5": 1.0,
+            "NDCG@10": 1.0
+          },
+          "SceneMiner_v2_5seed": {
+            "mAP": 0.6416485777669008,
+            "mAP_std": 0.008992477272865321,
+            "P@5": 1.0,
+            "NDCG@10": 1.0,
+            "n_seeds": 5
+          }
+        },
+        "vlm_fn_recovery": {
+          "SceneMiner_v2": {
+            "median_rank_pct": 0.19727272727272727,
+            "n_in_top20pct": 10,
+            "n_missed": 20
+          },
+          "v2_base_only": {
+            "median_rank_pct": 0.18272727272727274,
+            "n_in_top20pct": 11,
+            "n_missed": 20
+          }
+        }
+      },
+      "wet_road": {
+        "n_human_pos": 85,
+        "chance": 0.15454545454545454,
+        "rankers": {
+          "logit_VLM_lookup": {
+            "mAP": 0.9652501059933786,
+            "P@5": 1.0,
+            "NDCG@10": 1.0
+          },
+          "v2_base_only(zero-shot prior)": {
+            "mAP": 0.8148726449077122,
+            "P@5": 1.0,
+            "NDCG@10": 1.0
+          },
+          "SceneMiner_v2_5seed": {
+            "mAP": 0.9662891888577496,
+            "mAP_std": 0.0069889979489591025,
+            "P@5": 1.0,
+            "NDCG@10": 1.0,
+            "n_seeds": 5
+          }
+        },
+        "vlm_fn_recovery": {
+          "SceneMiner_v2": {
+            "median_rank_pct": 0.2581818181818182,
+            "n_in_top20pct": 0,
+            "n_missed": 1
+          },
+          "v2_base_only": {
+            "median_rank_pct": 0.2018181818181818,
+            "n_in_top20pct": 0,
+            "n_missed": 1
+          }
+        }
+      },
+      "low_contrast": {
+        "n_human_pos": 66,
+        "chance": 0.12,
+        "rankers": {
+          "logit_VLM_lookup": {
+            "mAP": 0.5521388576613958,
+            "P@5": 0.6,
+            "NDCG@10": 0.5423247252962318
+          },
+          "v2_base_only(zero-shot prior)": {
+            "mAP": 0.35854884673082854,
+            "P@5": 0.4,
+            "NDCG@10": 0.5114531979843773
+          },
+          "SceneMiner_v2_5seed": {
+            "mAP": 0.5126074087058503,
+            "mAP_std": 0.016435122308208407,
+            "P@5": 0.6,
+            "NDCG@10": 0.5455017237786199,
+            "n_seeds": 5
+          }
+        },
+        "vlm_fn_recovery": {
+          "SceneMiner_v2": {
+            "median_rank_pct": 0.2381818181818182,
+            "n_in_top20pct": 3,
+            "n_missed": 17
+          },
+          "v2_base_only": {
+            "median_rank_pct": 0.28363636363636363,
+            "n_in_top20pct": 2,
+            "n_missed": 17
+          }
+        }
+      }
+    }
+  }
+}
