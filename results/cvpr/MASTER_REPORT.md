@@ -155,3 +155,129 @@ nothing; VICReg + bounded scoring is negative.
 5. Decide the paper's frame: v2's win is real but modest (+0.026 over the best
    baseline, 2 wins / 1 tie / 1 loss). The diagnostic protocol remains the
    safer anchor, and Row A_true now demonstrates its central claim cleanly.
+
+
+---
+
+# Part II — Milestones 6–9 (19 Oct 2026)
+
+## 6. SceneMiner v2.1 and what human calibration buys
+
+v2's single global blend (~0.60 SigLIP2 / 0.40 VLM margin) is wrong whenever the
+two signals disagree about which query they are good at — and they do
+(SigLIP2 0.913 on droplets vs 0.105 on low_contrast). v2.1 replaces it with a
+query-conditioned routing distribution over three base signals plus a
+query-conditioned residual gate, all zero-initialised (routing exactly uniform,
+residual inert at step 0 — verified).
+
+| ranker (Mode B, 550 human-labelled scenes) | droplets | glare | wet_road | low_contrast | MEAN |
+|---|---|---|---|---|---|
+| **v2.1 + 5-fold human calibration** | 0.8545 | **0.7035** | 0.9616 | **0.6499** | **0.7924** |
+| SceneMiner v2 | **0.9143** | 0.6416 | 0.9663 | 0.5126 | 0.7587 |
+| v2.1 zero-leakage | 0.8991 | 0.5754 | 0.9639 | 0.5035 | 0.7355 |
+| logit VLM lookup | 0.8238 | 0.5887 | **0.9653** | 0.5521 | 0.7325 |
+| zero-shot SigLIP2 | 0.9129 | 0.4144 | 0.8433 | 0.1045 | 0.5688 |
+
+**The routing collapsed.** Across all five seeds and all four attributes it puts
+0.967–0.992 of its mass on the VLM margin — because the training labels *are*
+VLM-derived, so copying the VLM is optimal. That is why v2.1 zero-leakage
+(0.7355) is worse than v2: it discarded SigLIP2's droplets advantage.
+
+**What human labels buy.** Refitting only the three routing weights on 4/5 of
+the human scenes and scoring on the held-out fifth moves low_contrast
+0.5035 → 0.6499 and glare 0.5754 → 0.7035. **A 440-scene calibration set is
+worth more than the architecture change.** (Fold variance is large: ±0.118 on
+low_contrast.) Neither version reaches 4/4 wins, and glare FN recovery is still
+best for plain SigLIP2 (14/20 vs v2.1's 7/20).
+
+## 7. The suite is exact; the skew fix is not recommended
+
+`queries_390.json` — **240 train / 150 eval**, strata **62 / 58 / 18 / 12**,
+100 % disjoint text. A leakage bug was caught: 8 compositional predicates had
+entered the training pool, which would have falsified the "never supervised"
+claim. Fixed and verified at 0 overlap.
+
+**Per-domain z-scoring overcorrects and is not recommended.** SceneMiner's skew
+goes from +8.7 points to **−23.8**, and mAP drops 0.5312 → 0.4925. The residual
+skew on this larger suite is 8.7 points, not the 12.1 the paper reports.
+
+Table 3, sensor-degradation stratum (the one the paper is about, and the one
+where no tautology applies):
+
+| ranker | mAP |
+|---|---|
+| **SceneMiner v2.1** | **0.6608** |
+| logit VLM lookup (calibrated) | 0.6074 |
+| flat VLM lookup | 0.5790 |
+| zero-shot SigLIP2 | 0.4440 |
+
+v2.1 also leads the held-out compositional stratum among non-tautological
+rankers (0.5496 vs 0.3610). ⚠ The metadata prior scores **exactly 1.0000** on
+the macro stratum — the tautology again, since macro predicates read the same
+fields it stores. That figure must not appear as a baseline.
+
+## 8. A third dataset, and the cleanest version of the gate
+
+**BDD100K** (ungated Hub mirror, no login): 1,000 stratified images with native
+human `weather`/`timeofday` labels — night 493, rainy 94, snowy 82.
+
+| ranker | mAP (chance 0.262) |
+|---|---|
+| **zero-shot SigLIP2** | **0.6218** |
+| logit VLM lookup | 0.5910 |
+| SceneMiner v2.1 (portable routing) | 0.4177 |
+
+**The learned component does not transfer; the zero-shot component does.** And
+the full head cannot be evaluated on BDD at all — its Stage-1 signals need a
+calibrated 6-camera rig with 3D boxes. **The architecture is not portable to the
+kind of corpus the Area Chair asked for**, which belongs in the paper.
+
+**Uncontaminated 150-scene nuScenes val 3D study** (BEVFormer never saw these):
+
+| ranker | top-30 mAP | Δ vs corpus |
+|---|---|---|
+| logit VLM lookup | 0.4449 | −0.0065 |
+| metadata-matched | 0.4477 | −0.0038 |
+| random | 0.4524 | +0.0010 |
+| zero-shot SigLIP2 | 0.4546 | +0.0031 |
+
+**No ranker finds measurably harder scenes** — every delta is under 0.07 σ.
+Retrieved sets score *higher* at the tight 0.5 m threshold, and random draws the
+highest low-visibility fraction. **§6.8's −0.074 gap does not reproduce on
+uncontaminated data in any direction.**
+
+## 9. §4.2 reconciled, partially
+
+CLIP's multiplicative `logit_scale` is the better account of saturation, but not
+a sufficient one:
+
+| configuration | score span | effective support (of 1,508) |
+|---|---|---|
+| learned τ (divide) | 7.35 | 655.26 |
+| **CLIP logit_scale** | **15.08** | **299.47** |
+| paper §4.2 | 213.7 | 1.06 |
+
+Direction confirmed, magnitude not. The scale settled at 12.98, *below* its
+14.29 init. Inside the 16-scene training batch support does collapse (2.0/16),
+so saturation is real in kind but not in degree. **The 213.7 figure should be
+re-derived or dropped.**
+
+---
+
+# Where this leaves the paper
+
+**The strongest defensible claim is now:** SceneMiner v2.1 leads the
+sensor-degradation stratum (0.6608 vs 0.6074) and the held-out compositional
+stratum, and with a small human calibration set reaches 0.7924 mean mAP against
+human ground truth — ahead of every baseline.
+
+**The claims that do not survive:** the downstream detector-utility argument
+(§6.8) does not reproduce on uncontaminated data; the collapse magnitudes in
+Table 1 and §4.2 do not reproduce; §4.3's BLIP-2 degeneracy does not reproduce;
+and the system does not transfer to a monocular external corpus.
+
+**The honest frame:** this is a paper about *diagnosing* a retrieval index and
+about what human-calibrated supervision buys — not about a detector-grounded
+mining system. Row A_true demonstrates the central thesis cleanly (a modality
+100 % dead, 1 distinct row, std 0.0000, while mAP moves 0.004), and the
+de-confounded Table 2 shows deterministic labels are the entire effect.

@@ -112,10 +112,20 @@ class LoRAGroundedFilter(nn.Module):
                  legacy_scalar: bool = False,
                  force_layernorm1d: bool = False,
                  unbounded_tau: bool = False,
+                 clip_logit_scale: bool = False,
                  pool: str = "xattn") -> None:
         super().__init__()
         self.legacy_scoring = legacy_scoring
         self.unbounded_tau = unbounded_tau
+        self.clip_logit_scale = clip_logit_scale
+        if clip_logit_scale:
+            # CLIP parameterisation: a MULTIPLICATIVE log-scale initialised at
+            # 1/0.07 = 14.29 and free to grow, applied to UNNORMALISED
+            # projections. This is the construction that can actually produce a
+            # 200+ unit score span; dividing by a learned tau cannot, because
+            # tau drifts upward (measured: 1.070 at 3k, 1.249 at 12k steps).
+            import math
+            self.logit_scale = nn.Parameter(torch.tensor(math.log(1.0 / 0.07)))
         # [R3 ablation] pooling of the FiLM-conditioned modality tokens into
         # the fused vector. "xattn" is the query-conditioned cross-attention
         # of the main method; "mean" replaces it with an unweighted mean, so
@@ -187,8 +197,11 @@ class LoRAGroundedFilter(nn.Module):
             # unbounded_tau removes the 1e-2 floor, so a learned temperature is
             # free to collapse toward zero and saturate the listwise softmax -
             # the predecessor defect Sec. 4.2 describes.
-            _t = self.log_tau.exp()
-            s = (s_bil + s_mlp) / (_t if self.unbounded_tau else _t.clamp(min=1e-2))
+            if self.clip_logit_scale:
+                s = self.logit_scale.exp() * (s_bil + s_mlp)
+            else:
+                _t = self.log_tau.exp()
+                s = (s_bil + s_mlp) / (_t if self.unbounded_tau else _t.clamp(min=1e-2))
         else:
             qn = F.normalize(q, dim=-1)
             cn = F.normalize(fused_raw, dim=-1)

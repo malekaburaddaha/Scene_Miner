@@ -1,0 +1,25 @@
+{
+  "clip_logit_scale_test": {
+    "score_span": {
+      "learned_tau": 7.35,
+      "clip_logit_scale": 15.08,
+      "paper": 213.7
+    },
+    "effective_support_of_1508": {
+      "learned_tau": 655.26,
+      "clip_logit_scale": 299.47,
+      "paper": 1.06
+    },
+    "learned_logit_scale_exp": [
+      12.98,
+      13.0,
+      12.97
+    ],
+    "init_logit_scale_exp": 14.29,
+    "train_batch_effective_support_of_16": {
+      "s1": 2.0,
+      "s2": 1.9
+    },
+    "verdict": "direction confirmed, magnitude not; scale settled below its init"
+  }
+}

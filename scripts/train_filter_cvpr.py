@@ -268,6 +268,8 @@ def main():
                          "NOT reproduce the LayerNorm(1) bug. Use --force-layernorm1d.")
     ap.add_argument("--unbounded-tau", action="store_true",
                     help="remove the 1e-2 floor on the learned temperature")
+    ap.add_argument("--clip-logit-scale", action="store_true",
+                    help="CLIP-style multiplicative logit_scale init at 1/0.07")
     ap.add_argument("--force-layernorm1d", action="store_true",
                     help="TRUE pre-repair defect: real nn.LayerNorm over the width-1 "
                          "risk scalar, which zeroes the channel for every input")
@@ -406,6 +408,7 @@ def main():
                                legacy_scalar=args.legacy_scalar,
                                force_layernorm1d=args.force_layernorm1d,
                                unbounded_tau=args.unbounded_tau,
+                               clip_logit_scale=args.clip_logit_scale,
                                pool=args.pool,
                                n_fusion_layers=args.fusion_layers,
                                risk_stats=risk_stats).to(device)
