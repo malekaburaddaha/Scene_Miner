@@ -1,0 +1,168 @@
+{
+  "n_queries": 150,
+  "n_scenes": 602,
+  "tables": {
+    "metadata_prior|cal": {
+      "mAP_by_stratum": {
+        "sensor_degradation": 0.2955969327973736,
+        "macro_environmental": 1.0,
+        "compositional_heldout": 0.7139740639515345,
+        "negated": 0.3297537643375949
+      },
+      "mAP_all": 0.6209039210441061,
+      "P@5_all": 0.6066666666666667,
+      "NDCG@10_all": 0.6215694830516556
+    },
+    "metadata_prior|raw": {
+      "mAP_by_stratum": {
+        "sensor_degradation": 0.27910437772070973,
+        "macro_environmental": 1.0,
+        "compositional_heldout": 0.6997512065223245,
+        "negated": 0.3448599980414955
+      },
+      "mAP_all": 0.613588754083892,
+      "P@5_all": 0.5933333333333334,
+      "NDCG@10_all": 0.6026719145861384
+    },
+    "logit_VLM_lookup|cal": {
+      "mAP_by_stratum": {
+        "sensor_degradation": 0.6074305211553711,
+        "macro_environmental": NaN,
+        "compositional_heldout": 0.464501050924788,
+        "negated": 0.6053600160623093
+      },
+      "mAP_all": 0.5865415068348341,
+      "P@5_all": 0.5012048192771084,
+      "NDCG@10_all": 0.5161450980389202
+    },
+    "flat_VLM_lookup|cal": {
+      "mAP_by_stratum": {
+        "sensor_degradation": 0.5774765719775263,
+        "macro_environmental": NaN,
+        "compositional_heldout": 0.43101669437944395,
+        "negated": 0.664553686745323
+      },
+      "mAP_all": 0.5657437466972033,
+      "P@5_all": 0.5156626506024097,
+      "NDCG@10_all": 0.5375611611774695
+    },
+    "logit_VLM_lookup|raw": {
+      "mAP_by_stratum": {
+        "sensor_degradation": 0.5859795655540572,
+        "macro_environmental": NaN,
+        "compositional_heldout": 0.36101874187097405,
+        "negated": 0.6359861442496825
+      },
+      "mAP_all": 0.5588775092174744,
+      "P@5_all": 0.4939759036144578,
+      "NDCG@10_all": 0.5344901530207193
+    },
+    "flat_VLM_lookup|raw": {
+      "mAP_by_stratum": {
+        "sensor_degradation": 0.5790098100022815,
+        "macro_environmental": NaN,
+        "compositional_heldout": 0.32286485904061796,
+        "negated": 0.6382653182286931
+      },
+      "mAP_all": 0.5484021011167121,
+      "P@5_all": 0.5325301204819276,
+      "NDCG@10_all": 0.5341523007225811
+    },
+    "SceneMiner_v2.1|raw": {
+      "mAP_by_stratum": {
+        "sensor_degradation": 0.6607935423934835,
+        "macro_environmental": 0.4078662667972798,
+        "compositional_heldout": 0.5496094128736219,
+        "negated": 0.4305744388143024
+      },
+      "mAP_all": 0.5312353720009003,
+      "P@5_all": 0.5266666666666666,
+      "NDCG@10_all": 0.5368278776593811
+    },
+    "SceneMiner_v2.1|cal": {
+      "mAP_by_stratum": {
+        "sensor_degradation": 0.5972351166853677,
+        "macro_environmental": 0.38002476035811245,
+        "compositional_heldout": 0.5329579661753505,
+        "negated": 0.43412156712237543
+      },
+      "mAP_all": 0.4924847702125876,
+      "P@5_all": 0.47333333333333333,
+      "NDCG@10_all": 0.47087988920274826
+    },
+    "zeroshot_SigLIP2|raw": {
+      "mAP_by_stratum": {
+        "sensor_degradation": 0.44398401126531717,
+        "macro_environmental": 0.48670818992421416,
+        "compositional_heldout": 0.3701284652078132,
+        "negated": 0.3553535675326913
+      },
+      "mAP_all": 0.4445509259879134,
+      "P@5_all": 0.5386666666666667,
+      "NDCG@10_all": 0.5277637134489599
+    },
+    "zeroshot_SigLIP2|cal": {
+      "mAP_by_stratum": {
+        "sensor_degradation": 0.41998555523520825,
+        "macro_environmental": 0.4623656666729325,
+        "compositional_heldout": 0.3472095222039533,
+        "negated": 0.3470303883158914
+      },
+      "mAP_all": 0.42180299434049906,
+      "P@5_all": 0.4720000000000001,
+      "NDCG@10_all": 0.4767713723450201
+    }
+  },
+  "domain_skew": {
+    "SceneMiner_v2.1|cal": {
+      "nuscenes_share_top5": 0.3306666666666667,
+      "relevant_base_rate": 0.5686147897872729,
+      "skew_points": -23.794812312060614
+    },
+    "SceneMiner_v2.1|raw": {
+      "nuscenes_share_top5": 0.656,
+      "relevant_base_rate": 0.5686147897872729,
+      "skew_points": 8.738521021272716
+    },
+    "flat_VLM_lookup|cal": {
+      "nuscenes_share_top5": 0.40963855421686746,
+      "relevant_base_rate": 0.5354462875785927,
+      "skew_points": -12.580773336172523
+    },
+    "flat_VLM_lookup|raw": {
+      "nuscenes_share_top5": 0.5012048192771085,
+      "relevant_base_rate": 0.5354462875785927,
+      "skew_points": -3.4241468301484224
+    },
+    "logit_VLM_lookup|cal": {
+      "nuscenes_share_top5": 0.36144578313253023,
+      "relevant_base_rate": 0.5354462875785927,
+      "skew_points": -17.400050444606247
+    },
+    "logit_VLM_lookup|raw": {
+      "nuscenes_share_top5": 0.4698795180722892,
+      "relevant_base_rate": 0.5354462875785927,
+      "skew_points": -6.556676950630347
+    },
+    "metadata_prior|cal": {
+      "nuscenes_share_top5": 0.7226666666666667,
+      "relevant_base_rate": 0.5686147897872729,
+      "skew_points": 15.405187687939382
+    },
+    "metadata_prior|raw": {
+      "nuscenes_share_top5": 0.5786666666666667,
+      "relevant_base_rate": 0.5686147897872729,
+      "skew_points": 1.0051876879393795
+    },
+    "zeroshot_SigLIP2|cal": {
+      "nuscenes_share_top5": 0.4626666666666667,
+      "relevant_base_rate": 0.5686147897872729,
+      "skew_points": -10.594812312060615
+    },
+    "zeroshot_SigLIP2|raw": {
+      "nuscenes_share_top5": 0.4066666666666667,
+      "relevant_base_rate": 0.5686147897872729,
+      "skew_points": -16.19481231206062
+    }
+  }
+}

@@ -1,18 +1,2247 @@
 {
- "n_train": 126,
- "n_eval": 107,
+ "n_train": 240,
+ "n_eval": 150,
+ "n_total": 390,
  "strata": {
-  "sensor_degradation": 56,
-  "macro_environmental": 23,
-  "compositional_heldout": 14,
-  "negated": 14
+  "sensor_degradation": 62,
+  "macro_environmental": 58,
+  "compositional_heldout": 18,
+  "negated": 12
  },
- "withheld_from_training": "all compositional conjunctions are eval-only; rain AND night never trained",
+ "withheld_from_training": "all compositional conjunctions; rain AND night never trained",
  "train": [
+  {
+   "text": "heavy rain spatter obscuring the camera",
+   "predicate": {
+    "droplets": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "the lens drowned in rain streaks",
+   "predicate": {
+    "droplets": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "drizzle marking the lens",
+   "predicate": {
+    "droplets": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "persistent droplet smear on the glass",
+   "predicate": {
+    "droplets": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "strong headlight bloom from oncoming traffic",
+   "predicate": {
+    "glare": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "blinding light bloom swallowing the scene",
+   "predicate": {
+    "glare": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "harsh low-sun glare",
+   "predicate": {
+    "glare": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "scattered street-light halos",
+   "predicate": {
+    "glare": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "standing water pooling on the road",
+   "predicate": {
+    "wet_road": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "a soaked roadway with mirror-like sheen",
+   "predicate": {
+    "wet_road": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "rain-slicked carriageway",
+   "predicate": {
+    "wet_road": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "puddled road surface",
+   "predicate": {
+    "wet_road": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "a low contrast scene where vehicles are barely distinguishable",
+   "predicate": {
+    "low_contrast": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "murky scene with indistinct vehicle outlines",
+   "predicate": {
+    "low_contrast": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "grey scene with little tonal separation",
+   "predicate": {
+    "low_contrast": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "objects dissolving into the background",
+   "predicate": {
+    "low_contrast": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "heavy rain spatter obscuring the camera in daylight",
+   "predicate": {
+    "droplets": true,
+    "lighting": "day"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "heavy rain spatter obscuring the camera in dense traffic",
+   "predicate": {
+    "droplets": true,
+    "density": "dense"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "heavy rain spatter obscuring the camera on an empty road",
+   "predicate": {
+    "droplets": true,
+    "density": "sparse"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "the lens drowned in rain streaks in daylight",
+   "predicate": {
+    "droplets": true,
+    "lighting": "day"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "the lens drowned in rain streaks in dense traffic",
+   "predicate": {
+    "droplets": true,
+    "density": "dense"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "the lens drowned in rain streaks on an empty road",
+   "predicate": {
+    "droplets": true,
+    "density": "sparse"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "drizzle marking the lens in daylight",
+   "predicate": {
+    "droplets": true,
+    "lighting": "day"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "drizzle marking the lens in dense traffic",
+   "predicate": {
+    "droplets": true,
+    "density": "dense"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "drizzle marking the lens on an empty road",
+   "predicate": {
+    "droplets": true,
+    "density": "sparse"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "persistent droplet smear on the glass in daylight",
+   "predicate": {
+    "droplets": true,
+    "lighting": "day"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "persistent droplet smear on the glass in dense traffic",
+   "predicate": {
+    "droplets": true,
+    "density": "dense"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "persistent droplet smear on the glass on an empty road",
+   "predicate": {
+    "droplets": true,
+    "density": "sparse"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "strong headlight bloom from oncoming traffic in daylight",
+   "predicate": {
+    "glare": true,
+    "lighting": "day"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "strong headlight bloom from oncoming traffic in dense traffic",
+   "predicate": {
+    "glare": true,
+    "density": "dense"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "strong headlight bloom from oncoming traffic on an empty road",
+   "predicate": {
+    "glare": true,
+    "density": "sparse"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "blinding light bloom swallowing the scene in daylight",
+   "predicate": {
+    "glare": true,
+    "lighting": "day"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "blinding light bloom swallowing the scene in dense traffic",
+   "predicate": {
+    "glare": true,
+    "density": "dense"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "blinding light bloom swallowing the scene on an empty road",
+   "predicate": {
+    "glare": true,
+    "density": "sparse"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "harsh low-sun glare in daylight",
+   "predicate": {
+    "glare": true,
+    "lighting": "day"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "harsh low-sun glare in dense traffic",
+   "predicate": {
+    "glare": true,
+    "density": "dense"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "harsh low-sun glare on an empty road",
+   "predicate": {
+    "glare": true,
+    "density": "sparse"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "scattered street-light halos in daylight",
+   "predicate": {
+    "glare": true,
+    "lighting": "day"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "scattered street-light halos in dense traffic",
+   "predicate": {
+    "glare": true,
+    "density": "dense"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "scattered street-light halos on an empty road",
+   "predicate": {
+    "glare": true,
+    "density": "sparse"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "standing water pooling on the road in daylight",
+   "predicate": {
+    "wet_road": true,
+    "lighting": "day"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "standing water pooling on the road in dense traffic",
+   "predicate": {
+    "wet_road": true,
+    "density": "dense"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "standing water pooling on the road on an empty road",
+   "predicate": {
+    "wet_road": true,
+    "density": "sparse"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "a soaked roadway with mirror-like sheen in daylight",
+   "predicate": {
+    "wet_road": true,
+    "lighting": "day"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "a soaked roadway with mirror-like sheen in dense traffic",
+   "predicate": {
+    "wet_road": true,
+    "density": "dense"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "a soaked roadway with mirror-like sheen on an empty road",
+   "predicate": {
+    "wet_road": true,
+    "density": "sparse"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "rain-slicked carriageway in daylight",
+   "predicate": {
+    "wet_road": true,
+    "lighting": "day"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "rain-slicked carriageway in dense traffic",
+   "predicate": {
+    "wet_road": true,
+    "density": "dense"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "rain-slicked carriageway on an empty road",
+   "predicate": {
+    "wet_road": true,
+    "density": "sparse"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "puddled road surface in daylight",
+   "predicate": {
+    "wet_road": true,
+    "lighting": "day"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "puddled road surface in dense traffic",
+   "predicate": {
+    "wet_road": true,
+    "density": "dense"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "puddled road surface on an empty road",
+   "predicate": {
+    "wet_road": true,
+    "density": "sparse"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "a low contrast scene where vehicles are barely distinguishable in daylight",
+   "predicate": {
+    "low_contrast": true,
+    "lighting": "day"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "a low contrast scene where vehicles are barely distinguishable in dense traffic",
+   "predicate": {
+    "low_contrast": true,
+    "density": "dense"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "a low contrast scene where vehicles are barely distinguishable on an empty road",
+   "predicate": {
+    "low_contrast": true,
+    "density": "sparse"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "murky scene with indistinct vehicle outlines in daylight",
+   "predicate": {
+    "low_contrast": true,
+    "lighting": "day"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "murky scene with indistinct vehicle outlines in dense traffic",
+   "predicate": {
+    "low_contrast": true,
+    "density": "dense"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "murky scene with indistinct vehicle outlines on an empty road",
+   "predicate": {
+    "low_contrast": true,
+    "density": "sparse"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "grey scene with little tonal separation in daylight",
+   "predicate": {
+    "low_contrast": true,
+    "lighting": "day"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "grey scene with little tonal separation in dense traffic",
+   "predicate": {
+    "low_contrast": true,
+    "density": "dense"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "grey scene with little tonal separation on an empty road",
+   "predicate": {
+    "low_contrast": true,
+    "density": "sparse"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "objects dissolving into the background in daylight",
+   "predicate": {
+    "low_contrast": true,
+    "lighting": "day"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "objects dissolving into the background in dense traffic",
+   "predicate": {
+    "low_contrast": true,
+    "density": "dense"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "objects dissolving into the background on an empty road",
+   "predicate": {
+    "low_contrast": true,
+    "density": "sparse"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "night driving on an unlit road",
+   "predicate": {
+    "lighting": "night"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=night"
+  },
+  {
+   "text": "the street under lamplight",
+   "predicate": {
+    "lighting": "night"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=night"
+  },
+  {
+   "text": "driving under full daylight",
+   "predicate": {
+    "lighting": "day"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=day"
+  },
+  {
+   "text": "an afternoon street view",
+   "predicate": {
+    "lighting": "day"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=day"
+  },
+  {
+   "text": "rainfall over the roadway",
+   "predicate": {
+    "weather": "rain"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "weather=rain"
+  },
+  {
+   "text": "driving through a shower",
+   "predicate": {
+    "weather": "rain"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "weather=rain"
+  },
+  {
+   "text": "driving in settled weather",
+   "predicate": {
+    "weather": "dry"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "weather=dry"
+  },
+  {
+   "text": "a rain-free street",
+   "predicate": {
+    "weather": "dry"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "weather=dry"
+  },
+  {
+   "text": "queued vehicles filling the lane",
+   "predicate": {
+    "density": "dense"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=dense"
+  },
+  {
+   "text": "packed traffic ahead",
+   "predicate": {
+    "density": "dense"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=dense"
+  },
+  {
+   "text": "an open road with few cars",
+   "predicate": {
+    "density": "sparse"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=sparse"
+  },
+  {
+   "text": "a near-empty carriageway",
+   "predicate": {
+    "density": "sparse"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=sparse"
+  },
+  {
+   "text": "steady but unhurried traffic",
+   "predicate": {
+    "density": "moderate"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=moderate"
+  },
+  {
+   "text": "a handful of cars on the road",
+   "predicate": {
+    "density": "moderate"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=moderate"
+  },
+  {
+   "text": "a few water specks on the lens, seen in daylight",
+   "predicate": {
+    "droplets": true,
+    "lighting": "day"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "a few water specks on the lens, seen in dense traffic",
+   "predicate": {
+    "droplets": true,
+    "density": "dense"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "a few water specks on the lens, seen on an empty road",
+   "predicate": {
+    "droplets": true,
+    "density": "sparse"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "light droplets scattered on the lens, seen in daylight",
+   "predicate": {
+    "droplets": true,
+    "lighting": "day"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "light droplets scattered on the lens, seen in dense traffic",
+   "predicate": {
+    "droplets": true,
+    "density": "dense"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "light droplets scattered on the lens, seen on an empty road",
+   "predicate": {
+    "droplets": true,
+    "density": "sparse"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "water droplets smearing the camera lens, seen in daylight",
+   "predicate": {
+    "droplets": true,
+    "lighting": "day"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "water droplets smearing the camera lens, seen in dense traffic",
+   "predicate": {
+    "droplets": true,
+    "density": "dense"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "water droplets smearing the camera lens, seen on an empty road",
+   "predicate": {
+    "droplets": true,
+    "density": "sparse"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "rain beading across the lens, seen in daylight",
+   "predicate": {
+    "droplets": true,
+    "lighting": "day"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "rain beading across the lens, seen in dense traffic",
+   "predicate": {
+    "droplets": true,
+    "density": "dense"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "rain beading across the lens, seen on an empty road",
+   "predicate": {
+    "droplets": true,
+    "density": "sparse"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "a faint halo around a street light, seen in daylight",
+   "predicate": {
+    "glare": true,
+    "lighting": "day"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "a faint halo around a street light, seen in dense traffic",
+   "predicate": {
+    "glare": true,
+    "density": "dense"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "a faint halo around a street light, seen on an empty road",
+   "predicate": {
+    "glare": true,
+    "density": "sparse"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "mild light flare at the frame edge, seen in daylight",
+   "predicate": {
+    "glare": true,
+    "lighting": "day"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "mild light flare at the frame edge, seen in dense traffic",
+   "predicate": {
+    "glare": true,
+    "density": "dense"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "mild light flare at the frame edge, seen on an empty road",
+   "predicate": {
+    "glare": true,
+    "density": "sparse"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "noticeable glare washing across the image, seen in daylight",
+   "predicate": {
+    "glare": true,
+    "lighting": "day"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "noticeable glare washing across the image, seen in dense traffic",
+   "predicate": {
+    "glare": true,
+    "density": "dense"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "noticeable glare washing across the image, seen on an empty road",
+   "predicate": {
+    "glare": true,
+    "density": "sparse"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "specular glare washing out the image, seen in daylight",
+   "predicate": {
+    "glare": true,
+    "lighting": "day"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "specular glare washing out the image, seen in dense traffic",
+   "predicate": {
+    "glare": true,
+    "density": "dense"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "specular glare washing out the image, seen on an empty road",
+   "predicate": {
+    "glare": true,
+    "density": "sparse"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "a lightly damp road surface, seen in daylight",
+   "predicate": {
+    "wet_road": true,
+    "lighting": "day"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "a lightly damp road surface, seen in dense traffic",
+   "predicate": {
+    "wet_road": true,
+    "density": "dense"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "a lightly damp road surface, seen on an empty road",
+   "predicate": {
+    "wet_road": true,
+    "density": "sparse"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "patchy wet tarmac, seen in daylight",
+   "predicate": {
+    "wet_road": true,
+    "lighting": "day"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "patchy wet tarmac, seen in dense traffic",
+   "predicate": {
+    "wet_road": true,
+    "density": "dense"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "patchy wet tarmac, seen on an empty road",
+   "predicate": {
+    "wet_road": true,
+    "density": "sparse"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "wet reflective asphalt after rainfall, seen in daylight",
+   "predicate": {
+    "wet_road": true,
+    "lighting": "day"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "wet reflective asphalt after rainfall, seen in dense traffic",
+   "predicate": {
+    "wet_road": true,
+    "density": "dense"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "wet reflective asphalt after rainfall, seen on an empty road",
+   "predicate": {
+    "wet_road": true,
+    "density": "sparse"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "slick wet pavement throwing reflections, seen in daylight",
+   "predicate": {
+    "wet_road": true,
+    "lighting": "day"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "slick wet pavement throwing reflections, seen in dense traffic",
+   "predicate": {
+    "wet_road": true,
+    "density": "dense"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "slick wet pavement throwing reflections, seen on an empty road",
+   "predicate": {
+    "wet_road": true,
+    "density": "sparse"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "slightly flat lighting, seen in daylight",
+   "predicate": {
+    "low_contrast": true,
+    "lighting": "day"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "slightly flat lighting, seen in dense traffic",
+   "predicate": {
+    "low_contrast": true,
+    "density": "dense"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "slightly flat lighting, seen on an empty road",
+   "predicate": {
+    "low_contrast": true,
+    "density": "sparse"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "a dim view where shapes lose definition, seen in daylight",
+   "predicate": {
+    "low_contrast": true,
+    "lighting": "day"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "a dim view where shapes lose definition, seen in dense traffic",
+   "predicate": {
+    "low_contrast": true,
+    "density": "dense"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "a dim view where shapes lose definition, seen on an empty road",
+   "predicate": {
+    "low_contrast": true,
+    "density": "sparse"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "hazy washed out view with unclear boundaries, seen in daylight",
+   "predicate": {
+    "low_contrast": true,
+    "lighting": "day"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "hazy washed out view with unclear boundaries, seen in dense traffic",
+   "predicate": {
+    "low_contrast": true,
+    "density": "dense"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "hazy washed out view with unclear boundaries, seen on an empty road",
+   "predicate": {
+    "low_contrast": true,
+    "density": "sparse"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "poor visibility with objects blending in, seen in daylight",
+   "predicate": {
+    "low_contrast": true,
+    "lighting": "day"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "poor visibility with objects blending in, seen in dense traffic",
+   "predicate": {
+    "low_contrast": true,
+    "density": "dense"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "poor visibility with objects blending in, seen on an empty road",
+   "predicate": {
+    "low_contrast": true,
+    "density": "sparse"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "a scene showing driving after dark",
+   "predicate": {
+    "lighting": "night"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=night"
+  },
+  {
+   "text": "a scene showing a night-time street scene",
+   "predicate": {
+    "lighting": "night"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=night"
+  },
+  {
+   "text": "a scene showing low ambient light driving",
+   "predicate": {
+    "lighting": "night"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=night"
+  },
+  {
+   "text": "a scene showing night driving on an unlit road",
+   "predicate": {
+    "lighting": "night"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=night"
+  },
+  {
+   "text": "a scene showing the street under lamplight",
+   "predicate": {
+    "lighting": "night"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=night"
+  },
+  {
+   "text": "a scene showing bright daytime driving",
+   "predicate": {
+    "lighting": "day"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=day"
+  },
+  {
+   "text": "a scene showing a clear daylight street",
+   "predicate": {
+    "lighting": "day"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=day"
+  },
+  {
+   "text": "a scene showing a midday road scene",
+   "predicate": {
+    "lighting": "day"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=day"
+  },
+  {
+   "text": "a scene showing driving under full daylight",
+   "predicate": {
+    "lighting": "day"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=day"
+  },
+  {
+   "text": "a scene showing an afternoon street view",
+   "predicate": {
+    "lighting": "day"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=day"
+  },
+  {
+   "text": "a scene showing driving in rain",
+   "predicate": {
+    "weather": "rain"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "weather=rain"
+  },
+  {
+   "text": "a scene showing a rainy street",
+   "predicate": {
+    "weather": "rain"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "weather=rain"
+  },
+  {
+   "text": "a scene showing wet weather driving",
+   "predicate": {
+    "weather": "rain"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "weather=rain"
+  },
+  {
+   "text": "a scene showing rainfall over the roadway",
+   "predicate": {
+    "weather": "rain"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "weather=rain"
+  },
+  {
+   "text": "a scene showing driving through a shower",
+   "predicate": {
+    "weather": "rain"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "weather=rain"
+  },
+  {
+   "text": "a scene showing dry road conditions",
+   "predicate": {
+    "weather": "dry"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "weather=dry"
+  },
+  {
+   "text": "a scene showing a dry clear day",
+   "predicate": {
+    "weather": "dry"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "weather=dry"
+  },
+  {
+   "text": "a scene showing no precipitation on the road",
+   "predicate": {
+    "weather": "dry"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "weather=dry"
+  },
+  {
+   "text": "a scene showing driving in settled weather",
+   "predicate": {
+    "weather": "dry"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "weather=dry"
+  },
+  {
+   "text": "a scene showing a rain-free street",
+   "predicate": {
+    "weather": "dry"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "weather=dry"
+  },
+  {
+   "text": "a scene showing dense bumper-to-bumper traffic",
+   "predicate": {
+    "density": "dense"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=dense"
+  },
+  {
+   "text": "a scene showing a congested roadway",
+   "predicate": {
+    "density": "dense"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=dense"
+  },
+  {
+   "text": "a scene showing a heavy traffic jam",
+   "predicate": {
+    "density": "dense"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=dense"
+  },
+  {
+   "text": "a scene showing queued vehicles filling the lane",
+   "predicate": {
+    "density": "dense"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=dense"
+  },
+  {
+   "text": "a scene showing packed traffic ahead",
+   "predicate": {
+    "density": "dense"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=dense"
+  },
+  {
+   "text": "a scene showing an almost empty road",
+   "predicate": {
+    "density": "sparse"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=sparse"
+  },
+  {
+   "text": "a scene showing sparse traffic",
+   "predicate": {
+    "density": "sparse"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=sparse"
+  },
+  {
+   "text": "a scene showing a deserted street",
+   "predicate": {
+    "density": "sparse"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=sparse"
+  },
+  {
+   "text": "a scene showing an open road with few cars",
+   "predicate": {
+    "density": "sparse"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=sparse"
+  },
+  {
+   "text": "a scene showing a near-empty carriageway",
+   "predicate": {
+    "density": "sparse"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=sparse"
+  },
+  {
+   "text": "a scene showing a moderately busy road",
+   "predicate": {
+    "density": "moderate"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=moderate"
+  },
+  {
+   "text": "a scene showing a few vehicles around",
+   "predicate": {
+    "density": "moderate"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=moderate"
+  },
+  {
+   "text": "a scene showing light traffic flow",
+   "predicate": {
+    "density": "moderate"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=moderate"
+  },
+  {
+   "text": "a scene showing steady but unhurried traffic",
+   "predicate": {
+    "density": "moderate"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=moderate"
+  },
+  {
+   "text": "a scene showing a handful of cars on the road",
+   "predicate": {
+    "density": "moderate"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=moderate"
+  },
+  {
+   "text": "footage of driving after dark",
+   "predicate": {
+    "lighting": "night"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=night"
+  },
+  {
+   "text": "footage of a night-time street scene",
+   "predicate": {
+    "lighting": "night"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=night"
+  },
+  {
+   "text": "footage of low ambient light driving",
+   "predicate": {
+    "lighting": "night"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=night"
+  },
+  {
+   "text": "footage of night driving on an unlit road",
+   "predicate": {
+    "lighting": "night"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=night"
+  },
+  {
+   "text": "footage of the street under lamplight",
+   "predicate": {
+    "lighting": "night"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=night"
+  },
+  {
+   "text": "footage of bright daytime driving",
+   "predicate": {
+    "lighting": "day"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=day"
+  },
+  {
+   "text": "footage of a clear daylight street",
+   "predicate": {
+    "lighting": "day"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=day"
+  },
+  {
+   "text": "footage of a midday road scene",
+   "predicate": {
+    "lighting": "day"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=day"
+  },
+  {
+   "text": "footage of driving under full daylight",
+   "predicate": {
+    "lighting": "day"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=day"
+  },
+  {
+   "text": "footage of an afternoon street view",
+   "predicate": {
+    "lighting": "day"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=day"
+  },
+  {
+   "text": "footage of driving in rain",
+   "predicate": {
+    "weather": "rain"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "weather=rain"
+  },
+  {
+   "text": "footage of a rainy street",
+   "predicate": {
+    "weather": "rain"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "weather=rain"
+  },
+  {
+   "text": "footage of wet weather driving",
+   "predicate": {
+    "weather": "rain"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "weather=rain"
+  },
+  {
+   "text": "footage of rainfall over the roadway",
+   "predicate": {
+    "weather": "rain"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "weather=rain"
+  },
+  {
+   "text": "footage of driving through a shower",
+   "predicate": {
+    "weather": "rain"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "weather=rain"
+  },
+  {
+   "text": "footage of dry road conditions",
+   "predicate": {
+    "weather": "dry"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "weather=dry"
+  },
+  {
+   "text": "footage of a dry clear day",
+   "predicate": {
+    "weather": "dry"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "weather=dry"
+  },
+  {
+   "text": "footage of no precipitation on the road",
+   "predicate": {
+    "weather": "dry"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "weather=dry"
+  },
+  {
+   "text": "footage of driving in settled weather",
+   "predicate": {
+    "weather": "dry"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "weather=dry"
+  },
+  {
+   "text": "footage of a rain-free street",
+   "predicate": {
+    "weather": "dry"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "weather=dry"
+  },
+  {
+   "text": "footage of dense bumper-to-bumper traffic",
+   "predicate": {
+    "density": "dense"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=dense"
+  },
+  {
+   "text": "footage of a congested roadway",
+   "predicate": {
+    "density": "dense"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=dense"
+  },
+  {
+   "text": "footage of a heavy traffic jam",
+   "predicate": {
+    "density": "dense"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=dense"
+  },
+  {
+   "text": "footage of queued vehicles filling the lane",
+   "predicate": {
+    "density": "dense"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=dense"
+  },
+  {
+   "text": "footage of packed traffic ahead",
+   "predicate": {
+    "density": "dense"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=dense"
+  },
+  {
+   "text": "footage of an almost empty road",
+   "predicate": {
+    "density": "sparse"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=sparse"
+  },
+  {
+   "text": "footage of sparse traffic",
+   "predicate": {
+    "density": "sparse"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=sparse"
+  },
+  {
+   "text": "footage of a deserted street",
+   "predicate": {
+    "density": "sparse"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=sparse"
+  },
+  {
+   "text": "footage of an open road with few cars",
+   "predicate": {
+    "density": "sparse"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=sparse"
+  },
+  {
+   "text": "footage of a near-empty carriageway",
+   "predicate": {
+    "density": "sparse"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=sparse"
+  },
+  {
+   "text": "footage of a moderately busy road",
+   "predicate": {
+    "density": "moderate"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=moderate"
+  },
+  {
+   "text": "footage of a few vehicles around",
+   "predicate": {
+    "density": "moderate"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=moderate"
+  },
+  {
+   "text": "footage of light traffic flow",
+   "predicate": {
+    "density": "moderate"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=moderate"
+  },
+  {
+   "text": "footage of steady but unhurried traffic",
+   "predicate": {
+    "density": "moderate"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=moderate"
+  },
+  {
+   "text": "footage of a handful of cars on the road",
+   "predicate": {
+    "density": "moderate"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=moderate"
+  },
+  {
+   "text": "a recording with a few water specks on the lens",
+   "predicate": {
+    "droplets": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "a recording with light droplets scattered on the lens",
+   "predicate": {
+    "droplets": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "a recording with water droplets smearing the camera lens",
+   "predicate": {
+    "droplets": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "a recording with rain beading across the lens",
+   "predicate": {
+    "droplets": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "a recording with heavy rain spatter obscuring the camera",
+   "predicate": {
+    "droplets": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "a recording with the lens drowned in rain streaks",
+   "predicate": {
+    "droplets": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "a recording with drizzle marking the lens",
+   "predicate": {
+    "droplets": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "a recording with persistent droplet smear on the glass",
+   "predicate": {
+    "droplets": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "a recording with a faint halo around a street light",
+   "predicate": {
+    "glare": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "a recording with mild light flare at the frame edge",
+   "predicate": {
+    "glare": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "a recording with noticeable glare washing across the image",
+   "predicate": {
+    "glare": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "a recording with specular glare washing out the image",
+   "predicate": {
+    "glare": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "a recording with strong headlight bloom from oncoming traffic",
+   "predicate": {
+    "glare": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "a recording with blinding light bloom swallowing the scene",
+   "predicate": {
+    "glare": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "a recording with harsh low-sun glare",
+   "predicate": {
+    "glare": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "a recording with scattered street-light halos",
+   "predicate": {
+    "glare": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "a recording with a lightly damp road surface",
+   "predicate": {
+    "wet_road": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "a recording with patchy wet tarmac",
+   "predicate": {
+    "wet_road": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "a recording with wet reflective asphalt after rainfall",
+   "predicate": {
+    "wet_road": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "a recording with slick wet pavement throwing reflections",
+   "predicate": {
+    "wet_road": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "a recording with standing water pooling on the road",
+   "predicate": {
+    "wet_road": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "a recording with a soaked roadway with mirror-like sheen",
+   "predicate": {
+    "wet_road": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "a recording with rain-slicked carriageway",
+   "predicate": {
+    "wet_road": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "a recording with puddled road surface",
+   "predicate": {
+    "wet_road": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "a recording with slightly flat lighting",
+   "predicate": {
+    "low_contrast": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "a recording with a dim view where shapes lose definition",
+   "predicate": {
+    "low_contrast": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "a recording with hazy washed out view with unclear boundaries",
+   "predicate": {
+    "low_contrast": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "a recording with poor visibility with objects blending in",
+   "predicate": {
+    "low_contrast": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "a recording with a low contrast scene where vehicles are barely distinguishable",
+   "predicate": {
+    "low_contrast": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "a recording with murky scene with indistinct vehicle outlines",
+   "predicate": {
+    "low_contrast": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "a recording with grey scene with little tonal separation",
+   "predicate": {
+    "low_contrast": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "a recording with objects dissolving into the background",
+   "predicate": {
+    "low_contrast": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "dashcam footage showing a few water specks on the lens",
+   "predicate": {
+    "droplets": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "dashcam footage showing light droplets scattered on the lens",
+   "predicate": {
+    "droplets": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "dashcam footage showing water droplets smearing the camera lens",
+   "predicate": {
+    "droplets": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "dashcam footage showing rain beading across the lens",
+   "predicate": {
+    "droplets": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "dashcam footage showing heavy rain spatter obscuring the camera",
+   "predicate": {
+    "droplets": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "dashcam footage showing the lens drowned in rain streaks",
+   "predicate": {
+    "droplets": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "dashcam footage showing drizzle marking the lens",
+   "predicate": {
+    "droplets": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "dashcam footage showing persistent droplet smear on the glass",
+   "predicate": {
+    "droplets": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "dashcam footage showing a faint halo around a street light",
+   "predicate": {
+    "glare": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "dashcam footage showing mild light flare at the frame edge",
+   "predicate": {
+    "glare": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "dashcam footage showing noticeable glare washing across the image",
+   "predicate": {
+    "glare": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "dashcam footage showing specular glare washing out the image",
+   "predicate": {
+    "glare": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  }
+ ],
+ "eval": [
+  {
+   "text": "a few water specks on the lens",
+   "predicate": {
+    "droplets": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "light droplets scattered on the lens",
+   "predicate": {
+    "droplets": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
   {
    "text": "water droplets smearing the camera lens",
    "predicate": {
     "droplets": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "rain beading across the lens",
+   "predicate": {
+    "droplets": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "a faint halo around a street light",
+   "predicate": {
+    "glare": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "mild light flare at the frame edge",
+   "predicate": {
+    "glare": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "noticeable glare washing across the image",
+   "predicate": {
+    "glare": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "specular glare washing out the image",
+   "predicate": {
+    "glare": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "glare"
+  },
+  {
+   "text": "a lightly damp road surface",
+   "predicate": {
+    "wet_road": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "patchy wet tarmac",
+   "predicate": {
+    "wet_road": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "wet reflective asphalt after rainfall",
+   "predicate": {
+    "wet_road": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "slick wet pavement throwing reflections",
+   "predicate": {
+    "wet_road": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "slightly flat lighting",
+   "predicate": {
+    "low_contrast": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "a dim view where shapes lose definition",
+   "predicate": {
+    "low_contrast": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "hazy washed out view with unclear boundaries",
+   "predicate": {
+    "low_contrast": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "poor visibility with objects blending in",
+   "predicate": {
+    "low_contrast": true
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "low_contrast"
+  },
+  {
+   "text": "a few water specks on the lens at night",
+   "predicate": {
+    "droplets": true,
+    "lighting": "night"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "a few water specks on the lens in daylight",
+   "predicate": {
+    "droplets": true,
+    "lighting": "day"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "a few water specks on the lens in rain",
+   "predicate": {
+    "droplets": true,
+    "weather": "rain"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "a few water specks on the lens in dense traffic",
+   "predicate": {
+    "droplets": true,
+    "density": "dense"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "a few water specks on the lens on an empty road",
+   "predicate": {
+    "droplets": true,
+    "density": "sparse"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "light droplets scattered on the lens at night",
+   "predicate": {
+    "droplets": true,
+    "lighting": "night"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "light droplets scattered on the lens in daylight",
+   "predicate": {
+    "droplets": true,
+    "lighting": "day"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "light droplets scattered on the lens in rain",
+   "predicate": {
+    "droplets": true,
+    "weather": "rain"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "light droplets scattered on the lens in dense traffic",
+   "predicate": {
+    "droplets": true,
+    "density": "dense"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "droplets"
+  },
+  {
+   "text": "light droplets scattered on the lens on an empty road",
+   "predicate": {
+    "droplets": true,
+    "density": "sparse"
    },
    "stratum": "sensor_degradation",
    "attribute": "droplets"
@@ -45,15 +2274,6 @@
    "attribute": "droplets"
   },
   {
-   "text": "water droplets smearing the camera lens in dry conditions",
-   "predicate": {
-    "droplets": true,
-    "weather": "dry"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "droplets"
-  },
-  {
    "text": "water droplets smearing the camera lens in dense traffic",
    "predicate": {
     "droplets": true,
@@ -72,201 +2292,7 @@
    "attribute": "droplets"
   },
   {
-   "text": "rain beading on the lens obscuring the view",
-   "predicate": {
-    "droplets": true
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "droplets"
-  },
-  {
-   "text": "rain beading on the lens obscuring the view at night",
-   "predicate": {
-    "droplets": true,
-    "lighting": "night"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "droplets"
-  },
-  {
-   "text": "rain beading on the lens obscuring the view in daylight",
-   "predicate": {
-    "droplets": true,
-    "lighting": "day"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "droplets"
-  },
-  {
-   "text": "rain beading on the lens obscuring the view in rain",
-   "predicate": {
-    "droplets": true,
-    "weather": "rain"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "droplets"
-  },
-  {
-   "text": "rain beading on the lens obscuring the view in dry conditions",
-   "predicate": {
-    "droplets": true,
-    "weather": "dry"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "droplets"
-  },
-  {
-   "text": "rain beading on the lens obscuring the view in dense traffic",
-   "predicate": {
-    "droplets": true,
-    "density": "dense"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "droplets"
-  },
-  {
-   "text": "rain beading on the lens obscuring the view on an empty road",
-   "predicate": {
-    "droplets": true,
-    "density": "sparse"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "droplets"
-  },
-  {
-   "text": "a light drizzle leaving droplets on the lens",
-   "predicate": {
-    "droplets": true
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "droplets"
-  },
-  {
-   "text": "a light drizzle leaving droplets on the lens at night",
-   "predicate": {
-    "droplets": true,
-    "lighting": "night"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "droplets"
-  },
-  {
-   "text": "a light drizzle leaving droplets on the lens in daylight",
-   "predicate": {
-    "droplets": true,
-    "lighting": "day"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "droplets"
-  },
-  {
-   "text": "a light drizzle leaving droplets on the lens in rain",
-   "predicate": {
-    "droplets": true,
-    "weather": "rain"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "droplets"
-  },
-  {
-   "text": "a light drizzle leaving droplets on the lens in dry conditions",
-   "predicate": {
-    "droplets": true,
-    "weather": "dry"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "droplets"
-  },
-  {
-   "text": "a light drizzle leaving droplets on the lens in dense traffic",
-   "predicate": {
-    "droplets": true,
-    "density": "dense"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "droplets"
-  },
-  {
-   "text": "a light drizzle leaving droplets on the lens on an empty road",
-   "predicate": {
-    "droplets": true,
-    "density": "sparse"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "droplets"
-  },
-  {
-   "text": "heavy rain spatter across the camera",
-   "predicate": {
-    "droplets": true
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "droplets"
-  },
-  {
-   "text": "heavy rain spatter across the camera at night",
-   "predicate": {
-    "droplets": true,
-    "lighting": "night"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "droplets"
-  },
-  {
-   "text": "heavy rain spatter across the camera in daylight",
-   "predicate": {
-    "droplets": true,
-    "lighting": "day"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "droplets"
-  },
-  {
-   "text": "heavy rain spatter across the camera in rain",
-   "predicate": {
-    "droplets": true,
-    "weather": "rain"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "droplets"
-  },
-  {
-   "text": "heavy rain spatter across the camera in dry conditions",
-   "predicate": {
-    "droplets": true,
-    "weather": "dry"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "droplets"
-  },
-  {
-   "text": "heavy rain spatter across the camera in dense traffic",
-   "predicate": {
-    "droplets": true,
-    "density": "dense"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "droplets"
-  },
-  {
-   "text": "heavy rain spatter across the camera on an empty road",
-   "predicate": {
-    "droplets": true,
-    "density": "sparse"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "droplets"
-  },
-  {
-   "text": "blinding headlight bloom from oncoming traffic",
-   "predicate": {
-    "glare": true
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "glare"
-  },
-  {
-   "text": "blinding headlight bloom from oncoming traffic at night",
+   "text": "a faint halo around a street light at night",
    "predicate": {
     "glare": true,
     "lighting": "night"
@@ -275,7 +2301,7 @@
    "attribute": "glare"
   },
   {
-   "text": "blinding headlight bloom from oncoming traffic in daylight",
+   "text": "a faint halo around a street light in daylight",
    "predicate": {
     "glare": true,
     "lighting": "day"
@@ -284,7 +2310,7 @@
    "attribute": "glare"
   },
   {
-   "text": "blinding headlight bloom from oncoming traffic in rain",
+   "text": "a faint halo around a street light in rain",
    "predicate": {
     "glare": true,
     "weather": "rain"
@@ -293,16 +2319,7 @@
    "attribute": "glare"
   },
   {
-   "text": "blinding headlight bloom from oncoming traffic in dry conditions",
-   "predicate": {
-    "glare": true,
-    "weather": "dry"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "glare"
-  },
-  {
-   "text": "blinding headlight bloom from oncoming traffic in dense traffic",
+   "text": "a faint halo around a street light in dense traffic",
    "predicate": {
     "glare": true,
     "density": "dense"
@@ -311,7 +2328,7 @@
    "attribute": "glare"
   },
   {
-   "text": "blinding headlight bloom from oncoming traffic on an empty road",
+   "text": "a faint halo around a street light on an empty road",
    "predicate": {
     "glare": true,
     "density": "sparse"
@@ -320,15 +2337,7 @@
    "attribute": "glare"
   },
   {
-   "text": "specular glare washing out the image",
-   "predicate": {
-    "glare": true
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "glare"
-  },
-  {
-   "text": "specular glare washing out the image at night",
+   "text": "mild light flare at the frame edge at night",
    "predicate": {
     "glare": true,
     "lighting": "night"
@@ -337,7 +2346,7 @@
    "attribute": "glare"
   },
   {
-   "text": "specular glare washing out the image in daylight",
+   "text": "mild light flare at the frame edge in daylight",
    "predicate": {
     "glare": true,
     "lighting": "day"
@@ -346,7 +2355,7 @@
    "attribute": "glare"
   },
   {
-   "text": "specular glare washing out the image in rain",
+   "text": "mild light flare at the frame edge in rain",
    "predicate": {
     "glare": true,
     "weather": "rain"
@@ -355,16 +2364,7 @@
    "attribute": "glare"
   },
   {
-   "text": "specular glare washing out the image in dry conditions",
-   "predicate": {
-    "glare": true,
-    "weather": "dry"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "glare"
-  },
-  {
-   "text": "specular glare washing out the image in dense traffic",
+   "text": "mild light flare at the frame edge in dense traffic",
    "predicate": {
     "glare": true,
     "density": "dense"
@@ -373,7 +2373,7 @@
    "attribute": "glare"
   },
   {
-   "text": "specular glare washing out the image on an empty road",
+   "text": "mild light flare at the frame edge on an empty road",
    "predicate": {
     "glare": true,
     "density": "sparse"
@@ -382,15 +2382,7 @@
    "attribute": "glare"
   },
   {
-   "text": "mild light flare at the edge of frame",
-   "predicate": {
-    "glare": true
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "glare"
-  },
-  {
-   "text": "mild light flare at the edge of frame at night",
+   "text": "noticeable glare washing across the image at night",
    "predicate": {
     "glare": true,
     "lighting": "night"
@@ -399,7 +2391,7 @@
    "attribute": "glare"
   },
   {
-   "text": "mild light flare at the edge of frame in daylight",
+   "text": "noticeable glare washing across the image in daylight",
    "predicate": {
     "glare": true,
     "lighting": "day"
@@ -408,7 +2400,7 @@
    "attribute": "glare"
   },
   {
-   "text": "mild light flare at the edge of frame in rain",
+   "text": "noticeable glare washing across the image in rain",
    "predicate": {
     "glare": true,
     "weather": "rain"
@@ -417,16 +2409,7 @@
    "attribute": "glare"
   },
   {
-   "text": "mild light flare at the edge of frame in dry conditions",
-   "predicate": {
-    "glare": true,
-    "weather": "dry"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "glare"
-  },
-  {
-   "text": "mild light flare at the edge of frame in dense traffic",
+   "text": "noticeable glare washing across the image in dense traffic",
    "predicate": {
     "glare": true,
     "density": "dense"
@@ -435,207 +2418,13 @@
    "attribute": "glare"
   },
   {
-   "text": "mild light flare at the edge of frame on an empty road",
+   "text": "noticeable glare washing across the image on an empty road",
    "predicate": {
     "glare": true,
     "density": "sparse"
    },
    "stratum": "sensor_degradation",
    "attribute": "glare"
-  },
-  {
-   "text": "intense light bloom reflecting off the road",
-   "predicate": {
-    "glare": true
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "glare"
-  },
-  {
-   "text": "intense light bloom reflecting off the road at night",
-   "predicate": {
-    "glare": true,
-    "lighting": "night"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "glare"
-  },
-  {
-   "text": "intense light bloom reflecting off the road in daylight",
-   "predicate": {
-    "glare": true,
-    "lighting": "day"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "glare"
-  },
-  {
-   "text": "intense light bloom reflecting off the road in rain",
-   "predicate": {
-    "glare": true,
-    "weather": "rain"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "glare"
-  },
-  {
-   "text": "intense light bloom reflecting off the road in dry conditions",
-   "predicate": {
-    "glare": true,
-    "weather": "dry"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "glare"
-  },
-  {
-   "text": "intense light bloom reflecting off the road in dense traffic",
-   "predicate": {
-    "glare": true,
-    "density": "dense"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "glare"
-  },
-  {
-   "text": "intense light bloom reflecting off the road on an empty road",
-   "predicate": {
-    "glare": true,
-    "density": "sparse"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "glare"
-  },
-  {
-   "text": "wet reflective asphalt after rainfall",
-   "predicate": {
-    "wet_road": true
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "wet_road"
-  },
-  {
-   "text": "wet reflective asphalt after rainfall at night",
-   "predicate": {
-    "wet_road": true,
-    "lighting": "night"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "wet_road"
-  },
-  {
-   "text": "wet reflective asphalt after rainfall in daylight",
-   "predicate": {
-    "wet_road": true,
-    "lighting": "day"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "wet_road"
-  },
-  {
-   "text": "wet reflective asphalt after rainfall in rain",
-   "predicate": {
-    "wet_road": true,
-    "weather": "rain"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "wet_road"
-  },
-  {
-   "text": "wet reflective asphalt after rainfall in dry conditions",
-   "predicate": {
-    "wet_road": true,
-    "weather": "dry"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "wet_road"
-  },
-  {
-   "text": "wet reflective asphalt after rainfall in dense traffic",
-   "predicate": {
-    "wet_road": true,
-    "density": "dense"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "wet_road"
-  },
-  {
-   "text": "wet reflective asphalt after rainfall on an empty road",
-   "predicate": {
-    "wet_road": true,
-    "density": "sparse"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "wet_road"
-  },
-  {
-   "text": "standing water pooling on the road",
-   "predicate": {
-    "wet_road": true
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "wet_road"
-  },
-  {
-   "text": "standing water pooling on the road at night",
-   "predicate": {
-    "wet_road": true,
-    "lighting": "night"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "wet_road"
-  },
-  {
-   "text": "standing water pooling on the road in daylight",
-   "predicate": {
-    "wet_road": true,
-    "lighting": "day"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "wet_road"
-  },
-  {
-   "text": "standing water pooling on the road in rain",
-   "predicate": {
-    "wet_road": true,
-    "weather": "rain"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "wet_road"
-  },
-  {
-   "text": "standing water pooling on the road in dry conditions",
-   "predicate": {
-    "wet_road": true,
-    "weather": "dry"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "wet_road"
-  },
-  {
-   "text": "standing water pooling on the road in dense traffic",
-   "predicate": {
-    "wet_road": true,
-    "density": "dense"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "wet_road"
-  },
-  {
-   "text": "standing water pooling on the road on an empty road",
-   "predicate": {
-    "wet_road": true,
-    "density": "sparse"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "wet_road"
-  },
-  {
-   "text": "a lightly damp road surface",
-   "predicate": {
-    "wet_road": true
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "wet_road"
   },
   {
    "text": "a lightly damp road surface at night",
@@ -665,15 +2454,6 @@
    "attribute": "wet_road"
   },
   {
-   "text": "a lightly damp road surface in dry conditions",
-   "predicate": {
-    "wet_road": true,
-    "weather": "dry"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "wet_road"
-  },
-  {
    "text": "a lightly damp road surface in dense traffic",
    "predicate": {
     "wet_road": true,
@@ -687,748 +2467,6 @@
    "predicate": {
     "wet_road": true,
     "density": "sparse"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "wet_road"
-  },
-  {
-   "text": "slick wet pavement throwing reflections",
-   "predicate": {
-    "wet_road": true
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "wet_road"
-  },
-  {
-   "text": "slick wet pavement throwing reflections at night",
-   "predicate": {
-    "wet_road": true,
-    "lighting": "night"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "wet_road"
-  },
-  {
-   "text": "slick wet pavement throwing reflections in daylight",
-   "predicate": {
-    "wet_road": true,
-    "lighting": "day"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "wet_road"
-  },
-  {
-   "text": "slick wet pavement throwing reflections in rain",
-   "predicate": {
-    "wet_road": true,
-    "weather": "rain"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "wet_road"
-  },
-  {
-   "text": "slick wet pavement throwing reflections in dry conditions",
-   "predicate": {
-    "wet_road": true,
-    "weather": "dry"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "wet_road"
-  },
-  {
-   "text": "slick wet pavement throwing reflections in dense traffic",
-   "predicate": {
-    "wet_road": true,
-    "density": "dense"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "wet_road"
-  },
-  {
-   "text": "slick wet pavement throwing reflections on an empty road",
-   "predicate": {
-    "wet_road": true,
-    "density": "sparse"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "wet_road"
-  },
-  {
-   "text": "a low contrast scene where vehicles are barely distinguishable",
-   "predicate": {
-    "low_contrast": true
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "a low contrast scene where vehicles are barely distinguishable at night",
-   "predicate": {
-    "low_contrast": true,
-    "lighting": "night"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "a low contrast scene where vehicles are barely distinguishable in daylight",
-   "predicate": {
-    "low_contrast": true,
-    "lighting": "day"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "a low contrast scene where vehicles are barely distinguishable in rain",
-   "predicate": {
-    "low_contrast": true,
-    "weather": "rain"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "a low contrast scene where vehicles are barely distinguishable in dry conditions",
-   "predicate": {
-    "low_contrast": true,
-    "weather": "dry"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "a low contrast scene where vehicles are barely distinguishable in dense traffic",
-   "predicate": {
-    "low_contrast": true,
-    "density": "dense"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "a low contrast scene where vehicles are barely distinguishable on an empty road",
-   "predicate": {
-    "low_contrast": true,
-    "density": "sparse"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "hazy washed out view with unclear object boundaries",
-   "predicate": {
-    "low_contrast": true
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "hazy washed out view with unclear object boundaries at night",
-   "predicate": {
-    "low_contrast": true,
-    "lighting": "night"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "hazy washed out view with unclear object boundaries in daylight",
-   "predicate": {
-    "low_contrast": true,
-    "lighting": "day"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "hazy washed out view with unclear object boundaries in rain",
-   "predicate": {
-    "low_contrast": true,
-    "weather": "rain"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "hazy washed out view with unclear object boundaries in dry conditions",
-   "predicate": {
-    "low_contrast": true,
-    "weather": "dry"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "hazy washed out view with unclear object boundaries in dense traffic",
-   "predicate": {
-    "low_contrast": true,
-    "density": "dense"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "hazy washed out view with unclear object boundaries on an empty road",
-   "predicate": {
-    "low_contrast": true,
-    "density": "sparse"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "poor visibility with objects blending into the background",
-   "predicate": {
-    "low_contrast": true
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "poor visibility with objects blending into the background at night",
-   "predicate": {
-    "low_contrast": true,
-    "lighting": "night"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "poor visibility with objects blending into the background in daylight",
-   "predicate": {
-    "low_contrast": true,
-    "lighting": "day"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "poor visibility with objects blending into the background in rain",
-   "predicate": {
-    "low_contrast": true,
-    "weather": "rain"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "poor visibility with objects blending into the background in dry conditions",
-   "predicate": {
-    "low_contrast": true,
-    "weather": "dry"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "poor visibility with objects blending into the background in dense traffic",
-   "predicate": {
-    "low_contrast": true,
-    "density": "dense"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "poor visibility with objects blending into the background on an empty road",
-   "predicate": {
-    "low_contrast": true,
-    "density": "sparse"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "murky scene with indistinct vehicle outlines",
-   "predicate": {
-    "low_contrast": true
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "murky scene with indistinct vehicle outlines at night",
-   "predicate": {
-    "low_contrast": true,
-    "lighting": "night"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "murky scene with indistinct vehicle outlines in daylight",
-   "predicate": {
-    "low_contrast": true,
-    "lighting": "day"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "murky scene with indistinct vehicle outlines in rain",
-   "predicate": {
-    "low_contrast": true,
-    "weather": "rain"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "murky scene with indistinct vehicle outlines in dry conditions",
-   "predicate": {
-    "low_contrast": true,
-    "weather": "dry"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "murky scene with indistinct vehicle outlines in dense traffic",
-   "predicate": {
-    "low_contrast": true,
-    "density": "dense"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "murky scene with indistinct vehicle outlines on an empty road",
-   "predicate": {
-    "low_contrast": true,
-    "density": "sparse"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "driving after dark",
-   "predicate": {
-    "lighting": "night"
-   },
-   "stratum": "macro_environmental",
-   "attribute": "lighting=night"
-  },
-  {
-   "text": "a night-time street scene",
-   "predicate": {
-    "lighting": "night"
-   },
-   "stratum": "macro_environmental",
-   "attribute": "lighting=night"
-  },
-  {
-   "text": "bright daytime driving",
-   "predicate": {
-    "lighting": "day"
-   },
-   "stratum": "macro_environmental",
-   "attribute": "lighting=day"
-  },
-  {
-   "text": "a clear daylight street",
-   "predicate": {
-    "lighting": "day"
-   },
-   "stratum": "macro_environmental",
-   "attribute": "lighting=day"
-  },
-  {
-   "text": "driving in rain",
-   "predicate": {
-    "weather": "rain"
-   },
-   "stratum": "macro_environmental",
-   "attribute": "weather=rain"
-  },
-  {
-   "text": "a rainy street",
-   "predicate": {
-    "weather": "rain"
-   },
-   "stratum": "macro_environmental",
-   "attribute": "weather=rain"
-  },
-  {
-   "text": "dry road conditions",
-   "predicate": {
-    "weather": "dry"
-   },
-   "stratum": "macro_environmental",
-   "attribute": "weather=dry"
-  },
-  {
-   "text": "a dry clear day",
-   "predicate": {
-    "weather": "dry"
-   },
-   "stratum": "macro_environmental",
-   "attribute": "weather=dry"
-  },
-  {
-   "text": "dense bumper-to-bumper traffic",
-   "predicate": {
-    "density": "dense"
-   },
-   "stratum": "macro_environmental",
-   "attribute": "density=dense"
-  },
-  {
-   "text": "a congested roadway",
-   "predicate": {
-    "density": "dense"
-   },
-   "stratum": "macro_environmental",
-   "attribute": "density=dense"
-  },
-  {
-   "text": "an almost empty road",
-   "predicate": {
-    "density": "sparse"
-   },
-   "stratum": "macro_environmental",
-   "attribute": "density=sparse"
-  },
-  {
-   "text": "sparse traffic",
-   "predicate": {
-    "density": "sparse"
-   },
-   "stratum": "macro_environmental",
-   "attribute": "density=sparse"
-  },
-  {
-   "text": "moderately busy road",
-   "predicate": {
-    "density": "moderate"
-   },
-   "stratum": "macro_environmental",
-   "attribute": "density=moderate"
-  },
-  {
-   "text": "a few vehicles around",
-   "predicate": {
-    "density": "moderate"
-   },
-   "stratum": "macro_environmental",
-   "attribute": "density=moderate"
-  }
- ],
- "eval": [
-  {
-   "text": "lens covered in rain streaks",
-   "predicate": {
-    "droplets": true
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "droplets"
-  },
-  {
-   "text": "lens covered in rain streaks at night",
-   "predicate": {
-    "droplets": true,
-    "lighting": "night"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "droplets"
-  },
-  {
-   "text": "lens covered in rain streaks in daylight",
-   "predicate": {
-    "droplets": true,
-    "lighting": "day"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "droplets"
-  },
-  {
-   "text": "lens covered in rain streaks in rain",
-   "predicate": {
-    "droplets": true,
-    "weather": "rain"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "droplets"
-  },
-  {
-   "text": "lens covered in rain streaks in dry conditions",
-   "predicate": {
-    "droplets": true,
-    "weather": "dry"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "droplets"
-  },
-  {
-   "text": "lens covered in rain streaks in dense traffic",
-   "predicate": {
-    "droplets": true,
-    "density": "dense"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "droplets"
-  },
-  {
-   "text": "lens covered in rain streaks on an empty road",
-   "predicate": {
-    "droplets": true,
-    "density": "sparse"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "droplets"
-  },
-  {
-   "text": "faint water specks on the lens",
-   "predicate": {
-    "droplets": true
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "droplets"
-  },
-  {
-   "text": "faint water specks on the lens at night",
-   "predicate": {
-    "droplets": true,
-    "lighting": "night"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "droplets"
-  },
-  {
-   "text": "faint water specks on the lens in daylight",
-   "predicate": {
-    "droplets": true,
-    "lighting": "day"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "droplets"
-  },
-  {
-   "text": "faint water specks on the lens in rain",
-   "predicate": {
-    "droplets": true,
-    "weather": "rain"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "droplets"
-  },
-  {
-   "text": "faint water specks on the lens in dry conditions",
-   "predicate": {
-    "droplets": true,
-    "weather": "dry"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "droplets"
-  },
-  {
-   "text": "faint water specks on the lens in dense traffic",
-   "predicate": {
-    "droplets": true,
-    "density": "dense"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "droplets"
-  },
-  {
-   "text": "faint water specks on the lens on an empty road",
-   "predicate": {
-    "droplets": true,
-    "density": "sparse"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "droplets"
-  },
-  {
-   "text": "harsh sun glare low on the horizon",
-   "predicate": {
-    "glare": true
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "glare"
-  },
-  {
-   "text": "harsh sun glare low on the horizon at night",
-   "predicate": {
-    "glare": true,
-    "lighting": "night"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "glare"
-  },
-  {
-   "text": "harsh sun glare low on the horizon in daylight",
-   "predicate": {
-    "glare": true,
-    "lighting": "day"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "glare"
-  },
-  {
-   "text": "harsh sun glare low on the horizon in rain",
-   "predicate": {
-    "glare": true,
-    "weather": "rain"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "glare"
-  },
-  {
-   "text": "harsh sun glare low on the horizon in dry conditions",
-   "predicate": {
-    "glare": true,
-    "weather": "dry"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "glare"
-  },
-  {
-   "text": "harsh sun glare low on the horizon in dense traffic",
-   "predicate": {
-    "glare": true,
-    "density": "dense"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "glare"
-  },
-  {
-   "text": "harsh sun glare low on the horizon on an empty road",
-   "predicate": {
-    "glare": true,
-    "density": "sparse"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "glare"
-  },
-  {
-   "text": "scattered street-light halos",
-   "predicate": {
-    "glare": true
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "glare"
-  },
-  {
-   "text": "scattered street-light halos at night",
-   "predicate": {
-    "glare": true,
-    "lighting": "night"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "glare"
-  },
-  {
-   "text": "scattered street-light halos in daylight",
-   "predicate": {
-    "glare": true,
-    "lighting": "day"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "glare"
-  },
-  {
-   "text": "scattered street-light halos in rain",
-   "predicate": {
-    "glare": true,
-    "weather": "rain"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "glare"
-  },
-  {
-   "text": "scattered street-light halos in dry conditions",
-   "predicate": {
-    "glare": true,
-    "weather": "dry"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "glare"
-  },
-  {
-   "text": "scattered street-light halos in dense traffic",
-   "predicate": {
-    "glare": true,
-    "density": "dense"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "glare"
-  },
-  {
-   "text": "scattered street-light halos on an empty road",
-   "predicate": {
-    "glare": true,
-    "density": "sparse"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "glare"
-  },
-  {
-   "text": "soaked roadway with mirror-like sheen",
-   "predicate": {
-    "wet_road": true
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "wet_road"
-  },
-  {
-   "text": "soaked roadway with mirror-like sheen at night",
-   "predicate": {
-    "wet_road": true,
-    "lighting": "night"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "wet_road"
-  },
-  {
-   "text": "soaked roadway with mirror-like sheen in daylight",
-   "predicate": {
-    "wet_road": true,
-    "lighting": "day"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "wet_road"
-  },
-  {
-   "text": "soaked roadway with mirror-like sheen in rain",
-   "predicate": {
-    "wet_road": true,
-    "weather": "rain"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "wet_road"
-  },
-  {
-   "text": "soaked roadway with mirror-like sheen in dry conditions",
-   "predicate": {
-    "wet_road": true,
-    "weather": "dry"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "wet_road"
-  },
-  {
-   "text": "soaked roadway with mirror-like sheen in dense traffic",
-   "predicate": {
-    "wet_road": true,
-    "density": "dense"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "wet_road"
-  },
-  {
-   "text": "soaked roadway with mirror-like sheen on an empty road",
-   "predicate": {
-    "wet_road": true,
-    "density": "sparse"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "wet_road"
-  },
-  {
-   "text": "patchy wet tarmac",
-   "predicate": {
-    "wet_road": true
    },
    "stratum": "sensor_degradation",
    "attribute": "wet_road"
@@ -1461,15 +2499,6 @@
    "attribute": "wet_road"
   },
   {
-   "text": "patchy wet tarmac in dry conditions",
-   "predicate": {
-    "wet_road": true,
-    "weather": "dry"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "wet_road"
-  },
-  {
    "text": "patchy wet tarmac in dense traffic",
    "predicate": {
     "wet_road": true,
@@ -1488,15 +2517,52 @@
    "attribute": "wet_road"
   },
   {
-   "text": "flat grey scene with little tonal separation",
+   "text": "wet reflective asphalt after rainfall at night",
    "predicate": {
-    "low_contrast": true
+    "wet_road": true,
+    "lighting": "night"
    },
    "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
+   "attribute": "wet_road"
   },
   {
-   "text": "flat grey scene with little tonal separation at night",
+   "text": "wet reflective asphalt after rainfall in daylight",
+   "predicate": {
+    "wet_road": true,
+    "lighting": "day"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "wet reflective asphalt after rainfall in rain",
+   "predicate": {
+    "wet_road": true,
+    "weather": "rain"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "wet reflective asphalt after rainfall in dense traffic",
+   "predicate": {
+    "wet_road": true,
+    "density": "dense"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "wet reflective asphalt after rainfall on an empty road",
+   "predicate": {
+    "wet_road": true,
+    "density": "sparse"
+   },
+   "stratum": "sensor_degradation",
+   "attribute": "wet_road"
+  },
+  {
+   "text": "slightly flat lighting at night",
    "predicate": {
     "low_contrast": true,
     "lighting": "night"
@@ -1505,111 +2571,20 @@
    "attribute": "low_contrast"
   },
   {
-   "text": "flat grey scene with little tonal separation in daylight",
+   "text": "driving after dark",
    "predicate": {
-    "low_contrast": true,
-    "lighting": "day"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "flat grey scene with little tonal separation in rain",
-   "predicate": {
-    "low_contrast": true,
-    "weather": "rain"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "flat grey scene with little tonal separation in dry conditions",
-   "predicate": {
-    "low_contrast": true,
-    "weather": "dry"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "flat grey scene with little tonal separation in dense traffic",
-   "predicate": {
-    "low_contrast": true,
-    "density": "dense"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "flat grey scene with little tonal separation on an empty road",
-   "predicate": {
-    "low_contrast": true,
-    "density": "sparse"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "dim view where shapes lose definition",
-   "predicate": {
-    "low_contrast": true
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "dim view where shapes lose definition at night",
-   "predicate": {
-    "low_contrast": true,
     "lighting": "night"
    },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
+   "stratum": "macro_environmental",
+   "attribute": "lighting=night"
   },
   {
-   "text": "dim view where shapes lose definition in daylight",
+   "text": "a night-time street scene",
    "predicate": {
-    "low_contrast": true,
-    "lighting": "day"
+    "lighting": "night"
    },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "dim view where shapes lose definition in rain",
-   "predicate": {
-    "low_contrast": true,
-    "weather": "rain"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "dim view where shapes lose definition in dry conditions",
-   "predicate": {
-    "low_contrast": true,
-    "weather": "dry"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "dim view where shapes lose definition in dense traffic",
-   "predicate": {
-    "low_contrast": true,
-    "density": "dense"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
-  },
-  {
-   "text": "dim view where shapes lose definition on an empty road",
-   "predicate": {
-    "low_contrast": true,
-    "density": "sparse"
-   },
-   "stratum": "sensor_degradation",
-   "attribute": "low_contrast"
+   "stratum": "macro_environmental",
+   "attribute": "lighting=night"
   },
   {
    "text": "low ambient light driving",
@@ -1620,12 +2595,44 @@
    "attribute": "lighting=night"
   },
   {
-   "text": "midday road scene",
+   "text": "bright daytime driving",
    "predicate": {
     "lighting": "day"
    },
    "stratum": "macro_environmental",
    "attribute": "lighting=day"
+  },
+  {
+   "text": "a clear daylight street",
+   "predicate": {
+    "lighting": "day"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=day"
+  },
+  {
+   "text": "a midday road scene",
+   "predicate": {
+    "lighting": "day"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=day"
+  },
+  {
+   "text": "driving in rain",
+   "predicate": {
+    "weather": "rain"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "weather=rain"
+  },
+  {
+   "text": "a rainy street",
+   "predicate": {
+    "weather": "rain"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "weather=rain"
   },
   {
    "text": "wet weather driving",
@@ -1636,7 +2643,7 @@
    "attribute": "weather=rain"
   },
   {
-   "text": "no precipitation",
+   "text": "dry road conditions",
    "predicate": {
     "weather": "dry"
    },
@@ -1644,12 +2651,60 @@
    "attribute": "weather=dry"
   },
   {
-   "text": "heavy traffic jam",
+   "text": "a dry clear day",
+   "predicate": {
+    "weather": "dry"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "weather=dry"
+  },
+  {
+   "text": "no precipitation on the road",
+   "predicate": {
+    "weather": "dry"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "weather=dry"
+  },
+  {
+   "text": "dense bumper-to-bumper traffic",
    "predicate": {
     "density": "dense"
    },
    "stratum": "macro_environmental",
    "attribute": "density=dense"
+  },
+  {
+   "text": "a congested roadway",
+   "predicate": {
+    "density": "dense"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=dense"
+  },
+  {
+   "text": "a heavy traffic jam",
+   "predicate": {
+    "density": "dense"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=dense"
+  },
+  {
+   "text": "an almost empty road",
+   "predicate": {
+    "density": "sparse"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=sparse"
+  },
+  {
+   "text": "sparse traffic",
+   "predicate": {
+    "density": "sparse"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=sparse"
   },
   {
    "text": "a deserted street",
@@ -1658,6 +2713,22 @@
    },
    "stratum": "macro_environmental",
    "attribute": "density=sparse"
+  },
+  {
+   "text": "a moderately busy road",
+   "predicate": {
+    "density": "moderate"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=moderate"
+  },
+  {
+   "text": "a few vehicles around",
+   "predicate": {
+    "density": "moderate"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "density=moderate"
   },
   {
    "text": "light traffic flow",
@@ -1704,7 +2775,7 @@
    "attribute": "lighting=night+density=sparse"
   },
   {
-   "text": "driving after dark, moderately busy road",
+   "text": "driving after dark, a moderately busy road",
    "predicate": {
     "lighting": "night",
     "density": "moderate"
@@ -1749,7 +2820,7 @@
    "attribute": "lighting=day+density=sparse"
   },
   {
-   "text": "bright daytime driving, moderately busy road",
+   "text": "bright daytime driving, a moderately busy road",
    "predicate": {
     "lighting": "day",
     "density": "moderate"
@@ -1776,7 +2847,7 @@
    "attribute": "weather=rain+density=sparse"
   },
   {
-   "text": "driving in rain, moderately busy road",
+   "text": "driving in rain, a moderately busy road",
    "predicate": {
     "weather": "rain",
     "density": "moderate"
@@ -1803,7 +2874,7 @@
    "attribute": "weather=dry+density=sparse"
   },
   {
-   "text": "dry road conditions, moderately busy road",
+   "text": "dry road conditions, a moderately busy road",
    "predicate": {
     "weather": "dry",
     "density": "moderate"
@@ -1830,7 +2901,25 @@
    "attribute": "weather+lighting"
   },
   {
-   "text": "night-time downpour",
+   "text": "a night-time downpour",
+   "predicate": {
+    "weather": "rain",
+    "lighting": "night"
+   },
+   "stratum": "compositional_heldout",
+   "attribute": "weather+lighting"
+  },
+  {
+   "text": "rainfall on an unlit road",
+   "predicate": {
+    "weather": "rain",
+    "lighting": "night"
+   },
+   "stratum": "compositional_heldout",
+   "attribute": "weather+lighting"
+  },
+  {
+   "text": "driving through rain in darkness",
    "predicate": {
     "weather": "rain",
     "lighting": "night"
@@ -1866,7 +2955,25 @@
    "attribute": "density+lighting"
   },
   {
-   "text": "a light drizzle leaving droplets on the lens combined with driving after dark",
+   "text": "slick pavement in the dark",
+   "predicate": {
+    "wet_road": true,
+    "lighting": "night"
+   },
+   "stratum": "compositional_heldout",
+   "attribute": "wet_road+lighting"
+  },
+  {
+   "text": "indistinct shapes after dark",
+   "predicate": {
+    "low_contrast": true,
+    "lighting": "night"
+   },
+   "stratum": "compositional_heldout",
+   "attribute": "low_contrast+lighting"
+  },
+  {
+   "text": "water droplets smearing the camera lens together with driving after dark",
    "predicate": {
     "droplets": true,
     "lighting": "night"
@@ -1875,7 +2982,7 @@
    "attribute": "droplets+lighting=night"
   },
   {
-   "text": "a light drizzle leaving droplets on the lens combined with driving in rain",
+   "text": "water droplets smearing the camera lens together with driving in rain",
    "predicate": {
     "droplets": true,
     "weather": "rain"
@@ -1884,7 +2991,7 @@
    "attribute": "droplets+weather=rain"
   },
   {
-   "text": "mild light flare at the edge of frame combined with driving after dark",
+   "text": "noticeable glare washing across the image together with driving after dark",
    "predicate": {
     "glare": true,
     "lighting": "night"
@@ -1893,7 +3000,7 @@
    "attribute": "glare+lighting=night"
   },
   {
-   "text": "mild light flare at the edge of frame combined with driving in rain",
+   "text": "noticeable glare washing across the image together with driving in rain",
    "predicate": {
     "glare": true,
     "weather": "rain"
@@ -1902,7 +3009,7 @@
    "attribute": "glare+weather=rain"
   },
   {
-   "text": "a lightly damp road surface combined with driving after dark",
+   "text": "wet reflective asphalt after rainfall together with driving after dark",
    "predicate": {
     "wet_road": true,
     "lighting": "night"
@@ -1911,7 +3018,7 @@
    "attribute": "wet_road+lighting=night"
   },
   {
-   "text": "a lightly damp road surface combined with driving in rain",
+   "text": "wet reflective asphalt after rainfall together with driving in rain",
    "predicate": {
     "wet_road": true,
     "weather": "rain"
@@ -1920,7 +3027,7 @@
    "attribute": "wet_road+weather=rain"
   },
   {
-   "text": "poor visibility with objects blending into the background combined with driving after dark",
+   "text": "hazy washed out view with unclear boundaries together with driving after dark",
    "predicate": {
     "low_contrast": true,
     "lighting": "night"
@@ -1929,7 +3036,7 @@
    "attribute": "low_contrast+lighting=night"
   },
   {
-   "text": "poor visibility with objects blending into the background combined with driving in rain",
+   "text": "hazy washed out view with unclear boundaries together with driving in rain",
    "predicate": {
     "low_contrast": true,
     "weather": "rain"
@@ -1947,7 +3054,7 @@
    "attribute": "weather+lighting"
   },
   {
-   "text": "night driving without rain",
+   "text": "night driving without any rain",
    "predicate": {
     "lighting": "night",
     "weather": "dry"
@@ -1974,25 +3081,7 @@
    "attribute": "density+lighting"
   },
   {
-   "text": "lens droplets but not at night",
-   "predicate": {
-    "droplets": true,
-    "lighting": "day"
-   },
-   "stratum": "negated",
-   "attribute": "droplets+lighting"
-  },
-  {
-   "text": "glare that is not from headlights",
-   "predicate": {
-    "glare": true,
-    "lighting": "day"
-   },
-   "stratum": "negated",
-   "attribute": "glare+lighting"
-  },
-  {
-   "text": "water droplets smearing the camera lens but not after dark",
+   "text": "rain beading across the lens but not after dark",
    "predicate": {
     "droplets": true,
     "lighting": "day"
@@ -2001,7 +3090,7 @@
    "attribute": "droplets"
   },
   {
-   "text": "rain beading on the lens obscuring the view without rainfall",
+   "text": "heavy rain spatter obscuring the camera without rainfall",
    "predicate": {
     "droplets": true,
     "weather": "dry"
@@ -2010,7 +3099,7 @@
    "attribute": "droplets"
   },
   {
-   "text": "blinding headlight bloom from oncoming traffic but not after dark",
+   "text": "specular glare washing out the image but not after dark",
    "predicate": {
     "glare": true,
     "lighting": "day"
@@ -2019,7 +3108,7 @@
    "attribute": "glare"
   },
   {
-   "text": "specular glare washing out the image without rainfall",
+   "text": "strong headlight bloom from oncoming traffic without rainfall",
    "predicate": {
     "glare": true,
     "weather": "dry"
@@ -2028,7 +3117,7 @@
    "attribute": "glare"
   },
   {
-   "text": "wet reflective asphalt after rainfall but not after dark",
+   "text": "slick wet pavement throwing reflections but not after dark",
    "predicate": {
     "wet_road": true,
     "lighting": "day"
@@ -2046,7 +3135,7 @@
    "attribute": "wet_road"
   },
   {
-   "text": "a low contrast scene where vehicles are barely distinguishable but not after dark",
+   "text": "poor visibility with objects blending in but not after dark",
    "predicate": {
     "low_contrast": true,
     "lighting": "day"
@@ -2055,13 +3144,202 @@
    "attribute": "low_contrast"
   },
   {
-   "text": "hazy washed out view with unclear object boundaries without rainfall",
+   "text": "a low contrast scene where vehicles are barely distinguishable without rainfall",
    "predicate": {
     "low_contrast": true,
     "weather": "dry"
    },
    "stratum": "negated",
    "attribute": "low_contrast"
+  },
+  {
+   "text": "a night-time street scene with a rainy street",
+   "predicate": {
+    "lighting": "night",
+    "weather": "rain"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=night+weather=rain"
+  },
+  {
+   "text": "a night-time street scene with a dry clear day",
+   "predicate": {
+    "lighting": "night",
+    "weather": "dry"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=night+weather=dry"
+  },
+  {
+   "text": "a night-time street scene with a congested roadway",
+   "predicate": {
+    "lighting": "night",
+    "density": "dense"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=night+density=dense"
+  },
+  {
+   "text": "a night-time street scene with sparse traffic",
+   "predicate": {
+    "lighting": "night",
+    "density": "sparse"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=night+density=sparse"
+  },
+  {
+   "text": "a night-time street scene with a few vehicles around",
+   "predicate": {
+    "lighting": "night",
+    "density": "moderate"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=night+density=moderate"
+  },
+  {
+   "text": "a clear daylight street with a rainy street",
+   "predicate": {
+    "lighting": "day",
+    "weather": "rain"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=day+weather=rain"
+  },
+  {
+   "text": "a clear daylight street with a dry clear day",
+   "predicate": {
+    "lighting": "day",
+    "weather": "dry"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=day+weather=dry"
+  },
+  {
+   "text": "a clear daylight street with a congested roadway",
+   "predicate": {
+    "lighting": "day",
+    "density": "dense"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=day+density=dense"
+  },
+  {
+   "text": "a clear daylight street with sparse traffic",
+   "predicate": {
+    "lighting": "day",
+    "density": "sparse"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=day+density=sparse"
+  },
+  {
+   "text": "a clear daylight street with a few vehicles around",
+   "predicate": {
+    "lighting": "day",
+    "density": "moderate"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=day+density=moderate"
+  },
+  {
+   "text": "a rainy street with a congested roadway",
+   "predicate": {
+    "weather": "rain",
+    "density": "dense"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "weather=rain+density=dense"
+  },
+  {
+   "text": "a rainy street with sparse traffic",
+   "predicate": {
+    "weather": "rain",
+    "density": "sparse"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "weather=rain+density=sparse"
+  },
+  {
+   "text": "a rainy street with a few vehicles around",
+   "predicate": {
+    "weather": "rain",
+    "density": "moderate"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "weather=rain+density=moderate"
+  },
+  {
+   "text": "a dry clear day with a congested roadway",
+   "predicate": {
+    "weather": "dry",
+    "density": "dense"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "weather=dry+density=dense"
+  },
+  {
+   "text": "a dry clear day with sparse traffic",
+   "predicate": {
+    "weather": "dry",
+    "density": "sparse"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "weather=dry+density=sparse"
+  },
+  {
+   "text": "a dry clear day with a few vehicles around",
+   "predicate": {
+    "weather": "dry",
+    "density": "moderate"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "weather=dry+density=moderate"
+  },
+  {
+   "text": "wet weather driving during low ambient light driving",
+   "predicate": {
+    "lighting": "night",
+    "weather": "rain"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=night+weather=rain"
+  },
+  {
+   "text": "no precipitation on the road during low ambient light driving",
+   "predicate": {
+    "lighting": "night",
+    "weather": "dry"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=night+weather=dry"
+  },
+  {
+   "text": "a heavy traffic jam during low ambient light driving",
+   "predicate": {
+    "lighting": "night",
+    "density": "dense"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=night+density=dense"
+  },
+  {
+   "text": "a deserted street during low ambient light driving",
+   "predicate": {
+    "lighting": "night",
+    "density": "sparse"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=night+density=sparse"
+  },
+  {
+   "text": "light traffic flow during low ambient light driving",
+   "predicate": {
+    "lighting": "night",
+    "density": "moderate"
+   },
+   "stratum": "macro_environmental",
+   "attribute": "lighting=night+density=moderate"
   }
  ]
 }
