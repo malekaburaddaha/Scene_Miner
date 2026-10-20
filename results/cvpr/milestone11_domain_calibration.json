@@ -1,0 +1,193 @@
+{
+  "n_eval_scenes": 602,
+  "topk": 5,
+  "skew_target_pts": 2.0,
+  "map_budget": 0.003,
+  "protocol": "(q, alpha) selected on the 240 TRAIN queries, reported once on the 150 held-out EVAL queries; scored scenes are always from the 602-scene eval split",
+  "rankers": {
+    "SceneMiner_v2.2": {
+      "raw": {
+        "mAP": 0.5177650706298128,
+        "skew_pts": 1.138521021272712,
+        "skew_CI95": [
+          -4.925729615522282,
+          7.595419756359758
+        ],
+        "skew_within_target": true
+      },
+      "milestone7_full_zscore": {
+        "mAP": 0.48539849723186373,
+        "skew_pts": -24.461478978727293,
+        "dmAP": -0.03236657339794907
+      },
+      "selected": {
+        "q": 0.2,
+        "alpha": 1.0,
+        "train_skew_pts": 7.145495701171142,
+        "train_dmAP": -0.0029114039649442702
+      },
+      "eval": {
+        "mAP": 0.5284795078876333,
+        "skew_pts": 3.138521021272712,
+        "dmAP": 0.010714437257820508,
+        "mAP_CI95": [
+          0.4826733898115494,
+          0.5723547900368533
+        ],
+        "skew_CI95": [
+          -2.0664221379335315,
+          8.514714868816252
+        ],
+        "dmAP_CI95": [
+          0.0005379326499869304,
+          0.02180373298399341
+        ],
+        "perm_p_dmAP": 0.055944055944055944
+      },
+      "targets_met": {
+        "skew_within_target": false,
+        "within_map_budget": true
+      },
+      "best_option": "no_calibration",
+      "skew_target_resolvable": false
+    },
+    "SceneMiner_v2.1": {
+      "raw": {
+        "mAP": 0.5312353720009003,
+        "skew_pts": 8.738521021272714,
+        "skew_CI95": [
+          3.3399994351302804,
+          14.273718794130799
+        ],
+        "skew_within_target": false
+      },
+      "milestone7_full_zscore": {
+        "mAP": 0.4924847702125876,
+        "skew_pts": -23.794812312060618,
+        "dmAP": -0.038750601788312744
+      },
+      "selected": {
+        "q": 0.3,
+        "alpha": 0.15,
+        "train_skew_pts": 9.812162367837809,
+        "train_dmAP": -0.0028190556634646313
+      },
+      "eval": {
+        "mAP": 0.5216686468904531,
+        "skew_pts": 2.738521021272712,
+        "dmAP": -0.009566725110447205,
+        "mAP_CI95": [
+          0.47626094808360636,
+          0.5659536480154621
+        ],
+        "skew_CI95": [
+          -2.799261152537199,
+          8.470667977336623
+        ],
+        "dmAP_CI95": [
+          -0.016016618820027397,
+          -0.0036610399979719968
+        ],
+        "perm_p_dmAP": 0.001998001998001998
+      },
+      "targets_met": {
+        "skew_within_target": false,
+        "within_map_budget": false
+      },
+      "best_option": "negative_tail",
+      "skew_target_resolvable": false
+    },
+    "zeroshot_SigLIP2": {
+      "raw": {
+        "mAP": 0.4445509259879134,
+        "skew_pts": -16.19481231206062,
+        "skew_CI95": [
+          -20.77925549170439,
+          -11.08493874951766
+        ],
+        "skew_within_target": false
+      },
+      "milestone7_full_zscore": {
+        "mAP": 0.421802994340499,
+        "skew_pts": -10.594812312060622,
+        "dmAP": -0.0227479316474144
+      },
+      "selected": {
+        "q": 0.4,
+        "alpha": 0.05,
+        "train_skew_pts": 1.8121623678378076,
+        "train_dmAP": -0.000587339483130167
+      },
+      "eval": {
+        "mAP": 0.4356674034443351,
+        "skew_pts": -9.528145645393954,
+        "dmAP": -0.008883522543578326,
+        "mAP_CI95": [
+          0.39383174596971743,
+          0.4755306012766277
+        ],
+        "skew_CI95": [
+          -15.878964265829095,
+          -3.1862400765864956
+        ],
+        "dmAP_CI95": [
+          -0.021609066023666218,
+          0.0018720043614988686
+        ],
+        "perm_p_dmAP": 0.13686313686313686
+      },
+      "targets_met": {
+        "skew_within_target": false,
+        "within_map_budget": false
+      },
+      "best_option": "negative_tail",
+      "skew_target_resolvable": false
+    },
+    "logit_VLM_lookup": {
+      "raw": {
+        "mAP": 0.5588775092174744,
+        "skew_pts": -6.556676950630351,
+        "skew_CI95": [
+          -12.505756045092681,
+          -0.2938074405845359
+        ],
+        "skew_within_target": false
+      },
+      "milestone7_full_zscore": {
+        "mAP": 0.5865415068348341,
+        "skew_pts": -17.40005044460625,
+        "dmAP": 0.027663997617359715
+      },
+      "selected": {
+        "q": 0.4,
+        "alpha": 0.2,
+        "train_skew_pts": -0.5823194023251248,
+        "train_dmAP": -0.0028270020596069534
+      },
+      "eval": {
+        "mAP": 0.5674355853193155,
+        "skew_pts": -1.2554721313532424,
+        "dmAP": 0.008558076101841117,
+        "mAP_CI95": [
+          0.5090497587338937,
+          0.6257460576710608
+        ],
+        "skew_CI95": [
+          -10.327189457421545,
+          7.708210870829566
+        ],
+        "dmAP_CI95": [
+          -0.008343633632128358,
+          0.02382434096953839
+        ],
+        "perm_p_dmAP": 0.32867132867132864
+      },
+      "targets_met": {
+        "skew_within_target": true,
+        "within_map_budget": true
+      },
+      "best_option": "negative_tail",
+      "skew_target_resolvable": false
+    }
+  }
+}
