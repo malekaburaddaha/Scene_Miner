@@ -1,0 +1,6 @@
+{
+  "tautology_mAP": 1.0,
+  "contamination_delta": 0.3349305494045334,
+  "train_mAP": 0.7863721752305114,
+  "val_mAP": 0.451441625825978
+}

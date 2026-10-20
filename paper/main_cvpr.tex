@@ -1,0 +1,524 @@
+% =====================================================================
+% CVPR submission - SceneMiner: auditing and repairing a scene-mining
+% pipeline for autonomous driving.
+%
+% Compiles standalone with article.cls. For submission, drop the official
+% CVPR author kit (cvpr.sty, ieeenat_fullname.bst) into this directory and
+% the \IfFileExists switch below picks it up automatically.
+% =====================================================================
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\IfFileExists{cvpr.sty}{\usepackage[review]{cvpr}}{%
+  \usepackage[margin=0.72in]{geometry}%
+  \usepackage{times}%
+  \newcommand{\cvprPaperID}{0000}}
+
+\usepackage{graphicx,amsmath,amssymb,booktabs}
+\usepackage[table]{xcolor}
+\usepackage{caption}
+\usepackage[colorlinks,linkcolor=black,citecolor=black,urlcolor=black]{hyperref}
+\captionsetup{font=small,labelfont=bf}
+
+\newcommand{\best}[1]{\textbf{#1}}
+\newcommand{\nb}[1]{\textcolor{red}{\textbf{#1}}}
+
+\title{SceneMiner: What Survives an Audit of Language-Guided\\
+       Hard-Scene Mining for Autonomous Driving}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Language-guided scene mining promises to surface the rare, degraded driving
+scenes that dominate autonomy failures. We report an audit of such a pipeline,
+and the system that survives it. Three findings organise the paper. First, the
+benchmark the method was tuned on is \emph{circular}: relevance is a predicate
+over cached vision--language attributes, so an index that reads those same
+attributes scores exactly $1.000$~mAP and every learned ranker is measured
+against an unreachable tautology. Second, the downstream 3D detector used to
+certify mined scenes was trained on $278$ of them, inflating per-scene mAP by
+$+0.3349$ ($+74\%$) through memorisation. Third, a query-conditioned router
+placed $96.7$--$99.2\%$ of its weight on a single vision--language teacher,
+because that teacher's margins are a tautological oracle for its own
+pseudo-labels; the resulting model collapsed from $0.7355$ to $0.4189$~mAP on an
+external corpus. Repairing the third defect exposed a more general one: the
+router's convex weights were applied to parts differing by $28.1\times$ in
+scale, so a nominal $50/50$ blend was in effect $96\%$ one channel, and the
+blend scored \emph{below both signals it blended}. Our repaired model,
+SceneMiner~v2.2, standardises the routed parts, caps routing entropy, and
+declares modality availability explicitly, raising external transfer from
+$0.4189$ to $0.5952$~mAP at a cost of $0.029$~mAP in domain. It does not beat
+zero-shot SigLIP2 on that external corpus, and we report this. Finally, on $150$
+uncontaminated validation scenes we show the premise behind the whole enterprise
+does hold, once measured correctly: front-camera degradation costs the detector
+$0.0906$ front-sector mAP and $7.3$ points of false-positive rate
+($q<0.05$), an effect a $360^\circ$ scene average dilutes below detectability.
+\end{abstract}
+
+% =====================================================================
+\section{Introduction}
+% =====================================================================
+
+Autonomy failures concentrate in a thin tail of the data: rain beading on a lens,
+headlight bloom at night, a wet road that destroys the texture a detector relies
+on. Finding those scenes in a corpus of millions, from a natural-language
+description, is the scene-mining problem. The appeal is obvious and the
+evaluation is treacherous, because the attributes that define a ``hard'' scene
+are usually themselves produced by a model.
+
+This paper is an audit. We took a scene-mining pipeline that reported strong
+numbers, and we tried to reproduce the mechanism behind each claim rather than
+the claim itself. Several did not survive. Reporting that honestly, together
+with the repairs, is more useful to the community than another leaderboard
+increment --- particularly because two of the three defects we found are
+structural and will recur in any pipeline built the same way.
+
+\paragraph{Contributions.}
+\begin{enumerate}\setlength{\itemsep}{1pt}
+\item \textbf{A circularity result} (\S\ref{sec:d1}). When relevance is defined
+  as a predicate over cached VLM attributes, an attribute index attains
+  $1.000$~mAP by construction. We quantify how far that is from human judgement:
+  the VLM's precision against $550$ human-labelled scenes is $0.50$--$0.68$.
+\item \textbf{A contamination result} (\S\ref{sec:d2}). The 3D detector used to
+  certify mined scenes scores $0.7864$~mAP on scenes it was trained on against
+  $0.4514$ on unseen validation scenes: $+0.3349$ mAP, $+74\%$, of pure
+  memorisation.
+\item \textbf{A routing-collapse result and its deeper cause} (\S\ref{sec:d3}).
+  We show the collapse, show that fixing it changes external transfer by
+  $+0.0004$, and identify the actual mechanism: convex routing over
+  parts whose scales differ by $28.1\times$.
+\item \textbf{SceneMiner~v2.2} (\S\ref{sec:method}), which repairs these defects,
+  and an honest account of what it costs (\S\ref{sec:results}).
+\item \textbf{A targeted validation of the premise} (\S\ref{sec:premise}):
+  front-camera degradation does measurably damage 3D detection, at
+  $0.42$--$0.74\sigma$, surviving multiple-comparison correction.
+\end{enumerate}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig1_architecture.pdf}
+\caption{\textbf{SceneMiner v2.2.} Stage~1 is frozen and cached once per scene.
+Stage~2 is $4.68$M trainable parameters: base parts are standardised by
+\textsc{PartNorm} before a query-conditioned router combines them under an
+entropy floor, and a zero-initialised gate adds a cross-attention residual so
+that $s\equiv s_{\mathrm{base}}$ at initialisation. In monocular mode the 3D
+tokens are masked out of cross-attention \emph{and} the routing mass is
+renormalised over the channels that remain.}
+\label{fig:arch}
+\end{figure*}
+
+% =====================================================================
+\section{Setup}
+% =====================================================================
+
+\paragraph{Corpus and splits.} $1508$ scenes drawn from nuScenes and Waymo,
+split \emph{segment-disjoint} into $906$ training scenes ($422$ nuScenes, $484$
+Waymo, from $121$ segments) and $602$ evaluation scenes ($278$, $324$, from $81$
+segments). No evaluated scene contributes a gradient, and no segment straddles
+the split.
+
+\paragraph{Stage 1 (frozen).} BEVFormer with a $50\times50$ BEV grid and a
+motion head supplies a $256$-d scene embedding $\mathbf{e}$ and a scalar
+physical-risk score $r$; a BLIP-2 Q-Former supplies $20$ scene-tag logits
+$\mathbf{t}$; Qwen2.5-VL-3B supplies a $2048$-d visual token $\mathbf{v}$ and
+four degradation margins $\mathbf{m}$ (droplets, glare, wet road, low contrast),
+each the log-odds of \emph{yes} against \emph{no} for a fixed question;
+SigLIP2 ViT-B/16 supplies aligned image and text embeddings. All are computed
+once and cached.
+
+\paragraph{Queries.} $390$ natural-language queries, $240$ train and $150$
+evaluation, over four strata: sensor degradation ($62$), macro-environmental
+($58$), compositional held-out ($18$), and negated ($12$). Every compositional
+predicate appearing in evaluation is withheld from training by construction.
+
+\paragraph{Human ground truth.} One rater labelled $600$ scenes for the four
+degradation attributes; $550$ are used for evaluation. These labels never enter
+training.
+
+% =====================================================================
+\section{Audit Discovery 1: the benchmark is circular}
+\label{sec:d1}
+% =====================================================================
+
+The evaluation suite defines a scene as relevant to a query when it satisfies a
+predicate over cached attributes --- $\{\texttt{droplets}{=}\texttt{true}\}$,
+$\{\texttt{lighting}{=}\texttt{night}\}$, and conjunctions thereof. Those
+attributes are the Stage-1 VLM's own outputs. An index that simply reads them
+therefore scores, on the $150$-query evaluation suite,
+\[
+\text{mAP}=1.000,\quad \text{P@5}=0.992,\quad \text{NDCG@10}=1.000 .
+\]
+This is not a strong baseline. It is the benchmark restating its own definition,
+and it means every learned number on this suite is measured against an
+unreachable ceiling (Fig.~\ref{fig:audit}a). Any method that moves \emph{towards}
+the VLM's attribute decisions scores better, whether or not those decisions are
+correct.
+
+They are often not. Against the $550$ human-labelled scenes, the VLM's precision
+on its own four attributes ranges from $0.50$ to $0.68$: between a third and a
+half of the scenes it flags are false positives by human judgement. A benchmark
+that rewards agreement with this signal rewards reproducing its errors.
+
+\paragraph{Consequence.} We retain the suite but report the attribute index
+explicitly as a \emph{tautological ceiling} rather than a baseline, and we treat
+the $550$ human-labelled scenes and the external corpus of \S\ref{sec:results}
+as the evaluations that carry evidential weight. The compositional held-out and
+negated strata remain informative within the suite, because their predicates
+never appear in training.
+
+% =====================================================================
+\section{Audit Discovery 2: the certifying detector is contaminated}
+\label{sec:d2}
+% =====================================================================
+
+A scene-mining system is ultimately justified by a downstream claim: the scenes
+it retrieves are ones the perception stack handles badly. Testing that requires
+a detector, and the detector must not have memorised the scenes.
+
+We evaluated \texttt{bevformer\_base} (globally $0.4164$~mAP / $0.5173$~NDS,
+reproducing the published checkpoint) per scene under the official nuScenes
+protocol, using \texttt{accumulate} and \texttt{calc\_ap} rather than a
+hand-rolled matcher.\footnote{An earlier hand-rolled, class-agnostic matcher
+inverted the signal entirely, scoring night scenes $150\times$ higher than day
+scenes ($r=+0.96$). Under the official protocol the ordering is the expected
+one: night $0.4171$ against day $0.4553$. We flag this because per-scene
+detection metrics are easy to compute incorrectly in a way that looks plausible.}
+
+On the $278$ corpus scenes drawn from the nuScenes \emph{training} split --- the
+split the detector was trained on --- per-scene mAP is $0.7864$. On $150$
+nuScenes \emph{validation} scenes it never saw, it is $0.4514$. The gap is
+\[
++0.3349\ \text{mAP} \;=\; +74\% ,
+\]
+and it is pure memorisation (Fig.~\ref{fig:audit}b). Any ``downstream utility''
+measured on the contaminated scenes is measuring recall of the training set.
+
+\paragraph{Consequence.} All downstream claims in this paper are computed on the
+$150$ uncontaminated validation scenes only (\S\ref{sec:premise}).
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig3_audit.pdf}
+\caption{\textbf{The two structural defects.} (a) Relevance is a predicate over
+the same cached attributes an index can read, so the index scores $1.000$ by
+construction; learned rankers are measured against a tautology. (b) The
+certifying 3D detector scores $+0.3349$~mAP higher ($+74\%$) on scenes it was
+trained on than on unseen validation scenes.}
+\label{fig:audit}
+\end{figure*}
+
+% =====================================================================
+\section{Audit Discovery 3: routing collapse, and what actually caused the
+         transfer failure}
+\label{sec:d3}
+% =====================================================================
+
+The previous model, v2.1, combines three base signals with query-conditioned
+weights $\mathbf{w}(q)=\mathrm{softmax}(W q/\tau)$: a SigLIP2 image--text
+cosine, a selected VLM margin, and a metadata prior. Reading the weights on the
+four canonical queries shows near-total collapse onto one channel:
+
+\begin{center}\small
+\begin{tabular}{lcc}
+\toprule
+attribute & v2.1 margin weight & v2.2 \\
+\midrule
+droplets & $0.987$ & $0.560$\\
+glare & $0.975$ & $0.625$\\
+wet road & $0.992$ & $0.607$\\
+low contrast & $0.967$ & $0.692$\\
+\midrule
+mean & $0.980$ & $\best{0.535}$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The cause is a \emph{teacher shortcut}. Training targets are derived from the
+VLM's own margins, so the margin channel is a tautological oracle for its own
+labels; a router minimising training loss should route everything to it. In
+domain this is invisible. Out of domain it should be fatal, and indeed v2.1
+scores $0.4189$~mAP on BDD100K against $0.6218$ for zero-shot SigLIP2.
+
+\paragraph{The obvious explanation is wrong.} We built a variant with the
+collapse repaired --- channel dropout, an entropy floor, explicit modality
+masking --- and measured external transfer: $0.4177 \rightarrow 0.4181$, a gain
+of $0.0004$. Inspecting the router on BDD100K's query phrasings showed why: it
+was \emph{already} distributed there, $[0.301, 0.392, 0.307]$, not collapsed.
+The collapse is query-specific, because $W$ is a linear map of the query
+embedding and BDD100K's phrasings are unseen.
+
+\paragraph{The real mechanism.} v2.1's blend of two signals scored \emph{below
+both of them}: $0.4181$, against $0.6218$ for the cosine alone and $0.5871$ for
+the margin alone. A genuine convex combination cannot do that, so the parts
+cannot have been commensurate. Measuring their dispersion on BDD100K:
+
+\begin{center}\small
+\begin{tabular}{lcc}
+\toprule
+base part & std & mean $|\cdot|$ \\
+\midrule
+SigLIP2 cosine & $0.0193$ & $0.0840$\\
+VLM margin ($\tanh$ of a $z$-scored logit) & $0.5419$ & $0.4719$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The margin carries $28.1\times$ the spread of the cosine, so a nominal $50/50$
+routing weight is roughly $96\%$ margin in effect. The same gap is visible
+\emph{in training}, with no external data: the running statistics of our
+\textsc{PartNorm} layer converge to $[0.031, 0.564, 0.166]$. We state the lesson
+generally:
+
+\begin{quote}\itshape
+A routing weight is an influence weight only if the routed quantities are
+standardised. A convex combination over incommensurate parts is not a
+combination; it is the largest-scale part with extra steps.
+\end{quote}
+
+\paragraph{Two further defects, reported for completeness.} (i) The learned
+channel selector, a linear map fit on $72$ training phrasings, chose the wrong
+margin channel on $8$ of $12$ external queries, at a maximum probability of
+$0.26$ --- a near-uniform average of all four margins. SigLIP2 is trained for
+text--\emph{image} alignment, so its text space is anisotropic and raw text--text
+cosine collapses onto a generic direction; mean-centring the embeddings raises
+agreement with a held-out a-priori channel map from $6/12$ to $10/12$. (ii) Our
+own external evaluation contained two errors: the lookup baseline selected its
+margin channel by correlation \emph{with the test labels}, and the margin
+columns were permuted relative to training order, swapping droplets and wet road
+on the way into the model. Both are fixed; the oracle changed the baseline by
+only $0.0039$, the permutation changed our model by $0.0477$.
+
+% =====================================================================
+\section{SceneMiner v2.2}
+\label{sec:method}
+% =====================================================================
+
+Stage~2 scores a (query, scene) pair as
+\begin{equation}
+s(q,i) \;=\; \underbrace{\mathbf{w}(q)^{\!\top}\,
+             \widetilde{\mathbf{p}}(q,i)}_{\text{routed base}}
+           \;+\; \underbrace{g(q)\,\rho(q,i)}_{\text{gated residual}},
+\end{equation}
+with $4.68$M trainable parameters (Fig.~\ref{fig:arch}). Scoring an entire
+$1508$-scene corpus for one query takes $5.91\pm0.02$\,ms on an A40
+($3.9\,\mu$s per scene).
+
+\paragraph{Base parts and \textsc{PartNorm}.} The three raw parts are a SigLIP2
+cosine, a query-selected VLM margin, and a query-selected metadata prior. Each
+is standardised by running statistics,
+$\widetilde{p}_k = (p_k - \mu_k)/\sqrt{\sigma_k^2+\epsilon}$, updated during
+training and frozen at inference, so that $\mathbf{w}$ is an influence weight.
+
+\paragraph{Channel dropout.} On $50\%$ of steps the VLM margin is removed from
+both the base score and the fusion memory; on $30\%$ the BEV embedding, tag
+vector and risk scalar are removed. A router that bets everything on one channel
+pays whenever that channel vanishes: dropout \emph{prices} the shortcut rather
+than forbidding it.
+
+\paragraph{Entropy floor.} $\lambda_{\mathrm{ent}}\,
+\mathrm{relu}(\max_k w_k - 0.70)^2$ with $\lambda_{\mathrm{ent}}=2$. It is
+exactly zero once the router is distributed, so it never fights a healthy
+solution. It is a soft batch-mean penalty, not a projection: four of five seeds
+end below $0.70$, one at $0.724$.
+
+\paragraph{Cross-modal agreement distillation.} Rather than trusting either
+teacher, we weight each training pair by whether they corroborate,
+$\tfrac12(1+\tanh(\mathrm{cos}_z)\tanh(m_z))$, floored at $0.30$. On our data
+$37.4\%$ of pairs ($13{,}929/37{,}208$) are down-weighted for teacher
+disagreement. \emph{No human label enters training}; agreement is computed
+between two frozen Stage-1 signals, so the $550$ human scenes remain a clean
+test set.
+
+\paragraph{Explicit modality availability.} A monocular corpus has no BEV
+embedding, tag vector or risk scalar. Feeding zeros, as v2.1 did, is not the
+same as declaring a modality absent: the router still spends weight on a channel
+whose value is a constant. v2.2 takes a \texttt{has\_3d} flag that masks those
+tokens out of cross-attention and \emph{renormalises} $\mathbf{w}$ over the
+channels that remain.
+
+\paragraph{Identity-preserving initialisation.} $W$, the two selectors and the
+gate head are zero-initialised, so routing is uniform and $s\equiv
+s_{\mathrm{base}}$ exactly at step $0$ ($\max|s-s_{\mathrm{base}}|=0$): training
+can only add to a zero-shot prior.
+
+% =====================================================================
+\section{Results}
+\label{sec:results}
+% =====================================================================
+
+\begin{table}[t]\centering\small
+\caption{\textbf{Human ground truth}, $550$ scenes, macro-mAP over four
+attributes. Calibration refits \emph{routing weights only} on $4/5$ of the human
+scenes and scores on the held-out $1/5$.}
+\label{tab:human}
+\begin{tabular}{lc}
+\toprule
+ranker & mAP \\
+\midrule
+SceneMiner v2.1 $+$ human calibration & \best{0.7924} \\
+SceneMiner v2.2 $+$ human calibration & $0.7656$ \\
+SceneMiner v2.1 (zero-leakage) & $0.7355$ \\
+logit VLM lookup & $0.7325$ \\
+SceneMiner v2.2 (monocular) & $0.7167$ \\
+SceneMiner v2.2 (zero-leakage) & $0.7065$ \\
+zero-shot SigLIP2 & $0.5688$ \\
+metadata prior & $0.5297$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[t]\centering\small
+\caption{\textbf{External transfer}, BDD100K: $1000$ images, $12$ queries,
+native human weather/time-of-day labels, chance $0.2623$. The corpus is
+monocular, so only the portable part of the model crosses. $^\dagger$selects its
+margin channel using the test labels; an upper bound, not a baseline.}
+\label{tab:bdd}
+\begin{tabular}{lccc}
+\toprule
+ranker & mAP & P@5 & NDCG@10\\
+\midrule
+zero-shot SigLIP2 & \best{0.6218} & \best{0.8500} & \best{0.8088}\\
+\textbf{SceneMiner v2.2} (monocular) & $0.5952$ & $0.7500$ & $0.7892$\\
+logit VLM lookup$^\dagger$ & $0.5910$ & $0.6667$ & $0.6722$\\
+logit VLM lookup & $0.5871$ & $0.7167$ & $0.7054$\\
+SceneMiner v2.1 (portable) & $0.4189$ & $0.5500$ & $0.5524$\\
+flat VLM lookup & $0.3817$ & $0.5500$ & $0.5114$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig2_qualitative.pdf}
+\caption{\textbf{Qualitative retrievals.} SceneMiner v2.2, trained on nuScenes
+and Waymo, applied unchanged to monocular BDD100K. Ranks are over the $602$-scene
+evaluation split (left, blue) and the $1000$-image external corpus (right,
+orange).}
+\label{fig:qual}
+\end{figure*}
+
+\paragraph{External transfer improves markedly; it does not win.}
+Table~\ref{tab:bdd}. v2.2 raises BDD100K mAP from $0.4189$ to $0.5952$
+($+0.1763$) and NDCG@10 from $0.5524$ to $0.7892$, beating both lookup
+baselines including the oracle variant on all three metrics. It remains
+$0.027$~mAP \emph{below} zero-shot SigLIP2. We state this plainly: on an
+external corpus with independent human labels, our mined ranking does not beat a
+frozen off-the-shelf vision--language model on mAP, though it leads the
+VLM-margin baselines that a mining pipeline would otherwise use.
+
+\paragraph{In domain, the repair costs accuracy.} Table~\ref{tab:human}. Zero-leakage
+macro-mAP falls $0.7355\rightarrow0.7065$ and the calibrated figure
+$0.7924\rightarrow0.7656$. The clearest cost is VLM false-negative recovery on
+glare, which falls from $7/20$ to $1/20$: v2.1 found VLM-missed glare scenes
+\emph{because} it leaned on the glare margin at $0.975$ weight, whose
+near-threshold tail still ranks them above the bulk. Capping that weight
+discards the signal doing the work. Recovering a teacher's false negatives and
+refusing to over-trust that teacher are, on this evidence, in direct tension.
+
+\paragraph{Ablations, validated in domain.} On the $150$-query suite, removing
+\textsc{PartNorm} costs $0.0288$~mAP and hurts in $4/4$ strata; removing text
+mean-centring costs $0.0018$ and hurts in $4/4$. \textsc{PartNorm} is thus
+justified without reference to the external set. Mean-centring is only neutral
+in domain --- expected, since in-domain phrasings were seen in training --- and
+its large benefit was measured on BDD100K. We disclose that this one design
+choice was informed by the external set, and performed no further tuning against
+it.
+
+\paragraph{Domain skew.} Per-domain $z$-scoring, used previously, overcorrects:
+v2.1's top-$5$ nuScenes skew swings from $+8.7$ to $-23.8$ points while mAP
+falls $0.0388$. Estimating the offset only from each domain's \emph{negative
+tail}, where relevance prevalence does not contaminate the estimate, and
+selecting $(q,\alpha)$ on the $240$ training queries, reduces v2.1's skew to
+$+2.7$ points. v2.2 barely needs it: its raw skew is $+1.1$ points, because
+standardising the parts removed most of the skew as a side effect. We note that
+bootstrap $95\%$ CI widths on skew are $9.7$--$12.5$ points at $n=150$ queries,
+so differences of a few points here should not be over-read.
+
+% =====================================================================
+\section{Does the premise hold? A targeted test}
+\label{sec:premise}
+% =====================================================================
+
+Everything above presumes camera degradation damages downstream perception. Our
+first attempt to verify this found nothing --- every effect below $0.07\sigma$.
+That test was mis-specified: it averaged scene mAP over six cameras and
+$360^\circ$ while the degradation signal is read from one camera. Only $23.4\%$
+of nuScenes ground-truth boxes fall inside the CAM\_FRONT field of view
+($32.6^\circ$ half-angle, from the camera's own intrinsics), so a whole-scene
+average dilutes a front-camera effect roughly fourfold.
+
+Measuring degradation \emph{and} error in the same sector, on the $150$
+uncontaminated validation scenes, the effect appears clearly
+(Table~\ref{tab:premise}). AP and the TP metrics use the official
+\texttt{accumulate}/\texttt{calc\_ap}/\texttt{calc\_tp}; the FP rate and far
+recall need a fixed score operating point, so they use explicit greedy
+centre-distance matching at the same $2$\,m threshold. Uncertainty is a
+$1000$-resample bootstrap over scenes with paired permutation tests, and $q$ is
+Benjamini--Hochberg across all $30$ tests in the family.
+
+\begin{table}[t]\centering\small
+\caption{\textbf{CAM\_FRONT degradation vs.\ 3D detection error}, $150$
+uncontaminated nuScenes validation scenes, $42$ degraded vs.\ $108$ clean, all
+metrics restricted to the front-camera sector.}
+\label{tab:premise}
+\begin{tabular}{lccrc}
+\toprule
+metric & degraded & clean & $\Delta$ & $q$\\
+\midrule
+mAP & $0.3886$ & $0.4792$ & $-0.0906$ & \best{$0.015$}\\
+FP rate @ $s{>}0.3$ & $0.3503$ & $0.2775$ & $+0.0729$ & \best{$0.045$}\\
+mATE (m) & $0.8330$ & $0.7553$ & $+0.0777$ & $0.080$\\
+recall $>30$\,m & $0.5312$ & $0.6079$ & $-0.0767$ & $0.080$\\
+recall $\leq30$\,m & $0.7703$ & $0.8262$ & $-0.0559$ & $0.080$\\
+mAOE (rad) & $0.5008$ & $0.4308$ & $+0.0701$ & $0.489$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Degraded front cameras cost $9.1$ points of front-sector mAP and raise the
+false-positive rate at the mining operating point by $7.3$ points, a $26\%$
+relative increase; $4$ of $30$ tests survive at $q<0.05$ and $12$ at $q<0.10$.
+Orientation error is the one metric that does not move: degradation costs the
+detector detections and positions, not heading. By attribute, lens degradations
+(droplets, wet road) hit mAP hardest, while low contrast hits far recall hardest
+($-0.0973$, $q=0.087$) --- the mechanism one would predict, since low contrast
+removes distant objects from the image before near ones. Glare shows nothing,
+but with $6$ degraded scenes out of $150$ this is an absence of statistical
+power, not evidence of absence.
+
+The earlier null result stands as measured and is quantitatively consistent with
+this one: a $-0.69\sigma$ front-sector effect, diluted across a corpus where
+$76.6\%$ of the ground truth lies outside the front camera, is exactly the
+sub-$0.07\sigma$ whole-scene signal observed. Both are correct; the first
+answered a different question.
+
+% =====================================================================
+\section{Discussion}
+% =====================================================================
+
+\paragraph{What we claim.} That the premise holds under a correctly targeted
+test; that a convex router must standardise what it routes; that routing weight
+on a VLM teacher is an in-domain asset and an out-of-domain liability, costing
+$0.029$~mAP in domain to buy $0.176$ externally; and that benchmarks defined as
+predicates over cached model outputs cannot measure progress.
+
+\paragraph{What we do not claim.} That SceneMiner beats a frozen SigLIP2 on an
+external corpus --- on BDD100K's own human labels it does not. That the
+in-domain cost of de-shortcutting is free --- it is not, and glare
+false-negative recovery degrades sharply. That our skew figures resolve
+differences of two points --- at $n=150$ queries they do not.
+
+\paragraph{Limitations.} A single human rater; four degradation attributes; one
+external corpus, monocular, so only part of the model crosses; and one design
+choice (text mean-centring) informed by that external corpus, which we disclose
+rather than conceal.
+
+\paragraph{For the community.} Three checks cost little and would have caught
+all three defects here. Ask what score a lookup over your own cached labels
+achieves; if it is $1.000$, the benchmark is circular. Check the overlap between
+your corpus and your evaluating model's training set. And when a gated
+combination underperforms its own inputs, inspect the scales of what is being
+gated before inspecting the gate.
+
+\end{document}
