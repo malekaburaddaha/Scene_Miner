@@ -206,6 +206,24 @@ python scripts/run_3d_gate.py --per-scene results/cvpr/per_scene.json \
     --out results/cvpr/milestone1_bevformer_3d.json
 python scripts/val150_3d_study.py                          # uncontaminated val holdout
 
+# ── SceneMiner v2.2 (Milestone 10) ──────────────────────────────────────
+# 5 seeds, one GPU each (GPUs are Exclusive_Process: one job per GPU)
+for s in 0 1 2 3 4; do
+  CUDA_VISIBLE_DEVICES=$s python scripts/train_sceneminer_v22.py \
+      --work-dir work_dirs/sceneminer_v22/s$s --seed $s --steps 3000
+done
+python scripts/eval_v22_human_gt.py      # 550 human scenes, zero-leak + calibrated
+python scripts/eval_v22_query_suite.py   # 150-query suite + mechanism ablations
+python scripts/diag_bdd_blend.py         # the scale-incommensurability diagnostic
+
+# ── Milestone 11: calibration, targeted 3D error, significance ──────────
+python scripts/eval_domain_calibrated_v2.py   # (q,alpha) fit on train queries
+python scripts/val150_camfront_errors.py      # CAM_FRONT degradation vs error
+
+# ── Milestone 12: figures and paper ─────────────────────────────────────
+python scripts/make_figures.py
+cd paper && pdflatex main_cvpr.tex && pdflatex main_cvpr.tex
+
 # ── external dataset ────────────────────────────────────────────────
 python scripts/fetch_bdd100k.py                            # 1,000 stratified images
 python scripts/eval_external_bdd100k.py
@@ -218,19 +236,49 @@ python scripts/annotate_ui.py --rater <name> --port 8800
 
 ## 7. Headline results
 
-Against 600 human-labelled scenes (Mode B, 550):
+**Against 550 human-labelled scenes** (macro-mAP over the four attributes):
 
-| ranker | mean mAP |
+| ranker | mAP |
 |---|---|
 | **SceneMiner v2.1 + 5-fold human calibration** | **0.7924** |
-| SceneMiner v2 | 0.7587 |
+| SceneMiner v2.2 + 5-fold human calibration | 0.7656 |
+| SceneMiner v2.1 (zero-leakage) | 0.7355 |
 | logit VLM lookup | 0.7325 |
+| SceneMiner v2.2 (monocular) | 0.7167 |
+| SceneMiner v2.2 (zero-leakage) | 0.7065 |
 | zero-shot SigLIP2 | 0.5688 |
-| SceneMiner v1 | 0.4202 |
-| chance | 0.1232 |
+| metadata prior | 0.5297 |
 
-On the 150-query suite, sensor-degradation stratum: **v2.1 0.6608** vs 0.6074
-for the best lookup. Zero train/eval leakage throughout.
+**External transfer, BDD100K** (1000 images, 12 queries, BDD's own human
+weather/time-of-day labels, chance 0.2623):
+
+| ranker | mAP | P@5 | NDCG@10 |
+|---|---|---|---|
+| zero-shot SigLIP2 | **0.6218** | **0.8500** | **0.8088** |
+| **SceneMiner v2.2** (monocular) | 0.5952 | 0.7500 | 0.7892 |
+| logit VLM lookup | 0.5871 | 0.7167 | 0.7054 |
+| SceneMiner v2.1 (portable) | 0.4189 | 0.5500 | 0.5524 |
+
+v2.2 lifts external transfer by **+0.1763 mAP** over v2.1 and beats both lookup
+baselines, but **does not beat zero-shot SigLIP2** — stated plainly because it
+is the number a reviewer will look for.
+
+**The premise, tested correctly** (150 uncontaminated nuScenes val scenes,
+CAM_FRONT degradation vs front-sector detection error):
+
+| metric | degraded | clean | Δ | q (BH) |
+|---|---|---|---|---|
+| front-sector mAP | 0.3886 | 0.4792 | **−0.0906** | 0.015 |
+| FP rate @ score>0.3 | 0.3503 | 0.2775 | **+0.0729** | 0.045 |
+| mATE (m) | 0.8330 | 0.7553 | +0.0777 | 0.080 |
+| recall > 30 m | 0.5312 | 0.6079 | −0.0767 | 0.080 |
+
+Only 23.4 % of nuScenes GT lies in the CAM_FRONT FOV, which is why an earlier
+360° scene average found nothing (< 0.07σ) and this targeted test finds
+0.42–0.74σ.
+
+**Known costs of v2.2**, not buried: −0.029 mAP in domain, and glare VLM
+false-negative recovery falls from 7/20 to 1/20.
 
 `results/cvpr/MASTER_REPORT.md` carries every table, including the claims that
 **do not** reproduce and the open limitations.
@@ -244,11 +292,13 @@ src/scene_mining/      model, adapters, losses, diagnostic hooks
   filter/unified_filter.py     ModalityAdapter, FiLM, ScalarStandardize
   filter/lora_grounded_filter.py  v1 head, legacy/pre-repair switches
   filter/sceneminer_v2.py      v2 and v2.1 (query-conditioned routing)
+  filter/sceneminer_v2_2.py    v2.2: PartNorm, entropy floor, modality masking
   adapters/qformer.py          BLIP-2 Q-Former adapter
 scripts/               training, evaluation, baselines, diagnostics, annotation UI
 benchmark_cvpr/        frozen split, 390-query suite, human annotations
-results/cvpr/          MILESTONE1-9.md, MASTER_REPORT.md, all metric JSONs
-paper/                 LaTeX source
+results/cvpr/          MILESTONE1-13.md, MASTER_REPORT.md, all metric JSONs
+paper/main_cvpr.tex    the CVPR manuscript (6 pp, compiles with pdflatex)
+paper/figures/         fig1 architecture, fig2 qualitative, fig3 audit
 ```
 
 Checkpoints, feature stores and datasets are untracked — see `.gitignore`.

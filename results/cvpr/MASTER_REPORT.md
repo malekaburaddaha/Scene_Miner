@@ -264,20 +264,127 @@ re-derived or dropped.**
 
 ---
 
+# Part III — Milestones 10–13 (19 Oct 2026)
+
+## 10. SceneMiner v2.2 and the real cause of the transfer failure
+
+The routing collapse was real and is fixed: mean routing weight on the VLM
+margin falls from **0.980 to 0.535**, via channel dropout (50 % margin, 30 %
+3D), an entropy floor capping any channel at 0.70, cross-modal agreement
+distillation (37.4 % of pairs down-weighted for teacher disagreement), and
+explicit modality availability. No human label enters training.
+
+**The milestone's premise did not survive measurement, and is reported as
+such.** A build with the routing fixes *only* moved BDD100K by **+0.0004**. On
+BDD100K's phrasings v2.1's router was already distributed ([0.301, 0.392,
+0.307]) — the collapse is query-specific, because the router is a linear map of
+the query embedding.
+
+The actual mechanism is **scale incommensurability**. v2.1's blend scored
+*below both signals it blended* (0.4181 vs 0.6218 and 0.5871), which no genuine
+convex combination can do. The margin part carries **28.1×** the spread of the
+cosine part (std 0.5419 vs 0.0193), so a nominal 50/50 routing weight was ~96 %
+margin. The gap is visible in training too — PartNorm's running stds come out
+at [0.031, 0.564, 0.166] — so this was diagnosable without external data.
+
+**Three bugs, one in an already-reported number.**
+
+| bug | impact |
+|---|---|
+| the BDD lookup baseline chose its margin channel by correlation **with the test labels** (ours, Milestone 8) | small: 0.5910 → 0.5871 |
+| BDD margin columns permuted vs training order — droplets and wet_road **swapped** into the model | large: v2.2 0.5475 → 0.5952 |
+| learned channel selector wrong on 8/12 external queries at p_max 0.26 | fixed by mean-centred text priming, 6/12 → 10/12 |
+
+**Targets: none of the four were met.** Zero-leakage 0.7065 (target > 0.765),
+calibrated 0.7656 (> 0.800), glare FN recovery 1/20 (≥ 13/20, and *worse* than
+v2.1's 7/20), BDD 0.5952 (vs SigLIP2 0.6218). The one target met is beating the
+logit lookup (0.5871).
+
+**The defensible claim is a trade-off, not a win:** routing weight on a VLM
+teacher is an in-domain asset and an out-of-domain liability. Capping it costs
+0.029 mAP in domain and buys 0.176 externally.
+
+## 11. The premise holds, once measured correctly
+
+Milestone 8 found no link between degradation and detector error (< 0.07σ).
+That test averaged scene mAP over six cameras and 360° while the degradation
+signal comes from one camera. Only **23.4 %** of nuScenes GT lies in the
+CAM_FRONT FOV (half-angle 32.6°, from the camera's own intrinsics).
+
+Measuring degradation **and** error in the same sector, on the 150
+uncontaminated val scenes, 42 degraded vs 108 clean:
+
+| metric (front sector) | degraded | clean | Δ | σ | q (BH) |
+|---|---|---|---|---|---|
+| mAP | 0.3886 | 0.4792 | −0.0906 | −0.69 | **0.015** |
+| FP rate @ score>0.3 | 0.3503 | 0.2775 | +0.0729 | +0.50 | **0.045** |
+| mATE (m) | 0.8330 | 0.7553 | +0.0777 | +0.44 | 0.080 |
+| recall > 30 m | 0.5312 | 0.6079 | −0.0767 | −0.42 | 0.080 |
+| recall ≤ 30 m | 0.7703 | 0.8262 | −0.0559 | −0.44 | 0.080 |
+| mAOE (rad) | 0.5008 | 0.4308 | +0.0701 | +0.22 | 0.489 |
+
+4/30 tests survive Benjamini–Hochberg at q<0.05, 12 at q<0.10. Orientation does
+not move — degradation costs detections and positions, not heading. Lens
+degradations hit mAP hardest; low contrast hits far recall hardest (−0.0973,
+q=0.087). **Glare has only 6 degraded scenes and is underpowered, not null.**
+
+Milestone 8's result stands as measured and is quantitatively consistent with
+this one: a −0.69σ front-sector effect diluted across a corpus where 76.6 % of
+GT sits outside the front camera is the sub-0.07σ whole-scene signal observed.
+
+**Negative-tail domain calibration.** Milestone 7's full per-domain z-score
+overcorrects (skew +8.7 → −23.8, mAP −0.0388). Estimating the offset only from
+each domain's negative tail, with (q, α) fit on the 240 train queries and
+reported on the 150 held-out eval queries, dominates it for every ranker. Two
+findings matter more: **v2.2's raw skew is already +1.1 points** (v2.1: +8.7),
+so standardising the parts removed most of the skew as a side effect and v2.2
+needs no calibration; and **the ±2.0 point target is below the resolution of a
+150-query evaluation**, whose bootstrap CI widths are 9.7–12.5 points.
+
+## 12. Figures and manuscript
+
+Three figures generated directly from the result JSONs, and `paper/main_cvpr.tex`
+at 6 pages, organised as three Audit Discoveries plus the v2.2 method plus the
+targeted premise test. Every WACV claim that failed to reproduce is **removed,
+not softened**: Table 1 magnitudes, the τ-drift claim, §4.3's BLIP-2 degeneracy,
+the unreachable erank(L), and §6.8 downstream utility — the last replaced by the
+CAM_FRONT analysis, which does reproduce.
+
+---
+
 # Where this leaves the paper
 
-**The strongest defensible claim is now:** SceneMiner v2.1 leads the
-sensor-degradation stratum (0.6608 vs 0.6074) and the held-out compositional
-stratum, and with a small human calibration set reaches 0.7924 mean mAP against
-human ground truth — ahead of every baseline.
+**The strongest defensible claims, as of Milestone 13:**
 
-**The claims that do not survive:** the downstream detector-utility argument
-(§6.8) does not reproduce on uncontaminated data; the collapse magnitudes in
-Table 1 and §4.2 do not reproduce; §4.3's BLIP-2 degeneracy does not reproduce;
-and the system does not transfer to a monocular external corpus.
+1. **The premise holds.** Front-camera degradation costs the 3D detector 0.0906
+   front-sector mAP and 7.3 points of false-positive rate, surviving
+   multiple-comparison correction on uncontaminated data. This is the result the
+   WACV submission needed and did not have.
+2. **Two structural defects in this class of pipeline.** A benchmark whose
+   relevance is a predicate over cached model outputs is circular (lookup =
+   1.000); a detector that trained on the scenes it certifies inflates per-scene
+   mAP by +0.3349 (+74 %).
+3. **A general mechanism result.** A convex router must standardise what it
+   routes, or its weights are not influence weights — demonstrated by a blend
+   scoring below both of its inputs at a 28.1× scale gap.
+4. **A measured trade-off.** De-shortcutting a VLM teacher costs 0.029 mAP in
+   domain and buys 0.176 mAP externally.
 
-**The honest frame:** this is a paper about *diagnosing* a retrieval index and
-about what human-calibrated supervision buys — not about a detector-grounded
-mining system. Row A_true demonstrates the central thesis cleanly (a modality
-100 % dead, 1 distinct row, std 0.0000, while mAP moves 0.004), and the
-de-confounded Table 2 shows deterministic labels are the entire effect.
+**What still does not survive:** the system does **not** beat zero-shot SigLIP2
+on the external monocular corpus (0.5952 vs 0.6218); de-shortcutting collapses
+glare VLM false-negative recovery (7/20 → 1/20); the Table 1 and §4.2/§4.3
+magnitudes do not reproduce; and skew differences of a few points are not
+resolvable at 150 queries.
+
+**The honest frame:** this is a paper about auditing a language-guided mining
+pipeline — what breaks, why, and what survives repair — with a correctly
+targeted demonstration that the underlying premise is sound. It is not a paper
+claiming state-of-the-art retrieval. Row A_true still demonstrates the central
+thesis cleanly (a modality 100 % dead, 1 distinct row, std 0.0000, while mAP
+moves 0.004), and the de-confounded Table 2 shows deterministic labels are the
+entire effect.
+
+**One disclosure carried into the paper:** the text mean-centring design choice
+was informed by BDD100K measurements. It is a label-free selector prior fixed at
+train time and it helps in 4/4 in-domain strata, but it is not a blind choice,
+and no further tuning against BDD100K was performed.
