@@ -5,6 +5,22 @@ Ground truth is BDD100K's own per-image human annotation (`weather`,
 `timeofday`) - a channel that shares nothing with our VLM pipeline, so this is
 the independent external evaluation the Area Chair and Reviewer fKWi asked for.
 
+CORRECTION 2 (MILESTONE 10). The margin columns produced here follow the order
+of `QUESTIONS` - (wet_road, glare, droplets, low_contrast) - but the head's
+margin channels were trained in the feature cache's order,
+(droplets, glare, wet_road, low_contrast). Channels 0 and 2 were therefore
+SWAPPED on the way into the model, so every SceneMiner row in MILESTONE 8 was
+scored with droplets and wet_road margins exchanged. `PERM` below reorders the
+columns into training order before anything consumes them.
+
+CORRECTION 1 (MILESTONE 10). The first version of this script chose the
+`logit_VLM_lookup` margin channel by maximising its correlation WITH THE TEST
+LABELS, which handed that baseline an oracle no learned model had. The reported
+0.5910 was therefore an upper bound, not a baseline. The channel is now fixed
+a priori per query by `CHANNEL` below - declared from the query's wording alone
+and never refitted - and the old rule is still computed, clearly labelled
+`logit_VLM_lookup_ORACLE`, so the earlier figure stays traceable.
+
 IMPORTANT STRUCTURAL LIMIT, reported rather than worked around: the full
 SceneMiner head consumes four Stage-1 signals (BEVFormer embedding, tag logits,
 physical risk, Qwen visual token) that require a calibrated 6-camera rig with
@@ -44,12 +60,33 @@ EVAL_Q = [
  ("adverse weather on the road",                      ("weather", {"rainy","snowy","foggy"})),
 ]
 
+# A-PRIORI margin channel per query, fixed from the query's wording BEFORE any
+# label is read. Sign -1 means the query names the ABSENCE of the attribute.
+# Note honestly: none of our four attributes names snow, so the snow queries are
+# mapped to their nearest neighbour (wet_road) and are expected to be weak.
+CHANNEL = {
+ "wet reflective asphalt after rainfall":            ("wet_road", +1),
+ "driving in rain":                                  ("wet_road", +1),
+ "water droplets smearing the camera lens":          ("droplets", +1),
+ "snow covering the road":                           ("wet_road", +1),
+ "a snowy street scene":                             ("wet_road", +1),
+ "driving after dark":                               ("low_contrast", +1),
+ "a night-time street scene":                        ("low_contrast", +1),
+ "a low contrast scene where vehicles are barely distinguishable from the background":
+                                                     ("low_contrast", +1),
+ "blinding headlight bloom from oncoming traffic":   ("glare", +1),
+ "bright daytime driving":                           ("low_contrast", -1),
+ "overcast grey sky":                                ("low_contrast", +1),
+ "adverse weather on the road":                      ("wet_road", +1),
+}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", default="/nfs/turbo/umd-srawa/scene_mining/datasets/external_adverse/bdd100k")
     ap.add_argument("--qwen", default="/nfs/turbo/umd-srawa/hf_cache/Qwen2.5-VL-3B-Instruct")
     ap.add_argument("--cache", default=None)
-    ap.add_argument("--out", default="results/cvpr/milestone8_external_dataset.json")
+    ap.add_argument("--out", default="results/cvpr/milestone10_external_bdd100k_fixed.json")
     a = ap.parse_args()
     root = Path(a.root); dev = torch.device("cuda")
     labels = json.load(open(root/"labels.json"))
@@ -107,8 +144,15 @@ def main():
         np.savez_compressed(cache, siglip=SIG, margin=MARG, names=np.array(names))
         print(f"[bdd] cached signals -> {cache}", flush=True)
 
+    # reorder margin columns into the head's TRAINING order before any use
+    TRAIN_ORDER = ["droplets", "glare", "wet_road", "low_contrast"]
+    ASKED = [k for k, _ in QUESTIONS]
+    PERM = [ASKED.index(k) for k in TRAIN_ORDER]
+    if PERM != list(range(len(ASKED))):
+        print(f"[bdd] permuting margin columns {ASKED} -> {TRAIN_ORDER}", flush=True)
+    MARG = MARG[:, PERM]
     MZ = (MARG - MARG.mean(0, keepdims=True)) / (MARG.std(0, keepdims=True) + 1e-6)
-    ATT = [k for k, _ in QUESTIONS]
+    ATT = TRAIN_ORDER
     from transformers import AutoModel, GemmaTokenizerFast
     P = "google/siglip2-base-patch16-224"
     sm_ = AutoModel.from_pretrained(P, use_safetensors=True).to(dev).eval()
@@ -121,32 +165,61 @@ def main():
         QT = F.normalize(feat(sm_.get_text_features(**ti)), dim=-1)
     del sm_; torch.cuda.empty_cache()
 
-    # the portable part of v2.1: learned routing over (siglip, margin, meta=0)
+    # the portable part of each head: learned routing over (siglip, margin, meta)
     from scene_mining.filter.sceneminer_v2 import SceneMinerV21
-    ck = sorted(glob.glob("work_dirs/sceneminer_v21/s*/final.pt"))
+    from scene_mining.filter.sceneminer_v2_2 import SceneMinerV22
     routers = []
-    for c in ck:
+    for c in sorted(glob.glob("work_dirs/sceneminer_v21/s*/final.pt")):
         d = torch.load(c, map_location=dev, weights_only=False)
         m = SceneMinerV21(d_text=QT.shape[1], n_margins=MZ.shape[1], n_meta=6).to(dev)
         m.load_state_dict(d["state_dict"]); m.eval(); routers.append(m)
+    r22 = []
+    for c in sorted(glob.glob("work_dirs/sceneminer_v22/s*/final.pt")):
+        d = torch.load(c, map_location=dev, weights_only=False)
+        m = SceneMinerV22(d_text=QT.shape[1], n_margins=MZ.shape[1], n_meta=6).to(dev)
+        m.load_state_dict(d["state_dict"]); m.eval(); r22.append(m)
+    print(f"[bdd] {len(routers)} v2.1 seeds, {len(r22)} v2.2 seeds", flush=True)
 
     S = torch.from_numpy(SIG).float().to(dev); M = torch.from_numpy(MZ).float().to(dev)
     PR = torch.zeros(len(names), 26, device=dev)      # no Stage-1 prior on BDD
-    rows = {}
+    rows = {}; route_log = {}
     for qi, (qt, (field, pos)) in enumerate(EVAL_Q):
         rel = np.array([labels[n][field] in pos for n in names])
         if rel.sum() == 0 or rel.sum() == len(names): continue
         qv = QT[qi].unsqueeze(0).expand(len(names), -1)
         cos = (S @ QT[qi]).cpu().numpy()
-        # margin channel whose attribute the query most plausibly names
-        best = max(range(len(ATT)), key=lambda j: float(np.corrcoef(MZ[:, j], rel)[0, 1]))
+        # A-PRIORI channel (no labels consulted) ...
+        att, sgn = CHANNEL[qt]
+        j_apriori = ATT.index(att)
+        # ... and the OLD oracle rule, kept only as a labelled upper bound
+        j_oracle = max(range(len(ATT)),
+                       key=lambda j: float(np.corrcoef(MZ[:, j], rel)[0, 1]))
+        jitter = np.random.default_rng(0).random(len(names)) * 1e-6
         rank = {"zeroshot_SigLIP2": cos,
-                "logit_VLM_lookup": MZ[:, best],
-                "flat_VLM_lookup": (MARG[:, best] > 0).astype(float)
-                                   + np.random.default_rng(0).random(len(names))*1e-6}
+                "logit_VLM_lookup": sgn * MZ[:, j_apriori],
+                "flat_VLM_lookup": (sgn * MARG[:, j_apriori] > 0).astype(float) + jitter,
+                "logit_VLM_lookup_ORACLE": MZ[:, j_oracle],
+                "flat_VLM_lookup_ORACLE": (MARG[:, j_oracle] > 0).astype(float) + jitter}
         with torch.no_grad():
-            base = np.mean([m.base_score(qv, qv, S, M, PR).cpu().numpy() for m in routers], 0)
-        rank["SceneMiner_v2.1_portable(routing)"] = base
+            rank["SceneMiner_v2.1_portable(routing)"] = np.mean(
+                [m.base_score(qv, qv, S, M, PR).cpu().numpy() for m in routers], 0)
+            # v2.2: has_3d=False -> the meta channel is declared ABSENT and the
+            # routing mass is renormalised over (siglip, margin) instead of being
+            # spent on a constant-zero channel, which is what sank v2.1 here.
+            av2 = torch.stack([torch.ones(len(names), device=dev),
+                               torch.ones(len(names), device=dev),
+                               torch.zeros(len(names), device=dev)], -1)
+            v22s = []
+            for m in r22:
+                parts = m.base_parts(qv, qv, S, M, PR)
+                w = m.route(qv, av2)
+                v22s.append((w * parts * av2).sum(-1).cpu().numpy())
+            rank["SceneMiner_v2.2_monocular(routing)"] = np.mean(v22s, 0)
+            rw = np.mean([m.route(qv, av2).mean(0).cpu().numpy() for m in r22], 0)
+            route_log.setdefault("v2.2", []).append(rw.tolist())
+            rw1 = np.mean([torch.softmax(m.W_route(qv)/m.tau_route, -1).mean(0)
+                           .cpu().numpy() for m in routers], 0)
+            route_log.setdefault("v2.1", []).append(rw1.tolist())
         for nm, s in rank.items():
             o = np.argsort(-s)
             rows.setdefault(nm, []).append((ap_binary(o, rel), p_at(o, rel),
@@ -155,6 +228,11 @@ def main():
            "label_source": "BDD100K native human weather/timeofday annotations",
            "not_transferable": "BEVFormer embedding, tag logits, risk, Qwen visual "
                                "token - require a calibrated 6-camera rig with 3D boxes",
+           "margin_channel_order": TRAIN_ORDER,
+           "channel_selection": "a priori from query wording (CHANNEL); the *_ORACLE "
+                                "rows instead pick the channel by correlation with the "
+                                "test labels and are an upper bound, not a baseline",
+           "mean_routing": {k: np.array(v).mean(0).tolist() for k, v in route_log.items()},
            "rankers": {}}
     print(f"\n{'ranker':<38}{'mAP':>9}{'P@5':>9}{'NDCG@10':>10}")
     for nm in sorted(rows, key=lambda k: -np.mean([r[0] for r in rows[k]])):

@@ -1,0 +1,572 @@
+{
+  "mode_A": {
+    "n_scenes": 530,
+    "attributes": {
+      "droplets": {
+        "n_human_pos": 79,
+        "chance": 0.1490566037735849,
+        "rankers": {
+          "logit_VLM_lookup": {
+            "mAP": 0.8245407095239841,
+            "P@5": 0.8,
+            "NDCG@10": 0.9148568823583791
+          },
+          "zeroshot_SigLIP2": {
+            "mAP": 0.9145865304956701,
+            "P@5": 1.0,
+            "NDCG@10": 1.0
+          },
+          "metadata_prior": {
+            "mAP": 0.8351214394831806,
+            "P@5": 1.0,
+            "NDCG@10": 1.0
+          },
+          "SceneMiner_v2.2_zeroleak": {
+            "mAP": 0.8685778514389952,
+            "mAP_std": 0.04995392887019084,
+            "n_seeds": 5
+          },
+          "SceneMiner_v2.2_monocular": {
+            "mAP": 0.8423618220175966,
+            "mAP_std": 0.02872669353605494,
+            "n_seeds": 5,
+            "note": "has_3d_rig=False, routing renormalised over 2 channels"
+          },
+          "SceneMiner_v2.2_human_calibrated_5fold": {
+            "mAP": 0.9595565044813166,
+            "mAP_std": 0.047224436196854534,
+            "folds": 5,
+            "note": "routing refit on 4/5 human scenes, scored on held-out 1/5"
+          }
+        },
+        "vlm_fn_recovery": {
+          "SceneMiner_v2.1": {
+            "n_missed": 3,
+            "n_in_top20pct": 0,
+            "median_rank_pct": 0.24528301886792453
+          },
+          "zeroshot_SigLIP2": {
+            "n_missed": 3,
+            "n_in_top20pct": 1,
+            "median_rank_pct": 0.23018867924528302
+          },
+          "logit_VLM_lookup": {
+            "n_missed": 3,
+            "n_in_top20pct": 0,
+            "median_rank_pct": 0.3471698113207547
+          }
+        },
+        "mean_routing_seed0": [
+          0.30304625630378723,
+          0.4630151093006134,
+          0.23393866419792175
+        ],
+        "mean_routing_all_seeds": [
+          0.2603245973587036,
+          0.519501805305481,
+          0.22017362713813782
+        ],
+        "mean_routing_monocular": [
+          0.3357689380645752,
+          0.6642310619354248,
+          0.0
+        ]
+      },
+      "glare": {
+        "n_human_pos": 41,
+        "chance": 0.07735849056603773,
+        "rankers": {
+          "logit_VLM_lookup": {
+            "mAP": 0.5893270461666811,
+            "P@5": 1.0,
+            "NDCG@10": 1.0
+          },
+          "zeroshot_SigLIP2": {
+            "mAP": 0.4149503480050155,
+            "P@5": 0.4,
+            "NDCG@10": 0.4373524791503101
+          },
+          "metadata_prior": {
+            "mAP": 0.045430795137247695,
+            "P@5": 0.0,
+            "NDCG@10": 0.0
+          },
+          "SceneMiner_v2.2_zeroleak": {
+            "mAP": 0.5060173119325915,
+            "mAP_std": 0.016513845059625318,
+            "n_seeds": 5
+          },
+          "SceneMiner_v2.2_monocular": {
+            "mAP": 0.5384679129111317,
+            "mAP_std": 0.015862218271808785,
+            "n_seeds": 5,
+            "note": "has_3d_rig=False, routing renormalised over 2 channels"
+          },
+          "SceneMiner_v2.2_human_calibrated_5fold": {
+            "mAP": 0.6068591022861471,
+            "mAP_std": 0.08820128981051167,
+            "folds": 5,
+            "note": "routing refit on 4/5 human scenes, scored on held-out 1/5"
+          }
+        },
+        "vlm_fn_recovery": {
+          "SceneMiner_v2.1": {
+            "n_missed": 20,
+            "n_in_top20pct": 1,
+            "median_rank_pct": 0.6660377358490566
+          },
+          "zeroshot_SigLIP2": {
+            "n_missed": 20,
+            "n_in_top20pct": 13,
+            "median_rank_pct": 0.14245283018867924
+          },
+          "logit_VLM_lookup": {
+            "n_missed": 20,
+            "n_in_top20pct": 7,
+            "median_rank_pct": 0.2518867924528302
+          }
+        },
+        "mean_routing_seed0": [
+          0.2923670709133148,
+          0.4959026277065277,
+          0.21173030138015747
+        ],
+        "mean_routing_all_seeds": [
+          0.3465751111507416,
+          0.4650607705116272,
+          0.1883641481399536
+        ],
+        "mean_routing_monocular": [
+          0.42783403396606445,
+          0.572165846824646,
+          0.0
+        ]
+      },
+      "wet_road": {
+        "n_human_pos": 85,
+        "chance": 0.16037735849056603,
+        "rankers": {
+          "logit_VLM_lookup": {
+            "mAP": 0.9653116217414102,
+            "P@5": 1.0,
+            "NDCG@10": 1.0
+          },
+          "zeroshot_SigLIP2": {
+            "mAP": 0.8478310459737859,
+            "P@5": 1.0,
+            "NDCG@10": 1.0
+          },
+          "metadata_prior": {
+            "mAP": 0.8175929012835779,
+            "P@5": 1.0,
+            "NDCG@10": 1.0
+          },
+          "SceneMiner_v2.2_zeroleak": {
+            "mAP": 0.9591017494397331,
+            "mAP_std": 0.009623895586904824,
+            "n_seeds": 5
+          },
+          "SceneMiner_v2.2_monocular": {
+            "mAP": 0.951702177147161,
+            "mAP_std": 0.011817589130900622,
+            "n_seeds": 5,
+            "note": "has_3d_rig=False, routing renormalised over 2 channels"
+          },
+          "SceneMiner_v2.2_human_calibrated_5fold": {
+            "mAP": 0.96287450289128,
+            "mAP_std": 0.02635509835455384,
+            "folds": 5,
+            "note": "routing refit on 4/5 human scenes, scored on held-out 1/5"
+          }
+        },
+        "vlm_fn_recovery": {
+          "SceneMiner_v2.1": {
+            "n_missed": 1,
+            "n_in_top20pct": 1,
+            "median_rank_pct": 0.19433962264150945
+          },
+          "zeroshot_SigLIP2": {
+            "n_missed": 1,
+            "n_in_top20pct": 1,
+            "median_rank_pct": 0.08867924528301886
+          },
+          "logit_VLM_lookup": {
+            "n_missed": 1,
+            "n_in_top20pct": 0,
+            "median_rank_pct": 0.23773584905660378
+          }
+        },
+        "mean_routing_seed0": [
+          0.26978182792663574,
+          0.5149171948432922,
+          0.21530090272426605
+        ],
+        "mean_routing_all_seeds": [
+          0.25447899103164673,
+          0.5420385599136353,
+          0.2034824639558792
+        ],
+        "mean_routing_monocular": [
+          0.3207474648952484,
+          0.6792525053024292,
+          0.0
+        ]
+      },
+      "low_contrast": {
+        "n_human_pos": 66,
+        "chance": 0.12452830188679245,
+        "rankers": {
+          "logit_VLM_lookup": {
+            "mAP": 0.5535886006543048,
+            "P@5": 0.6,
+            "NDCG@10": 0.5423247252962318
+          },
+          "zeroshot_SigLIP2": {
+            "mAP": 0.10776762623418185,
+            "P@5": 0.0,
+            "NDCG@10": 0.0
+          },
+          "metadata_prior": {
+            "mAP": 0.43174687512060544,
+            "P@5": 0.6,
+            "NDCG@10": 0.694765116060299
+          },
+          "SceneMiner_v2.2_zeroleak": {
+            "mAP": 0.49942379178337537,
+            "mAP_std": 0.04099195341426479,
+            "n_seeds": 5
+          },
+          "SceneMiner_v2.2_monocular": {
+            "mAP": 0.540617292829382,
+            "mAP_std": 0.05878294226317396,
+            "n_seeds": 5,
+            "note": "has_3d_rig=False, routing renormalised over 2 channels"
+          },
+          "SceneMiner_v2.2_human_calibrated_5fold": {
+            "mAP": 0.5934851118026743,
+            "mAP_std": 0.08389548190380193,
+            "folds": 5,
+            "note": "routing refit on 4/5 human scenes, scored on held-out 1/5"
+          }
+        },
+        "vlm_fn_recovery": {
+          "SceneMiner_v2.1": {
+            "n_missed": 17,
+            "n_in_top20pct": 4,
+            "median_rank_pct": 0.2641509433962264
+          },
+          "zeroshot_SigLIP2": {
+            "n_missed": 17,
+            "n_in_top20pct": 3,
+            "median_rank_pct": 0.630188679245283
+          },
+          "logit_VLM_lookup": {
+            "n_missed": 17,
+            "n_in_top20pct": 2,
+            "median_rank_pct": 0.2679245283018868
+          }
+        },
+        "mean_routing_seed0": [
+          0.1404198557138443,
+          0.7231194972991943,
+          0.1364605575799942
+        ],
+        "mean_routing_all_seeds": [
+          0.20992735028266907,
+          0.614622175693512,
+          0.17545048892498016
+        ],
+        "mean_routing_monocular": [
+          0.25558358430862427,
+          0.7444164156913757,
+          0.0
+        ]
+      }
+    }
+  },
+  "mode_B": {
+    "n_scenes": 550,
+    "attributes": {
+      "droplets": {
+        "n_human_pos": 79,
+        "chance": 0.14363636363636365,
+        "rankers": {
+          "logit_VLM_lookup": {
+            "mAP": 0.8238017685557508,
+            "P@5": 0.8,
+            "NDCG@10": 0.9148568823583791
+          },
+          "zeroshot_SigLIP2": {
+            "mAP": 0.9129275459510545,
+            "P@5": 1.0,
+            "NDCG@10": 1.0
+          },
+          "metadata_prior": {
+            "mAP": 0.8311425364251662,
+            "P@5": 1.0,
+            "NDCG@10": 1.0
+          },
+          "SceneMiner_v2.2_zeroleak": {
+            "mAP": 0.8679680283956916,
+            "mAP_std": 0.049934979216270416,
+            "n_seeds": 5
+          },
+          "SceneMiner_v2.2_monocular": {
+            "mAP": 0.8418316968114528,
+            "mAP_std": 0.028742986403455944,
+            "n_seeds": 5,
+            "note": "has_3d_rig=False, routing renormalised over 2 channels"
+          },
+          "SceneMiner_v2.2_human_calibrated_5fold": {
+            "mAP": 0.9383803813663139,
+            "mAP_std": 0.03525999869134249,
+            "folds": 5,
+            "note": "routing refit on 4/5 human scenes, scored on held-out 1/5"
+          }
+        },
+        "vlm_fn_recovery": {
+          "SceneMiner_v2.1": {
+            "n_missed": 3,
+            "n_in_top20pct": 0,
+            "median_rank_pct": 0.24181818181818182
+          },
+          "zeroshot_SigLIP2": {
+            "n_missed": 3,
+            "n_in_top20pct": 1,
+            "median_rank_pct": 0.22545454545454546
+          },
+          "logit_VLM_lookup": {
+            "n_missed": 3,
+            "n_in_top20pct": 0,
+            "median_rank_pct": 0.34545454545454546
+          }
+        },
+        "mean_routing_seed0": [
+          0.30304625630378723,
+          0.4630151093006134,
+          0.23393866419792175
+        ],
+        "mean_routing_all_seeds": [
+          0.2603245973587036,
+          0.519501805305481,
+          0.22017362713813782
+        ],
+        "mean_routing_monocular": [
+          0.3357689380645752,
+          0.6642310619354248,
+          0.0
+        ]
+      },
+      "glare": {
+        "n_human_pos": 41,
+        "chance": 0.07454545454545454,
+        "rankers": {
+          "logit_VLM_lookup": {
+            "mAP": 0.5886638446257638,
+            "P@5": 1.0,
+            "NDCG@10": 1.0
+          },
+          "zeroshot_SigLIP2": {
+            "mAP": 0.4143846277626952,
+            "P@5": 0.4,
+            "NDCG@10": 0.4373524791503101
+          },
+          "metadata_prior": {
+            "mAP": 0.043602679359447026,
+            "P@5": 0.0,
+            "NDCG@10": 0.0
+          },
+          "SceneMiner_v2.2_zeroleak": {
+            "mAP": 0.5044407019522806,
+            "mAP_std": 0.01652476240996154,
+            "n_seeds": 5
+          },
+          "SceneMiner_v2.2_monocular": {
+            "mAP": 0.5370100712608977,
+            "mAP_std": 0.0160330131016721,
+            "n_seeds": 5,
+            "note": "has_3d_rig=False, routing renormalised over 2 channels"
+          },
+          "SceneMiner_v2.2_human_calibrated_5fold": {
+            "mAP": 0.6061714209867459,
+            "mAP_std": 0.120674074499068,
+            "folds": 5,
+            "note": "routing refit on 4/5 human scenes, scored on held-out 1/5"
+          }
+        },
+        "vlm_fn_recovery": {
+          "SceneMiner_v2.1": {
+            "n_missed": 20,
+            "n_in_top20pct": 1,
+            "median_rank_pct": 0.6618181818181819
+          },
+          "zeroshot_SigLIP2": {
+            "n_missed": 20,
+            "n_in_top20pct": 14,
+            "median_rank_pct": 0.13727272727272727
+          },
+          "logit_VLM_lookup": {
+            "n_missed": 20,
+            "n_in_top20pct": 7,
+            "median_rank_pct": 0.24454545454545454
+          }
+        },
+        "mean_routing_seed0": [
+          0.2923670709133148,
+          0.4959026277065277,
+          0.21173030138015747
+        ],
+        "mean_routing_all_seeds": [
+          0.3465751111507416,
+          0.4650607705116272,
+          0.1883641481399536
+        ],
+        "mean_routing_monocular": [
+          0.42783403396606445,
+          0.572165846824646,
+          0.0
+        ]
+      },
+      "wet_road": {
+        "n_human_pos": 85,
+        "chance": 0.15454545454545454,
+        "rankers": {
+          "logit_VLM_lookup": {
+            "mAP": 0.9652501059933786,
+            "P@5": 1.0,
+            "NDCG@10": 1.0
+          },
+          "zeroshot_SigLIP2": {
+            "mAP": 0.8433058865036837,
+            "P@5": 1.0,
+            "NDCG@10": 1.0
+          },
+          "metadata_prior": {
+            "mAP": 0.8153096528716521,
+            "P@5": 1.0,
+            "NDCG@10": 1.0
+          },
+          "SceneMiner_v2.2_zeroleak": {
+            "mAP": 0.9589446009545368,
+            "mAP_std": 0.009619831854319822,
+            "n_seeds": 5
+          },
+          "SceneMiner_v2.2_monocular": {
+            "mAP": 0.951597386332721,
+            "mAP_std": 0.011850610776450585,
+            "n_seeds": 5,
+            "note": "has_3d_rig=False, routing renormalised over 2 channels"
+          },
+          "SceneMiner_v2.2_human_calibrated_5fold": {
+            "mAP": 0.9725588030238548,
+            "mAP_std": 0.028892421984777865,
+            "folds": 5,
+            "note": "routing refit on 4/5 human scenes, scored on held-out 1/5"
+          }
+        },
+        "vlm_fn_recovery": {
+          "SceneMiner_v2.1": {
+            "n_missed": 1,
+            "n_in_top20pct": 1,
+            "median_rank_pct": 0.18727272727272729
+          },
+          "zeroshot_SigLIP2": {
+            "n_missed": 1,
+            "n_in_top20pct": 1,
+            "median_rank_pct": 0.08545454545454545
+          },
+          "logit_VLM_lookup": {
+            "n_missed": 1,
+            "n_in_top20pct": 0,
+            "median_rank_pct": 0.2309090909090909
+          }
+        },
+        "mean_routing_seed0": [
+          0.26978182792663574,
+          0.5149171948432922,
+          0.21530090272426605
+        ],
+        "mean_routing_all_seeds": [
+          0.25447899103164673,
+          0.5420385599136353,
+          0.2034824639558792
+        ],
+        "mean_routing_monocular": [
+          0.3207474648952484,
+          0.6792525053024292,
+          0.0
+        ]
+      },
+      "low_contrast": {
+        "n_human_pos": 66,
+        "chance": 0.12,
+        "rankers": {
+          "logit_VLM_lookup": {
+            "mAP": 0.5521388576613958,
+            "P@5": 0.6,
+            "NDCG@10": 0.5423247252962318
+          },
+          "zeroshot_SigLIP2": {
+            "mAP": 0.1045141425862662,
+            "P@5": 0.0,
+            "NDCG@10": 0.0
+          },
+          "metadata_prior": {
+            "mAP": 0.4285623456972873,
+            "P@5": 0.6,
+            "NDCG@10": 0.694765116060299
+          },
+          "SceneMiner_v2.2_zeroleak": {
+            "mAP": 0.4944782454283449,
+            "mAP_std": 0.04104199826812726,
+            "n_seeds": 5
+          },
+          "SceneMiner_v2.2_monocular": {
+            "mAP": 0.5363489543931542,
+            "mAP_std": 0.058092023987118664,
+            "n_seeds": 5,
+            "note": "has_3d_rig=False, routing renormalised over 2 channels"
+          },
+          "SceneMiner_v2.2_human_calibrated_5fold": {
+            "mAP": 0.5452533174320282,
+            "mAP_std": 0.07669007997691012,
+            "folds": 5,
+            "note": "routing refit on 4/5 human scenes, scored on held-out 1/5"
+          }
+        },
+        "vlm_fn_recovery": {
+          "SceneMiner_v2.1": {
+            "n_missed": 17,
+            "n_in_top20pct": 4,
+            "median_rank_pct": 0.25636363636363635
+          },
+          "zeroshot_SigLIP2": {
+            "n_missed": 17,
+            "n_in_top20pct": 3,
+            "median_rank_pct": 0.6254545454545455
+          },
+          "logit_VLM_lookup": {
+            "n_missed": 17,
+            "n_in_top20pct": 2,
+            "median_rank_pct": 0.26
+          }
+        },
+        "mean_routing_seed0": [
+          0.1404198557138443,
+          0.7231194972991943,
+          0.1364605575799942
+        ],
+        "mean_routing_all_seeds": [
+          0.20992735028266907,
+          0.614622175693512,
+          0.17545048892498016
+        ],
+        "mean_routing_monocular": [
+          0.25558358430862427,
+          0.7444164156913757,
+          0.0
+        ]
+      }
+    }
+  }
+}

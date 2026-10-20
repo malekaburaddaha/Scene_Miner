@@ -1,0 +1,57 @@
+{
+  "n_images": 1000,
+  "n_queries": 12,
+  "label_source": "BDD100K native human weather/timeofday annotations",
+  "not_transferable": "BEVFormer embedding, tag logits, risk, Qwen visual token - require a calibrated 6-camera rig with 3D boxes",
+  "channel_selection": "a priori from query wording (CHANNEL); the *_ORACLE rows instead pick the channel by correlation with the test labels and are an upper bound, not a baseline",
+  "mean_routing": {
+    "v2.2": [
+      0.48894138137499493,
+      0.51105863849322,
+      0.0
+    ],
+    "v2.1": [
+      0.3006879861156146,
+      0.3919339006145795,
+      0.3073781654238701
+    ]
+  },
+  "rankers": {
+    "zeroshot_SigLIP2": {
+      "mAP": 0.6218381432122236,
+      "P@5": 0.8500000000000001,
+      "NDCG@10": 0.808780276587184
+    },
+    "logit_VLM_lookup_ORACLE": {
+      "mAP": 0.5910277418966902,
+      "P@5": 0.6666666666666666,
+      "NDCG@10": 0.6721878519545325
+    },
+    "logit_VLM_lookup": {
+      "mAP": 0.5870798248854863,
+      "P@5": 0.7166666666666667,
+      "NDCG@10": 0.7053837213336324
+    },
+    "SceneMiner_v2.2_monocular(routing)": {
+      "mAP": 0.41813838574733037,
+      "P@5": 0.5666666666666665,
+      "NDCG@10": 0.546243971504163
+    },
+    "SceneMiner_v2.1_portable(routing)": {
+      "mAP": 0.4176530566227263,
+      "P@5": 0.5499999999999999,
+      "NDCG@10": 0.5452852985576893
+    },
+    "flat_VLM_lookup_ORACLE": {
+      "mAP": 0.38989460611438576,
+      "P@5": 0.55,
+      "NDCG@10": 0.532569939679339
+    },
+    "flat_VLM_lookup": {
+      "mAP": 0.3816952253412785,
+      "P@5": 0.5499999999999999,
+      "NDCG@10": 0.511418227043835
+    }
+  },
+  "chance": 0.2623333333333333
+}

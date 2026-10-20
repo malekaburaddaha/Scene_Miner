@@ -1,0 +1,89 @@
+{
+  "n_scenes": 602,
+  "n_queries_scored": 150,
+  "caveat": "relevance is a predicate over the cached VLM attributes, so attribute_index is a tautological CEILING (1.000), not a baseline",
+  "overall": {
+    "attribute_index(TAUTOLOGY)": {
+      "mAP": 1.0,
+      "P@5": 0.9920000000000001,
+      "NDCG@10": 1.0
+    },
+    "SceneMiner_v2.1": {
+      "mAP": 0.5312353720009003,
+      "P@5": 0.5266666666666666,
+      "NDCG@10": 0.5368278776593811
+    },
+    "SceneMiner_v2.2": {
+      "mAP": 0.5177650706298128,
+      "P@5": 0.5093333333333333,
+      "NDCG@10": 0.5245811835449605
+    },
+    "v2.2_ablate_text_centring": {
+      "mAP": 0.5159423579414816,
+      "P@5": 0.5093333333333333,
+      "NDCG@10": 0.5231058810822269
+    },
+    "SceneMiner_v2.2_monocular": {
+      "mAP": 0.5018611110371254,
+      "P@5": 0.47199999999999986,
+      "NDCG@10": 0.5056265475465986
+    },
+    "v2.2_ablate_PartNorm": {
+      "mAP": 0.488984831423759,
+      "P@5": 0.48266666666666663,
+      "NDCG@10": 0.5017297902827287
+    },
+    "zeroshot_SigLIP2": {
+      "mAP": 0.4445509259879134,
+      "P@5": 0.5386666666666667,
+      "NDCG@10": 0.52776371344896
+    },
+    "logit_VLM_lookup": {
+      "mAP": 0.39025276587543034,
+      "P@5": 0.3466666666666667,
+      "NDCG@10": 0.37344534750998537
+    }
+  },
+  "per_stratum": {
+    "compositional_heldout": {
+      "attribute_index(TAUTOLOGY)": 1.0,
+      "logit_VLM_lookup": 0.05153770307523928,
+      "zeroshot_SigLIP2": 0.3701284652078132,
+      "SceneMiner_v2.2": 0.4722177744133873,
+      "SceneMiner_v2.2_monocular": 0.44597931954162295,
+      "SceneMiner_v2.1": 0.5496094128736219,
+      "v2.2_ablate_PartNorm": 0.4356463549739748,
+      "v2.2_ablate_text_centring": 0.47155191265814966
+    },
+    "macro_environmental": {
+      "attribute_index(TAUTOLOGY)": 1.0,
+      "logit_VLM_lookup": 0.2701893808121473,
+      "zeroshot_SigLIP2": 0.48670818992421416,
+      "SceneMiner_v2.2": 0.40754575216958977,
+      "SceneMiner_v2.2_monocular": 0.3925797060052815,
+      "SceneMiner_v2.1": 0.4078662667972798,
+      "v2.2_ablate_PartNorm": 0.3844404720190266,
+      "v2.2_ablate_text_centring": 0.4063161657684783
+    },
+    "negated": {
+      "attribute_index(TAUTOLOGY)": 1.0,
+      "logit_VLM_lookup": 0.46737658954201383,
+      "zeroshot_SigLIP2": 0.3553535675326913,
+      "SceneMiner_v2.2": 0.434378415358687,
+      "SceneMiner_v2.2_monocular": 0.439573840400022,
+      "SceneMiner_v2.1": 0.4305744388143024,
+      "v2.2_ablate_PartNorm": 0.4148033255987184,
+      "v2.2_ablate_text_centring": 0.43140376402425457
+    },
+    "sensor_degradation": {
+      "attribute_index(TAUTOLOGY)": 1.0,
+      "logit_VLM_lookup": 0.5859795655540572,
+      "zeroshot_SigLIP2": 0.44398401126531717,
+      "SceneMiner_v2.2": 0.650236226530492,
+      "SceneMiner_v2.2_monocular": 0.632371449527629,
+      "SceneMiner_v2.1": 0.6607935423934835,
+      "v2.2_ablate_PartNorm": 0.6166274683829698,
+      "v2.2_ablate_text_centring": 0.6477457496856895
+    }
+  }
+}
