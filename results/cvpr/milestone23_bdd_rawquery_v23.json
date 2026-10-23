@@ -1,0 +1,304 @@
+{
+ "B_bdd100k": {
+  "n_images": 1000,
+  "n_queries": 12,
+  "per_query": [
+   {
+    "query": "wet reflective asphalt after rainfall",
+    "category": "in_vocab",
+    "gamma": 0.9999912977218628,
+    "concept_argmax": "wet_road",
+    "concept_pmax": 0.9989475607872009,
+    "apriori_channel": "wet_road",
+    "routing": [
+     0.22664979100227356,
+     0.7733501195907593,
+     0.0
+    ],
+    "mAP": {
+     "zeroshot_SigLIP2": 0.429874598643891,
+     "logit_VLM_lookup": 0.6197374407243021,
+     "v2.3_full": 0.6304570465888145,
+     "v2.3_abstain": 0.6304570465888145,
+     "v2.3_no_gate": 0.6304570465888145,
+     "v2.3_no_rescue": 0.6304570465888145
+    }
+   },
+   {
+    "query": "driving in rain",
+    "category": "out_of_vocab",
+    "gamma": 0.3436029255390167,
+    "concept_argmax": "wet_road",
+    "concept_pmax": 0.5408511757850647,
+    "apriori_channel": "wet_road",
+    "routing": [
+     0.25750571489334106,
+     0.7424942851066589,
+     0.0
+    ],
+    "mAP": {
+     "zeroshot_SigLIP2": 0.5562110547692591,
+     "logit_VLM_lookup": 0.6197374407243021,
+     "v2.3_full": 0.6557433053693191,
+     "v2.3_abstain": 0.6106106393366931,
+     "v2.3_no_gate": 0.64877789739976,
+     "v2.3_no_rescue": 0.6557433053693191
+    }
+   },
+   {
+    "query": "water droplets smearing the camera lens",
+    "category": "in_vocab",
+    "gamma": 0.999998927116394,
+    "concept_argmax": "droplets",
+    "concept_pmax": 0.9995885491371155,
+    "apriori_channel": "droplets",
+    "routing": [
+     0.30747467279434204,
+     0.6925252676010132,
+     0.0
+    ],
+    "mAP": {
+     "zeroshot_SigLIP2": 0.5497060105887079,
+     "logit_VLM_lookup": 0.4110923374597319,
+     "v2.3_full": 0.5335978562132698,
+     "v2.3_abstain": 0.5335978562132698,
+     "v2.3_no_gate": 0.5335978562132698,
+     "v2.3_no_rescue": 0.5335978562132698
+    }
+   },
+   {
+    "query": "snow covering the road",
+    "category": "out_of_vocab",
+    "gamma": 0.6012566089630127,
+    "concept_argmax": "wet_road",
+    "concept_pmax": 0.7083399295806885,
+    "apriori_channel": "wet_road",
+    "routing": [
+     0.3156801164150238,
+     0.6843199133872986,
+     0.0
+    ],
+    "mAP": {
+     "zeroshot_SigLIP2": 0.6169579172358145,
+     "logit_VLM_lookup": 0.13986605412429018,
+     "v2.3_full": 0.23235473616446056,
+     "v2.3_abstain": 0.39726132889944327,
+     "v2.3_no_gate": 0.20438892767272468,
+     "v2.3_no_rescue": 0.23053702281884542
+    }
+   },
+   {
+    "query": "a snowy street scene",
+    "category": "out_of_vocab",
+    "gamma": 0.03791242092847824,
+    "concept_argmax": "wet_road",
+    "concept_pmax": 0.46668559312820435,
+    "apriori_channel": "wet_road",
+    "routing": [
+     0.8357523083686829,
+     0.16424767673015594,
+     0.0
+    ],
+    "mAP": {
+     "zeroshot_SigLIP2": 0.6503036354779392,
+     "logit_VLM_lookup": 0.13986605412429018,
+     "v2.3_full": 0.5751355772241472,
+     "v2.3_abstain": 0.6487386809822774,
+     "v2.3_no_gate": 0.1422466888306422,
+     "v2.3_no_rescue": 0.5751355772241472
+    }
+   },
+   {
+    "query": "driving after dark",
+    "category": "out_of_vocab",
+    "gamma": 0.4332369267940521,
+    "concept_argmax": "glare",
+    "concept_pmax": 0.6054108738899231,
+    "apriori_channel": "low_contrast",
+    "routing": [
+     0.4142051339149475,
+     0.5857948064804077,
+     0.0
+    ],
+    "mAP": {
+     "zeroshot_SigLIP2": 0.9551035727467044,
+     "logit_VLM_lookup": 0.9571950791738516,
+     "v2.3_full": 0.8907395810303097,
+     "v2.3_abstain": 0.9507332763794372,
+     "v2.3_no_gate": 0.8352577265047224,
+     "v2.3_no_rescue": 0.8761461504996938
+    }
+   },
+   {
+    "query": "a night-time street scene",
+    "category": "out_of_vocab",
+    "gamma": 0.03478553146123886,
+    "concept_argmax": "wet_road",
+    "concept_pmax": 0.5291193723678589,
+    "apriori_channel": "low_contrast",
+    "routing": [
+     0.8577293157577515,
+     0.14227057993412018,
+     0.0
+    ],
+    "mAP": {
+     "zeroshot_SigLIP2": 0.9707588529886592,
+     "logit_VLM_lookup": 0.9571950791738516,
+     "v2.3_full": 0.9673412708127742,
+     "v2.3_abstain": 0.9707872820757083,
+     "v2.3_no_gate": 0.7636580370384013,
+     "v2.3_no_rescue": 0.9669388494186848
+    }
+   },
+   {
+    "query": "a low contrast scene where vehicles are barely distinguishable from the background",
+    "category": "in_vocab",
+    "gamma": 0.40934351086616516,
+    "concept_argmax": "low_contrast",
+    "concept_pmax": 0.8631173372268677,
+    "apriori_channel": "low_contrast",
+    "routing": [
+     0.07987669855356216,
+     0.920123279094696,
+     0.0
+    ],
+    "mAP": {
+     "zeroshot_SigLIP2": 0.5499237752906512,
+     "logit_VLM_lookup": 0.9571950791738516,
+     "v2.3_full": 0.926634823919113,
+     "v2.3_abstain": 0.8615493951735003,
+     "v2.3_no_gate": 0.9281103152347231,
+     "v2.3_no_rescue": 0.9392809308250336
+    }
+   },
+   {
+    "query": "blinding headlight bloom from oncoming traffic",
+    "category": "in_vocab",
+    "gamma": 0.9989485144615173,
+    "concept_argmax": "glare",
+    "concept_pmax": 0.9876294136047363,
+    "apriori_channel": "glare",
+    "routing": [
+     0.18027791380882263,
+     0.819722056388855,
+     0.0
+    ],
+    "mAP": {
+     "zeroshot_SigLIP2": 0.871105994537172,
+     "logit_VLM_lookup": 0.6018368454256332,
+     "v2.3_full": 0.707816818594248,
+     "v2.3_abstain": 0.7080836159168926,
+     "v2.3_no_gate": 0.7077881916456724,
+     "v2.3_no_rescue": 0.6530254321339333
+    }
+   },
+   {
+    "query": "bright daytime driving",
+    "category": "out_of_vocab",
+    "gamma": 0.9923223853111267,
+    "concept_argmax": "glare",
+    "concept_pmax": 0.925910472869873,
+    "apriori_channel": "low_contrast",
+    "routing": [
+     0.16967841982841492,
+     0.8303216099739075,
+     0.0
+    ],
+    "mAP": {
+     "zeroshot_SigLIP2": 0.4950404959952983,
+     "logit_VLM_lookup": 0.9440525083775874,
+     "v2.3_full": 0.3279090930232154,
+     "v2.3_abstain": 0.32808634857778596,
+     "v2.3_no_gate": 0.3278671074620274,
+     "v2.3_no_rescue": 0.3279090930232154
+    }
+   },
+   {
+    "query": "overcast grey sky",
+    "category": "out_of_vocab",
+    "gamma": 0.8982732892036438,
+    "concept_argmax": "low_contrast",
+    "concept_pmax": 0.801202654838562,
+    "apriori_channel": "low_contrast",
+    "routing": [
+     0.170011505484581,
+     0.8299884796142578,
+     0.0
+    ],
+    "mAP": {
+     "zeroshot_SigLIP2": 0.26993905590664136,
+     "logit_VLM_lookup": 0.0790942159815275,
+     "v2.3_full": 0.07995709986988175,
+     "v2.3_abstain": 0.08111371707135405,
+     "v2.3_no_gate": 0.07982208293206439,
+     "v2.3_no_rescue": 0.07995709986988175
+    }
+   },
+   {
+    "query": "adverse weather on the road",
+    "category": "out_of_vocab",
+    "gamma": 0.25888296961784363,
+    "concept_argmax": "wet_road",
+    "concept_pmax": 0.479326456785202,
+    "apriori_channel": "wet_road",
+    "routing": [
+     0.47094541788101196,
+     0.5290546417236328,
+     0.0
+    ],
+    "mAP": {
+     "zeroshot_SigLIP2": 0.5471327543659465,
+     "logit_VLM_lookup": 0.6182628066744288,
+     "v2.3_full": 0.5343963838371817,
+     "v2.3_abstain": 0.5715384721800599,
+     "v2.3_no_gate": 0.4891851760857227,
+     "v2.3_no_rescue": 0.5343963838371817
+    }
+   }
+  ],
+  "rankers": {
+   "zeroshot_SigLIP2": {
+    "mAP": 0.6218381432122236,
+    "P@5": 0.8500000000000001,
+    "NDCG@10": 0.808780276587184,
+    "mAP_in_vocab": 0.6001525947651055,
+    "mAP_out_of_vocab": 0.6326809174357828
+   },
+   "logit_VLM_lookup": {
+    "mAP": 0.587094245094804,
+    "P@5": 0.7166666666666667,
+    "NDCG@10": 0.7053837213336324,
+    "mAP_in_vocab": 0.6474654256958797,
+    "mAP_out_of_vocab": 0.5569086547942661
+   },
+   "v2.3_full": {
+    "mAP": 0.5885069660538945,
+    "P@5": 0.7666666666666666,
+    "NDCG@10": 0.7871110889577682,
+    "mAP_in_vocab": 0.6996266363288614,
+    "mAP_out_of_vocab": 0.5329471309164112
+   },
+   "v2.3_abstain": {
+    "mAP": 0.6077131382829364,
+    "P@5": 0.7833333333333333,
+    "NDCG@10": 0.799486729841225,
+    "mAP_in_vocab": 0.6834219784731193,
+    "mAP_out_of_vocab": 0.569858718187845
+   },
+   "v2.3_no_gate": {
+    "mAP": 0.5242630878007121,
+    "P@5": 0.7166666666666667,
+    "NDCG@10": 0.7226712078697085,
+    "mAP_in_vocab": 0.69998835242062,
+    "mAP_out_of_vocab": 0.4364004554907581
+   },
+   "v2.3_no_rescue": {
+    "mAP": 0.5835937289851684,
+    "P@5": 0.7666666666666666,
+    "NDCG@10": 0.7871110889577682,
+    "mAP_in_vocab": 0.6890903164402629,
+    "mAP_out_of_vocab": 0.5308454352576212
+   }
+  }
+ }
+}

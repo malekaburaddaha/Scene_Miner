@@ -42,12 +42,13 @@ reading those attributes scores exactly $1.000$~mAP. \emph{(ii)} When the 3D
 detector that certifies mined scenes was trained on them, per-scene mAP is
 inflated by $+0.3349$ ($+74\%$). \emph{(iii)} Learned fusion of several signals
 fails silently through scale incommensurability: parts that differ by
-$28.1\times$ in spread, a residual an order of magnitude larger than its base,
+$30.3\times$ in spread, a residual an order of magnitude larger than its base,
 and a width-1 LayerNorm that kills a modality outright while task mAP moves by
 $0.004$. Standardising every level, and deciding when to trust a vision--language
 teacher with a factored concept gate built only from training text, gives
 SceneMiner. It reaches $0.785$~mAP on $550$ human-labelled scenes ($0.826$ with
-calibration) and $0.632$ on an external corpus (zero-shot SigLIP2: $0.622$). On
+calibration) and $0.616$ on an external corpus, within $0.006$ of zero-shot
+SigLIP2 ($+0.100$ on queries naming a trained attribute). On
 $40$ safety-critical semantic queries graded by human 3D annotation it matches
 SigLIP2. Its lead over a fixed-column lookup survives a simulated second rater in
 $92$--$100\%$ of trials. On $150$ uncontaminated validation scenes, front-camera
@@ -234,18 +235,18 @@ The natural fusion design combines a SigLIP2 cosine, a selected VLM margin and a
 metadata prior with query-conditioned convex weights $\mathbf{w}(q)$, plus a
 gated cross-attention residual. Trained on VLM pseudo-labels, this \emph{naive
 convex router} puts $0.967$--$0.992$ of its weight on the margin: a teacher
-shortcut, since the targets come from the VLM. Externally it scores $0.4189$~mAP
-on BDD100K, against $0.6218$ for zero-shot SigLIP2. Repairing the router alone,
+shortcut, since the targets come from the VLM. Externally it scores $0.486$~mAP
+on BDD100K, against $0.622$ for zero-shot SigLIP2. Repairing the router alone,
 with channel dropout, an entropy floor and modality masking, lowers the margin
-weight from $0.980$ to $0.535$ yet moves external mAP by only $+0.0004$. The
+weight from $0.980$ to $0.535$ yet moves external mAP by $-0.001$. The
 router was never the cause. Three scale defects were, and none of them shows
 in task mAP.
 
 \paragraph{Level 1: the parts.} The router's blend scores \emph{below both
-signals it blends} ($0.4181$ vs.\ $0.6218$ and $0.5871$), which no convex
-combination of commensurate signals can do. The margin part has $28.1\times$ the
-spread of the cosine (std $0.5419$ vs.\ $0.0193$), so a nominal $50/50$ weight is
-$\sim\!96\%$ margin. The gap is visible during training without labels: running
+signals it blends} ($0.485$ vs.\ $0.622$ and $0.587$), which no convex
+combination of commensurate signals can do. The margin part has $30.3\times$ the
+spread of the cosine (std $0.583$ vs.\ $0.019$), so a nominal $50/50$ weight is
+$\sim\!97\%$ margin. The gap is visible during training without labels: running
 stds converge to $[0.031, 0.566, 0.159]$.
 
 \paragraph{Level 2: the residual.} The gated residual has $2$--$3\times$ the
@@ -380,11 +381,11 @@ and top-5 domain skew.}
 \toprule
 design & human GT & BDD100K & suite / skew\\
 \midrule
-naive convex router & $0.736$ / $0.792$ & $0.419$ & $0.531$ / $+8.7$\\
-$+$ anti-collapse routing & $0.707$ / $0.766$ & $0.595$ & $0.518$ / $+1.1$\\
-$+$ \textsc{ResNorm}, single-prompt gate & \best{0.790} / \best{0.828} & $0.613$ & $0.631$ / $+17.0$\\
-$+$ contrastive gate, abstention & $0.788$ / $0.817$ & \best{0.639} & $0.594$ / \best{$+0.5$}\\
-\textbf{SceneMiner} (factored gate) & $0.785$ / $0.826$ & $0.632$ & \best{0.685} / $+2.2$\\
+naive convex router & $0.736$ / $0.792$ & $0.486$ & $0.531$ / $+8.7$\\
+$+$ anti-collapse routing & $0.707$ / $0.766$ & $0.570$ & $0.518$ / $+1.1$\\
+$+$ \textsc{ResNorm}, single-prompt gate & \best{0.790} / \best{0.828} & $0.589$ & $0.631$ / $+17.0$\\
+$+$ contrastive gate, abstention & $0.788$ / $0.817$ & \best{0.628} & $0.594$ / \best{$+0.5$}\\
+\textbf{SceneMiner} (factored gate) & $0.785$ / $0.826$ & $0.616$ & \best{0.685} / $+2.2$\\
 \midrule
 zero-shot SigLIP2 & $0.569$ & $0.622$ & $0.445$ / $-16.2$\\
 logit VLM lookup & $0.733$ & $0.587$ & $0.390$ / $-6.6$\\
@@ -399,8 +400,8 @@ defect. Anti-collapse routing alone does not help; \textsc{ResNorm} gives the
 largest in-domain gain; the contrastive gate and abstention give the first
 external result above SigLIP2 and remove the domain skew; and the factored gate
 recovers compositional queries. No single design wins every column.
-SceneMiner trades $0.007$ BDD100K mAP against the unfactored gate for $+0.091$ on
-the suite. The difference is one query: removing the context subspace raises
+SceneMiner trades $0.012$ BDD100K mAP against the unfactored gate for $+0.091$ on
+the suite. Most of the difference is one query: removing the context subspace raises
 ``snow covering the road'' from $\gdeg=0.49$ to $0.71$ (\cref{tab:bddq}).
 
 \begin{table}[t]\centering\small
@@ -411,10 +412,10 @@ the suite. The difference is one query: removing the context subspace raises
 \toprule
 variant & human GT & BDD100K & suite / skew\\
 \midrule
-\textbf{SceneMiner} & \best{0.7845} & \best{0.6317} & \best{0.685} / $+2.2$\\
+\textbf{SceneMiner} & \best{0.7845} & \best{0.6164} & \best{0.685} / $+2.2$\\
 without metadata in $s_{\mathrm{abst}}$ & \best{0.7845} & -- & $0.606$ / $-0.2$\\
-without abstention & \best{0.7845} & $0.6233$ & $0.634$ / $+17.0$\\
-without $\gdeg$ on routing & \best{0.7845} & $0.6277$ & \best{0.685} / $+2.1$\\
+without abstention & \best{0.7845} & $0.6074$ & $0.634$ / $+17.0$\\
+without $\gdeg$ on routing & \best{0.7845} & $0.6138$ & \best{0.685} / $+2.1$\\
 without \textsc{ResNorm} & $0.7689$ & -- & $0.633$ / $+2.2$\\
 \bottomrule
 \end{tabular}%
@@ -440,17 +441,17 @@ $s_{\mathrm{abst}}$ is the SigLIP2 cosine. No tuning on BDD100K.}
 \toprule
 ranker & all & in-voc & OOV & P@5 & NDCG@10\\
 \midrule
-\textbf{SceneMiner} & \best{0.6317} & \best{0.7081} & $0.5936$ & $0.833$ & \best{0.814}\\
-zero-shot SigLIP2 & $0.6218$ & $0.6002$ & \best{0.6327} & \best{0.850} & $0.809$\\
+\textbf{SceneMiner} & $0.6164$ & \best{0.7003} & $0.5745$ & $0.817$ & $0.782$\\
+zero-shot SigLIP2 & \best{0.6218} & $0.6002$ & \best{0.6327} & \best{0.850} & \best{0.809}\\
 logit VLM lookup & $0.5871$ & $0.6475$ & $0.5569$ & $0.717$ & $0.705$\\
 \bottomrule
 \end{tabular}%
 }
 \end{table}
 
-\paragraph{External transfer.} \cref{tab:bdd,tab:bddq}. SceneMiner exceeds
-zero-shot SigLIP2 ($0.6317$ vs.\ $0.6218$), with $+0.108$ on in-vocabulary
-queries. The gate switches off context and weather queries that a single-prompt
+\paragraph{External transfer.} \cref{tab:bdd,tab:bddq}. SceneMiner is
+$0.005$ below zero-shot SigLIP2 overall ($0.6164$ vs.\ $0.6218$): it gains $+0.100$
+on in-vocabulary queries and loses $0.058$ out of vocabulary. The gate switches off context and weather queries that a single-prompt
 gate mistakes for degradation (``bright daytime driving'', ``driving after dark'':
 $\gdeg=0.000$). Two out-of-vocabulary queries still trigger it, ``overcast grey
 sky'' (as low contrast) and ``snow covering the road'' (as wet road), and they
@@ -698,8 +699,7 @@ A learned fusion must standardise what it combines at every level, because task
 mAP will not reveal a dead or dominating modality. It must also know when its
 training vocabulary applies, and abstain to an open-vocabulary prior plus recorded
 context when it does not. With these, a degradation-specialised head leads every
-human-graded degradation benchmark we have, exceeds SigLIP2 externally, and
-matches it elsewhere.
+human-graded degradation benchmark we have and ties SigLIP2 elsewhere.
 
 \paragraph{What we do not claim.} That learned fusion beats a no-learning fusion
 of SigLIP2 with metadata on object$\times$condition conjunctions: it does not. That
@@ -715,15 +715,11 @@ scored only from portable signals. Three components, text mean-centring,
 failures on evaluation data. None has a parameter fitted to evaluation data, and
 each is supported by training-only evidence (\cref{sec:d3,sec:method}).
 
-\paragraph{For the community.} Four cheap checks catch every defect here: score
-a lookup over your own cached labels; check whether certifying models trained on
-your corpus; when a fusion underperforms its inputs or a modality can be zeroed
-at no cost, inspect the scales of what is fused; and measure an effect where its
-cause acts.
-
-\paragraph{Reproducibility.} Code, splits, all $430$ queries, the human
-annotations and every result file will be released; each number here is
-generated from those files.
+\paragraph{For the community.} Four cheap checks catch every defect here: score a
+lookup over your own cached labels; ask whether the certifier trained on your
+corpus; inspect the scales of what a fusion combines; and measure an effect where
+its cause acts. Code, splits, queries, human annotations and every result file
+will be released.
 
 {
     \small

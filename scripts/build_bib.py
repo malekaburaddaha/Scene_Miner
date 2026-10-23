@@ -13,6 +13,14 @@ from pathlib import Path
 A = json.load(open("paper/bibcheck/api_responses.json"))
 C = json.load(open("paper/bibcheck/crossref_by_doi.json"))
 OA = json.load(open("paper/bibcheck/openalex_roy2007.json"))[0]
+# Milestone 23: four related-work entries, fetched from Crossref by DOI and the arXiv API
+RW = json.load(open("paper/bibcheck/related_work_check_2.json"))
+C.update({"tang2025bevtsr": RW["bevtsr"], "ki2025carim": RW["carim"], "chamiti2025refergpt": RW["refergpt"]})
+# Crossref inverts one name ("Fan JingChen"); the arXiv record of the same paper gives "Jingchen Fan"
+C["tang2025bevtsr"] = dict(C["tang2025bevtsr"], authors=["Jingchen Fan" if x == "Fan JingChen" else x
+                                                         for x in C["tang2025bevtsr"]["authors"]])
+_rv = json.load(open("paper/bibcheck/related_work_check_1.json"))["refav"]
+A["davidson2025refav"] = {"arxiv_id": _rv["id"], "arxiv": _rv}
 
 CVPR = "Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)"
 ICCV = "Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)"
@@ -36,6 +44,10 @@ SPEC = {   # key -> (type, venue field, venue, year, source of authors, extra)
  "mu2018allbutthetop": ("inproceedings", "booktitle", "International Conference on Learning Representations (ICLR)", 2018, "override", {}),
  "bai2025qwen25vl": ("article", "journal", "arXiv preprint arXiv:2502.13923", 2025, "arxiv", {}),
  "tschannen2025siglip2": ("article", "journal", "arXiv preprint arXiv:2502.14786", 2025, "arxiv", {}),
+ "tang2025bevtsr": ("inproceedings", "booktitle", "Proceedings of the AAAI Conference on Artificial Intelligence", 2025, "crossref", {}),
+ "ki2025carim": ("inproceedings", "booktitle", ICCV, 2025, "crossref", {}),
+ "chamiti2025refergpt": ("inproceedings", "booktitle", "Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition Workshops (CVPRW)", 2025, "crossref", {}),
+ "davidson2025refav": ("article", "journal", "arXiv preprint arXiv:2505.20981", 2025, "arxiv", {}),
  "roy2007erank": ("inproceedings", "booktitle", "Proceedings of the European Signal Processing Conference (EUSIPCO)", 2007, "openalex", {}),
 }
 OVERRIDES = {
@@ -50,7 +62,7 @@ def bibname(n):
     parts = n.split()
     if "," in n: return n
     # keep particles (Van Gool) with the surname
-    if len(parts) >= 3 and parts[-2].lower() in ("van", "von", "de", "der", "da"):
+    if len(parts) >= 3 and parts[-2].lower() in ("van", "von", "de", "der", "da", "di"):
         return f"{' '.join(parts[-2:])}, {' '.join(parts[:-2])}"
     return f"{parts[-1]}, {' '.join(parts[:-1])}"
 

@@ -1,0 +1,105 @@
+{
+ "carim": {
+  "doi": "10.1109/iccv51701.2025.02046",
+  "title": "CARIM: Caption-Based Autonomous Driving Scene Retrieval via Inclusive Text Matching",
+  "container": "2025 IEEE/CVF International Conference on Computer Vision (ICCV)",
+  "year": 2025,
+  "volume": null,
+  "issue": null,
+  "page": "22036-22045",
+  "authors": [
+   "Minjoo Ki",
+   "Daejung Kim",
+   "Kisung Kim",
+   "Seon Joo Kim",
+   "Jinhan Lee"
+  ]
+ },
+ "refergpt": {
+  "doi": "10.1109/cvprw67362.2025.00370",
+  "title": "ReferGPT: Towards Zero-Shot Referring Multi-Object Tracking",
+  "container": "2025 IEEE/CVF Conference on Computer Vision and Pattern Recognition Workshops (CVPRW)",
+  "year": 2025,
+  "volume": null,
+  "issue": null,
+  "page": "3849-3858",
+  "authors": [
+   "Tzoulio Chamiti",
+   "Leandro Di Bella",
+   "Adrian Munteanu",
+   "Nikos Deligiannis"
+  ]
+ },
+ "bevtsr": {
+  "doi": "10.1609/aaai.v39i7.32782",
+  "title": "BEV-TSR: Text-Scene Retrieval in BEV Space for Autonomous Driving",
+  "container": "Proceedings of the AAAI Conference on Artificial Intelligence",
+  "year": 2025,
+  "volume": "39",
+  "issue": "7",
+  "page": "7275-7283",
+  "authors": [
+   "Tao Tang",
+   "Dafeng Wei",
+   "Zhengyu Jia",
+   "Tian Gao",
+   "Changwei Cai",
+   "Chengkai Hou",
+   "Peng Jia",
+   "Kun Zhan",
+   "Haiyang Sun",
+   "Fan JingChen",
+   "Yixing Zhao",
+   "Xiaodan Liang",
+   "Xianpeng Lang",
+   "Yang Wang"
+  ]
+ },
+ "s2": [
+  {
+   "paperId": "dd690ad33426d45d1d93b5a72588f7f83ab0a7bb",
+   "externalIds": {
+    "ArXiv": "2505.20981",
+    "DBLP": "journals/corr/abs-2505-20981",
+    "DOI": "10.48550/arXiv.2505.20981",
+    "CorpusId": 278911182
+   },
+   "publicationVenue": {
+    "id": "1901e811-ee72-4b20-8f7e-de08cd395a10",
+    "name": "arXiv.org",
+    "alternate_names": [
+     "ArXiv"
+    ],
+    "issn": "2331-8422",
+    "url": "https://arxiv.org"
+   },
+   "title": "RefAV: Towards Planning-Centric Scenario Mining",
+   "venue": "arXiv.org",
+   "year": 2025
+  },
+  {
+   "paperId": "c02bdabb695aac914a0bc53c5f41ba90a94fe6c5",
+   "externalIds": {
+    "ArXiv": "2401.01065",
+    "DBLP": "conf/aaai/TangWJGCHJZSFZL25",
+    "DOI": "10.1609/aaai.v39i7.32782",
+    "CorpusId": 266725357
+   },
+   "publicationVenue": {
+    "id": "bdc2e585-4e48-4e36-8af1-6d859763d405",
+    "name": "AAAI Conference on Artificial Intelligence",
+    "type": "conference",
+    "alternate_names": [
+     "National Conference on Artificial Intelligence",
+     "National Conf Artif Intell",
+     "AAAI Conf Artif Intell",
+     "AAAI"
+    ],
+    "url": "http://www.aaai.org/"
+   },
+   "title": "BEV-TSR: Text-Scene Retrieval in BEV Space for Autonomous Driving",
+   "venue": "AAAI Conference on Artificial Intelligence",
+   "year": 2024
+  }
+ ]
+}

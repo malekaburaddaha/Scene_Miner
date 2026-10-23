@@ -1,0 +1,37 @@
+{
+ "doc": "CARIM-style diagnostic on the 550 human-GT scenes: dense vs BM25 parts, and how often captions mention the attribute only to negate it",
+ "attributes": {
+  "droplets": {
+   "dense": 0.5018429498446492,
+   "bm25": 0.4040356194125444,
+   "sum": 0.5447022375119397,
+   "prevalence": 0.14363636363636365,
+   "caption_mentions_frac": 0.8368700265251989,
+   "caption_negated_mentions_frac": 0.6445623342175066
+  },
+  "glare": {
+   "dense": 0.0968217802225239,
+   "bm25": 0.11869552789222447,
+   "sum": 0.11640613090763716,
+   "prevalence": 0.07454545454545454,
+   "caption_mentions_frac": 0.6996021220159151,
+   "caption_negated_mentions_frac": 0.6432360742705571
+  },
+  "wet_road": {
+   "dense": 0.506104403604587,
+   "bm25": 0.7006550913542258,
+   "sum": 0.7115140941761915,
+   "prevalence": 0.15454545454545454,
+   "caption_mentions_frac": 0.2957559681697613,
+   "caption_negated_mentions_frac": 0.0
+  },
+  "low_contrast": {
+   "dense": 0.09148233815968788,
+   "bm25": 0.19976626623253463,
+   "sum": 0.1343357121465028,
+   "prevalence": 0.12,
+   "caption_mentions_frac": 0.2526525198938992,
+   "caption_negated_mentions_frac": 0.04840848806366048
+  }
+ }
+}

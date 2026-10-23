@@ -23,4 +23,8 @@ Every entry was generated from metadata fetched in Milestone 20 (arXiv API, Cros
 | `mu2018allbutthetop` | 1702.01417 | override | International Conference on Learning Representations (ICLR) | 2018 | 2 | - |
 | `bai2025qwen25vl` | 2502.13923 | arxiv | arXiv preprint arXiv:2502.13923 | 2025 | 27 | - |
 | `tschannen2025siglip2` | 2502.14786 | arxiv | arXiv preprint arXiv:2502.14786 | 2025 | 14 | - |
+| `tang2025bevtsr` | - | crossref | Proceedings of the AAAI Conference on Artificial Intelligence | 2025 | 14 | 10.1609/aaai.v39i7.32782 |
+| `ki2025carim` | - | crossref | Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) | 2025 | 5 | 10.1109/iccv51701.2025.02046 |
+| `chamiti2025refergpt` | - | crossref | Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition Workshops (CVPRW) | 2025 | 4 | 10.1109/cvprw67362.2025.00370 |
+| `davidson2025refav` | 2505.20981 | arxiv | arXiv preprint arXiv:2505.20981 | 2025 | 3 | - |
 | `roy2007erank` | - | openalex | Proceedings of the European Signal Processing Conference (EUSIPCO) | 2007 | 2 | 10.5281/zenodo.40328 |

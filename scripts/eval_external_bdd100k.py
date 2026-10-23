@@ -162,7 +162,9 @@ def main():
     with torch.no_grad():
         ti = tkz(qtexts, padding="max_length", truncation=True, max_length=64,
                  return_tensors="pt").to(dev)
-        QT = F.normalize(feat(sm_.get_text_features(**ti)), dim=-1)
+        # raw text features for the learned heads (their training input); the unit
+        # vector only for the SigLIP2 cosine (Milestone 23 fix: this line normalised both)
+        QT = feat(sm_.get_text_features(**ti)); QN = F.normalize(QT, dim=-1)
     del sm_; torch.cuda.empty_cache()
 
     # the portable part of each head: learned routing over (siglip, margin, meta)
@@ -187,7 +189,7 @@ def main():
         rel = np.array([labels[n][field] in pos for n in names])
         if rel.sum() == 0 or rel.sum() == len(names): continue
         qv = QT[qi].unsqueeze(0).expand(len(names), -1)
-        cos = (S @ QT[qi]).cpu().numpy()
+        cos = (S @ QN[qi]).cpu().numpy()
         # A-PRIORI channel (no labels consulted) ...
         att, sgn = CHANNEL[qt]
         j_apriori = ATT.index(att)

@@ -178,13 +178,15 @@ def bench_bdd(a, M):
     S = torch.from_numpy(z["siglip"]).float().to(dev); Mz = torch.from_numpy(MZ).float().to(dev)
     N = len(names); PR = torch.zeros(N, 26, device=dev)
     av2 = torch.stack([torch.ones(N, device=dev), torch.ones(N, device=dev), torch.zeros(N, device=dev)], -1)
-    QT = F.normalize(text_embed([q for q, _ in EVAL_Q]), dim=-1)
+    # raw text features, as in training and in benches (A)/(C); Milestone 23 found this
+    # line L2-normalised them, which changed the scale seen by the learned selectors
+    QT = text_embed([q for q, _ in EVAL_Q]); QN = F.normalize(QT, dim=-1)
     rows, per_q = {}, []
     for qi, (qt, (field, pos)) in enumerate(EVAL_Q):
         rel = np.array([labels[n][field] in pos for n in names])
         if rel.sum() in (0, N): continue
         qv = QT[qi].unsqueeze(0).expand(N, -1)
-        cos = (S @ QT[qi]).cpu().numpy()
+        cos = (S @ QN[qi]).cpu().numpy()
         att, sgn = CHANNEL[qt]; j = TRAIN_ORDER.index(att)
         R = {"zeroshot_SigLIP2": cos, "logit_VLM_lookup": sgn * MZ[:, j]}
         with torch.no_grad():
