@@ -95,10 +95,12 @@ def val150_siglip(thumbs, cache):
     return sc, X
 
 
-def load_v23(rk, d_qwen=2048):
+def load_v23(rk, d_qwen=2048, which="v23"):
     from scene_mining.filter.sceneminer_v2_3 import SceneMinerV23
+    if which == "v24":
+        from scene_mining.filter.sceneminer_v2_4 import SceneMinerV24 as SceneMinerV23
     M = []
-    for c in sorted(glob.glob("work_dirs/sceneminer_v23/s*/final.pt")):
+    for c in sorted(glob.glob(f"work_dirs/sceneminer_{which}/s*/final.pt")):
         d = torch.load(c, map_location=dev, weights_only=False)
         m = SceneMinerV23(d_qwen=d_qwen, d_siglip=768, n_margins=4, n_meta=6, d_text=768,
                           risk_stats=(float(rk.mean()), float(rk.std()))).to(dev)
@@ -110,18 +112,20 @@ def portable(M, qv, S, MZt, abstain=False):
     """v2.3 base score with the meta channel declared absent (no rig, no tags)."""
     N = S.shape[0]; PR = torch.zeros(N, 26, device=dev)
     av = torch.stack([torch.ones(N, device=dev), torch.ones(N, device=dev), torch.zeros(N, device=dev)], -1)
+    prev = [m.use_abstain for m in M]
     for m in M: m.use_abstain = abstain
     with torch.no_grad():
         out = np.mean([m.base_score(qv, S, MZt, PR, av).cpu().numpy() for m in M], 0)
-    for m in M: m.use_abstain = False
+    for m, pv in zip(M, prev): m.use_abstain = pv
     return out
 
 
 def with_abstain(M, fn):
+    prev = [m.use_abstain for m in M]
     for m in M: m.use_abstain = True
     try: return fn()
     finally:
-        for m in M: m.use_abstain = False
+        for m, pv in zip(M, prev): m.use_abstain = pv
 
 
 def summarise(rows, queries):
@@ -165,7 +169,7 @@ def main():
     ap.add_argument("--val-margins", default="work_dirs/val150_camfront_signals.npz")
     ap.add_argument("--val-siglip", default="work_dirs/val150_siglip.npz")
     ap.add_argument("--val-thumbs", default="work_dirs/val150_thumbs")
-    ap.add_argument("--out", default="results/cvpr/milestone15_semantic_edge_cases.json")
+    ap.add_argument("--out", default="results/cvpr/milestone18_semantic_edge_cases.json")
     a = ap.parse_args()
     Q = json.load(open(a.queries))["queries"]
     G = json.load(open(a.gt))["scenes"]
@@ -183,6 +187,8 @@ def main():
     sig, mz, prior = T("siglip_img"), T("vlm_margin_z"), T("prior")
     qwen = torch.load(Path(a.work)/"V_frozen_cache.pt", map_location=dev).float()
     M = load_v23(risk.reshape(-1).cpu().numpy())
+    M24 = load_v23(risk.reshape(-1).cpu().numpy(), which="v24")
+    for m in M24: m.use_abstain = True
     W = Path(a.work)
     vlm = json.load(open(W/"binary_flags_with_logits.json"))
     strict = json.load(open(W/"lowcontrast_strict.json"))
@@ -201,7 +207,8 @@ def main():
     rows = {k: [] for k in ["random", "flat_VLM_lookup", "logit_VLM_lookup", "metadata_matched",
                             "zeroshot_SigLIP2", "v2.3_monocular", "v2.3_portable_base",
                             "BLIP2_tag_lookup [contam.]", "v2.3_full [contam.]",
-                            "v2.3A_monocular", "v2.3A_portable_base", "v2.3A_full [contam.]"]}
+                            "v2.3A_monocular", "v2.3A_portable_base", "v2.3A_full [contam.]",
+                            "v2.4_monocular", "v2.4_portable_base", "v2.4_full [contam.]"]}
     per_q = []
     for qi, q in enumerate(Q):
         rel = np.array([all(truth(t, k) == v for k, v in q["predicate"].items()) for t in toks])
@@ -226,6 +233,7 @@ def main():
             R["v2.3_monocular"] = np.mean([m(qv, qv, emb, tlog, risk, qwen, sig, mz, prior, has_3d=off)
                                            .cpu().numpy() for m in M], 0)[idx]
             _, gam, _ = M[0].concept(QT[qi:qi+1])
+            _, gam24, _ = M24[0].concept(QT[qi:qi+1])
         R["v2.3_portable_base"] = portable(M, qv, sig, mz)[idx]
         # POST-HOC variant: abstention toward SigLIP2 out of vocabulary
         with torch.no_grad():
@@ -234,14 +242,21 @@ def main():
             R["v2.3A_monocular"] = with_abstain(M, lambda: np.mean(
                 [m(qv, qv, emb, tlog, risk, qwen, sig, mz, prior, has_3d=off).cpu().numpy() for m in M], 0)[idx])
         R["v2.3A_portable_base"] = portable(M, qv, sig, mz, abstain=True)[idx]
+        with torch.no_grad():
+            R["v2.4_full [contam.]"] = np.mean([m(qv, qv, emb, tlog, risk, qwen, sig, mz, prior, has_3d=on)
+                                                .cpu().numpy() for m in M24], 0)[idx]
+            R["v2.4_monocular"] = np.mean([m(qv, qv, emb, tlog, risk, qwen, sig, mz, prior, has_3d=off)
+                                           .cpu().numpy() for m in M24], 0)[idx]
+        R["v2.4_portable_base"] = portable(M24, qv, sig, mz, abstain=True)[idx]
         res = {k: metrics(v, rel) for k, v in R.items()}
         for k in rows: rows[k].append(res[k])
         per_q.append({"text": q["text"], "stratum": q["stratum"], "predicate": q["predicate"],
-                      "n_pos": int(rel.sum()), "gamma": float(gam),
+                      "n_pos": int(rel.sum()), "gamma": float(gam), "gamma_v24": float(gam24),
                       "mAP": {k: v["mAP"] for k, v in res.items()}})
     corpus_out = {"n_scenes": len(toks), "per_query": per_q, "summary": summarise(rows, Q),
                   "tests": {}}
-    for a_, b_ in [("v2.3A_monocular", "zeroshot_SigLIP2"), ("v2.3A_full [contam.]", "zeroshot_SigLIP2"),
+    for a_, b_ in [("v2.4_monocular", "zeroshot_SigLIP2"), ("v2.4_monocular", "logit_VLM_lookup"),
+                   ("v2.3A_monocular", "zeroshot_SigLIP2"), ("v2.3A_full [contam.]", "zeroshot_SigLIP2"),
                    ("v2.3A_monocular", "logit_VLM_lookup"), ("v2.3_monocular", "zeroshot_SigLIP2"), ("v2.3_full [contam.]", "zeroshot_SigLIP2"),
                    ("v2.3_monocular", "logit_VLM_lookup")]:
         for st in ["semantic_atomic", "semantic_compositional"]:
@@ -259,7 +274,7 @@ def main():
     S = torch.from_numpy(VS).float().to(dev); MZt = torch.from_numpy(VMZ).float().to(dev)
     vQ = [q for q in Q if q["condition"] in (None, "night", "rain")]
     vrows = {k: [] for k in ["random", "logit_VLM_lookup", "metadata_matched", "zeroshot_SigLIP2",
-                             "v2.3_portable_base", "v2.3A_portable_base"]}
+                             "v2.3_portable_base", "v2.3A_portable_base", "v2.4_portable_base"]}
     vper = []
     for q in vQ:
         qi = Q.index(q)
@@ -275,6 +290,7 @@ def main():
         R["zeroshot_SigLIP2"] = (S @ QN[qi]).cpu().numpy()
         R["v2.3_portable_base"] = portable(M, QT[qi].unsqueeze(0).expand(len(vs), -1), S, MZt)
         R["v2.3A_portable_base"] = portable(M, QT[qi].unsqueeze(0).expand(len(vs), -1), S, MZt, abstain=True)
+        R["v2.4_portable_base"] = portable(M24, QT[qi].unsqueeze(0).expand(len(vs), -1), S, MZt, abstain=True)
         res = {k: metrics(v, rel) for k, v in R.items()}
         for k in vrows: vrows[k].append(res[k])
         vper.append({"text": q["text"], "stratum": q["stratum"], "predicate": q["predicate"],
@@ -283,6 +299,10 @@ def main():
     val_out = {"n_scenes": len(vs), "per_query": vper, "summary": summarise(vrows, vQk),
                "tests": {"v2.3_portable_base vs zeroshot_SigLIP2 | semantic_atomic":
                          paired(vrows, vQk, "v2.3_portable_base", "zeroshot_SigLIP2", "semantic_atomic"),
+                         "v2.4_portable_base vs zeroshot_SigLIP2 | semantic_atomic":
+                         paired(vrows, vQk, "v2.4_portable_base", "zeroshot_SigLIP2", "semantic_atomic"),
+                         "v2.4_portable_base vs zeroshot_SigLIP2 | semantic_compositional":
+                         paired(vrows, vQk, "v2.4_portable_base", "zeroshot_SigLIP2", "semantic_compositional"),
                          "v2.3A_portable_base vs zeroshot_SigLIP2 | semantic_atomic":
                          paired(vrows, vQk, "v2.3A_portable_base", "zeroshot_SigLIP2", "semantic_atomic")}}
     out = {"doc": __doc__, "corpus_258": corpus_out, "val150_clean": val_out}

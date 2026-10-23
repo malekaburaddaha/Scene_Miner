@@ -1,0 +1,2141 @@
+{
+ "doc": "MILESTONE 15 - Stratum 5 against 100 % human ground truth.\n\nTwo evaluation sets:\n\n  CORPUS: the 258 nuScenes eval-split scenes that carry human degradation\n    labels. CONTAMINATION WARNING: these scenes belong to the official nuScenes\n    TRAIN split. BEVFormer (source of the BEV embedding e and risk r) was trained\n    on their 3D boxes, and the BLIP-2 tag head (source of the 20 tags t) was\n    supervised with nuPrompt tags for them - and those tags include\n    object_pedestrian, object_bus, scene_construction_zone. Any ranker that\n    reads e, r or t is therefore marked [contam.] here. The clean rankers use\n    only frozen, web-trained signals: SigLIP2, the Qwen VLM margins, and\n    SceneMiner v2.3 in monocular mode (3D tokens and tag prior masked).\n\n  VAL150: the 150 official nuScenes VAL scenes, which neither BEVFormer nor\n    our heads trained on. Only portable signals exist here (SigLIP2 on the\n    CAM_FRONT keyframe, and the CAM_FRONT VLM margins from Milestone 11), so\n    this is the fully clean test. Lens/road degradation has no human labels on\n    val150, so only atomic queries and night/rain conjunctions are graded.\n\nRankers. A ranker with nothing to say about a query (a 4-column VLM lookup asked\nabout pedestrians) scores every scene equally; its AP is the expectation over\nrandom tie-breaking, i.e. chance. For conjunctions the lookups use the a-priori\ncolumn (night -> low_contrast, rain -> wet_road, others their own column) and\nthe metadata ranker uses recorded lighting/weather - which, for night and rain,\nis the same human scene description the ground truth uses.\n",
+ "corpus_258": {
+  "n_scenes": 258,
+  "per_query": [
+   {
+    "text": "pedestrians walking near the roadway",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "pedestrian_close": true
+    },
+    "n_pos": 77,
+    "gamma": 0.12877687811851501,
+    "gamma_v24": 0.00011192409874638543,
+    "mAP": {
+     "random": 0.311965058790212,
+     "flat_VLM_lookup": 0.311965058790212,
+     "logit_VLM_lookup": 0.311965058790212,
+     "metadata_matched": 0.311965058790212,
+     "zeroshot_SigLIP2": 0.4640904478544717,
+     "BLIP2_tag_lookup [contam.]": 0.34177541211010937,
+     "v2.3_full [contam.]": 0.2915150882003817,
+     "v2.3_monocular": 0.3114887312484513,
+     "v2.3_portable_base": 0.38637646604818465,
+     "v2.3A_full [contam.]": 0.4689645180534237,
+     "v2.3A_monocular": 0.46671561519721444,
+     "v2.3A_portable_base": 0.4645987656167124,
+     "v2.4_full [contam.]": 0.4640227529190943,
+     "v2.4_monocular": 0.4640904478544717,
+     "v2.4_portable_base": 0.4640904478544717
+    }
+   },
+   {
+    "text": "a person crossing the street in front of the car",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "pedestrian_close": true
+    },
+    "n_pos": 77,
+    "gamma": 0.08007471263408661,
+    "gamma_v24": 0.0002510261256247759,
+    "mAP": {
+     "random": 0.311965058790212,
+     "flat_VLM_lookup": 0.311965058790212,
+     "logit_VLM_lookup": 0.311965058790212,
+     "metadata_matched": 0.311965058790212,
+     "zeroshot_SigLIP2": 0.39305838392538817,
+     "BLIP2_tag_lookup [contam.]": 0.34177541211010937,
+     "v2.3_full [contam.]": 0.2814298360226378,
+     "v2.3_monocular": 0.2945531602887722,
+     "v2.3_portable_base": 0.33193196087401206,
+     "v2.3A_full [contam.]": 0.38589043705360043,
+     "v2.3A_monocular": 0.38656768984825113,
+     "v2.3A_portable_base": 0.3900870439906974,
+     "v2.4_full [contam.]": 0.3928800338394297,
+     "v2.4_monocular": 0.3929940258637642,
+     "v2.4_portable_base": 0.39305838392538817
+    }
+   },
+   {
+    "text": "people on foot close to the vehicle",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "pedestrian_close": true
+    },
+    "n_pos": 77,
+    "gamma": 0.08966691046953201,
+    "gamma_v24": 8.976668323157355e-05,
+    "mAP": {
+     "random": 0.311965058790212,
+     "flat_VLM_lookup": 0.311965058790212,
+     "logit_VLM_lookup": 0.311965058790212,
+     "metadata_matched": 0.311965058790212,
+     "zeroshot_SigLIP2": 0.4267585006381329,
+     "BLIP2_tag_lookup [contam.]": 0.34177541211010937,
+     "v2.3_full [contam.]": 0.2958050012006898,
+     "v2.3_monocular": 0.29662587491660514,
+     "v2.3_portable_base": 0.33492221066865735,
+     "v2.3A_full [contam.]": 0.42051127015506373,
+     "v2.3A_monocular": 0.42103782777468324,
+     "v2.3A_portable_base": 0.4246627829734572,
+     "v2.4_full [contam.]": 0.4267585006381329,
+     "v2.4_monocular": 0.4267585006381329,
+     "v2.4_portable_base": 0.4267585006381329
+    }
+   },
+   {
+    "text": "pedestrians at a crosswalk ahead",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "pedestrian_close": true
+    },
+    "n_pos": 77,
+    "gamma": 0.24712306261062622,
+    "gamma_v24": 4.641179111786187e-05,
+    "mAP": {
+     "random": 0.311965058790212,
+     "flat_VLM_lookup": 0.311965058790212,
+     "logit_VLM_lookup": 0.311965058790212,
+     "metadata_matched": 0.311965058790212,
+     "zeroshot_SigLIP2": 0.4061176782343709,
+     "BLIP2_tag_lookup [contam.]": 0.34177541211010937,
+     "v2.3_full [contam.]": 0.28190323523998667,
+     "v2.3_monocular": 0.2893457198486518,
+     "v2.3_portable_base": 0.30303794083522567,
+     "v2.3A_full [contam.]": 0.3779290879214573,
+     "v2.3A_monocular": 0.3816981220046042,
+     "v2.3A_portable_base": 0.39386993023103994,
+     "v2.4_full [contam.]": 0.40608072832612985,
+     "v2.4_monocular": 0.40608072832612985,
+     "v2.4_portable_base": 0.4061176782343709
+    }
+   },
+   {
+    "text": "bicyclist or motorcyclist in traffic",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "vru": true
+    },
+    "n_pos": 42,
+    "gamma": 0.08771652728319168,
+    "gamma_v24": 0.01841100864112377,
+    "mAP": {
+     "random": 0.17863662689995385,
+     "flat_VLM_lookup": 0.17863662689995385,
+     "logit_VLM_lookup": 0.17863662689995385,
+     "metadata_matched": 0.17863662689995385,
+     "zeroshot_SigLIP2": 0.29091630467616575,
+     "BLIP2_tag_lookup [contam.]": 0.19327619472815497,
+     "v2.3_full [contam.]": 0.17579217354714766,
+     "v2.3_monocular": 0.17867579251913618,
+     "v2.3_portable_base": 0.17996911638322274,
+     "v2.3A_full [contam.]": 0.28971032450902595,
+     "v2.3A_monocular": 0.2862659807649182,
+     "v2.3A_portable_base": 0.28879714306848636,
+     "v2.4_full [contam.]": 0.2898341888428428,
+     "v2.4_monocular": 0.2905793243977515,
+     "v2.4_portable_base": 0.2906078865201061
+    }
+   },
+   {
+    "text": "a cyclist riding on the road ahead",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "vru": true
+    },
+    "n_pos": 42,
+    "gamma": 0.07751354575157166,
+    "gamma_v24": 0.0003473149845376611,
+    "mAP": {
+     "random": 0.17863662689995385,
+     "flat_VLM_lookup": 0.17863662689995385,
+     "logit_VLM_lookup": 0.17863662689995385,
+     "metadata_matched": 0.17863662689995385,
+     "zeroshot_SigLIP2": 0.2387873213748984,
+     "BLIP2_tag_lookup [contam.]": 0.19327619472815497,
+     "v2.3_full [contam.]": 0.18686777946330663,
+     "v2.3_monocular": 0.19436502391106708,
+     "v2.3_portable_base": 0.23135475601244992,
+     "v2.3A_full [contam.]": 0.23861147499892313,
+     "v2.3A_monocular": 0.2378858088778768,
+     "v2.3A_portable_base": 0.23851692114339992,
+     "v2.4_full [contam.]": 0.2387873213748984,
+     "v2.4_monocular": 0.2387873213748984,
+     "v2.4_portable_base": 0.2387873213748984
+    }
+   },
+   {
+    "text": "a motorcycle rider sharing the lane",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "vru": true
+    },
+    "n_pos": 42,
+    "gamma": 0.0957271009683609,
+    "gamma_v24": 0.00013035352458246052,
+    "mAP": {
+     "random": 0.17863662689995385,
+     "flat_VLM_lookup": 0.17863662689995385,
+     "logit_VLM_lookup": 0.17863662689995385,
+     "metadata_matched": 0.17863662689995385,
+     "zeroshot_SigLIP2": 0.2312040034906122,
+     "BLIP2_tag_lookup [contam.]": 0.19327619472815497,
+     "v2.3_full [contam.]": 0.1799712064906371,
+     "v2.3_monocular": 0.18022927595592667,
+     "v2.3_portable_base": 0.1861666899321784,
+     "v2.3A_full [contam.]": 0.22490949106925298,
+     "v2.3A_monocular": 0.23061656078007675,
+     "v2.3A_portable_base": 0.23199235151440833,
+     "v2.4_full [contam.]": 0.2312040034906122,
+     "v2.4_monocular": 0.2312040034906122,
+     "v2.4_portable_base": 0.2312040034906122
+    }
+   },
+   {
+    "text": "vulnerable road users close to the car",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "vru": true
+    },
+    "n_pos": 42,
+    "gamma": 0.1544080674648285,
+    "gamma_v24": 0.005307082086801529,
+    "mAP": {
+     "random": 0.17863662689995385,
+     "flat_VLM_lookup": 0.17863662689995385,
+     "logit_VLM_lookup": 0.17863662689995385,
+     "metadata_matched": 0.17863662689995385,
+     "zeroshot_SigLIP2": 0.20009788537820267,
+     "BLIP2_tag_lookup [contam.]": 0.19327619472815497,
+     "v2.3_full [contam.]": 0.15733509132022133,
+     "v2.3_monocular": 0.16655108744112568,
+     "v2.3_portable_base": 0.16606332021676776,
+     "v2.3A_full [contam.]": 0.19497149686118673,
+     "v2.3A_monocular": 0.19451290770385427,
+     "v2.3A_portable_base": 0.19495052790471887,
+     "v2.4_full [contam.]": 0.2013591601169425,
+     "v2.4_monocular": 0.19995600769549013,
+     "v2.4_portable_base": 0.20003522873659862
+    }
+   },
+   {
+    "text": "road construction zone with traffic cones and barriers",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "construction_zone": true
+    },
+    "n_pos": 53,
+    "gamma": 0.12665638327598572,
+    "gamma_v24": 0.0001128066360251978,
+    "mAP": {
+     "random": 0.22273266914967813,
+     "flat_VLM_lookup": 0.22273266914967813,
+     "logit_VLM_lookup": 0.22273266914967813,
+     "metadata_matched": 0.22273266914967813,
+     "zeroshot_SigLIP2": 0.5716809687951228,
+     "BLIP2_tag_lookup [contam.]": 0.1816365608133046,
+     "v2.3_full [contam.]": 0.2249387305218248,
+     "v2.3_monocular": 0.2854454687938969,
+     "v2.3_portable_base": 0.4284409690643101,
+     "v2.3A_full [contam.]": 0.5615787395244074,
+     "v2.3A_monocular": 0.5680288048049101,
+     "v2.3A_portable_base": 0.571909666397588,
+     "v2.4_full [contam.]": 0.5716809687951228,
+     "v2.4_monocular": 0.5716809687951228,
+     "v2.4_portable_base": 0.5716809687951228
+    }
+   },
+   {
+    "text": "traffic cones blocking part of the lane",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "construction_zone": true
+    },
+    "n_pos": 53,
+    "gamma": 0.07411280274391174,
+    "gamma_v24": 0.0003755799843929708,
+    "mAP": {
+     "random": 0.22273266914967813,
+     "flat_VLM_lookup": 0.22273266914967813,
+     "logit_VLM_lookup": 0.22273266914967813,
+     "metadata_matched": 0.22273266914967813,
+     "zeroshot_SigLIP2": 0.41854751599436135,
+     "BLIP2_tag_lookup [contam.]": 0.1816365608133046,
+     "v2.3_full [contam.]": 0.2138379148997195,
+     "v2.3_monocular": 0.2784422555327836,
+     "v2.3_portable_base": 0.3634622434877402,
+     "v2.3A_full [contam.]": 0.41310945981602293,
+     "v2.3A_monocular": 0.41561827342866664,
+     "v2.3A_portable_base": 0.41739974373577665,
+     "v2.4_full [contam.]": 0.41854751599436135,
+     "v2.4_monocular": 0.41854751599436135,
+     "v2.4_portable_base": 0.41854751599436135
+    }
+   },
+   {
+    "text": "construction workers and equipment on the road",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "construction_zone": true
+    },
+    "n_pos": 53,
+    "gamma": 0.27648288011550903,
+    "gamma_v24": 0.0006731179310008883,
+    "mAP": {
+     "random": 0.22273266914967813,
+     "flat_VLM_lookup": 0.22273266914967813,
+     "logit_VLM_lookup": 0.22273266914967813,
+     "metadata_matched": 0.22273266914967813,
+     "zeroshot_SigLIP2": 0.6071217565413487,
+     "BLIP2_tag_lookup [contam.]": 0.1816365608133046,
+     "v2.3_full [contam.]": 0.22917416827297257,
+     "v2.3_monocular": 0.26107779188376573,
+     "v2.3_portable_base": 0.28324934121882406,
+     "v2.3A_full [contam.]": 0.5555123412253494,
+     "v2.3A_monocular": 0.557793326508668,
+     "v2.3A_portable_base": 0.575308822484581,
+     "v2.4_full [contam.]": 0.6074169872238683,
+     "v2.4_monocular": 0.6074169872238683,
+     "v2.4_portable_base": 0.6071217565413487
+    }
+   },
+   {
+    "text": "a work zone with orange cones",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "construction_zone": true
+    },
+    "n_pos": 53,
+    "gamma": 0.04409804940223694,
+    "gamma_v24": 5.620519004878588e-06,
+    "mAP": {
+     "random": 0.22273266914967813,
+     "flat_VLM_lookup": 0.22273266914967813,
+     "logit_VLM_lookup": 0.22273266914967813,
+     "metadata_matched": 0.22273266914967813,
+     "zeroshot_SigLIP2": 0.5694398002586957,
+     "BLIP2_tag_lookup [contam.]": 0.1816365608133046,
+     "v2.3_full [contam.]": 0.22366356992973996,
+     "v2.3_monocular": 0.4165684881223632,
+     "v2.3_portable_base": 0.5664164565561374,
+     "v2.3A_full [contam.]": 0.5687711183112479,
+     "v2.3A_monocular": 0.569833168278519,
+     "v2.3A_portable_base": 0.569756833849114,
+     "v2.4_full [contam.]": 0.5694398002586957,
+     "v2.4_monocular": 0.5694398002586957,
+     "v2.4_portable_base": 0.5694398002586957
+    }
+   },
+   {
+    "text": "large truck or bus ahead",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "heavy_vehicle": true
+    },
+    "n_pos": 58,
+    "gamma": 0.42360809445381165,
+    "gamma_v24": 7.438529792125337e-08,
+    "mAP": {
+     "random": 0.23815551891368575,
+     "flat_VLM_lookup": 0.23815551891368575,
+     "logit_VLM_lookup": 0.23815551891368575,
+     "metadata_matched": 0.23815551891368575,
+     "zeroshot_SigLIP2": 0.4052119730349019,
+     "BLIP2_tag_lookup [contam.]": 0.39209897069479577,
+     "v2.3_full [contam.]": 0.2193520019852025,
+     "v2.3_monocular": 0.2217594070623324,
+     "v2.3_portable_base": 0.23904826473008714,
+     "v2.3A_full [contam.]": 0.35157309956749994,
+     "v2.3A_monocular": 0.3293867646572382,
+     "v2.3A_portable_base": 0.36118641803046664,
+     "v2.4_full [contam.]": 0.4052119730349019,
+     "v2.4_monocular": 0.4052119730349019,
+     "v2.4_portable_base": 0.4052119730349019
+    }
+   },
+   {
+    "text": "a city bus right in front of the car",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "heavy_vehicle": true
+    },
+    "n_pos": 58,
+    "gamma": 0.02809254080057144,
+    "gamma_v24": 0.0009829940972849727,
+    "mAP": {
+     "random": 0.23815551891368575,
+     "flat_VLM_lookup": 0.23815551891368575,
+     "logit_VLM_lookup": 0.23815551891368575,
+     "metadata_matched": 0.23815551891368575,
+     "zeroshot_SigLIP2": 0.2997837895436918,
+     "BLIP2_tag_lookup [contam.]": 0.39209897069479577,
+     "v2.3_full [contam.]": 0.2203331294674745,
+     "v2.3_monocular": 0.23352750633546052,
+     "v2.3_portable_base": 0.2843113244713298,
+     "v2.3A_full [contam.]": 0.2983097009054506,
+     "v2.3A_monocular": 0.29762799621147845,
+     "v2.3A_portable_base": 0.29841023099276026,
+     "v2.4_full [contam.]": 0.2997255473183363,
+     "v2.4_monocular": 0.2997940358424681,
+     "v2.4_portable_base": 0.2997837895436918
+    }
+   },
+   {
+    "text": "a heavy truck driving close by",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "heavy_vehicle": true
+    },
+    "n_pos": 58,
+    "gamma": 0.02850661799311638,
+    "gamma_v24": 5.262443664832972e-06,
+    "mAP": {
+     "random": 0.23815551891368575,
+     "flat_VLM_lookup": 0.23815551891368575,
+     "logit_VLM_lookup": 0.23815551891368575,
+     "metadata_matched": 0.23815551891368575,
+     "zeroshot_SigLIP2": 0.33894596702997576,
+     "BLIP2_tag_lookup [contam.]": 0.39209897069479577,
+     "v2.3_full [contam.]": 0.264908811932759,
+     "v2.3_monocular": 0.263628606073143,
+     "v2.3_portable_base": 0.3288556553937803,
+     "v2.3A_full [contam.]": 0.3403760423837526,
+     "v2.3A_monocular": 0.33971432103952914,
+     "v2.3A_portable_base": 0.3395161896053987,
+     "v2.4_full [contam.]": 0.33894596702997576,
+     "v2.4_monocular": 0.33894596702997576,
+     "v2.4_portable_base": 0.33894596702997576
+    }
+   },
+   {
+    "text": "a trailer or construction vehicle nearby",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "heavy_vehicle": true
+    },
+    "n_pos": 58,
+    "gamma": 0.14774399995803833,
+    "gamma_v24": 0.00036120135337114334,
+    "mAP": {
+     "random": 0.23815551891368575,
+     "flat_VLM_lookup": 0.23815551891368575,
+     "logit_VLM_lookup": 0.23815551891368575,
+     "metadata_matched": 0.23815551891368575,
+     "zeroshot_SigLIP2": 0.34829573238489747,
+     "BLIP2_tag_lookup [contam.]": 0.39209897069479577,
+     "v2.3_full [contam.]": 0.22194408887001596,
+     "v2.3_monocular": 0.2184565744743128,
+     "v2.3_portable_base": 0.2466113890396298,
+     "v2.3A_full [contam.]": 0.3407788607724335,
+     "v2.3A_monocular": 0.3388074574184569,
+     "v2.3A_portable_base": 0.34395560681722337,
+     "v2.4_full [contam.]": 0.34829573238489747,
+     "v2.4_monocular": 0.34829573238489747,
+     "v2.4_portable_base": 0.34829573238489747
+    }
+   },
+   {
+    "text": "a child, stroller or wheelchair user near the road",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "rare_or_child": true
+    },
+    "n_pos": 30,
+    "gamma": 0.09033195674419403,
+    "gamma_v24": 0.01500366348773241,
+    "mAP": {
+     "random": 0.1339857364591467,
+     "flat_VLM_lookup": 0.1339857364591467,
+     "logit_VLM_lookup": 0.1339857364591467,
+     "metadata_matched": 0.1339857364591467,
+     "zeroshot_SigLIP2": 0.14438865116294622,
+     "BLIP2_tag_lookup [contam.]": 0.15822816468832065,
+     "v2.3_full [contam.]": 0.1120673532475161,
+     "v2.3_monocular": 0.11958923051519484,
+     "v2.3_portable_base": 0.13037595343762234,
+     "v2.3A_full [contam.]": 0.14431414842851678,
+     "v2.3A_monocular": 0.1427229986967831,
+     "v2.3A_portable_base": 0.14295018825886643,
+     "v2.4_full [contam.]": 0.14417248638626218,
+     "v2.4_monocular": 0.1443074138956107,
+     "v2.4_portable_base": 0.14438865116294622
+    }
+   },
+   {
+    "text": "rare or unusual road users near the vehicle",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "rare_or_child": true
+    },
+    "n_pos": 30,
+    "gamma": 0.12105438858270645,
+    "gamma_v24": 0.005375919863581657,
+    "mAP": {
+     "random": 0.1339857364591467,
+     "flat_VLM_lookup": 0.1339857364591467,
+     "logit_VLM_lookup": 0.1339857364591467,
+     "metadata_matched": 0.1339857364591467,
+     "zeroshot_SigLIP2": 0.1208502946816621,
+     "BLIP2_tag_lookup [contam.]": 0.15822816468832065,
+     "v2.3_full [contam.]": 0.11170948039210886,
+     "v2.3_monocular": 0.12856126756584318,
+     "v2.3_portable_base": 0.12768448601561785,
+     "v2.3A_full [contam.]": 0.12236400599092728,
+     "v2.3A_monocular": 0.12294880519681496,
+     "v2.3A_portable_base": 0.12313116633413797,
+     "v2.4_full [contam.]": 0.12091729403444444,
+     "v2.4_monocular": 0.12090404585674602,
+     "v2.4_portable_base": 0.12092261078759164
+    }
+   },
+   {
+    "text": "a police officer, emergency vehicle or debris on the street",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "rare_or_child": true
+    },
+    "n_pos": 30,
+    "gamma": 0.028136657550930977,
+    "gamma_v24": 0.012206386774778366,
+    "mAP": {
+     "random": 0.1339857364591467,
+     "flat_VLM_lookup": 0.1339857364591467,
+     "logit_VLM_lookup": 0.1339857364591467,
+     "metadata_matched": 0.1339857364591467,
+     "zeroshot_SigLIP2": 0.11736584751398546,
+     "BLIP2_tag_lookup [contam.]": 0.15822816468832065,
+     "v2.3_full [contam.]": 0.11226948709743308,
+     "v2.3_monocular": 0.11384391405484509,
+     "v2.3_portable_base": 0.11072585202749204,
+     "v2.3A_full [contam.]": 0.11665027765610533,
+     "v2.3A_monocular": 0.11695101816499286,
+     "v2.3A_portable_base": 0.11718777207636892,
+     "v2.4_full [contam.]": 0.11710485634176131,
+     "v2.4_monocular": 0.11744380599459812,
+     "v2.4_portable_base": 0.11717316956932848
+    }
+   },
+   {
+    "text": "unexpected objects or vulnerable people near the lane",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "rare_or_child": true
+    },
+    "n_pos": 30,
+    "gamma": 0.15629293024539948,
+    "gamma_v24": 0.06498771905899048,
+    "mAP": {
+     "random": 0.1339857364591467,
+     "flat_VLM_lookup": 0.1339857364591467,
+     "logit_VLM_lookup": 0.1339857364591467,
+     "metadata_matched": 0.1339857364591467,
+     "zeroshot_SigLIP2": 0.1469317049271071,
+     "BLIP2_tag_lookup [contam.]": 0.15822816468832065,
+     "v2.3_full [contam.]": 0.1299231119537655,
+     "v2.3_monocular": 0.13643099054776447,
+     "v2.3_portable_base": 0.15316669864279955,
+     "v2.3A_full [contam.]": 0.15280084440172767,
+     "v2.3A_monocular": 0.1497674936627825,
+     "v2.3A_portable_base": 0.14860809554084603,
+     "v2.4_full [contam.]": 0.1483937472373799,
+     "v2.4_monocular": 0.1488619353714055,
+     "v2.4_portable_base": 0.14857609466973942
+    }
+   },
+   {
+    "text": "pedestrians walking near the road at night",
+    "stratum": "semantic_compositional",
+    "predicate": {
+     "pedestrian_close": true,
+     "night": true
+    },
+    "n_pos": 6,
+    "gamma": 0.2330317199230194,
+    "gamma_v24": 2.8181221978229587e-07,
+    "mAP": {
+     "random": 0.03675332008503023,
+     "logit_VLM_lookup": 0.3198071333365451,
+     "flat_VLM_lookup": 0.1459760585357802,
+     "metadata_matched": 0.23360724243077183,
+     "zeroshot_SigLIP2": 0.4319255907491201,
+     "BLIP2_tag_lookup [contam.]": 0.036416727964733026,
+     "v2.3_full [contam.]": 0.3008382334040229,
+     "v2.3_monocular": 0.21747622944431452,
+     "v2.3_portable_base": 0.4761022927689594,
+     "v2.3A_full [contam.]": 0.4595721329467459,
+     "v2.3A_monocular": 0.468859649122807,
+     "v2.3A_portable_base": 0.443859649122807,
+     "v2.4_full [contam.]": 0.4319255907491201,
+     "v2.4_monocular": 0.4319255907491201,
+     "v2.4_portable_base": 0.4319255907491201
+    }
+   },
+   {
+    "text": "people crossing the street after dark",
+    "stratum": "semantic_compositional",
+    "predicate": {
+     "pedestrian_close": true,
+     "night": true
+    },
+    "n_pos": 6,
+    "gamma": 0.14599038660526276,
+    "gamma_v24": 9.103007869271096e-06,
+    "mAP": {
+     "random": 0.03675332008503023,
+     "logit_VLM_lookup": 0.3198071333365451,
+     "flat_VLM_lookup": 0.09521530308931885,
+     "metadata_matched": 0.2093473524675571,
+     "zeroshot_SigLIP2": 0.5077972709551656,
+     "BLIP2_tag_lookup [contam.]": 0.036416727964733026,
+     "v2.3_full [contam.]": 0.3207925846083741,
+     "v2.3_monocular": 0.15147214441332088,
+     "v2.3_portable_base": 0.36675405971180614,
+     "v2.3A_full [contam.]": 0.4935736677115987,
+     "v2.3A_monocular": 0.45006105006105,
+     "v2.3A_portable_base": 0.4947606142728094,
+     "v2.4_full [contam.]": 0.5077972709551656,
+     "v2.4_monocular": 0.5077972709551656,
+     "v2.4_portable_base": 0.5077972709551656
+    }
+   },
+   {
+    "text": "pedestrians walking in the rain",
+    "stratum": "semantic_compositional",
+    "predicate": {
+     "pedestrian_close": true,
+     "rain": true
+    },
+    "n_pos": 8,
+    "gamma": 0.36642318964004517,
+    "gamma_v24": 3.0429149774136022e-05,
+    "mAP": {
+     "random": 0.053754061150433075,
+     "logit_VLM_lookup": 0.2594249357115125,
+     "flat_VLM_lookup": 0.1513292092908507,
+     "metadata_matched": 0.33086499237750133,
+     "zeroshot_SigLIP2": 0.494364727786338,
+     "BLIP2_tag_lookup [contam.]": 0.36210858942936147,
+     "v2.3_full [contam.]": 0.16330569720319296,
+     "v2.3_monocular": 0.44391725280944294,
+     "v2.3_portable_base": 0.4587120638287128,
+     "v2.3A_full [contam.]": 0.427755215798694,
+     "v2.3A_monocular": 0.49500108661292874,
+     "v2.3A_portable_base": 0.4939885609293504,
+     "v2.4_full [contam.]": 0.494364727786338,
+     "v2.4_monocular": 0.494364727786338,
+     "v2.4_portable_base": 0.494364727786338
+    }
+   },
+   {
+    "text": "people on foot near the road on a rainy day",
+    "stratum": "semantic_compositional",
+    "predicate": {
+     "pedestrian_close": true,
+     "rain": true
+    },
+    "n_pos": 8,
+    "gamma": 0.39606979489326477,
+    "gamma_v24": 0.00014098334941081703,
+    "mAP": {
+     "random": 0.053754061150433075,
+     "logit_VLM_lookup": 0.2594249357115125,
+     "flat_VLM_lookup": 0.34514623318971144,
+     "metadata_matched": 0.29478934410999624,
+     "zeroshot_SigLIP2": 0.35998816158406904,
+     "BLIP2_tag_lookup [contam.]": 0.36210858942936147,
+     "v2.3_full [contam.]": 0.1685940352361715,
+     "v2.3_monocular": 0.3456058854907539,
+     "v2.3_portable_base": 0.35229700854700857,
+     "v2.3A_full [contam.]": 0.3229353615732551,
+     "v2.3A_monocular": 0.3734217171717172,
+     "v2.3A_portable_base": 0.3685488122988123,
+     "v2.4_full [contam.]": 0.35998816158406904,
+     "v2.4_monocular": 0.35998816158406904,
+     "v2.4_portable_base": 0.35998816158406904
+    }
+   },
+   {
+    "text": "pedestrians near a wet reflective road",
+    "stratum": "semantic_compositional",
+    "predicate": {
+     "pedestrian_close": true,
+     "wet_road": true
+    },
+    "n_pos": 7,
+    "gamma": 0.998708963394165,
+    "gamma_v24": 0.9925144910812378,
+    "mAP": {
+     "random": 0.050743038362794375,
+     "logit_VLM_lookup": 0.27643551549987383,
+     "flat_VLM_lookup": 0.11464614487175429,
+     "metadata_matched": 0.1407059069962296,
+     "zeroshot_SigLIP2": 0.4224206349206349,
+     "BLIP2_tag_lookup [contam.]": 0.40407037815126046,
+     "v2.3_full [contam.]": 0.3178967374089325,
+     "v2.3_monocular": 0.39713034639143013,
+     "v2.3_portable_base": 0.40025772281411376,
+     "v2.3A_full [contam.]": 0.31850649350649346,
+     "v2.3A_monocular": 0.39713034639143013,
+     "v2.3A_portable_base": 0.40025772281411376,
+     "v2.4_full [contam.]": 0.3073472359186645,
+     "v2.4_monocular": 0.40236643437862957,
+     "v2.4_portable_base": 0.39823069578708675
+    }
+   },
+   {
+    "text": "pedestrians visible through raindrops on the camera lens",
+    "stratum": "semantic_compositional",
+    "predicate": {
+     "pedestrian_close": true,
+     "droplets": true
+    },
+    "n_pos": 8,
+    "gamma": 0.9994885921478271,
+    "gamma_v24": 0.9999979138374329,
+    "mAP": {
+     "random": 0.05546313785960514,
+     "logit_VLM_lookup": 0.1038348445265325,
+     "flat_VLM_lookup": 0.12047822683852097,
+     "metadata_matched": 0.195316669340392,
+     "zeroshot_SigLIP2": 0.4858913861936527,
+     "BLIP2_tag_lookup [contam.]": 0.28621612456171275,
+     "v2.3_full [contam.]": 0.19854672070970403,
+     "v2.3_monocular": 0.3514890906195254,
+     "v2.3_portable_base": 0.3513957307060755,
+     "v2.3A_full [contam.]": 0.19854672070970403,
+     "v2.3A_monocular": 0.3514890906195254,
+     "v2.3A_portable_base": 0.3513957307060755,
+     "v2.4_full [contam.]": 0.22701824064386752,
+     "v2.4_monocular": 0.3052706651424487,
+     "v2.4_portable_base": 0.306596799553662
+    }
+   },
+   {
+    "text": "a person on the street seen through a wet, spotted lens",
+    "stratum": "semantic_compositional",
+    "predicate": {
+     "pedestrian_close": true,
+     "droplets": true
+    },
+    "n_pos": 8,
+    "gamma": 0.7218249440193176,
+    "gamma_v24": 0.12630127370357513,
+    "mAP": {
+     "random": 0.05546313785960514,
+     "logit_VLM_lookup": 0.1038348445265325,
+     "flat_VLM_lookup": 0.1353975369773889,
+     "metadata_matched": 0.14312808928224652,
+     "zeroshot_SigLIP2": 0.4682519757374408,
+     "BLIP2_tag_lookup [contam.]": 0.28621612456171275,
+     "v2.3_full [contam.]": 0.16348608573141601,
+     "v2.3_monocular": 0.2312840762638816,
+     "v2.3_portable_base": 0.2767596073517126,
+     "v2.3A_full [contam.]": 0.32094501891709337,
+     "v2.3A_monocular": 0.3791740401115401,
+     "v2.3A_portable_base": 0.39598492198237534,
+     "v2.4_full [contam.]": 0.44561074197120704,
+     "v2.4_monocular": 0.4688062994624963,
+     "v2.4_portable_base": 0.4687407342907155
+    }
+   },
+   {
+    "text": "pedestrians barely visible in a low contrast dark scene",
+    "stratum": "semantic_compositional",
+    "predicate": {
+     "pedestrian_close": true,
+     "low_contrast": true
+    },
+    "n_pos": 5,
+    "gamma": 0.4772585928440094,
+    "gamma_v24": 0.020760759711265564,
+    "mAP": {
+     "random": 0.03252285733657025,
+     "logit_VLM_lookup": 0.2850633267661131,
+     "flat_VLM_lookup": 0.1231905760207647,
+     "metadata_matched": 0.11619027019603805,
+     "zeroshot_SigLIP2": 0.23733055748322923,
+     "BLIP2_tag_lookup [contam.]": 0.03479294784769375,
+     "v2.3_full [contam.]": 0.1565294970447195,
+     "v2.3_monocular": 0.1940484614054122,
+     "v2.3_portable_base": 0.22070806077739488,
+     "v2.3A_full [contam.]": 0.25979879275653917,
+     "v2.3A_monocular": 0.2657392253136933,
+     "v2.3A_portable_base": 0.272027972027972,
+     "v2.4_full [contam.]": 0.2372157666894509,
+     "v2.4_monocular": 0.2373892773892774,
+     "v2.4_portable_base": 0.2373892773892774
+    }
+   },
+   {
+    "text": "construction zone with cones on a rainy day",
+    "stratum": "semantic_compositional",
+    "predicate": {
+     "construction_zone": true,
+     "rain": true
+    },
+    "n_pos": 10,
+    "gamma": 0.05010092630982399,
+    "gamma_v24": 0.07182635366916656,
+    "mAP": {
+     "random": 0.05968503799722395,
+     "logit_VLM_lookup": 0.2452514250126397,
+     "flat_VLM_lookup": 0.18430226479712267,
+     "metadata_matched": 0.3416734204959605,
+     "zeroshot_SigLIP2": 0.19165999855224516,
+     "BLIP2_tag_lookup [contam.]": 0.06008156469750244,
+     "v2.3_full [contam.]": 0.16449633836504596,
+     "v2.3_monocular": 0.24330843989646173,
+     "v2.3_portable_base": 0.252269201300935,
+     "v2.3A_full [contam.]": 0.20582017194922728,
+     "v2.3A_monocular": 0.20244761244761245,
+     "v2.3A_portable_base": 0.19414617476952858,
+     "v2.4_full [contam.]": 0.21192369244376819,
+     "v2.4_monocular": 0.20449374055486108,
+     "v2.4_portable_base": 0.19432635494970876
+    }
+   },
+   {
+    "text": "road works with traffic cones in the rain",
+    "stratum": "semantic_compositional",
+    "predicate": {
+     "construction_zone": true,
+     "rain": true
+    },
+    "n_pos": 10,
+    "gamma": 0.3930565416812897,
+    "gamma_v24": 0.9523719549179077,
+    "mAP": {
+     "random": 0.05968503799722395,
+     "logit_VLM_lookup": 0.2452514250126397,
+     "flat_VLM_lookup": 0.2141685680652868,
+     "metadata_matched": 0.18110530527058766,
+     "zeroshot_SigLIP2": 0.18461873292214742,
+     "BLIP2_tag_lookup [contam.]": 0.06008156469750244,
+     "v2.3_full [contam.]": 0.16394570760833285,
+     "v2.3_monocular": 0.2084350675420285,
+     "v2.3_portable_base": 0.23617889967076455,
+     "v2.3A_full [contam.]": 0.22461330466032928,
+     "v2.3A_monocular": 0.22529316051445902,
+     "v2.3A_portable_base": 0.23026589423648244,
+     "v2.4_full [contam.]": 0.16505147393885783,
+     "v2.4_monocular": 0.19057726211696352,
+     "v2.4_portable_base": 0.22700686436692133
+    }
+   },
+   {
+    "text": "construction barriers and cones on a wet reflective road",
+    "stratum": "semantic_compositional",
+    "predicate": {
+     "construction_zone": true,
+     "wet_road": true
+    },
+    "n_pos": 10,
+    "gamma": 0.9733389616012573,
+    "gamma_v24": 0.9999871253967285,
+    "mAP": {
+     "random": 0.05968503799722395,
+     "logit_VLM_lookup": 0.2452514250126397,
+     "flat_VLM_lookup": 0.15189075784363423,
+     "metadata_matched": 0.19427876620711648,
+     "zeroshot_SigLIP2": 0.08380629269998806,
+     "BLIP2_tag_lookup [contam.]": 0.06008156469750244,
+     "v2.3_full [contam.]": 0.17231208016269933,
+     "v2.3_monocular": 0.20439168819982773,
+     "v2.3_portable_base": 0.23871338680093818,
+     "v2.3A_full [contam.]": 0.16928759754898276,
+     "v2.3A_monocular": 0.197637206445346,
+     "v2.3A_portable_base": 0.24959774336244928,
+     "v2.4_full [contam.]": 0.15859949670925283,
+     "v2.4_monocular": 0.18546327038974098,
+     "v2.4_portable_base": 0.21437185474138132
+    }
+   },
+   {
+    "text": "traffic cones on wet glistening pavement",
+    "stratum": "semantic_compositional",
+    "predicate": {
+     "construction_zone": true,
+     "wet_road": true
+    },
+    "n_pos": 10,
+    "gamma": 0.9515273571014404,
+    "gamma_v24": 0.9999714493751526,
+    "mAP": {
+     "random": 0.05968503799722395,
+     "logit_VLM_lookup": 0.2452514250126397,
+     "flat_VLM_lookup": 0.18368789071067396,
+     "metadata_matched": 0.22460541033195214,
+     "zeroshot_SigLIP2": 0.10981591656797363,
+     "BLIP2_tag_lookup [contam.]": 0.06008156469750244,
+     "v2.3_full [contam.]": 0.16262911548789177,
+     "v2.3_monocular": 0.17693775151367303,
+     "v2.3_portable_base": 0.17310842840254606,
+     "v2.3A_full [contam.]": 0.16163065934250728,
+     "v2.3A_monocular": 0.17943916183389869,
+     "v2.3A_portable_base": 0.17586937744058487,
+     "v2.4_full [contam.]": 0.1502824048896762,
+     "v2.4_monocular": 0.1538506288281865,
+     "v2.4_portable_base": 0.1528971421532397
+    }
+   },
+   {
+    "text": "traffic cones seen through water droplets on the lens",
+    "stratum": "semantic_compositional",
+    "predicate": {
+     "construction_zone": true,
+     "droplets": true
+    },
+    "n_pos": 10,
+    "gamma": 0.9837368130683899,
+    "gamma_v24": 0.9994184970855713,
+    "mAP": {
+     "random": 0.05968503799722395,
+     "logit_VLM_lookup": 0.11232040957849605,
+     "flat_VLM_lookup": 0.16094318791811052,
+     "metadata_matched": 0.23361581969781736,
+     "zeroshot_SigLIP2": 0.19053850054610705,
+     "BLIP2_tag_lookup [contam.]": 0.027705576761540052,
+     "v2.3_full [contam.]": 0.1381645717555944,
+     "v2.3_monocular": 0.1418949359861204,
+     "v2.3_portable_base": 0.1405586364100296,
+     "v2.3A_full [contam.]": 0.13963817067480472,
+     "v2.3A_monocular": 0.14644180566114529,
+     "v2.3A_portable_base": 0.14428314043879326,
+     "v2.4_full [contam.]": 0.1443819385119473,
+     "v2.4_monocular": 0.1529977004418571,
+     "v2.4_portable_base": 0.15452702316895
+    }
+   },
+   {
+    "text": "a bus or truck ahead in the rain",
+    "stratum": "semantic_compositional",
+    "predicate": {
+     "heavy_vehicle": true,
+     "rain": true
+    },
+    "n_pos": 11,
+    "gamma": 0.06569883972406387,
+    "gamma_v24": 0.0021625319495797157,
+    "mAP": {
+     "random": 0.0618493275422459,
+     "logit_VLM_lookup": 0.21495457198326148,
+     "flat_VLM_lookup": 0.1466607003576754,
+     "metadata_matched": 0.23574769313405675,
+     "zeroshot_SigLIP2": 0.3049351800681588,
+     "BLIP2_tag_lookup [contam.]": 0.2877668091201297,
+     "v2.3_full [contam.]": 0.23130592276618078,
+     "v2.3_monocular": 0.2840322201342133,
+     "v2.3_portable_base": 0.30440829432095706,
+     "v2.3A_full [contam.]": 0.30573370485164597,
+     "v2.3A_monocular": 0.30510179375749974,
+     "v2.3A_portable_base": 0.30949228962526837,
+     "v2.4_full [contam.]": 0.30872305885603757,
+     "v2.4_monocular": 0.3049351800681588,
+     "v2.4_portable_base": 0.3049351800681588
+    }
+   },
+   {
+    "text": "heavy truck driving in rainy weather",
+    "stratum": "semantic_compositional",
+    "predicate": {
+     "heavy_vehicle": true,
+     "rain": true
+    },
+    "n_pos": 11,
+    "gamma": 0.3042113482952118,
+    "gamma_v24": 0.000490250822622329,
+    "mAP": {
+     "random": 0.0618493275422459,
+     "logit_VLM_lookup": 0.21495457198326148,
+     "flat_VLM_lookup": 0.20415777315669234,
+     "metadata_matched": 0.23647244093980613,
+     "zeroshot_SigLIP2": 0.20878762994750455,
+     "BLIP2_tag_lookup [contam.]": 0.2877668091201297,
+     "v2.3_full [contam.]": 0.3563884207841662,
+     "v2.3_monocular": 0.2167742629032621,
+     "v2.3_portable_base": 0.21195993548934727,
+     "v2.3A_full [contam.]": 0.2479506737874206,
+     "v2.3A_monocular": 0.22477105989547772,
+     "v2.3A_portable_base": 0.21246375211434917,
+     "v2.4_full [contam.]": 0.20878762994750455,
+     "v2.4_monocular": 0.20878762994750455,
+     "v2.4_portable_base": 0.20878762994750455
+    }
+   },
+   {
+    "text": "a large truck on a wet reflective road",
+    "stratum": "semantic_compositional",
+    "predicate": {
+     "heavy_vehicle": true,
+     "wet_road": true
+    },
+    "n_pos": 12,
+    "gamma": 0.988166332244873,
+    "gamma_v24": 0.9999344944953918,
+    "mAP": {
+     "random": 0.0657155602135925,
+     "logit_VLM_lookup": 0.21734914730051605,
+     "flat_VLM_lookup": 0.2107826210778714,
+     "metadata_matched": 0.38316027127696956,
+     "zeroshot_SigLIP2": 0.18838090429878576,
+     "BLIP2_tag_lookup [contam.]": 0.29081709701730313,
+     "v2.3_full [contam.]": 0.3229690257407649,
+     "v2.3_monocular": 0.20336971147621008,
+     "v2.3_portable_base": 0.23519379120191816,
+     "v2.3A_full [contam.]": 0.3198005558642513,
+     "v2.3A_monocular": 0.20367802719150255,
+     "v2.3A_portable_base": 0.23596539614018977,
+     "v2.4_full [contam.]": 0.32868486384790735,
+     "v2.4_monocular": 0.21671385918726346,
+     "v2.4_portable_base": 0.23865415871082094
+    }
+   },
+   {
+    "text": "a bus driving on wet pavement",
+    "stratum": "semantic_compositional",
+    "predicate": {
+     "heavy_vehicle": true,
+     "wet_road": true
+    },
+    "n_pos": 12,
+    "gamma": 0.8163785338401794,
+    "gamma_v24": 0.9661820530891418,
+    "mAP": {
+     "random": 0.0657155602135925,
+     "logit_VLM_lookup": 0.21734914730051605,
+     "flat_VLM_lookup": 0.19430562860498632,
+     "metadata_matched": 0.35960762768269355,
+     "zeroshot_SigLIP2": 0.2555850444772587,
+     "BLIP2_tag_lookup [contam.]": 0.29081709701730313,
+     "v2.3_full [contam.]": 0.31710848730690816,
+     "v2.3_monocular": 0.27384808974887226,
+     "v2.3_portable_base": 0.27309148723503257,
+     "v2.3A_full [contam.]": 0.28353094056316835,
+     "v2.3A_monocular": 0.2747654651684896,
+     "v2.3A_portable_base": 0.27415132728487723,
+     "v2.4_full [contam.]": 0.2987274353636931,
+     "v2.4_monocular": 0.2713033485640772,
+     "v2.4_portable_base": 0.27013288316782225
+    }
+   },
+   {
+    "text": "a bus or truck seen through rain droplets on the lens",
+    "stratum": "semantic_compositional",
+    "predicate": {
+     "heavy_vehicle": true,
+     "droplets": true
+    },
+    "n_pos": 12,
+    "gamma": 0.9900327920913696,
+    "gamma_v24": 0.991150438785553,
+    "mAP": {
+     "random": 0.0657155602135925,
+     "logit_VLM_lookup": 0.21686377642264532,
+     "flat_VLM_lookup": 0.3484402525322337,
+     "metadata_matched": 0.28048516893344483,
+     "zeroshot_SigLIP2": 0.28083293665349046,
+     "BLIP2_tag_lookup [contam.]": 0.258765590443884,
+     "v2.3_full [contam.]": 0.25505268596336694,
+     "v2.3_monocular": 0.22163811735656677,
+     "v2.3_portable_base": 0.22570450739601733,
+     "v2.3A_full [contam.]": 0.25442467128393254,
+     "v2.3A_monocular": 0.2203754910939405,
+     "v2.3A_portable_base": 0.22897831691982684,
+     "v2.4_full [contam.]": 0.25999494374494375,
+     "v2.4_monocular": 0.23625500509769712,
+     "v2.4_portable_base": 0.23389163807393865
+    }
+   },
+   {
+    "text": "a large vehicle ahead behind a rain-spattered lens",
+    "stratum": "semantic_compositional",
+    "predicate": {
+     "heavy_vehicle": true,
+     "droplets": true
+    },
+    "n_pos": 12,
+    "gamma": 0.8220039010047913,
+    "gamma_v24": 0.49187415838241577,
+    "mAP": {
+     "random": 0.0657155602135925,
+     "logit_VLM_lookup": 0.21686377642264532,
+     "flat_VLM_lookup": 0.2656374671080554,
+     "metadata_matched": 0.2967158210184761,
+     "zeroshot_SigLIP2": 0.23862987602988503,
+     "BLIP2_tag_lookup [contam.]": 0.258765590443884,
+     "v2.3_full [contam.]": 0.22250203975436175,
+     "v2.3_monocular": 0.21920226904952167,
+     "v2.3_portable_base": 0.2172777019323072,
+     "v2.3A_full [contam.]": 0.2874187811544791,
+     "v2.3A_monocular": 0.2574479786185913,
+     "v2.3A_portable_base": 0.24270900552413158,
+     "v2.4_full [contam.]": 0.27661559732059077,
+     "v2.4_monocular": 0.23347618635165893,
+     "v2.4_portable_base": 0.24023380937563352
+    }
+   },
+   {
+    "text": "unusual road users near a wet road",
+    "stratum": "semantic_compositional",
+    "predicate": {
+     "rare_or_child": true,
+     "wet_road": true
+    },
+    "n_pos": 5,
+    "gamma": 0.9677969813346863,
+    "gamma_v24": 0.995399534702301,
+    "mAP": {
+     "random": 0.04299929521791,
+     "logit_VLM_lookup": 0.08245476423604013,
+     "flat_VLM_lookup": 0.054909357014299554,
+     "metadata_matched": 0.043502897102897106,
+     "zeroshot_SigLIP2": 0.08366744366744368,
+     "BLIP2_tag_lookup [contam.]": 0.04169410598247396,
+     "v2.3_full [contam.]": 0.08063832831198559,
+     "v2.3_monocular": 0.17075698651016252,
+     "v2.3_portable_base": 0.08423605805958748,
+     "v2.3A_full [contam.]": 0.07895809647082146,
+     "v2.3A_monocular": 0.16885222460540064,
+     "v2.3A_portable_base": 0.08771008403361344,
+     "v2.4_full [contam.]": 0.0769077801609562,
+     "v2.4_monocular": 0.13805302380619983,
+     "v2.4_portable_base": 0.08186786217476755
+    }
+   }
+  ],
+  "summary": {
+   "semantic_atomic": {
+    "random": {
+     "mAP": 0.2170951220425353,
+     "P@5": 0.20155038759689928,
+     "NDCG@10": NaN,
+     "n_queries": 20
+    },
+    "flat_VLM_lookup": {
+     "mAP": 0.2170951220425353,
+     "P@5": 0.20155038759689928,
+     "NDCG@10": NaN,
+     "n_queries": 20
+    },
+    "logit_VLM_lookup": {
+     "mAP": 0.2170951220425353,
+     "P@5": 0.20155038759689928,
+     "NDCG@10": NaN,
+     "n_queries": 20
+    },
+    "metadata_matched": {
+     "mAP": 0.2170951220425353,
+     "P@5": 0.20155038759689928,
+     "NDCG@10": NaN,
+     "n_queries": 20
+    },
+    "zeroshot_SigLIP2": {
+     "mAP": 0.33697972637204693,
+     "P@5": 0.47000000000000003,
+     "NDCG@10": 0.46716754746048644,
+     "n_queries": 20
+    },
+    "v2.3_monocular": {
+     "mAP": 0.22945830835457212,
+     "P@5": 0.19000000000000003,
+     "NDCG@10": 0.191800140524166,
+     "n_queries": 20
+    },
+    "v2.3_portable_base": {
+     "mAP": 0.2691085547528034,
+     "P@5": 0.33,
+     "NDCG@10": 0.31910388363860714,
+     "n_queries": 20
+    },
+    "BLIP2_tag_lookup [contam.]": {
+     "mAP": 0.2534030606069371,
+     "P@5": 0.32,
+     "NDCG@10": 0.30363960932946454,
+     "n_queries": 20
+    },
+    "v2.3_full [contam.]": {
+     "mAP": 0.20673706300277708,
+     "P@5": 0.17,
+     "NDCG@10": 0.1530530774254232,
+     "n_queries": 20
+    },
+    "v2.3A_monocular": {
+     "mAP": 0.3277250470510159,
+     "P@5": 0.45999999999999996,
+     "NDCG@10": 0.45293475380312875,
+     "n_queries": 20
+    },
+    "v2.3A_portable_base": {
+     "mAP": 0.33183981002830243,
+     "P@5": 0.45999999999999996,
+     "NDCG@10": 0.45177139028291435,
+     "n_queries": 20
+    },
+    "v2.3A_full [contam.]": {
+     "mAP": 0.3283818369802688,
+     "P@5": 0.45,
+     "NDCG@10": 0.45003127110146535,
+     "n_queries": 20
+    },
+    "v2.4_monocular": {
+     "mAP": 0.3370650270661951,
+     "P@5": 0.47000000000000003,
+     "NDCG@10": 0.46716754746048644,
+     "n_queries": 20
+    },
+    "v2.4_portable_base": {
+     "mAP": 0.337037374027359,
+     "P@5": 0.47000000000000003,
+     "NDCG@10": 0.46716754746048644,
+     "n_queries": 20
+    },
+    "v2.4_full [contam.]": {
+     "mAP": 0.3370389782794045,
+     "P@5": 0.47000000000000003,
+     "NDCG@10": 0.47073197597717165,
+     "n_queries": 20
+    }
+   },
+   "semantic_compositional": {
+    "random": {
+     "mAP": 0.05515961575161965,
+     "P@5": 0.03507751937984496,
+     "NDCG@10": NaN,
+     "n_queries": 20
+    },
+    "flat_VLM_lookup": {
+     "mAP": 0.17756328790003661,
+     "P@5": 0.12000000000000002,
+     "NDCG@10": 0.13782408993253598,
+     "n_queries": 20
+    },
+    "logit_VLM_lookup": {
+     "mAP": 0.2200874267346554,
+     "P@5": 0.16000000000000003,
+     "NDCG@10": 0.1854249111463819,
+     "n_queries": 20
+    },
+    "metadata_matched": {
+     "mAP": 0.23374602546462553,
+     "P@5": 0.24000000000000005,
+     "NDCG@10": 0.21397956740898091,
+     "n_queries": 20
+    },
+    "zeroshot_SigLIP2": {
+     "mAP": 0.2864614380920319,
+     "P@5": 0.3000000000000001,
+     "NDCG@10": 0.30521069759876984,
+     "n_queries": 20
+    },
+    "v2.3_monocular": {
+     "mAP": 0.24485065135775005,
+     "P@5": 0.22000000000000003,
+     "NDCG@10": 0.26199740561201396,
+     "n_queries": 20
+    },
+    "v2.3_portable_base": {
+     "mAP": 0.2747843437363082,
+     "P@5": 0.24000000000000005,
+     "NDCG@10": 0.2959222981293332,
+     "n_queries": 20
+    },
+    "BLIP2_tag_lookup [contam.]": {
+     "mAP": 0.1896385572303613,
+     "P@5": 0.14000000000000004,
+     "NDCG@10": 0.1938942470354213,
+     "n_queries": 20
+    },
+    "v2.3_full [contam.]": {
+     "mAP": 0.21887511576769159,
+     "P@5": 0.16,
+     "NDCG@10": 0.1908610022618888,
+     "n_queries": 20
+    },
+    "v2.3A_monocular": {
+     "mAP": 0.28935635963190276,
+     "P@5": 0.29000000000000004,
+     "NDCG@10": 0.32191990075100546,
+     "n_queries": 20
+    },
+    "v2.3A_portable_base": {
+     "mAP": 0.29032282430222056,
+     "P@5": 0.29000000000000004,
+     "NDCG@10": 0.3221344990373518,
+     "n_queries": 20
+    },
+    "v2.3A_full [contam.]": {
+     "mAP": 0.27402203660358476,
+     "P@5": 0.25000000000000006,
+     "NDCG@10": 0.2848224192348002,
+     "n_queries": 20
+    },
+    "v2.4_monocular": {
+     "mAP": 0.2852407631400857,
+     "P@5": 0.28,
+     "NDCG@10": 0.2986469335542286,
+     "n_queries": 20
+    },
+    "v2.4_portable_base": {
+     "mAP": 0.2863332829497141,
+     "P@5": 0.28,
+     "NDCG@10": 0.304450641947289,
+     "n_queries": 20
+    },
+    "v2.4_full [contam.]": {
+     "mAP": 0.2799974026016509,
+     "P@5": 0.2700000000000001,
+     "NDCG@10": 0.28902776336316827,
+     "n_queries": 20
+    }
+   },
+   "all": {
+    "random": {
+     "mAP": 0.13612736889707747,
+     "P@5": 0.1183139534883721,
+     "NDCG@10": NaN,
+     "n_queries": 40
+    },
+    "flat_VLM_lookup": {
+     "mAP": 0.19732920497128595,
+     "P@5": 0.1607751937984496,
+     "NDCG@10": 0.13782408993253598,
+     "n_queries": 40
+    },
+    "logit_VLM_lookup": {
+     "mAP": 0.2185912743885953,
+     "P@5": 0.18077519379844958,
+     "NDCG@10": 0.1854249111463819,
+     "n_queries": 40
+    },
+    "metadata_matched": {
+     "mAP": 0.22542057375358043,
+     "P@5": 0.22077519379844962,
+     "NDCG@10": 0.21397956740898091,
+     "n_queries": 40
+    },
+    "zeroshot_SigLIP2": {
+     "mAP": 0.3117205822320394,
+     "P@5": 0.385,
+     "NDCG@10": 0.3861891225296281,
+     "n_queries": 40
+    },
+    "v2.3_monocular": {
+     "mAP": 0.23715447985616106,
+     "P@5": 0.20500000000000002,
+     "NDCG@10": 0.22689877306808998,
+     "n_queries": 40
+    },
+    "v2.3_portable_base": {
+     "mAP": 0.27194644924455585,
+     "P@5": 0.28500000000000003,
+     "NDCG@10": 0.30751309088397016,
+     "n_queries": 40
+    },
+    "BLIP2_tag_lookup [contam.]": {
+     "mAP": 0.22152080891864917,
+     "P@5": 0.22999999999999998,
+     "NDCG@10": 0.2487669281824429,
+     "n_queries": 40
+    },
+    "v2.3_full [contam.]": {
+     "mAP": 0.21280608938523438,
+     "P@5": 0.165,
+     "NDCG@10": 0.171957039843656,
+     "n_queries": 40
+    },
+    "v2.3A_monocular": {
+     "mAP": 0.3085407033414594,
+     "P@5": 0.375,
+     "NDCG@10": 0.3874273272770671,
+     "n_queries": 40
+    },
+    "v2.3A_portable_base": {
+     "mAP": 0.3110813171652615,
+     "P@5": 0.375,
+     "NDCG@10": 0.3869529446601331,
+     "n_queries": 40
+    },
+    "v2.3A_full [contam.]": {
+     "mAP": 0.30120193679192675,
+     "P@5": 0.35,
+     "NDCG@10": 0.36742684516813273,
+     "n_queries": 40
+    },
+    "v2.4_monocular": {
+     "mAP": 0.31115289510314037,
+     "P@5": 0.375,
+     "NDCG@10": 0.3829072405073575,
+     "n_queries": 40
+    },
+    "v2.4_portable_base": {
+     "mAP": 0.3116853284885366,
+     "P@5": 0.375,
+     "NDCG@10": 0.38580909470388774,
+     "n_queries": 40
+    },
+    "v2.4_full [contam.]": {
+     "mAP": 0.30851819044052775,
+     "P@5": 0.37,
+     "NDCG@10": 0.37987986967016996,
+     "n_queries": 40
+    }
+   }
+  },
+  "tests": {
+   "v2.4_monocular vs zeroshot_SigLIP2 | semantic_atomic": {
+    "delta": 8.530069414817849e-05,
+    "CI95": [
+     -5.055121754094959e-05,
+     0.0003009472448846034
+    ],
+    "perm_p": 0.6724327567243276,
+    "n_units": 20,
+    "unit": "query"
+   },
+   "v2.4_monocular vs zeroshot_SigLIP2 | semantic_compositional": {
+    "delta": -0.0011485083183489983,
+    "CI95": [
+     -0.023826998094351348,
+     0.021279065129521105
+    ],
+    "perm_p": 0.9272072792720728,
+    "n_units": 12,
+    "unit": "predicate"
+   },
+   "v2.4_monocular vs logit_VLM_lookup | semantic_atomic": {
+    "delta": 0.11996990502365983,
+    "CI95": [
+     0.07137595431288127,
+     0.1726789879217882
+    ],
+    "perm_p": 9.999000099990002e-05,
+    "n_units": 20,
+    "unit": "query"
+   },
+   "v2.4_monocular vs logit_VLM_lookup | semantic_compositional": {
+    "delta": 0.06156663116850195,
+    "CI95": [
+     0.0046940275909970516,
+     0.12212658777854514
+    ],
+    "perm_p": 0.0644935506449355,
+    "n_units": 12,
+    "unit": "predicate"
+   },
+   "v2.3A_monocular vs zeroshot_SigLIP2 | semantic_atomic": {
+    "delta": -0.009254679321031002,
+    "CI95": [
+     -0.018399618535747297,
+     -0.0022801080923355883
+    ],
+    "perm_p": 0.0029997000299970002,
+    "n_units": 20,
+    "unit": "query"
+   },
+   "v2.3A_monocular vs zeroshot_SigLIP2 | semantic_compositional": {
+    "delta": 0.004254370672986296,
+    "CI95": [
+     -0.025225155994656422,
+     0.032828363195564404
+    ],
+    "perm_p": 0.8037196280371963,
+    "n_units": 12,
+    "unit": "predicate"
+   },
+   "v2.3A_full [contam.] vs zeroshot_SigLIP2 | semantic_atomic": {
+    "delta": -0.00859788939177818,
+    "CI95": [
+     -0.016102368102746307,
+     -0.002301604565885641
+    ],
+    "perm_p": 0.006399360063993601,
+    "n_units": 20,
+    "unit": "query"
+   },
+   "v2.3A_full [contam.] vs zeroshot_SigLIP2 | semantic_compositional": {
+    "delta": -0.016076817207404177,
+    "CI95": [
+     -0.062191543936342575,
+     0.023318920942603048
+    ],
+    "perm_p": 0.5521447855214479,
+    "n_units": 12,
+    "unit": "predicate"
+   },
+   "v2.3A_monocular vs logit_VLM_lookup | semantic_atomic": {
+    "delta": 0.11062992500848068,
+    "CI95": [
+     0.06518694781789916,
+     0.1613645023265938
+    ],
+    "perm_p": 9.999000099990002e-05,
+    "n_units": 20,
+    "unit": "query"
+   },
+   "v2.3A_monocular vs logit_VLM_lookup | semantic_compositional": {
+    "delta": 0.06696951015983725,
+    "CI95": [
+     0.014941482854907425,
+     0.12007058672119164
+    ],
+    "perm_p": 0.029497050294970503,
+    "n_units": 12,
+    "unit": "predicate"
+   },
+   "v2.3_monocular vs zeroshot_SigLIP2 | semantic_atomic": {
+    "delta": -0.10752141801747488,
+    "CI95": [
+     -0.14727956946268458,
+     -0.07080633151944757
+    ],
+    "perm_p": 9.999000099990002e-05,
+    "n_units": 20,
+    "unit": "query"
+   },
+   "v2.3_monocular vs zeroshot_SigLIP2 | semantic_compositional": {
+    "delta": -0.035930922542080274,
+    "CI95": [
+     -0.09716629120363889,
+     0.016457839053035484
+    ],
+    "perm_p": 0.31156884311568844,
+    "n_units": 12,
+    "unit": "predicate"
+   },
+   "v2.3_full [contam.] vs zeroshot_SigLIP2 | semantic_atomic": {
+    "delta": -0.1302426633692699,
+    "CI95": [
+     -0.18084055639048086,
+     -0.08388350363919299
+    ],
+    "perm_p": 9.999000099990002e-05,
+    "n_units": 20,
+    "unit": "query"
+   },
+   "v2.3_full [contam.] vs zeroshot_SigLIP2 | semantic_compositional": {
+    "delta": -0.0663522686909579,
+    "CI95": [
+     -0.13479979813489512,
+     -0.004346163658111151
+    ],
+    "perm_p": 0.08909109089091091,
+    "n_units": 12,
+    "unit": "predicate"
+   },
+   "v2.3_monocular vs logit_VLM_lookup | semantic_atomic": {
+    "delta": 0.0123631863120368,
+    "CI95": [
+     -0.005457428690932887,
+     0.03566773297417218
+    ],
+    "perm_p": 0.31866813318668136,
+    "n_units": 20,
+    "unit": "query"
+   },
+   "v2.3_monocular vs logit_VLM_lookup | semantic_compositional": {
+    "delta": 0.026784216944770664,
+    "CI95": [
+     -0.025299962219240198,
+     0.07656407207728048
+    ],
+    "perm_p": 0.34726527347265274,
+    "n_units": 12,
+    "unit": "predicate"
+   }
+  }
+ },
+ "val150_clean": {
+  "n_scenes": 150,
+  "per_query": [
+   {
+    "text": "pedestrians walking near the roadway",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "pedestrian_close": true
+    },
+    "n_pos": 35,
+    "mAP": {
+     "random": 0.2588491046335285,
+     "logit_VLM_lookup": 0.2588491046335285,
+     "metadata_matched": 0.2588491046335285,
+     "zeroshot_SigLIP2": 0.3682447066756815,
+     "v2.3_portable_base": 0.1973645811688382,
+     "v2.3A_portable_base": 0.36768911686668804,
+     "v2.4_portable_base": 0.3682447066756815
+    }
+   },
+   {
+    "text": "a person crossing the street in front of the car",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "pedestrian_close": true
+    },
+    "n_pos": 35,
+    "mAP": {
+     "random": 0.2588491046335285,
+     "logit_VLM_lookup": 0.2588491046335285,
+     "metadata_matched": 0.2588491046335285,
+     "zeroshot_SigLIP2": 0.3799365730252454,
+     "v2.3_portable_base": 0.23149296769715866,
+     "v2.3A_portable_base": 0.3764618686171906,
+     "v2.4_portable_base": 0.3799365730252454
+    }
+   },
+   {
+    "text": "people on foot close to the vehicle",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "pedestrian_close": true
+    },
+    "n_pos": 35,
+    "mAP": {
+     "random": 0.2588491046335285,
+     "logit_VLM_lookup": 0.2588491046335285,
+     "metadata_matched": 0.2588491046335285,
+     "zeroshot_SigLIP2": 0.35886233097008485,
+     "v2.3_portable_base": 0.21396325876202824,
+     "v2.3A_portable_base": 0.3564514416779323,
+     "v2.4_portable_base": 0.35886233097008485
+    }
+   },
+   {
+    "text": "pedestrians at a crosswalk ahead",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "pedestrian_close": true
+    },
+    "n_pos": 35,
+    "mAP": {
+     "random": 0.2588491046335285,
+     "logit_VLM_lookup": 0.2588491046335285,
+     "metadata_matched": 0.2588491046335285,
+     "zeroshot_SigLIP2": 0.34166264995136186,
+     "v2.3_portable_base": 0.2286103808213336,
+     "v2.3A_portable_base": 0.3146415206548503,
+     "v2.4_portable_base": 0.34166264995136186
+    }
+   },
+   {
+    "text": "bicyclist or motorcyclist in traffic",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "vru": true
+    },
+    "n_pos": 26,
+    "mAP": {
+     "random": 0.19846241983457255,
+     "logit_VLM_lookup": 0.19846241983457255,
+     "metadata_matched": 0.19846241983457255,
+     "zeroshot_SigLIP2": 0.16926584745688736,
+     "v2.3_portable_base": 0.1423491863403769,
+     "v2.3A_portable_base": 0.16616730146251127,
+     "v2.4_portable_base": 0.1691886869630602
+    }
+   },
+   {
+    "text": "a cyclist riding on the road ahead",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "vru": true
+    },
+    "n_pos": 26,
+    "mAP": {
+     "random": 0.19846241983457255,
+     "logit_VLM_lookup": 0.19846241983457255,
+     "metadata_matched": 0.19846241983457255,
+     "zeroshot_SigLIP2": 0.30260259715844146,
+     "v2.3_portable_base": 0.22657259001006066,
+     "v2.3A_portable_base": 0.29933159744257615,
+     "v2.4_portable_base": 0.30260259715844146
+    }
+   },
+   {
+    "text": "a motorcycle rider sharing the lane",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "vru": true
+    },
+    "n_pos": 26,
+    "mAP": {
+     "random": 0.19846241983457255,
+     "logit_VLM_lookup": 0.19846241983457255,
+     "metadata_matched": 0.19846241983457255,
+     "zeroshot_SigLIP2": 0.26042213115885376,
+     "v2.3_portable_base": 0.18180051457611238,
+     "v2.3A_portable_base": 0.2600479048757011,
+     "v2.4_portable_base": 0.26042213115885376
+    }
+   },
+   {
+    "text": "vulnerable road users close to the car",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "vru": true
+    },
+    "n_pos": 26,
+    "mAP": {
+     "random": 0.19846241983457255,
+     "logit_VLM_lookup": 0.19846241983457255,
+     "metadata_matched": 0.19846241983457255,
+     "zeroshot_SigLIP2": 0.2748250214894847,
+     "v2.3_portable_base": 0.16661988889787557,
+     "v2.3A_portable_base": 0.23027239761798343,
+     "v2.4_portable_base": 0.2748250214894847
+    }
+   },
+   {
+    "text": "road construction zone with traffic cones and barriers",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "construction_zone": true
+    },
+    "n_pos": 26,
+    "mAP": {
+     "random": 0.19724498957634687,
+     "logit_VLM_lookup": 0.19724498957634687,
+     "metadata_matched": 0.19724498957634687,
+     "zeroshot_SigLIP2": 0.7287529880743693,
+     "v2.3_portable_base": 0.6024775582317692,
+     "v2.3A_portable_base": 0.7306058276597808,
+     "v2.4_portable_base": 0.7287529880743693
+    }
+   },
+   {
+    "text": "traffic cones blocking part of the lane",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "construction_zone": true
+    },
+    "n_pos": 26,
+    "mAP": {
+     "random": 0.19724498957634687,
+     "logit_VLM_lookup": 0.19724498957634687,
+     "metadata_matched": 0.19724498957634687,
+     "zeroshot_SigLIP2": 0.5200112294062352,
+     "v2.3_portable_base": 0.4926392514998653,
+     "v2.3A_portable_base": 0.5242884196685383,
+     "v2.4_portable_base": 0.5200112294062352
+    }
+   },
+   {
+    "text": "construction workers and equipment on the road",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "construction_zone": true
+    },
+    "n_pos": 26,
+    "mAP": {
+     "random": 0.19724498957634687,
+     "logit_VLM_lookup": 0.19724498957634687,
+     "metadata_matched": 0.19724498957634687,
+     "zeroshot_SigLIP2": 0.6194770990684285,
+     "v2.3_portable_base": 0.3139890111626395,
+     "v2.3A_portable_base": 0.6213196725213067,
+     "v2.4_portable_base": 0.6194770990684285
+    }
+   },
+   {
+    "text": "a work zone with orange cones",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "construction_zone": true
+    },
+    "n_pos": 26,
+    "mAP": {
+     "random": 0.19724498957634687,
+     "logit_VLM_lookup": 0.19724498957634687,
+     "metadata_matched": 0.19724498957634687,
+     "zeroshot_SigLIP2": 0.7529497903869944,
+     "v2.3_portable_base": 0.7276140877298405,
+     "v2.3A_portable_base": 0.7513193430758854,
+     "v2.4_portable_base": 0.7529497903869944
+    }
+   },
+   {
+    "text": "large truck or bus ahead",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "heavy_vehicle": true
+    },
+    "n_pos": 36,
+    "mAP": {
+     "random": 0.2656805047981696,
+     "logit_VLM_lookup": 0.2656805047981696,
+     "metadata_matched": 0.2656805047981696,
+     "zeroshot_SigLIP2": 0.467408937295989,
+     "v2.3_portable_base": 0.27889817253439264,
+     "v2.3A_portable_base": 0.4524197922708987,
+     "v2.4_portable_base": 0.467408937295989
+    }
+   },
+   {
+    "text": "a city bus right in front of the car",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "heavy_vehicle": true
+    },
+    "n_pos": 36,
+    "mAP": {
+     "random": 0.2656805047981696,
+     "logit_VLM_lookup": 0.2656805047981696,
+     "metadata_matched": 0.2656805047981696,
+     "zeroshot_SigLIP2": 0.32792942796912317,
+     "v2.3_portable_base": 0.31217511621953803,
+     "v2.3A_portable_base": 0.32743059886253145,
+     "v2.4_portable_base": 0.32792942796912317
+    }
+   },
+   {
+    "text": "a heavy truck driving close by",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "heavy_vehicle": true
+    },
+    "n_pos": 36,
+    "mAP": {
+     "random": 0.2656805047981696,
+     "logit_VLM_lookup": 0.2656805047981696,
+     "metadata_matched": 0.2656805047981696,
+     "zeroshot_SigLIP2": 0.5241854590484396,
+     "v2.3_portable_base": 0.5329396982106442,
+     "v2.3A_portable_base": 0.5237311569662435,
+     "v2.4_portable_base": 0.5241854590484396
+    }
+   },
+   {
+    "text": "a trailer or construction vehicle nearby",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "heavy_vehicle": true
+    },
+    "n_pos": 36,
+    "mAP": {
+     "random": 0.2656805047981696,
+     "logit_VLM_lookup": 0.2656805047981696,
+     "metadata_matched": 0.2656805047981696,
+     "zeroshot_SigLIP2": 0.5585538519254822,
+     "v2.3_portable_base": 0.4564953729935019,
+     "v2.3A_portable_base": 0.5749714653767816,
+     "v2.4_portable_base": 0.5585538519254822
+    }
+   },
+   {
+    "text": "a child, stroller or wheelchair user near the road",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "rare_or_child": true
+    },
+    "n_pos": 22,
+    "mAP": {
+     "random": 0.1797803110895153,
+     "logit_VLM_lookup": 0.1797803110895153,
+     "metadata_matched": 0.1797803110895153,
+     "zeroshot_SigLIP2": 0.13377590247810145,
+     "v2.3_portable_base": 0.16460266923613193,
+     "v2.3A_portable_base": 0.13486492309711043,
+     "v2.4_portable_base": 0.13377590247810145
+    }
+   },
+   {
+    "text": "rare or unusual road users near the vehicle",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "rare_or_child": true
+    },
+    "n_pos": 22,
+    "mAP": {
+     "random": 0.1797803110895153,
+     "logit_VLM_lookup": 0.1797803110895153,
+     "metadata_matched": 0.1797803110895153,
+     "zeroshot_SigLIP2": 0.18961073677200313,
+     "v2.3_portable_base": 0.2937639719265307,
+     "v2.3A_portable_base": 0.20015974213269336,
+     "v2.4_portable_base": 0.18969042566655883
+    }
+   },
+   {
+    "text": "a police officer, emergency vehicle or debris on the street",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "rare_or_child": true
+    },
+    "n_pos": 22,
+    "mAP": {
+     "random": 0.1797803110895153,
+     "logit_VLM_lookup": 0.1797803110895153,
+     "metadata_matched": 0.1797803110895153,
+     "zeroshot_SigLIP2": 0.12577447320411636,
+     "v2.3_portable_base": 0.15148017774378827,
+     "v2.3A_portable_base": 0.12623064734682932,
+     "v2.4_portable_base": 0.1257778020197257
+    }
+   },
+   {
+    "text": "unexpected objects or vulnerable people near the lane",
+    "stratum": "semantic_atomic",
+    "predicate": {
+     "rare_or_child": true
+    },
+    "n_pos": 22,
+    "mAP": {
+     "random": 0.1797803110895153,
+     "logit_VLM_lookup": 0.1797803110895153,
+     "metadata_matched": 0.1797803110895153,
+     "zeroshot_SigLIP2": 0.2435723172393507,
+     "v2.3_portable_base": 0.3395221716016463,
+     "v2.3A_portable_base": 0.2757164092584225,
+     "v2.4_portable_base": 0.25041503419069727
+    }
+   },
+   {
+    "text": "construction zone with cones on a rainy day",
+    "stratum": "semantic_compositional",
+    "predicate": {
+     "construction_zone": true,
+     "rain": true
+    },
+    "n_pos": 3,
+    "mAP": {
+     "random": 0.04973977884581741,
+     "logit_VLM_lookup": 0.16203703703703703,
+     "metadata_matched": 0.24444444444444446,
+     "zeroshot_SigLIP2": 0.24230769230769234,
+     "v2.3_portable_base": 0.3148148148148148,
+     "v2.3A_portable_base": 0.2714714714714715,
+     "v2.4_portable_base": 0.2714714714714715
+    }
+   },
+   {
+    "text": "road works with traffic cones in the rain",
+    "stratum": "semantic_compositional",
+    "predicate": {
+     "construction_zone": true,
+     "rain": true
+    },
+    "n_pos": 3,
+    "mAP": {
+     "random": 0.04973977884581741,
+     "logit_VLM_lookup": 0.16203703703703703,
+     "metadata_matched": 0.11706349206349205,
+     "zeroshot_SigLIP2": 0.28030303030303033,
+     "v2.3_portable_base": 0.21717171717171715,
+     "v2.3A_portable_base": 0.4844444444444444,
+     "v2.4_portable_base": 0.17857142857142858
+    }
+   },
+   {
+    "text": "a bus or truck ahead in the rain",
+    "stratum": "semantic_compositional",
+    "predicate": {
+     "heavy_vehicle": true,
+     "rain": true
+    },
+    "n_pos": 6,
+    "mAP": {
+     "random": 0.07466508804633226,
+     "logit_VLM_lookup": 0.41083802528815316,
+     "metadata_matched": 0.2525754746342982,
+     "zeroshot_SigLIP2": 0.36980056980056975,
+     "v2.3_portable_base": 0.39707602339181286,
+     "v2.3A_portable_base": 0.36980056980056975,
+     "v2.4_portable_base": 0.36980056980056975
+    }
+   },
+   {
+    "text": "heavy truck driving in rainy weather",
+    "stratum": "semantic_compositional",
+    "predicate": {
+     "heavy_vehicle": true,
+     "rain": true
+    },
+    "n_pos": 6,
+    "mAP": {
+     "random": 0.07466508804633226,
+     "logit_VLM_lookup": 0.41083802528815316,
+     "metadata_matched": 0.33798840048840045,
+     "zeroshot_SigLIP2": 0.6913752913752914,
+     "v2.3_portable_base": 0.6631766381766382,
+     "v2.3A_portable_base": 0.6913752913752914,
+     "v2.4_portable_base": 0.6913752913752914
+    }
+   }
+  ],
+  "summary": {
+   "semantic_atomic": {
+    "random": {
+     "mAP": 0.22000346598642656,
+     "P@5": 0.1933333333333333,
+     "NDCG@10": NaN,
+     "n_queries": 20
+    },
+    "logit_VLM_lookup": {
+     "mAP": 0.22000346598642656,
+     "P@5": 0.1933333333333333,
+     "NDCG@10": NaN,
+     "n_queries": 20
+    },
+    "metadata_matched": {
+     "mAP": 0.22000346598642656,
+     "P@5": 0.1933333333333333,
+     "NDCG@10": NaN,
+     "n_queries": 20
+    },
+    "zeroshot_SigLIP2": {
+     "mAP": 0.38239120353773365,
+     "P@5": 0.51,
+     "NDCG@10": 0.47637597886812433,
+     "n_queries": 20
+    },
+    "v2.3_portable_base": {
+     "mAP": 0.31276853136820365,
+     "P@5": 0.35000000000000003,
+     "NDCG@10": 0.32807762032058474,
+     "n_queries": 20
+    },
+    "v2.3A_portable_base": {
+     "mAP": 0.38070605737262275,
+     "P@5": 0.52,
+     "NDCG@10": 0.4677256902427632,
+     "n_queries": 20
+    },
+    "v2.4_portable_base": {
+     "mAP": 0.3827336322461179,
+     "P@5": 0.51,
+     "NDCG@10": 0.47637597886812433,
+     "n_queries": 20
+    }
+   },
+   "semantic_compositional": {
+    "random": {
+     "mAP": 0.06220243344607483,
+     "P@5": 0.03,
+     "NDCG@10": NaN,
+     "n_queries": 4
+    },
+    "logit_VLM_lookup": {
+     "mAP": 0.28643753116259507,
+     "P@5": 0.30000000000000004,
+     "NDCG@10": 0.31751676295486586,
+     "n_queries": 4
+    },
+    "metadata_matched": {
+     "mAP": 0.23801795290765876,
+     "P@5": 0.1,
+     "NDCG@10": 0.2294820884339402,
+     "n_queries": 4
+    },
+    "zeroshot_SigLIP2": {
+     "mAP": 0.39594664594664597,
+     "P@5": 0.4,
+     "NDCG@10": 0.46550265477453534,
+     "n_queries": 4
+    },
+    "v2.3_portable_base": {
+     "mAP": 0.3980597983887458,
+     "P@5": 0.4,
+     "NDCG@10": 0.45052453379407253,
+     "n_queries": 4
+    },
+    "v2.3A_portable_base": {
+     "mAP": 0.4542729442729443,
+     "P@5": 0.4,
+     "NDCG@10": 0.5217147375372833,
+     "n_queries": 4
+    },
+    "v2.4_portable_base": {
+     "mAP": 0.3778046903046903,
+     "P@5": 0.4,
+     "NDCG@10": 0.4131317789151804,
+     "n_queries": 4
+    }
+   },
+   "all": {
+    "random": {
+     "mAP": 0.19370329389636795,
+     "P@5": 0.16611111111111113,
+     "NDCG@10": NaN,
+     "n_queries": 24
+    },
+    "logit_VLM_lookup": {
+     "mAP": 0.23107581018245468,
+     "P@5": 0.2111111111111111,
+     "NDCG@10": 0.31751676295486586,
+     "n_queries": 24
+    },
+    "metadata_matched": {
+     "mAP": 0.2230058804732986,
+     "P@5": 0.17777777777777778,
+     "NDCG@10": 0.2294820884339402,
+     "n_queries": 24
+    },
+    "zeroshot_SigLIP2": {
+     "mAP": 0.38465044393921904,
+     "P@5": 0.4916666666666667,
+     "NDCG@10": 0.4745637581858595,
+     "n_queries": 24
+    },
+    "v2.3_portable_base": {
+     "mAP": 0.326983742538294,
+     "P@5": 0.3583333333333334,
+     "NDCG@10": 0.34848543923283265,
+     "n_queries": 24
+    },
+    "v2.3A_portable_base": {
+     "mAP": 0.39296720518934297,
+     "P@5": 0.5,
+     "NDCG@10": 0.4767238647918499,
+     "n_queries": 24
+    },
+    "v2.4_portable_base": {
+     "mAP": 0.38191214192254663,
+     "P@5": 0.4916666666666667,
+     "NDCG@10": 0.465835278875967,
+     "n_queries": 24
+    }
+   }
+  },
+  "tests": {
+   "v2.3_portable_base vs zeroshot_SigLIP2 | semantic_atomic": {
+    "delta": -0.06962267216953007,
+    "CI95": [
+     -0.11187228558652061,
+     -0.02681513617950666
+    ],
+    "perm_p": 0.007699230076992301,
+    "n_units": 20,
+    "unit": "query"
+   },
+   "v2.4_portable_base vs zeroshot_SigLIP2 | semantic_atomic": {
+    "delta": 0.0003424287083842223,
+    "CI95": [
+     -7.589629346289872e-06,
+     0.001030728029491616
+    ],
+    "perm_p": 0.3788621137886211,
+    "n_units": 20,
+    "unit": "query"
+   },
+   "v2.4_portable_base vs zeroshot_SigLIP2 | semantic_compositional": {
+    "delta": -0.01814195564195565,
+    "CI95": [
+     -0.07629870129870131,
+     0.02187283437283437
+    ],
+    "perm_p": 1.0,
+    "n_units": 4,
+    "unit": "query"
+   },
+   "v2.3A_portable_base vs zeroshot_SigLIP2 | semantic_atomic": {
+    "delta": -0.0016851461651109317,
+    "CI95": [
+     -0.008201192240318032,
+     0.004438682551118841
+    ],
+    "perm_p": 0.6354364563543645,
+    "n_units": 20,
+    "unit": "query"
+   }
+  }
+ }
+}
