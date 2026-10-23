@@ -402,7 +402,7 @@ external result above SigLIP2 and remove the domain skew; and the factored gate
 recovers compositional queries. No single design wins every column.
 SceneMiner trades $0.012$ BDD100K mAP against the unfactored gate for $+0.091$ on
 the suite. Most of the difference is one query: removing the context subspace raises
-``snow covering the road'' from $\gdeg=0.49$ to $0.71$ (\cref{tab:bddq}).
+``snow covering the road'' from $\gdeg=0.49$ to $0.71$ (per-query table in the supplementary).
 
 \begin{table}[t]\centering\small
 \caption{\textbf{Ablations of SceneMiner}, one inference switch each.}
@@ -449,7 +449,7 @@ logit VLM lookup & $0.5871$ & $0.6475$ & $0.5569$ & $0.717$ & $0.705$\\
 }
 \end{table}
 
-\paragraph{External transfer.} \cref{tab:bdd,tab:bddq}. SceneMiner is
+\paragraph{External transfer.} \cref{tab:bdd} (per query in the supplementary). SceneMiner is
 $0.005$ below zero-shot SigLIP2 overall ($0.6164$ vs.\ $0.6218$): it gains $+0.100$
 on in-vocabulary queries and loses $0.058$ out of vocabulary. The gate switches off context and weather queries that a single-prompt
 gate mistakes for degradation (``bright daytime driving'', ``driving after dark'':
@@ -458,21 +458,16 @@ sky'' (as low contrast) and ``snow covering the road'' (as wet road), and they
 account for the OOV gap. No training phrasing describes overcast skies or snow;
 adding such foils would tune the gate on BDD100K, so we did not.
 
-\begin{table*}[t]\centering\small
-\caption{\textbf{BDD100K per query.} I/O: in-/out-of-vocabulary by wording;
-$\gdeg$: concept specificity; column: margin column the gate aligns to (inactive
-when $\gdeg\approx0$).}
-\label{tab:bddq}
-\input{tab_bddq.tex}
-\end{table*}
-
 \begin{figure*}[t]
-\vspace{10pt}
 \centering
-\includegraphics[width=0.92\textwidth]{figures/fig2_qualitative.pdf}
-\caption{\textbf{Qualitative retrievals}, balanced across corpora: the top two
-SceneMiner retrievals within each of nuScenes and Waymo (evaluation split) and
-BDD100K (external, monocular), for the four degradation concepts.}
+\includegraphics[width=\textwidth]{figures/fig2_qualitative.pdf}
+\caption{\textbf{Qualitative retrievals, balanced across corpora}: SceneMiner's
+top two within each of nuScenes and Waymo (evaluation split, one per driving
+segment) and BDD100K (external, portable signals). (a) Sensor and surface
+degradations. (b) Safety-critical road users and objects; yellow boxes are human
+3D annotations of the queried class projected into the retrieved frame, the inset
+enlarges the smallest, and red labels mark retrievals with none. Waymo's labels
+lack truck, bus and cone classes; BDD100K boxes are not available.}
 \label{fig:qual}
 \end{figure*}
 
