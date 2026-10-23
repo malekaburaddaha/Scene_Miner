@@ -83,6 +83,7 @@ def main():
     ap.add_argument("--map-budget", type=float, default=0.003)
     ap.add_argument("--boot", type=int, default=1000)
     ap.add_argument("--out", default="results/cvpr/milestone11_domain_calibration.json")
+    ap.add_argument("--rankers", default="SceneMiner_v2.2,SceneMiner_v2.1,zeroshot_SigLIP2,logit_VLM_lookup")
     a = ap.parse_args()
     dev = torch.device("cuda"); W = Path(a.work)
 
@@ -130,6 +131,7 @@ def main():
 
     from scene_mining.filter.sceneminer_v2 import SceneMinerV21
     from scene_mining.filter.sceneminer_v2_2 import SceneMinerV22
+    from scene_mining.filter.sceneminer_v2_3 import SceneMinerV23
     def load(cls, pat):
         out = []
         for c in sorted(glob.glob(pat)):
@@ -141,6 +143,7 @@ def main():
         return out
     M21 = load(SceneMinerV21, "work_dirs/sceneminer_v21/s*/final.pt")
     M22 = load(SceneMinerV22, "work_dirs/sceneminer_v22/s*/final.pt")
+    M23 = load(SceneMinerV23, "work_dirs/sceneminer_v23/s*/final.pt")
     print(f"[cal] {len(M21)} v2.1 seeds, {len(M22)} v2.2 seeds", flush=True)
 
     on = torch.ones(len(corpus), device=dev)
@@ -161,6 +164,9 @@ def main():
                 R["SceneMiner_v2.1"] = np.mean(
                     [m(qv, qv, emb, tlog, risk, qwen, sig, mzz, prior)
                      .cpu().numpy()[idx] for m in M21], 0)
+                R["SceneMiner_v2.3"] = np.mean(
+                    [m(qv, qv, emb, tlog, risk, qwen, sig, mzz, prior, has_3d=on)
+                     .cpu().numpy()[idx] for m in M23], 0)
                 R["SceneMiner_v2.2"] = np.mean(
                     [m(qv, qv, emb, tlog, risk, qwen, sig, mzz, prior, has_3d=on)
                      .cpu().numpy()[idx] for m in M22], 0)
@@ -196,7 +202,7 @@ def main():
                        "once on the 150 held-out EVAL queries; scored scenes are "
                        "always from the 602-scene eval split",
            "rankers": {}}
-    for nm in ["SceneMiner_v2.2", "SceneMiner_v2.1", "zeroshot_SigLIP2", "logit_VLM_lookup"]:
+    for nm in a.rankers.split(","):
         if nm not in TR: continue
         base_tr = measure(TR[nm], 1.0, 0.0)
         base_ev = measure(EV[nm], 1.0, 0.0)

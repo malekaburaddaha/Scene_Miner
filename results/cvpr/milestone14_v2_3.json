@@ -1,0 +1,907 @@
+{
+ "A_human_gt": {
+  "n_scenes": 550,
+  "attributes": {
+   "droplets": {
+    "n_human_pos": 79,
+    "gamma": 0.999998927116394,
+    "routing_mean": [
+     0.22913901507854462,
+     0.5178371667861938,
+     0.25302380323410034
+    ],
+    "rankers": {
+     "logit_VLM_lookup": {
+      "mAP": 0.8238017685557508
+     },
+     "zeroshot_SigLIP2": {
+      "mAP": 0.9129275459510545
+     },
+     "v2.3_full": {
+      "mAP": 0.9416738428876114,
+      "mAP_std": 0.0026338169161411124
+     },
+     "v2.3_no_gate": {
+      "mAP": 0.9416738428876114,
+      "mAP_std": 0.0026338169161411124
+     },
+     "v2.3_no_rescue": {
+      "mAP": 0.9416738428876114,
+      "mAP_std": 0.0026338169161411124
+     },
+     "v2.3_no_resnorm": {
+      "mAP": 0.9370118611889025,
+      "mAP_std": 0.005651012145970274
+     },
+     "v2.3_base_only": {
+      "mAP": 0.9443373810209394,
+      "mAP_std": 0.002450266420575711
+     },
+     "v2.3_monocular": {
+      "mAP": 0.9223501097652633
+     },
+     "v2.3_human_calibrated_5fold": {
+      "mAP": 0.9473174782381687,
+      "mAP_std": 0.03487957553025064
+     }
+    },
+    "vlm_fn_recovery": {
+     "logit_VLM_lookup": {
+      "n_missed": 3,
+      "n_in_top20pct": 0,
+      "median_rank_pct": 0.34545454545454546
+     },
+     "zeroshot_SigLIP2": {
+      "n_missed": 3,
+      "n_in_top20pct": 1,
+      "median_rank_pct": 0.22545454545454546
+     },
+     "v2.3_full": {
+      "n_missed": 3,
+      "n_in_top20pct": 1,
+      "median_rank_pct": 0.21454545454545454
+     },
+     "v2.3_full_seed0": {
+      "n_missed": 3,
+      "n_in_top20pct": 0,
+      "median_rank_pct": 0.27636363636363637
+     },
+     "v2.3_no_gate": {
+      "n_missed": 3,
+      "n_in_top20pct": 1,
+      "median_rank_pct": 0.21454545454545454
+     },
+     "v2.3_no_gate_seed0": {
+      "n_missed": 3,
+      "n_in_top20pct": 0,
+      "median_rank_pct": 0.27636363636363637
+     },
+     "v2.3_no_rescue": {
+      "n_missed": 3,
+      "n_in_top20pct": 1,
+      "median_rank_pct": 0.21454545454545454
+     },
+     "v2.3_no_rescue_seed0": {
+      "n_missed": 3,
+      "n_in_top20pct": 0,
+      "median_rank_pct": 0.27636363636363637
+     },
+     "v2.3_no_resnorm": {
+      "n_missed": 3,
+      "n_in_top20pct": 1,
+      "median_rank_pct": 0.27636363636363637
+     },
+     "v2.3_no_resnorm_seed0": {
+      "n_missed": 3,
+      "n_in_top20pct": 1,
+      "median_rank_pct": 0.32727272727272727
+     },
+     "v2.3_base_only": {
+      "n_missed": 3,
+      "n_in_top20pct": 0,
+      "median_rank_pct": 0.26545454545454544
+     },
+     "v2.3_base_only_seed0": {
+      "n_missed": 3,
+      "n_in_top20pct": 0,
+      "median_rank_pct": 0.2509090909090909
+     }
+    }
+   },
+   "glare": {
+    "n_human_pos": 41,
+    "gamma": 0.9989485144615173,
+    "routing_mean": [
+     0.14890596270561218,
+     0.6777961850166321,
+     0.17329789698123932
+    ],
+    "rankers": {
+     "logit_VLM_lookup": {
+      "mAP": 0.5886638446257638
+     },
+     "zeroshot_SigLIP2": {
+      "mAP": 0.4143846277626952
+     },
+     "v2.3_full": {
+      "mAP": 0.589554427531229,
+      "mAP_std": 0.014755821584511426
+     },
+     "v2.3_no_gate": {
+      "mAP": 0.5895354049345364,
+      "mAP_std": 0.01474402925616321
+     },
+     "v2.3_no_rescue": {
+      "mAP": 0.588285440849253,
+      "mAP_std": 0.014799995461037885
+     },
+     "v2.3_no_resnorm": {
+      "mAP": 0.5603187714099348,
+      "mAP_std": 0.019478452436595534
+     },
+     "v2.3_base_only": {
+      "mAP": 0.5547499752757032,
+      "mAP_std": 0.015291830407642032
+     },
+     "v2.3_monocular": {
+      "mAP": 0.6228588550520568
+     },
+     "v2.3_human_calibrated_5fold": {
+      "mAP": 0.6395473546362676,
+      "mAP_std": 0.10900592095465514
+     }
+    },
+    "vlm_fn_recovery": {
+     "logit_VLM_lookup": {
+      "n_missed": 20,
+      "n_in_top20pct": 7,
+      "median_rank_pct": 0.24454545454545454
+     },
+     "zeroshot_SigLIP2": {
+      "n_missed": 20,
+      "n_in_top20pct": 14,
+      "median_rank_pct": 0.13727272727272727
+     },
+     "v2.3_full": {
+      "n_missed": 20,
+      "n_in_top20pct": 7,
+      "median_rank_pct": 0.2390909090909091
+     },
+     "v2.3_full_seed0": {
+      "n_missed": 20,
+      "n_in_top20pct": 6,
+      "median_rank_pct": 0.2772727272727273
+     },
+     "v2.3_no_gate": {
+      "n_missed": 20,
+      "n_in_top20pct": 7,
+      "median_rank_pct": 0.2390909090909091
+     },
+     "v2.3_no_gate_seed0": {
+      "n_missed": 20,
+      "n_in_top20pct": 6,
+      "median_rank_pct": 0.2772727272727273
+     },
+     "v2.3_no_rescue": {
+      "n_missed": 20,
+      "n_in_top20pct": 7,
+      "median_rank_pct": 0.2390909090909091
+     },
+     "v2.3_no_rescue_seed0": {
+      "n_missed": 20,
+      "n_in_top20pct": 6,
+      "median_rank_pct": 0.2772727272727273
+     },
+     "v2.3_no_resnorm": {
+      "n_missed": 20,
+      "n_in_top20pct": 1,
+      "median_rank_pct": 0.3490909090909091
+     },
+     "v2.3_no_resnorm_seed0": {
+      "n_missed": 20,
+      "n_in_top20pct": 0,
+      "median_rank_pct": 0.4390909090909091
+     },
+     "v2.3_base_only": {
+      "n_missed": 20,
+      "n_in_top20pct": 9,
+      "median_rank_pct": 0.2081818181818182
+     },
+     "v2.3_base_only_seed0": {
+      "n_missed": 20,
+      "n_in_top20pct": 9,
+      "median_rank_pct": 0.21272727272727274
+     }
+    }
+   },
+   "wet_road": {
+    "n_human_pos": 85,
+    "gamma": 0.9999912977218628,
+    "routing_mean": [
+     0.15981969237327576,
+     0.54677414894104,
+     0.2934061586856842
+    ],
+    "rankers": {
+     "logit_VLM_lookup": {
+      "mAP": 0.9652501059933786
+     },
+     "zeroshot_SigLIP2": {
+      "mAP": 0.8433058865036837
+     },
+     "v2.3_full": {
+      "mAP": 0.9726086980010986,
+      "mAP_std": 0.0015480595447629906
+     },
+     "v2.3_no_gate": {
+      "mAP": 0.9726086980010986,
+      "mAP_std": 0.0015480595447629906
+     },
+     "v2.3_no_rescue": {
+      "mAP": 0.9726086980010986,
+      "mAP_std": 0.0015480595447629906
+     },
+     "v2.3_no_resnorm": {
+      "mAP": 0.9568786157390055,
+      "mAP_std": 0.008461009793347631
+     },
+     "v2.3_base_only": {
+      "mAP": 0.9698901192632157,
+      "mAP_std": 0.0028191082534904837
+     },
+     "v2.3_monocular": {
+      "mAP": 0.9653022294028546
+     },
+     "v2.3_human_calibrated_5fold": {
+      "mAP": 0.9843960658364683,
+      "mAP_std": 0.009837262011330276
+     }
+    },
+    "vlm_fn_recovery": {
+     "logit_VLM_lookup": {
+      "n_missed": 1,
+      "n_in_top20pct": 0,
+      "median_rank_pct": 0.2309090909090909
+     },
+     "zeroshot_SigLIP2": {
+      "n_missed": 1,
+      "n_in_top20pct": 1,
+      "median_rank_pct": 0.08545454545454545
+     },
+     "v2.3_full": {
+      "n_missed": 1,
+      "n_in_top20pct": 1,
+      "median_rank_pct": 0.17636363636363636
+     },
+     "v2.3_full_seed0": {
+      "n_missed": 1,
+      "n_in_top20pct": 1,
+      "median_rank_pct": 0.17636363636363636
+     },
+     "v2.3_no_gate": {
+      "n_missed": 1,
+      "n_in_top20pct": 1,
+      "median_rank_pct": 0.17636363636363636
+     },
+     "v2.3_no_gate_seed0": {
+      "n_missed": 1,
+      "n_in_top20pct": 1,
+      "median_rank_pct": 0.17636363636363636
+     },
+     "v2.3_no_rescue": {
+      "n_missed": 1,
+      "n_in_top20pct": 1,
+      "median_rank_pct": 0.17636363636363636
+     },
+     "v2.3_no_rescue_seed0": {
+      "n_missed": 1,
+      "n_in_top20pct": 1,
+      "median_rank_pct": 0.17636363636363636
+     },
+     "v2.3_no_resnorm": {
+      "n_missed": 1,
+      "n_in_top20pct": 1,
+      "median_rank_pct": 0.15818181818181817
+     },
+     "v2.3_no_resnorm_seed0": {
+      "n_missed": 1,
+      "n_in_top20pct": 1,
+      "median_rank_pct": 0.17272727272727273
+     },
+     "v2.3_base_only": {
+      "n_missed": 1,
+      "n_in_top20pct": 0,
+      "median_rank_pct": 0.23272727272727273
+     },
+     "v2.3_base_only_seed0": {
+      "n_missed": 1,
+      "n_in_top20pct": 0,
+      "median_rank_pct": 0.2309090909090909
+     }
+    }
+   },
+   "low_contrast": {
+    "n_human_pos": 66,
+    "gamma": 0.4093439280986786,
+    "routing_mean": [
+     0.0694897323846817,
+     0.8028749227523804,
+     0.12763532996177673
+    ],
+    "rankers": {
+     "logit_VLM_lookup": {
+      "mAP": 0.5521388576613958
+     },
+     "zeroshot_SigLIP2": {
+      "mAP": 0.1045141425862662
+     },
+     "v2.3_full": {
+      "mAP": 0.6548362830781203,
+      "mAP_std": 0.023907056110895226
+     },
+     "v2.3_no_gate": {
+      "mAP": 0.6058296623693588,
+      "mAP_std": 0.013955743232698832
+     },
+     "v2.3_no_rescue": {
+      "mAP": 0.6549787560704461,
+      "mAP_std": 0.02400642083861643
+     },
+     "v2.3_no_resnorm": {
+      "mAP": 0.646089877771195,
+      "mAP_std": 0.025019880278374276
+     },
+     "v2.3_base_only": {
+      "mAP": 0.6306577631461909,
+      "mAP_std": 0.03242506934199405
+     },
+     "v2.3_monocular": {
+      "mAP": 0.5617670520188367
+     },
+     "v2.3_human_calibrated_5fold": {
+      "mAP": 0.7416542375988672,
+      "mAP_std": 0.08536293666733948
+     }
+    },
+    "vlm_fn_recovery": {
+     "logit_VLM_lookup": {
+      "n_missed": 17,
+      "n_in_top20pct": 2,
+      "median_rank_pct": 0.26
+     },
+     "zeroshot_SigLIP2": {
+      "n_missed": 17,
+      "n_in_top20pct": 3,
+      "median_rank_pct": 0.6254545454545455
+     },
+     "v2.3_full": {
+      "n_missed": 17,
+      "n_in_top20pct": 4,
+      "median_rank_pct": 0.23454545454545456
+     },
+     "v2.3_full_seed0": {
+      "n_missed": 17,
+      "n_in_top20pct": 4,
+      "median_rank_pct": 0.24181818181818182
+     },
+     "v2.3_no_gate": {
+      "n_missed": 17,
+      "n_in_top20pct": 4,
+      "median_rank_pct": 0.23636363636363636
+     },
+     "v2.3_no_gate_seed0": {
+      "n_missed": 17,
+      "n_in_top20pct": 4,
+      "median_rank_pct": 0.24727272727272728
+     },
+     "v2.3_no_rescue": {
+      "n_missed": 17,
+      "n_in_top20pct": 4,
+      "median_rank_pct": 0.23454545454545456
+     },
+     "v2.3_no_rescue_seed0": {
+      "n_missed": 17,
+      "n_in_top20pct": 4,
+      "median_rank_pct": 0.24181818181818182
+     },
+     "v2.3_no_resnorm": {
+      "n_missed": 17,
+      "n_in_top20pct": 5,
+      "median_rank_pct": 0.25636363636363635
+     },
+     "v2.3_no_resnorm_seed0": {
+      "n_missed": 17,
+      "n_in_top20pct": 6,
+      "median_rank_pct": 0.24
+     },
+     "v2.3_base_only": {
+      "n_missed": 17,
+      "n_in_top20pct": 4,
+      "median_rank_pct": 0.24545454545454545
+     },
+     "v2.3_base_only_seed0": {
+      "n_missed": 17,
+      "n_in_top20pct": 3,
+      "median_rank_pct": 0.24727272727272728
+     }
+    }
+   }
+  },
+  "macro_mAP": {
+   "logit_VLM_lookup": 0.7324636442090723,
+   "zeroshot_SigLIP2": 0.5687830507009249,
+   "v2.3_full": 0.7896683128745148,
+   "v2.3_no_gate": 0.7774119020481512,
+   "v2.3_no_rescue": 0.7893866844521022,
+   "v2.3_no_resnorm": 0.7750747815272594,
+   "v2.3_base_only": 0.7749088096765123,
+   "v2.3_monocular": 0.7680695615597528,
+   "v2.3_human_calibrated_5fold": 0.8282287840774429
+  }
+ },
+ "B_bdd100k": {
+  "n_images": 1000,
+  "n_queries": 12,
+  "per_query": [
+   {
+    "query": "wet reflective asphalt after rainfall",
+    "category": "in_vocab",
+    "gamma": 0.9999912977218628,
+    "concept_argmax": "wet_road",
+    "concept_pmax": 0.9989475607872009,
+    "apriori_channel": "wet_road",
+    "routing": [
+     0.48177391290664673,
+     0.518226146697998,
+     0.0
+    ],
+    "mAP": {
+     "zeroshot_SigLIP2": 0.429874598643891,
+     "logit_VLM_lookup": 0.6197374407243021,
+     "v2.3_full": 0.5918012655748272,
+     "v2.3_no_gate": 0.5918012655748272,
+     "v2.3_no_rescue": 0.5918012655748272
+    }
+   },
+   {
+    "query": "driving in rain",
+    "category": "out_of_vocab",
+    "gamma": 0.3436029255390167,
+    "concept_argmax": "wet_road",
+    "concept_pmax": 0.5408511757850647,
+    "apriori_channel": "wet_road",
+    "routing": [
+     0.7227634191513062,
+     0.2772365212440491,
+     0.0
+    ],
+    "mAP": {
+     "zeroshot_SigLIP2": 0.5562110547692591,
+     "logit_VLM_lookup": 0.6197374407243021,
+     "v2.3_full": 0.6136550329844263,
+     "v2.3_no_gate": 0.6453045414285419,
+     "v2.3_no_rescue": 0.6136550329844263
+    }
+   },
+   {
+    "query": "water droplets smearing the camera lens",
+    "category": "in_vocab",
+    "gamma": 0.999998927116394,
+    "concept_argmax": "droplets",
+    "concept_pmax": 0.9995885491371155,
+    "apriori_channel": "droplets",
+    "routing": [
+     0.48746442794799805,
+     0.5125356912612915,
+     0.0
+    ],
+    "mAP": {
+     "zeroshot_SigLIP2": 0.5497060105887079,
+     "logit_VLM_lookup": 0.4110923374597319,
+     "v2.3_full": 0.5548268692119984,
+     "v2.3_no_gate": 0.5548268692119984,
+     "v2.3_no_rescue": 0.5548268692119984
+    }
+   },
+   {
+    "query": "snow covering the road",
+    "category": "out_of_vocab",
+    "gamma": 0.6012566089630127,
+    "concept_argmax": "wet_road",
+    "concept_pmax": 0.7083399295806885,
+    "apriori_channel": "wet_road",
+    "routing": [
+     0.6083965301513672,
+     0.3916034400463104,
+     0.0
+    ],
+    "mAP": {
+     "zeroshot_SigLIP2": 0.6169579172358145,
+     "logit_VLM_lookup": 0.13986605412429018,
+     "v2.3_full": 0.415854325218465,
+     "v2.3_no_gate": 0.31883830522863416,
+     "v2.3_no_rescue": 0.4086511678281051
+    }
+   },
+   {
+    "query": "a snowy street scene",
+    "category": "out_of_vocab",
+    "gamma": 0.03791242092847824,
+    "concept_argmax": "wet_road",
+    "concept_pmax": 0.46668559312820435,
+    "apriori_channel": "wet_road",
+    "routing": [
+     0.9600604772567749,
+     0.03993946686387062,
+     0.0
+    ],
+    "mAP": {
+     "zeroshot_SigLIP2": 0.6503036354779392,
+     "logit_VLM_lookup": 0.13986605412429018,
+     "v2.3_full": 0.6383862012904998,
+     "v2.3_no_gate": 0.28887929240846144,
+     "v2.3_no_rescue": 0.6383862012904998
+    }
+   },
+   {
+    "query": "driving after dark",
+    "category": "out_of_vocab",
+    "gamma": 0.4332367777824402,
+    "concept_argmax": "glare",
+    "concept_pmax": 0.6054108738899231,
+    "apriori_channel": "low_contrast",
+    "routing": [
+     0.6845988035202026,
+     0.31540122628211975,
+     0.0
+    ],
+    "mAP": {
+     "zeroshot_SigLIP2": 0.9551035727467044,
+     "logit_VLM_lookup": 0.9571950791738516,
+     "v2.3_full": 0.9449873629139338,
+     "v2.3_no_gate": 0.9078169237034012,
+     "v2.3_no_rescue": 0.9400292731015674
+    }
+   },
+   {
+    "query": "a night-time street scene",
+    "category": "out_of_vocab",
+    "gamma": 0.03478553146123886,
+    "concept_argmax": "wet_road",
+    "concept_pmax": 0.5291193723678589,
+    "apriori_channel": "low_contrast",
+    "routing": [
+     0.9634817242622375,
+     0.036518268287181854,
+     0.0
+    ],
+    "mAP": {
+     "zeroshot_SigLIP2": 0.9707588529886592,
+     "logit_VLM_lookup": 0.9571950791738516,
+     "v2.3_full": 0.9705675014798223,
+     "v2.3_no_gate": 0.9013439332023871,
+     "v2.3_no_rescue": 0.9705675014798223
+    }
+   },
+   {
+    "query": "a low contrast scene where vehicles are barely distinguishable from the background",
+    "category": "in_vocab",
+    "gamma": 0.40934351086616516,
+    "concept_argmax": "low_contrast",
+    "concept_pmax": 0.8631173372268677,
+    "apriori_channel": "low_contrast",
+    "routing": [
+     0.6709697842597961,
+     0.329030305147171,
+     0.0
+    ],
+    "mAP": {
+     "zeroshot_SigLIP2": 0.5499237752906512,
+     "logit_VLM_lookup": 0.9571950791738516,
+     "v2.3_full": 0.8467976120458839,
+     "v2.3_no_gate": 0.9058032183974912,
+     "v2.3_no_rescue": 0.8955603264125216
+    }
+   },
+   {
+    "query": "blinding headlight bloom from oncoming traffic",
+    "category": "in_vocab",
+    "gamma": 0.9989485144615173,
+    "concept_argmax": "glare",
+    "concept_pmax": 0.9876294136047363,
+    "apriori_channel": "glare",
+    "routing": [
+     0.4798699915409088,
+     0.5201299786567688,
+     0.0
+    ],
+    "mAP": {
+     "zeroshot_SigLIP2": 0.871105994537172,
+     "logit_VLM_lookup": 0.6018368454256332,
+     "v2.3_full": 0.7680874660611439,
+     "v2.3_no_gate": 0.7680337843648143,
+     "v2.3_no_rescue": 0.733430523490062
+    }
+   },
+   {
+    "query": "bright daytime driving",
+    "category": "out_of_vocab",
+    "gamma": 0.9923223853111267,
+    "concept_argmax": "glare",
+    "concept_pmax": 0.9259106516838074,
+    "apriori_channel": "low_contrast",
+    "routing": [
+     0.4812588095664978,
+     0.5187411308288574,
+     0.0
+    ],
+    "mAP": {
+     "zeroshot_SigLIP2": 0.4950404959952983,
+     "logit_VLM_lookup": 0.9440525083775874,
+     "v2.3_full": 0.34674845095539386,
+     "v2.3_no_gate": 0.346598523150065,
+     "v2.3_no_rescue": 0.34674845095539386
+    }
+   },
+   {
+    "query": "overcast grey sky",
+    "category": "out_of_vocab",
+    "gamma": 0.898273229598999,
+    "concept_argmax": "low_contrast",
+    "concept_pmax": 0.8012027740478516,
+    "apriori_channel": "low_contrast",
+    "routing": [
+     0.5051629543304443,
+     0.49483704566955566,
+     0.0
+    ],
+    "mAP": {
+     "zeroshot_SigLIP2": 0.26993905590664136,
+     "logit_VLM_lookup": 0.0790942159815275,
+     "v2.3_full": 0.09262527567310819,
+     "v2.3_no_gate": 0.09016268606265153,
+     "v2.3_no_rescue": 0.09262527567310819
+    }
+   },
+   {
+    "query": "adverse weather on the road",
+    "category": "out_of_vocab",
+    "gamma": 0.25888296961784363,
+    "concept_argmax": "wet_road",
+    "concept_pmax": 0.479326456785202,
+    "apriori_channel": "wet_road",
+    "routing": [
+     0.7819179892539978,
+     0.2180819809436798,
+     0.0
+    ],
+    "mAP": {
+     "zeroshot_SigLIP2": 0.5471327543659465,
+     "logit_VLM_lookup": 0.6182628066744288,
+     "v2.3_full": 0.5715230691533083,
+     "v2.3_no_gate": 0.5360360960180122,
+     "v2.3_no_rescue": 0.5715230691533083
+    }
+   }
+  ],
+  "rankers": {
+   "zeroshot_SigLIP2": {
+    "mAP": 0.6218381432122236,
+    "P@5": 0.8500000000000001,
+    "NDCG@10": 0.808780276587184,
+    "mAP_in_vocab": 0.6001525947651055,
+    "mAP_out_of_vocab": 0.6326809174357828
+   },
+   "logit_VLM_lookup": {
+    "mAP": 0.587094245094804,
+    "P@5": 0.7166666666666667,
+    "NDCG@10": 0.7053837213336324,
+    "mAP_in_vocab": 0.6474654256958797,
+    "mAP_out_of_vocab": 0.5569086547942661
+   },
+   "v2.3_full": {
+    "mAP": 0.6129883693802342,
+    "P@5": 0.7999999999999999,
+    "NDCG@10": 0.8129128022728959,
+    "mAP_in_vocab": 0.6903783032234633,
+    "mAP_out_of_vocab": 0.5742934024586197
+   },
+   "v2.3_no_gate": {
+    "mAP": 0.5712871198959404,
+    "P@5": 0.75,
+    "NDCG@10": 0.780652510514165,
+    "mAP_in_vocab": 0.7051162843872828,
+    "mAP_out_of_vocab": 0.5043725376502692
+   },
+   "v2.3_no_rescue": {
+    "mAP": 0.6131504130963034,
+    "P@5": 0.7833333333333333,
+    "NDCG@10": 0.811931202644374,
+    "mAP_in_vocab": 0.6939047461723522,
+    "mAP_out_of_vocab": 0.5727732465582789
+   }
+  }
+ },
+ "C_suite150": {
+  "n_scenes": 602,
+  "overall": {
+   "zeroshot_SigLIP2": {
+    "mAP": 0.4445509619274833,
+    "P@5": 0.5386666666666667,
+    "NDCG@10": 0.52776371344896
+   },
+   "v2.3_full": {
+    "mAP": 0.631322174644723,
+    "P@5": 0.6306666666666667,
+    "NDCG@10": 0.6318417094007424
+   },
+   "v2.3_no_gate": {
+    "mAP": 0.5937496125674451,
+    "P@5": 0.6106666666666666,
+    "NDCG@10": 0.6100938674268803
+   },
+   "v2.3_no_rescue": {
+    "mAP": 0.6311850463455712,
+    "P@5": 0.6306666666666667,
+    "NDCG@10": 0.6318417094007424
+   },
+   "v2.3_no_resnorm": {
+    "mAP": 0.531215192666259,
+    "P@5": 0.604,
+    "NDCG@10": 0.592293799336396
+   },
+   "v2.3_base_only": {
+    "mAP": 0.6548567756326164,
+    "P@5": 0.6293333333333334,
+    "NDCG@10": 0.6402487032148452
+   }
+  },
+  "per_stratum": {
+   "sensor_degradation": {
+    "zeroshot_SigLIP2": 0.44398409821588936,
+    "v2.3_full": 0.7597132549790637,
+    "v2.3_no_gate": 0.7565959676093099,
+    "v2.3_no_rescue": 0.7598675799643546,
+    "v2.3_no_resnorm": 0.6573110779959497,
+    "v2.3_base_only": 0.7913257607574069
+   },
+   "macro_environmental": {
+    "zeroshot_SigLIP2": 0.48670818992421416,
+    "v2.3_full": 0.49720980210543203,
+    "v2.3_no_gate": 0.42717238639511124,
+    "v2.3_no_rescue": 0.4966350264834917,
+    "v2.3_no_resnorm": 0.4005837288185248,
+    "v2.3_base_only": 0.5308849026937293
+   },
+   "compositional_heldout": {
+    "zeroshot_SigLIP2": 0.3701284652078132,
+    "v2.3_full": 0.7341804777604919,
+    "v2.3_no_gate": 0.6697289136541539,
+    "v2.3_no_rescue": 0.7341926822497088,
+    "v2.3_no_resnorm": 0.617740309642972,
+    "v2.3_base_only": 0.7077066627743995
+   },
+   "negated": {
+    "zeroshot_SigLIP2": 0.3553535675326913,
+    "v2.3_full": 0.46189060551687994,
+    "v2.3_no_gate": 0.44353108638735855,
+    "v2.3_no_rescue": 0.46213893145903207,
+    "v2.3_no_resnorm": 0.38131751826183713,
+    "v2.3_base_only": 0.46968957431314345
+   }
+  },
+  "skew_pts": {
+   "zeroshot_SigLIP2": {
+    "mean": -16.19481231206062,
+    "CI95": [
+     -20.77925549170439,
+     -11.08493874951766
+    ]
+   },
+   "v2.3_full": {
+    "mean": 17.00518768793938,
+    "CI95": [
+     12.790798178260712,
+     21.675831422509294
+    ]
+   },
+   "v2.3_no_gate": {
+    "mean": 13.805187687939378,
+    "CI95": [
+     9.82291521977852,
+     17.81940954953648
+    ]
+   },
+   "v2.3_no_rescue": {
+    "mean": 17.00518768793938,
+    "CI95": [
+     12.405203224748638,
+     21.575335949868798
+    ]
+   },
+   "v2.3_no_resnorm": {
+    "mean": 17.405187687939378,
+    "CI95": [
+     12.961352609027298,
+     21.83543593821822
+    ]
+   },
+   "v2.3_base_only": {
+    "mean": 14.60518768793938,
+    "CI95": [
+     10.388779931891237,
+     19.107125167101742
+    ]
+   }
+  },
+  "gamma_by_stratum": {
+   "sensor_degradation": 0.8584318654912133,
+   "macro_environmental": 0.256785173820139,
+   "compositional_heldout": 0.5574902015634708,
+   "negated": 0.7352063444753488
+  }
+ },
+ "C_domain_calibration": {
+  "raw": {
+   "mAP": 0.631322174644723,
+   "skew_pts": 17.005187687939376,
+   "skew_CI95": [
+    12.723852383954966,
+    21.70614880039313
+   ],
+   "skew_within_target": false
+  },
+  "milestone7_full_zscore": {
+   "mAP": 0.5438319338590345,
+   "skew_pts": -10.994812312060622,
+   "dmAP": -0.08749024078568846
+  },
+  "selected": {
+   "q": 0.2,
+   "alpha": 0.0,
+   "train_skew_pts": 25.728829034504475,
+   "train_dmAP": 0.0
+  },
+  "eval": {
+   "mAP": 0.631322174644723,
+   "skew_pts": 17.005187687939376,
+   "dmAP": 0.0,
+   "mAP_CI95": [
+    0.5820066932253761,
+    0.6794605035349334
+   ],
+   "skew_CI95": [
+    12.723852383954966,
+    21.70614880039313
+   ],
+   "dmAP_CI95": [
+    0.0,
+    0.0
+   ],
+   "perm_p_dmAP": 1.0
+  },
+  "targets_met": {
+   "skew_within_target": false,
+   "within_map_budget": true
+  },
+  "best_option": "no_calibration",
+  "skew_target_resolvable": false
+ },
+ "training": {
+  "concept_gate": {
+   "median_in_vocab_cos": 0.383,
+   "median_oov_cos": 0.106,
+   "tau_c": 0.245,
+   "T_c": 0.046,
+   "gamma_train_min": 0.017,
+   "gamma_train_median": 0.953,
+   "gamma_oov_bank_max": 0.315
+  },
+  "raw_residual_running_std": 6.3112,
+  "base_part_running_std": [
+   0.031,
+   0.5656,
+   0.1587
+  ]
+ }
+}
