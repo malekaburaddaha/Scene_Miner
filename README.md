@@ -246,6 +246,17 @@ SM_FINAL=v25 SM_OUT=results/cvpr/milestone22_compositional_synergy.json python s
 SM_FINAL=v25 SM_OUT=results/cvpr/milestone22_rater_sensitivity.json python scripts/eval_rater_sensitivity.py
 python scripts/val150_retrieval_to_3d.py --model v25 --out results/cvpr/milestone22_val150_retrieval_v25.json
 
+# ── Milestones 23-25: published-paradigm comparison, showcase figure ────
+python scripts/caption_scenes_qwen.py --shard 0 --nshard 3   # also shards 1, 2 (one GPU each)
+python scripts/embed_images_baselines.py                     # CLIP / SigLIP image embeddings
+for k in bev sigft; do for s in 0 1 2 3 4; do python scripts/train_projection_baselines.py --kind $k --seed $s; done; done
+python scripts/eval_related_work_baselines.py               # -> milestone23_related_work_comparison.json
+python scripts/eval_v23.py --model v25 --ckpts "work_dirs/sceneminer_v25/s*/final.pt" --bench bdd --out results/cvpr/milestone23_bdd_rawquery_v25.json
+python scripts/bdd_routing_rawquery_check.py && python scripts/diagnose_carim_captions.py && python scripts/time_qwen_captions.py
+python scripts/check_macro_subspace_train.py
+python scripts/make_qualitative_showcase.py                 # Fig. 2 + supplementary strips
+python scripts/make_tab_bddq.py && python scripts/make_tab_master.py
+
 # ── bibliography (fetched, never typed) ──────────────────────────────────
 SSL_CERT_FILE=/etc/pki/tls/certs/ca-bundle.crt python scripts/verify_bibliography.py
 SSL_CERT_FILE=/etc/pki/tls/certs/ca-bundle.crt python scripts/verify_bibliography_doi.py
@@ -288,9 +299,38 @@ name?) — with abstention to SigLIP2 plus the named metadata. Earlier designs
 
 | ranker | all 12 | in-vocab (4) | out-of-vocab (8) | P@5 | NDCG@10 |
 |---|---|---|---|---|---|
-| **SceneMiner** | **0.6317** | **0.7081** | 0.5936 | 0.833 | **0.814** |
-| zero-shot SigLIP2 | 0.6218 | 0.6002 | **0.6327** | **0.850** | 0.809 |
+| SceneMiner | 0.6164 | **0.7003** | 0.5745 | 0.817 | 0.782 |
+| zero-shot SigLIP2 | **0.6218** | 0.6002 | **0.6327** | **0.850** | **0.809** |
 | logit VLM lookup | 0.5871 | 0.6475 | 0.5569 | 0.717 | 0.705 |
+
+SceneMiner is level with SigLIP2 externally (−0.005, p = 0.94): +0.100 on queries
+naming a trained attribute, −0.058 on the rest. (Milestone 23 found that earlier
+BDD100K evaluations fed L2-normalised query features to heads trained on raw ones;
+these are the corrected numbers.)
+
+**Against published driving-retrieval paradigms and foundation models**
+(Milestone 23; "-style" rows re-implement the paradigm on our cached signals and
+are not the authors' systems; † reads BEV/tags supervised on corpus scenes; ‡ reads
+the attributes that define suite relevance):
+
+| method | human GT | BDD100K | S5 258 | S5 val150 | suite | ms |
+|---|---|---|---|---|---|---|
+| BEV-TSR-style | 0.577† | n/a | 0.208† | n/a | 0.459† | 0.39 |
+| RefAV-style program | 0.733† | 0.383 | 0.229† | 0.211 | 0.850†‡ | 0.08 |
+| CARIM-style captions | 0.377 | 0.463 | 0.248 | 0.309 | 0.308 | 1.53 |
+| Tag map (Talk2BEV/nuPrompt-style) | 0.624† | n/a | 0.198† | n/a | 0.378† | 0.69 |
+| ReferGPT-style | 0.469† | 0.612 | 0.252† | 0.376 | 0.543† | 1.39 |
+| CLIP ViT-B/32 | 0.453 | 0.612 | 0.253 | 0.374 | 0.384 | 0.17 |
+| SigLIP ViT-B/16 | 0.507 | 0.607 | 0.281 | 0.385 | 0.427 | 0.17 |
+| SigLIP2 ViT-B/16 | 0.569 | **0.622** | 0.312 | 0.385 | 0.445 | 0.17 |
+| SigLIP2 + adapter (906 scenes) | 0.666 | 0.539 | 0.222 | 0.226 | 0.479 | 0.39 |
+| Qwen2.5-VL lookup | 0.732 | 0.587 | 0.219 | 0.231 | 0.414‡ | 0.01 |
+| naive convex router | 0.735† | 0.486 | 0.188† | 0.212 | 0.531† | 5.84 |
+| **SceneMiner** | **0.785**† | 0.616 | **0.315** | **0.397** | 0.685† | 8.00 |
+
+SceneMiner leads on human-labelled degradation and ties SigLIP2 on BDD100K and
+Stratum 5; CLIP and the ReferGPT-style ranker are higher on the 4 val150
+conjunctions (too few to test).
 
 **Where learned fusion helps** (all human-graded):
 

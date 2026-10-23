@@ -287,6 +287,13 @@ cosine part (std 0.5419 vs 0.0193), so a nominal 50/50 routing weight was ~96 %
 margin. The gap is visible in training too — PartNorm's running stds come out
 at [0.031, 0.564, 0.166] — so this was diagnosable without external data.
 
+> **Correction (Milestone 23).** The BDD100K numbers in this section were computed
+> with L2-normalised query features, while the heads were trained on raw ones. With
+> raw features, v2.1 scores 0.486 and its blend is 0.485 (still below both signals);
+> the spread ratio is 30.3× (std 0.583 vs 0.019); and v2.1's router puts 0.977 of its
+> weight on the margin on BDD100K too, so the "already distributed" observation
+> above was an artefact. Routing repair alone still moves BDD100K by −0.001.
+
 **Three bugs, one in an already-reported number.**
 
 | bug | impact |
@@ -374,6 +381,9 @@ bounded residual, α = 0.5 a priori).
 | glare FN recovery | 7/20 | 1/20 | 7/20 | ≥ 12/20 ✗ |
 | BDD100K | 0.4189 | 0.5952 | 0.6130 | ≥ 0.6218 ✗ |
 | 150-suite mAP / skew | 0.5312 / +8.7 | 0.5178 / +1.1 | 0.6313 / **+17.0** | skew preserved ✗ |
+
+BDD100K values in this table used L2-normalised queries (corrected in Milestone 23:
+v2.1 0.486, v2.2 0.570, v2.3 0.589).
 
 Ablations: gate −0.0123, ResNorm −0.0146, FN rescue −0.0003 (as predicted). On
 BDD100K the gate picks the right column on 4/4 in-vocabulary queries and wins
@@ -505,7 +515,7 @@ leave-group-out (half projection, τ = 0.02).
 | | v2.4 | **v2.5 (final)** |
 |---|---|---|
 | human GT zero-leakage / calibrated | 0.7879 / 0.8165 | 0.7845 / **0.8263** |
-| BDD100K | **0.6387** | 0.6317 (> SigLIP2 0.6218) |
+| BDD100K (corrected in M23; reported 0.6387 / 0.6317) | **0.6283** | 0.6164 (SigLIP2 0.6218) |
 | suite overall / skew / S3 | 0.594 / +0.5 / 0.459 | **0.685** / +2.2 / **0.603** |
 | S5 object × condition | 0.292 | **0.310** (SigLIP2+metadata 0.327, gap n.s.) |
 | S5 atomic corpus / val150 | 0.337 / 0.383 | 0.332 / **0.392** |
@@ -515,6 +525,37 @@ re-audit table of an earlier version is removed; the weaker designs appear as a
 design-progression table; the width-1 LayerNorm dead-modality result is in
 Section 6; and Equation 1, Figure 1 and Figure 2 are fixed. Main text ends on
 page 8, references from page 9.
+
+## 23. Published driving-retrieval paradigms; BDD100K evaluation bug
+
+Twelve methods on identical splits and metrics, including re-implementations of
+the BEV-TSR, RefAV, CARIM, Talk2BEV/nuPrompt and ReferGPT paradigms on our cached
+signals (`milestone23_related_work_comparison.json`). SceneMiner leads on human
+GT (0.785; next 0.735), ties SigLIP2 on BDD100K and Stratum 5, and loses to CLIP
+and ReferGPT-style on the 4 val150 conjunctions (untestable, n = 4). The RefAV-style
+program's 0.850 on the suite is circularity. Caption retrieval is weak partly
+because our caption prompt makes 64 % of captions deny droplets or glare.
+
+An evaluation bug of mine was found: the BDD100K benchmark fed L2-normalised query
+features to learned heads trained on raw features. All BDD100K numbers were
+recomputed (SceneMiner 0.632 → 0.616, now 0.005 below SigLIP2). The γ_macro
+subspace refinement was rejected on training text. Four references were verified
+(BEV-CLIP is published as BEV-TSR, AAAI 2025; RefAV is arXiv only).
+
+## 24. Qualitative showcase
+
+Figure 2 has degradation rows and safety-critical road-user rows, top-2 per corpus
+for nuScenes, Waymo and BDD100K. Boxes come only from human 3D annotations projected
+into the retrieved frame (source frames verified by pixel correlation, r ≥ 0.979);
+retrievals without an annotated object of the class are labelled, not hidden. The
+supplementary adds a page of semantic strips and a rule-selected failure strip.
+
+## 25. Paper rewrite
+
+Abstract and introduction rebuilt around three contributions (system; calibrated
+fusion with diagnostic auditing; multi-dataset human evaluation); related work
+covers the driving-retrieval systems; the master comparison table is Table 2.
+Main text is 8 pages with references from the top of page 9.
 
 ---
 
@@ -529,13 +570,15 @@ page 8, references from page 9.
 2. **Two structural defects:** circular predicate benchmarks (lookup = 1.000) and
    certifiers trained on the mined scenes (+0.3349 detector mAP; tag head
    supervised on the same objects).
-3. **Three levels of silent modality failure:** parts (28.1×), residual (~10×),
-   and a width-1 LayerNorm that kills a modality outright while mAP moves 0.004.
-4. **One model**, best on human-graded degradation (0.785 / 0.826), above
-   zero-shot SigLIP2 externally (0.632 vs 0.622), matching SigLIP2 on semantic edge
-   cases, with low domain skew. Its gate never saw evaluation data.
+3. **Three levels of silent modality failure:**
+   parts (30.3×), residual (~10×), and a width-1 LayerNorm that kills a modality
+   outright while mAP moves 0.004.
+4. **One model**, best of twelve methods on human-graded degradation (0.785 /
+   0.826), level with zero-shot SigLIP2 externally (0.616 vs 0.622, p = 0.94) and on
+   semantic edge cases, with low domain skew. Its gate never saw evaluation data.
 
-**What does not survive:** learned fusion beating simple SigLIP2 + metadata fusion
+**What does not survive:** SceneMiner beating SigLIP2 on BDD100K (an evaluation
+bug, fixed in M23); beating every published paradigm everywhere; learned fusion beating simple SigLIP2 + metadata fusion
 on object × condition conjunctions; SceneMiner finding breakage scenes better
 than the VLM-margin lookup on val150; a uniform per-attribute lead.
 
