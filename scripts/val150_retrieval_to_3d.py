@@ -46,6 +46,7 @@ def main():
     ap.add_argument("--topk", type=int, default=25)
     ap.add_argument("--perm", type=int, default=2000)
     ap.add_argument("--out", default="results/cvpr/milestone16_val150_retrieval_to_3d.json")
+    ap.add_argument("--model", default="v23", choices=["v23", "v24"])
     a = ap.parse_args()
     per = json.load(open(a.per_scene)); G = json.load(open(a.gt))["scenes"]
     vz = np.load(a.val_siglip, allow_pickle=False); scenes = [str(t) for t in vz["scenes"]]
@@ -62,16 +63,16 @@ def main():
     QS = [(q["text"], "degradation", q.get("attribute") or next(iter(q["predicate"]))) for q in deg] + \
          [(q["text"], "semantic", q["semantic"]) for q in sem]
     QT = text_embed([q[0] for q in QS]); QN = F.normalize(QT, dim=-1)
-    M = load_v23(np.array([0.417797, 0.081112]))   # risk stats unused in portable mode
+    M = load_v23(np.array([0.417797, 0.081112]), which=a.model)   # risk stats unused in portable mode
+    for m in M: m.use_abstain = (a.model == "v24")
     rng = np.random.default_rng(0)
 
     # rankings: ranker -> list of score vectors (None = no information -> random)
-    R = {k: [] for k in ["SceneMiner_v2.3", "SceneMiner_v2.3A", "zeroshot_SigLIP2",
-                         "logit_VLM_lookup", "metadata_matched", "random"]}
+    SM = "SceneMiner_v2.4" if a.model == "v24" else "SceneMiner_v2.3"
+    R = {k: [] for k in [SM, "zeroshot_SigLIP2", "logit_VLM_lookup", "metadata_matched", "random"]}
     for qi, (text, kind, attr) in enumerate(QS):
         qv = QT[qi].unsqueeze(0).expand(n, -1)
-        R["SceneMiner_v2.3"].append(portable(M, qv, S, MZt))
-        R["SceneMiner_v2.3A"].append(portable(M, qv, S, MZt, abstain=True))
+        R[SM].append(portable(M, qv, S, MZt, abstain=(a.model == "v24")))
         R["zeroshot_SigLIP2"].append((S @ QN[qi]).cpu().numpy())
         if kind == "degradation":
             R["logit_VLM_lookup"].append(VM[:, TRAIN_ORDER.index(attr)])
@@ -132,8 +133,8 @@ def main():
     # permutation, applied to both rankers at once, so the null keeps both sets fixed
     res["pairwise"] = {}
     qsel = np.where(kinds == "degradation")[0]
-    for A_, B_ in [("SceneMiner_v2.3", "metadata_matched"), ("SceneMiner_v2.3", "zeroshot_SigLIP2"),
-                   ("SceneMiner_v2.3", "logit_VLM_lookup"), ("metadata_matched", "zeroshot_SigLIP2")]:
+    for A_, B_ in [(SM, "metadata_matched"), (SM, "zeroshot_SigLIP2"),
+                   (SM, "logit_VLM_lookup"), ("metadata_matched", "zeroshot_SigLIP2")]:
         TA = sets([R[A_][i] for i in qsel], a.topk, 0); TB = sets([R[B_][i] for i in qsel], a.topk, 0)
         for m, sgn in METRICS.items():
             v = X[m]

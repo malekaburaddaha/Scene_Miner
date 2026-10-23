@@ -2,8 +2,8 @@
 """MILESTONE 17 - LaTeX tables for the supplementary, generated from data.
 
   per_query_suite.tex     per-query mAP on the 150 eval queries of the 390 suite
-                          (recomputed here: v2.3, v2.3A, SigLIP2, logit lookup)
-  per_query_semantic.tex  per-query mAP on the 40 Stratum-5 queries (from M15)
+                          (recomputed here: SceneMiner v2.4, SigLIP2, logit lookup)
+  per_query_semantic.tex  per-query mAP on the 40 Stratum-5 queries (from M18)
   train_queries.tex       the 240 TRAINING queries, listed but never scored -
                           scoring them would measure memorisation, not retrieval
   bh_table.tex            all 30 front-sector tests of Milestone 11 with BH q
@@ -53,7 +53,8 @@ def suite_rows():
     emb, tlog, risk = T("emb"), T("tag_logits"), T("risk")
     sig, mz, prior = T("siglip_img"), T("vlm_margin_z"), T("prior")
     qwen = torch.load(W/"V_frozen_cache.pt", map_location=dev).float()
-    M = load_v23(risk.reshape(-1).cpu().numpy())
+    M = load_v23(risk.reshape(-1).cpu().numpy(), which="v24")
+    for m in M: m.use_abstain = True
     attrs = load_attributes(W)
     for f in ("binary_flags_with_logits.json", "lowcontrast_strict.json"):
         for t, r in json.load(open(W/f)).items():
@@ -68,50 +69,45 @@ def suite_rows():
         rel = predicate_mask(attrs, toks, q["predicate"])
         qv = QT[qi].unsqueeze(0).expand(N, -1)
         if rel.sum() in (0, len(rel)):
-            vals = [None] * 4
+            vals = [None] * 3
         else:
             with torch.no_grad():
-                for m in M: m.use_abstain = False
                 s = np.mean([m(qv, qv, emb, tlog, risk, qwen, sig, mz, prior, has_3d=on).cpu().numpy() for m in M], 0)[idx]
-                for m in M: m.use_abstain = True
-                sa = np.mean([m(qv, qv, emb, tlog, risk, qwen, sig, mz, prior, has_3d=on).cpu().numpy() for m in M], 0)[idx]
-                for m in M: m.use_abstain = False
                 c = F.cosine_similarity(F.normalize(qv, -1), F.normalize(sig, -1)).cpu().numpy()[idx]
             at = next((k for k in ("droplets", "glare", "wet_road", "low_contrast") if k in q["predicate"]), None)
             lk = None
             if at:
                 src, key = (strict, "low_contrast_strict") if at == "low_contrast" else (vlm, at)
                 lk = ap_binary(np.argsort(-np.array([float(src.get(t, {}).get(key+"_margin", -9.)) for t in toks])), rel)
-            vals = [ap_binary(np.argsort(-s), rel), ap_binary(np.argsort(-sa), rel),
-                    ap_binary(np.argsort(-c), rel), lk]
+            vals = [ap_binary(np.argsort(-s), rel), ap_binary(np.argsort(-c), rel), lk]
         raw.append({"text": q["text"], "stratum": q["stratum"], "n_pos": int(rel.sum()),
-                    "v2.3": vals[0], "v2.3A": vals[1], "SigLIP2": vals[2], "lookup": vals[3]})
+                    "v2.4": vals[0], "SigLIP2": vals[1], "lookup": vals[2]})
         rows.append([str(qi + 1), SHORT[q["stratum"]], tex(q["text"]), pred_str(q["predicate"]),
                      str(int(rel.sum()))] + [fmt(v) for v in vals])
-    json.dump(raw, open("results/cvpr/milestone17_per_query_suite150.json", "w"), indent=1)
+    json.dump(raw, open("results/cvpr/milestone20_per_query_suite150_v24.json", "w"), indent=1)
     return rows
 
 
 def main():
-    head = r"\# & S & query & predicate & pos & v2.3 & v2.3A & SigLIP2 & lookup"
-    spec = r"r l p{4.3cm} p{3.0cm} r r r r r"
+    head = r"\# & S & query & predicate & pos & SceneMiner & SigLIP2 & lookup"
+    spec = r"r l p{5.0cm} p{3.4cm} r r r r"
     longtable(OUT/"per_query_suite.tex", head, suite_rows(),
               r"Per-query mAP, 150 evaluation queries of the 390-query suite, 602 eval-split scenes. "
               r"Relevance is a predicate over cached VLM attributes (circular; \S\ref{sec:supp-circ}). "
-              r"Lookup reads the column of the attribute the predicate names; -- where it names none. "
-              r"v2.3A is the post-hoc abstention variant.", "tab:pq-suite", spec)
+              r"Lookup reads the column of the attribute the predicate names; -- where it names none.",
+              "tab:pq-suite", spec)
 
-    d = json.load(open("results/cvpr/milestone15_semantic_edge_cases.json"))["corpus_258"]["per_query"]
+    d = json.load(open("results/cvpr/milestone18_semantic_edge_cases.json"))["corpus_258"]["per_query"]
     rows = [[str(i + 1), SHORT[q["stratum"]], tex(q["text"]), pred_str(q["predicate"]), str(q["n_pos"]),
-             f"{q['gamma']:.2f}"] + [fmt(q["mAP"][k]) for k in
-             ["v2.3_monocular", "v2.3A_monocular", "zeroshot_SigLIP2", "logit_VLM_lookup", "v2.3_full [contam.]"]]
+             f"{q['gamma_v24']:.2f}"] + [fmt(q["mAP"][k]) for k in
+             ["v2.4_monocular", "zeroshot_SigLIP2", "logit_VLM_lookup", "v2.4_full [contam.]"]]
             for i, q in enumerate(d)]
     longtable(OUT/"per_query_semantic.tex",
-              r"\# & S & query & predicate & pos & $\gamma$ & v2.3m & v2.3Am & SigLIP2 & lookup & v2.3$^\dagger$",
+              r"\# & S & query & predicate & pos & $\gamma$ & SceneMiner & SigLIP2 & lookup & full$^\dagger$",
               rows, r"Per-query mAP on Stratum 5, 258 human-labelled nuScenes eval scenes, 100\,\% human ground "
-              r"truth. ``m'' = monocular (BEV/tag channels masked). $^\dagger$Full model; its BEV and tag "
-              r"channels were supervised on these scenes and are contaminated for object queries.",
-              "tab:pq-sem", r"r l p{3.6cm} p{2.6cm} r r r r r r r")
+              r"truth. SceneMiner is run monocular (BEV and tag channels masked). $^\dagger$Full model; its BEV "
+              r"and tag channels were supervised on these scenes and are contaminated for object queries.",
+              "tab:pq-sem", r"r l p{4.0cm} p{3.0cm} r r r r r r")
 
     tr = json.load(open("benchmark_cvpr/queries_390.json"))["train"]
     rows = [[str(i + 1), SHORT.get(q["stratum"], tex(q["stratum"])), tex(q["text"]), pred_str(q["predicate"])]

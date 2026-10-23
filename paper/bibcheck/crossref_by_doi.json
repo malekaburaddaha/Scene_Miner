@@ -1,0 +1,284 @@
+{
+ "li2022bevformer": {
+  "doi": "10.1007/978-3-031-20077-9_1",
+  "title": "BEVFormer: Learning Bird\u2019s-Eye-View Representation from\u00a0Multi-camera Images via\u00a0Spatiotemporal Transformers",
+  "container": "Lecture Notes in Computer Science",
+  "year": 2022,
+  "volume": null,
+  "issue": null,
+  "page": "1-18",
+  "publisher": "Springer Nature Switzerland",
+  "authors": [
+   "Zhiqi Li",
+   "Wenhai Wang",
+   "Hongyang Li",
+   "Enze Xie",
+   "Chonghao Sima",
+   "Tong Lu",
+   "Yu Qiao",
+   "Jifeng Dai"
+  ]
+ },
+ "caesar2020nuscenes": {
+  "doi": "10.1109/cvpr42600.2020.01164",
+  "title": "nuScenes: A Multimodal Dataset for Autonomous Driving",
+  "container": "2020 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)",
+  "year": 2020,
+  "volume": null,
+  "issue": null,
+  "page": "11618-11628",
+  "publisher": "IEEE",
+  "authors": [
+   "Holger Caesar",
+   "Varun Bankiti",
+   "Alex H. Lang",
+   "Sourabh Vora",
+   "Venice Erin Liong",
+   "Qiang Xu",
+   "Anush Krishnan",
+   "Yu Pan",
+   "Giancarlo Baldan",
+   "Oscar Beijbom"
+  ]
+ },
+ "sun2020waymo": {
+  "doi": "10.1109/cvpr42600.2020.00252",
+  "title": "Scalability in Perception for Autonomous Driving: Waymo Open Dataset",
+  "container": "2020 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)",
+  "year": 2020,
+  "volume": null,
+  "issue": null,
+  "page": "2443-2451",
+  "publisher": "IEEE",
+  "authors": [
+   "Pei Sun",
+   "Henrik Kretzschmar",
+   "Xerxes Dotiwalla",
+   "Aurelien Chouard",
+   "Vijaysai Patnaik",
+   "Paul Tsui",
+   "James Guo",
+   "Yin Zhou",
+   "Yuning Chai",
+   "Benjamin Caine",
+   "Vijay Vasudevan",
+   "Wei Han",
+   "Jiquan Ngiam",
+   "Hang Zhao",
+   "Aleksei Timofeev",
+   "Scott Ettinger",
+   "Maxim Krivokon",
+   "Amy Gao",
+   "Aditya Joshi",
+   "Yu Zhang",
+   "Jonathon Shlens",
+   "Zhifeng Chen",
+   "Dragomir Anguelov"
+  ]
+ },
+ "yu2020bdd": {
+  "doi": "10.1109/cvpr42600.2020.00271",
+  "title": "BDD100K: A Diverse Driving Dataset for Heterogeneous Multitask Learning",
+  "container": "2020 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)",
+  "year": 2020,
+  "volume": null,
+  "issue": null,
+  "page": "2633-2642",
+  "publisher": "IEEE",
+  "authors": [
+   "Fisher Yu",
+   "Haofeng Chen",
+   "Xin Wang",
+   "Wenqi Xian",
+   "Yingying Chen",
+   "Fangchen Liu",
+   "Vashisht Madhavan",
+   "Trevor Darrell"
+  ]
+ },
+ "zhai2023siglip": {
+  "doi": "10.1109/iccv51070.2023.01100",
+  "title": "Sigmoid Loss for Language Image Pre-Training",
+  "container": "2023 IEEE/CVF International Conference on Computer Vision (ICCV)",
+  "year": 2023,
+  "volume": null,
+  "issue": null,
+  "page": "11941-11952",
+  "publisher": "IEEE",
+  "authors": [
+   "Xiaohua Zhai",
+   "Basil Mustafa",
+   "Alexander Kolesnikov",
+   "Lucas Beyer"
+  ]
+ },
+ "sakaridis2021acdc": {
+  "doi": "10.1109/iccv48922.2021.01059",
+  "title": "ACDC: The Adverse Conditions Dataset with Correspondences for Semantic Driving Scene Understanding",
+  "container": "2021 IEEE/CVF International Conference on Computer Vision (ICCV)",
+  "year": 2021,
+  "volume": null,
+  "issue": null,
+  "page": "10745-10755",
+  "publisher": "IEEE",
+  "authors": [
+   "Christos Sakaridis",
+   "Dengxin Dai",
+   "Luc Van Gool"
+  ]
+ },
+ "choudhary2024talk2bev": {
+  "doi": "10.1109/icra57147.2024.10611485",
+  "title": "Talk2BEV: Language-enhanced Bird\u2019s-eye View Maps for Autonomous Driving",
+  "container": "2024 IEEE International Conference on Robotics and Automation (ICRA)",
+  "year": 2024,
+  "volume": null,
+  "issue": null,
+  "page": "16345-16352",
+  "publisher": "IEEE",
+  "authors": [
+   "Tushar Choudhary",
+   "Vikrant Dewangan",
+   "Shivam Chandhok",
+   "Shubham Priyadarshan",
+   "Anushka Jain",
+   "Arun K. Singh",
+   "Siddharth Srivastava",
+   "Krishna Murthy Jatavallabhula",
+   "K. Madhava Krishna"
+  ]
+ },
+ "wu2023nuprompt": {
+  "doi": "10.1609/aaai.v39i8.32902",
+  "title": "Language Prompt for Autonomous Driving",
+  "container": "Proceedings of the AAAI Conference on Artificial Intelligence",
+  "year": 2025,
+  "volume": "39",
+  "issue": "8",
+  "page": "8359-8367",
+  "publisher": "Association for the Advancement of Artificial Intelligence (AAAI)",
+  "authors": [
+   "Dongming Wu",
+   "Wencheng Han",
+   "Yingfei Liu",
+   "Tiancai Wang",
+   "Cheng-Zhong Xu",
+   "Xiangyu Zhang",
+   "Jianbing Shen"
+  ]
+ },
+ "geirhos2020shortcut": {
+  "doi": "10.1038/s42256-020-00257-z",
+  "title": "Shortcut learning in deep neural networks",
+  "container": "Nature Machine Intelligence",
+  "year": 2020,
+  "volume": "2",
+  "issue": "11",
+  "page": "665-673",
+  "publisher": "Springer Science and Business Media LLC",
+  "authors": [
+   "Robert Geirhos",
+   "J\u00f6rn-Henrik Jacobsen",
+   "Claudio Michaelis",
+   "Richard Zemel",
+   "Wieland Brendel",
+   "Matthias Bethge",
+   "Felix A. Wichmann"
+  ]
+ },
+ "benjamini1995fdr": {
+  "doi": "10.1111/j.2517-6161.1995.tb02031.x",
+  "title": "Controlling the False Discovery Rate: A Practical and Powerful Approach to Multiple Testing",
+  "container": "Journal of the Royal Statistical Society Series B: Statistical Methodology",
+  "year": 1995,
+  "volume": "57",
+  "issue": "1",
+  "page": "289-300",
+  "publisher": "Oxford University Press (OUP)",
+  "authors": [
+   "Yoav Benjamini",
+   "Yosef Hochberg"
+  ]
+ },
+ "carbonell1998mmr": {
+  "doi": "10.1145/290941.291025",
+  "title": "The use of MMR, diversity-based reranking for reordering documents and producing summaries",
+  "container": "Proceedings of the 21st annual international ACM SIGIR conference on Research and development in information retrieval",
+  "year": 1998,
+  "volume": null,
+  "issue": null,
+  "page": "335-336",
+  "publisher": "ACM",
+  "authors": [
+   "Jaime Carbonell",
+   "Jade Goldstein"
+  ]
+ },
+ "ethayarajh2019anisotropy": {
+  "doi": "10.18653/v1/d19-1006",
+  "title": "How Contextual are Contextualized Word Representations? Comparing the Geometry of BERT, ELMo, and GPT-2 Embeddings",
+  "container": "Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP)",
+  "year": 2019,
+  "volume": null,
+  "issue": null,
+  "page": "55-65",
+  "publisher": "Association for Computational Linguistics",
+  "authors": [
+   "Kawin Ethayarajh"
+  ]
+ },
+ "roy2007erank_search": [
+  {
+   "title": "Distributed Spatial Audio Coding in Wireless Hearing Aids",
+   "container": "2007 IEEE Workshop on Applications of Signal Processing to Audio and Acoustics",
+   "doi": "10.1109/aspaa.2007.4392986",
+   "page": "227-230",
+   "authors": [
+    "Olivier Roy",
+    "Martin Vetterli"
+   ]
+  },
+  {
+   "title": "Cost Effective Multiframe Demosaicking for Noise Reduction",
+   "container": "2007 15th International Conference on Digital Signal Processing",
+   "doi": "10.1109/icdsp.2007.4288605",
+   "page": "407-410",
+   "authors": [
+    "K. Gorokhovskiy",
+    "J.A. Flint",
+    "S. Datta",
+    "N. Glushnev"
+   ]
+  },
+  {
+   "title": "Efficient image compression using directionlets",
+   "container": "2007 6th International Conference on Information, Communications &amp; Signal Processing",
+   "doi": "10.1109/icics.2007.4449603",
+   "page": "1-5",
+   "authors": [
+    "Vladan Velisavljevic",
+    "Baltasar Beferull-Lozano",
+    "Martin Vetterli"
+   ]
+  },
+  {
+   "title": "An Effective Privacy-Preserving RFID Scheme against Desynchronization",
+   "container": "Third International Conference on Intelligent Information Hiding and Multimedia Signal Processing (IIH-MSP 2007)",
+   "doi": "10.1109/iih-msp.2007.80",
+   "page": "659-662",
+   "authors": [
+    "Min-Hua Shao"
+   ]
+  },
+  {
+   "title": "Effective Color Ink Diffusion Synthesis",
+   "container": "Third International Conference on Intelligent Information Hiding and Multimedia Signal Processing (IIH-MSP 2007)",
+   "doi": "10.1109/iihmsp.2007.4457556",
+   "page": "329-332",
+   "authors": [
+    "Ren-Jie Wang",
+    "Chung-Ming Wang"
+   ]
+  }
+ ]
+}

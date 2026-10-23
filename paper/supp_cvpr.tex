@@ -10,6 +10,7 @@
 \usepackage{times,graphicx,amsmath,amssymb,booktabs,longtable,array}
 \usepackage{caption}
 \usepackage[colorlinks,linkcolor=black,citecolor=black,urlcolor=black]{hyperref}
+\usepackage{cleveref}
 \captionsetup{font=small,labelfont=bf}
 \renewcommand{\thetable}{S\arabic{table}}
 \renewcommand{\thefigure}{S\arabic{figure}}
@@ -24,7 +25,7 @@
 \begin{document}
 \maketitle
 
-\noindent This supplement gives the full specification of SceneMiner v2.3, the
+\noindent This supplement gives the full specification of SceneMiner, the
 human annotation protocols, the complete significance table for the CAM\_FRONT
 study, per-query results for every evaluated query, the list of training queries,
 and additional qualitative retrievals.
@@ -34,9 +35,9 @@ and additional qualitative retrievals.
 % =====================================================================
 
 \begin{table}[h]\centering\small
-\caption{\textbf{SceneMiner v2.3 specification.} Values are the code defaults
-used for every reported run (\texttt{src/scene\_mining/filter/sceneminer\_v2\_3.py},
-\texttt{scripts/train\_sceneminer\_v23.py}).}
+\caption{\textbf{SceneMiner specification.} Values are the code defaults used
+for every reported run (\texttt{src/scene\_mining/filter/sceneminer\_v2\_4.py},
+\texttt{scripts/train\_sceneminer\_v24.py}).}
 \label{tab:hp}
 \begin{tabular}{lll}
 \toprule
@@ -50,9 +51,12 @@ Fusion & $d_{\mathrm{model}}$, heads, decoder layers & $256$, $4$, $2$ (pre-norm
  & bilinear rank, dropout, score temperature & $64$, $0.1$, $0.30$\\
 Base & \textsc{PartNorm} momentum, $\epsilon$ & $0.01$, $10^{-5}$\\
  & router temperature, entropy cap & $1.0$, $\max_k w_k\le0.70$\\
-Concept gate & $T_a$ (column alignment) & $0.10$\\
- & $\tau_c$, $T_c$ (from label-free banks) & $0.245$, $0.046$\\
- & in-vocabulary / OOV bank & $72$ training phrasings / $12$ generic phrases\\
+Concept gate & bank & $252$ training phrasings, $23$ classes\\
+ & concept / foil classes & $4$ ($156$ phrasings) / $7$ macro ($84$) $+$ $12$ OOV\\
+ & temperature $\tau$ (leave-one-out on the bank) & $0.02$\\
+ & margin-column temperature $T_a$ & $0.10$\\
+ & text mean & mean of the training bank\\
+Abstention & $s=\gamma\,s_{\mathrm{head}}+(1-\gamma)\,\tilde p_{\cos}$ & always on\\
 Residual & \textsc{ResNorm} bound $\alpha$ & $0.5$\\
 FN rescue & cosine threshold, margin floor & $+1.0\sigma$, $-0.5\sigma$\\
 Optimisation & optimiser, learning rate, weight decay & AdamW, $10^{-4}$, $0.01$\\
@@ -66,16 +70,41 @@ Anti-shortcut & margin dropout / 3D dropout (per step) & $50\%$ / $30\%$\\
  & agreement-distillation floor & $0.30$\\
 Model & trainable parameters & $4{,}678{,}736$\\
  & seeds & $5$ (scores averaged)\\
- & latency, $1508$ scenes, one query, A40 & $6.77\pm0.32$\,ms\\
+ & latency, $1508$ scenes, one query, A40 & $7.42\pm0.47$\,ms\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\paragraph{Canonical concept descriptions.} ``water droplets on camera lens'',
-``bright headlight or sun glare'', ``wet reflective road surface'', ``dark low
-contrast poor visibility''.
+\paragraph{Contrastive concept gate.} The bank is the $390$-query training
+split: its $156$ sensor-degradation phrasings form the four concept classes, and
+its $84$ macro-environmental phrasings, grouped by predicate, form seven foil
+classes; twelve generic phrases form singleton foil classes. $\tau$ is chosen
+by leave-one-out on that bank alone (\cref{tab:loo}): the largest value whose
+separation (5th percentile of concept $\gamma$ minus 95th percentile of foil
+$\gamma$) stays $\ge0.99$. No evaluation query or label is read.
 
-\paragraph{Out-of-vocabulary bank.} ``a parking lot'', ``a roundabout'', ``a
+\begin{table}[h]\centering\small
+\caption{\textbf{Leave-one-out choice of $\tau$} on the training bank. Positives:
+the $156$ degradation phrasings; negatives: the $84$ macro phrasings and $12$
+generic phrases. Each phrasing is scored with itself removed from its class.}
+\label{tab:loo}
+\begin{tabular}{lccccc}
+\toprule
+$\tau$ & pos.\ p5 & pos.\ min & neg.\ p95 & neg.\ max & separation\\
+\midrule
+0.01 & 1.000 & 0.512 & 0.000 & 0.009 & 1.000\\
+0.015 & 1.000 & 0.381 & 0.000 & 0.010 & 1.000\\
+0.02 & 0.999 & 0.322 & 0.000 & 0.012 & 0.999 (chosen)\\
+0.03 & 0.983 & 0.277 & 0.001 & 0.017 & 0.982\\
+0.04 & 0.944 & 0.263 & 0.004 & 0.034 & 0.940\\
+0.05 & 0.889 & 0.258 & 0.010 & 0.049 & 0.879\\
+0.07 & 0.735 & 0.251 & 0.032 & 0.067 & 0.703\\
+0.1 & 0.484 & 0.230 & 0.069 & 0.111 & 0.415\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Generic out-of-vocabulary phrases.} ``a parking lot'', ``a roundabout'', ``a
 tunnel entrance'', ``a bridge over a river'', ``a gas station'', ``a suburban
 cul-de-sac'', ``a toll booth'', ``a railway crossing'', ``a school zone sign'',
 ``a freeway on-ramp'', ``a shopping mall entrance'', ``a narrow alley between
@@ -178,11 +207,14 @@ SceneMiner's head saw their text during training.
 
 \begin{figure}[!ht]\centering
 \includegraphics[width=\textwidth]{figures/supp_strips.pdf}
-\caption{\textbf{Top-2 retrievals per corpus} for four degradation queries
-(v2.3) and two semantic queries (v2.3A in monocular mode, because the BEV and tag
-channels are contaminated for object queries on these scenes). Note the last
-row: ``large truck or bus ahead'' still pulls rainy nuScenes scenes, because
-that query's specificity $\gamma=0.42$ leaves part of the margin channel active.}
+\caption{\textbf{Additional retrievals, balanced across corpora}: the top two
+SceneMiner retrievals within each of nuScenes and Waymo (evaluation split) and
+BDD100K (external), for three semantic queries, one macro query, one
+degradation-by-condition query and one degradation query. The semantic and macro
+queries are out of vocabulary ($\gamma\approx0$), so SceneMiner defers to
+SigLIP2 and returns the requested objects rather than degraded scenes. The
+earlier prompt-gated version returned rainy scenes for ``large truck or bus
+ahead''.}
 \label{fig:strips}
 \end{figure}
 

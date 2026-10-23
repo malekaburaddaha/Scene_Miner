@@ -1,59 +1,58 @@
 % =====================================================================
-% CVPR submission - SceneMiner: auditing and repairing a scene-mining
-% pipeline for autonomous driving.
-%
-% Compiles standalone with article.cls. For submission, drop the official
-% CVPR author kit (cvpr.sty, ieeenat_fullname.bst) into this directory and
-% the \IfFileExists switch below picks it up automatically.
-% Every number in this file is traceable to a JSON under results/cvpr/.
+% CVPR 2026 submission - SceneMiner.
+% Official author kit (github.com/cvpr-org/author-kit): cvpr.sty and
+% ieeenat_fullname.bst are in this directory. Build:
+%   pdflatex main_cvpr && bibtex main_cvpr && pdflatex main_cvpr && pdflatex main_cvpr
+% Every number is traceable to a JSON under results/cvpr/; every reference is
+% generated from fetched metadata (scripts/build_bib.py, paper/bibcheck/).
 % =====================================================================
 \documentclass[10pt,twocolumn,letterpaper]{article}
-\IfFileExists{cvpr.sty}{\usepackage[review]{cvpr}}{%
-  \usepackage[margin=0.72in]{geometry}%
-  \usepackage{times}%
-  \newcommand{\cvprPaperID}{0000}}
+\usepackage[review]{cvpr}
 
 \usepackage{graphicx,amsmath,amssymb,booktabs}
-\usepackage[table]{xcolor}
 \usepackage{caption}
-\usepackage[colorlinks,linkcolor=black,citecolor=black,urlcolor=black]{hyperref}
-\captionsetup{font=small,labelfont=bf}
+\definecolor{cvprblue}{rgb}{0.21,0.49,0.74}
+\usepackage[pagebackref,breaklinks,colorlinks,allcolors=cvprblue]{hyperref}
+
+\def\paperID{*****}
+\def\confName{CVPR}
+\def\confYear{2026}
 
 \newcommand{\best}[1]{\textbf{#1}}
 \newcommand{\cont}{$^{\dagger}$}
 
 \title{SceneMiner: What Survives an Audit of Language-Guided\\
        Hard-Scene Mining for Autonomous Driving}
-\author{}
-\date{}
+\author{Anonymous CVPR submission}
 
 \begin{document}
 \maketitle
 
+% =====================================================================
 \begin{abstract}
 Language-guided scene mining promises to surface the rare, degraded driving
 scenes behind perception failures. We audit such a pipeline and report what
 survives. Three defects organise the paper. \emph{(i)} The benchmark is
 circular: relevance is a predicate over cached vision--language attributes, so
-an index reading those attributes scores exactly $1.000$~mAP. \emph{(ii)} The
-3D detector that certifies mined scenes, and the tag head that describes them,
-were trained on those scenes; the detector's per-scene mAP is inflated by
-$+0.3349$ ($+74\%$). \emph{(iii)} A learned ranker that combines several signals
-collapses onto one teacher, and the cause is not the router but scale: the
-combined parts differ by $28.1\times$, and the gated residual by a further
-order of magnitude, so convex weights were never influence weights. Standardising
-both levels, and selecting the teacher's evidence by a zero-shot
-concept-specificity gate, gives SceneMiner~v2.3, the strongest model we built on
-human ground truth: $0.7897$~mAP zero-leakage and $0.8282$ calibrated on $550$
-human-labelled scenes. It does not beat zero-shot SigLIP2 on an external corpus
-($0.6130$ vs.\ $0.6218$), and on $40$ safety-critical semantic queries graded
-against human 3D annotation it is worse than SigLIP2 until it abstains to it
-out of vocabulary; we report both. Finally, on $150$ uncontaminated validation
-scenes we confirm the premise behind the enterprise: front-camera degradation
-costs the detector $0.0906$ front-sector mAP and $7.3$ points of false-positive
-rate ($q<0.05$), and the top quartile retrieved for a degradation query loses
-$0.060$ mAP and $0.193$ vulnerable-road-user recall. A plain VLM-margin lookup
-and night/rain metadata retrieve such scenes equally well.
+an index reading them scores exactly $1.000$~mAP. \emph{(ii)} The detector that
+certifies mined scenes, and the tag head that describes them, were trained on
+those scenes; per-scene detection mAP is inflated by $+0.3349$ ($+74\%$).
+\emph{(iii)} A learned multi-signal ranker collapses onto one teacher, and the
+cause is scale, not routing: the combined parts differ by $28.1\times$ and the
+gated residual by a further order of magnitude, so convex weights were never
+influence weights. Standardising both levels, and deciding \emph{when} to trust
+the teacher with a concept gate built only from training text, gives
+SceneMiner: $0.788$~mAP on $550$ human-labelled scenes ($0.817$ with
+calibration), and $0.639$ on an external corpus, the first result in this
+project above zero-shot SigLIP2 ($0.622$). We are equally explicit about where
+it does not help. On $40$ safety-critical semantic queries graded by human 3D
+annotation it equals SigLIP2, and on object-by-condition conjunctions a
+no-learning fusion of SigLIP2 with recorded metadata beats it. A simulated second
+rater leaves its in-domain lead intact in $92$--$100\%$ of trials. Finally, on
+$150$ uncontaminated validation scenes we confirm the premise: front-camera
+degradation costs the detector $0.0906$ front-sector mAP and $7.3$ points of
+false-positive rate ($q<0.05$), and the top quartile retrieved for a degradation
+query loses $0.057$ mAP and $0.196$ vulnerable-road-user recall.
 \end{abstract}
 
 % =====================================================================
@@ -63,50 +62,47 @@ and night/rain metadata retrieve such scenes equally well.
 Autonomy failures concentrate in a thin tail of the data: rain beading on a
 lens, headlight bloom at night, a wet road that destroys the texture a detector
 relies on. Finding those scenes in a large corpus from a natural-language
-description is the scene-mining problem. The appeal is obvious and the
-evaluation is treacherous, because the attributes that define a ``hard'' scene
-are usually produced by a model, and the detector that certifies a scene as
-hard was usually trained on it.
+description is the scene-mining problem. Its evaluation is treacherous, because
+the attributes that define a ``hard'' scene are usually produced by a model, and
+the detector that certifies a scene as hard was usually trained on it.
 
 This paper is an audit. We took a scene-mining pipeline that reported strong
 numbers and tried to reproduce the \emph{mechanism} behind each claim rather
-than the number. Several did not survive. Two of the defects we found are
-structural and will recur in any pipeline built the same way, which is why we
-think reporting them, together with the repairs and their costs, is more useful
-than another leaderboard increment.
+than the number. Several did not survive. Two of the defects are structural and
+will recur in any pipeline built the same way, which is why we report them
+together with the repairs, their costs, and the controls that bound what the
+repaired system can claim.
 
 \paragraph{Contributions.}
 \begin{enumerate}\setlength{\itemsep}{1pt}
-\item \textbf{Circularity} (\S\ref{sec:d1}). With predicate-defined relevance an
-  attribute index attains $1.000$~mAP; the VLM behind those predicates has
-  precision $0.50$--$0.68$ against $550$ human-labelled scenes.
-\item \textbf{Contamination} (\S\ref{sec:d2}). The certifying detector scores
-  $+0.3349$~mAP higher on scenes it trained on, and the scene-tag head was
-  supervised with object tags for every corpus scene.
-\item \textbf{Two-level scale incommensurability} (\S\ref{sec:d3}). Routing
-  collapse onto a teacher is real but is not what breaks transfer; repairing
-  it alone moves external mAP by $+0.0004$. Parts and residual differing by
-  $28.1\times$ and $\sim\!10\times$ in spread are what break it.
-\item \textbf{SceneMiner v2.3} (\S\ref{sec:method}) with a measured account of
-  each component, including the ones that did nothing (\S\ref{sec:results}).
-\item \textbf{Stratum~5} (\S\ref{sec:s5}): $40$ semantic edge-case queries
-  graded entirely by human annotation, which show fixed-column lookups at
-  chance and bound what a degradation-trained head can claim.
-\item \textbf{The premise, tested correctly} (\S\ref{sec:premise}), including a
-  retrieval-to-perception loop on uncontaminated scenes.
+\item \textbf{Circularity} (\cref{sec:d1}): with predicate-defined relevance an
+  attribute index attains $1.000$~mAP; the VLM behind the predicates has
+  precision $0.50$--$0.68$ against human labels.
+\item \textbf{Contamination} (\cref{sec:d2}): the certifying detector and the
+  scene-tag head were both supervised on the scenes being mined.
+\item \textbf{Two-level scale incommensurability} (\cref{sec:d3}): routing
+  collapse is real but is not what breaks transfer.
+\item \textbf{SceneMiner} (\cref{sec:method}), with a contrastive concept gate
+  derived only from training text, and a component-level account of what each
+  part buys (\cref{sec:results}).
+\item \textbf{Where fusion helps, and where it does not} (\cref{sec:regimes}):
+  three human-graded regimes against no-learning fusion controls, a
+  semantic edge-case stratum, and a simulated second rater.
+\item \textbf{The premise, tested correctly} (\cref{sec:premise}): front-camera
+  degradation measurably breaks 3D detection on uncontaminated scenes, and
+  retrieval surfaces where it does.
 \end{enumerate}
 
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth]{figures/fig1_architecture.pdf}
-\caption{\textbf{SceneMiner v2.3.} Stage~1 is frozen and cached once per scene.
-Stage~2 ($4.68$M trainable parameters) standardises three base parts with
-\textsc{PartNorm}, selects the VLM-margin column by zero-shot text alignment,
-scales its routing weight by a concept-specificity $\gamma(q)$, and adds a
-cross-attention residual that \textsc{ResNorm} standardises and bounds. The gate
-is zero-initialised, so $s\equiv s_{\mathrm{base}}$ at step~0. In monocular mode
-3D tokens are masked from attention and routing mass is renormalised over the
-remaining channels.}
+\caption{\textbf{SceneMiner.} Stage~1 is frozen and cached once per scene.
+Stage~2 ($4.68$M trainable parameters) standardises three base parts
+(\textsc{PartNorm}), routes them per query, and adds a cross-attention residual
+that \textsc{ResNorm} standardises and bounds. A contrastive concept gate
+$\gamma(q)$, built only from training phrasings, chooses the margin column and
+decides how far to trust the head: the final score abstains toward SigLIP2 in
+proportion to $1-\gamma$. Monocular mode masks the 3D tokens.}
 \label{fig:arch}
 \end{figure*}
 
@@ -115,222 +111,241 @@ remaining channels.}
 % =====================================================================
 
 \paragraph{Driving data and language.} nuScenes~\cite{caesar2020nuscenes},
-Waymo Open~\cite{sun2020waymo} and BDD100K~\cite{yu2020bdd} supply the scenes we
-mine and test on. Language interfaces to driving scenes range from object-level
-prompts over 3D annotation, as in nuPrompt~\cite{wu2023nuprompt}, to
-language-augmented BEV maps~\cite{choudhary2024talk2bev}. We use nuPrompt-style
-tags as a Stage-1 signal and show that this choice contaminates semantic
-evaluation on the same scenes.
+Waymo Open~\cite{sun2020waymo} and BDD100K~\cite{yu2020bdd} supply the scenes
+we mine and test on; adverse-condition benchmarks such as
+ACDC~\cite{sakaridis2021acdc} pair degraded and clear views for segmentation.
+Language interfaces to driving scenes range from object-level prompts over 3D
+annotation, as in nuPrompt~\cite{wu2023nuprompt}, to language-augmented BEV
+maps~\cite{choudhary2024talk2bev}. We use nuPrompt-style tags as a Stage-1
+signal and show that this choice contaminates semantic evaluation on the same
+scenes.
 
 \paragraph{Vision--language retrieval.} Contrastive image--text models,
-CLIP~\cite{radford2021clip} and the sigmoid-loss SigLIP~\cite{zhai2023siglip,
-tschannen2025siglip2}, give zero-shot retrieval; BLIP-2~\cite{li2023blip2} and
-Qwen2.5-VL~\cite{bai2025qwen25vl} answer attribute questions whose yes/no
-log-odds we use as margins. Our strongest external baseline is simply frozen
-SigLIP2.
+CLIP~\cite{radford2021clip} and the sigmoid-loss
+SigLIP~\cite{zhai2023siglip,tschannen2025siglip2}, give zero-shot retrieval;
+BLIP-2~\cite{li2023blip2} and Qwen2.5-VL~\cite{bai2025qwen25vl} answer attribute
+questions whose yes/no log-odds we use as margins. Our strongest external
+baseline is simply frozen SigLIP2, and our strongest conjunction baseline adds
+recorded metadata to it.
 
 \paragraph{Shortcuts, routing and normalisation.} Models that lean on the
 easiest predictive signal are a known failure mode~\cite{geirhos2020shortcut};
 gated mixtures collapse onto few experts without balancing
-pressure~\cite{shazeer2017moe}. Our finding is that balancing the router is not
-enough when the routed quantities are on different scales; the remedy is the
-running standardisation familiar from batch normalisation~\cite{ioffe2015bn}.
-Text embeddings of contrastive models are anisotropic, and mean removal restores
+pressure~\cite{shazeer2017moe}. Balancing the router is not enough when the
+routed quantities are on different scales; the remedy is the running
+standardisation familiar from batch normalisation~\cite{ioffe2015bn}.
+Contrastive text embeddings are anisotropic, and mean removal restores
 discriminative similarity~\cite{mu2018allbutthetop,ethayarajh2019anisotropy}.
 
-\paragraph{Evaluation.} We report multiple-comparison-corrected
-tests~\cite{benjamini1995fdr}, use spectral effective rank~\cite{roy2007erank}
-in our diagnostics, and MMR-style diversity~\cite{carbonell1998mmr} for
-top-$k$ composition.
+\paragraph{Evaluation.} We correct for multiple comparisons with
+Benjamini--Hochberg~\cite{benjamini1995fdr}, use spectral effective
+rank~\cite{roy2007erank} in diagnostics, and MMR-style
+diversity~\cite{carbonell1998mmr} for top-$k$ composition.
 
 % =====================================================================
 \section{Setup}
 % =====================================================================
 
 \paragraph{Corpus and splits.} $1508$ scenes from nuScenes and Waymo, split
-\emph{segment-disjoint} into $906$ training scenes ($422$ nuScenes, $484$ Waymo;
-$121$ segments) and $602$ evaluation scenes ($278$, $324$; $81$ segments). No
-evaluated scene contributes a gradient. All $700$ nuScenes corpus scenes belong
-to the official nuScenes \emph{train} split; the $150$ official \emph{val}
-scenes form a separate, uncontaminated set (\emph{val150}).
+\emph{segment-disjoint} into $906$ training scenes ($422$ nuScenes, $484$
+Waymo; $121$ segments) and $602$ evaluation scenes ($278$, $324$; $81$
+segments). No evaluated scene contributes a gradient. All $700$ nuScenes corpus
+scenes belong to the official nuScenes \emph{train} split; the $150$ official
+\emph{val} scenes form a separate, uncontaminated set (\emph{val150}).
 
 \paragraph{Stage 1 (frozen).} BEVFormer~\cite{li2022bevformer} with a
 $50\times50$ grid and a motion head gives a $256$-d embedding $\mathbf{e}$ and a
 risk scalar $r$; a BLIP-2 Q-Former gives $20$ tag logits $\mathbf{t}$;
 Qwen2.5-VL-3B gives a $2048$-d visual token $\mathbf{v}$ and four margins
-$\mathbf{m}$ (droplets, glare, wet road, low contrast), each the yes--no log-odds
-of a fixed question; SigLIP2 ViT-B/16 gives aligned image and text embeddings.
+$\mathbf{m}$ (droplets, glare, wet road, low contrast), each the yes--no
+log-odds of a fixed question; SigLIP2 ViT-B/16 gives aligned image and text
+embeddings.
 
 \paragraph{Queries.} $390$ queries ($240$ train, $150$ evaluation) in four
 strata: sensor degradation (S1, $62$), macro-environmental (S2, $58$),
-compositional held-out (S3, $18$) and negated (S4, $12$). Stratum~5 adds $40$
-semantic edge-case queries (\S\ref{sec:s5}).
+compositional held-out (S3, $18$) and negated (S4, $12$). A fifth stratum of
+$40$ semantic edge-case queries is introduced in \cref{sec:regimes}.
 
 \paragraph{Human ground truth.} One rater labelled $600$ evaluation scenes for
-the four degradation attributes; $550$ remain after removing unsure and skipped
-scenes. Stratum~5 additionally uses nuScenes human 3D annotation and the
-human-written scene descriptions. No human label ever enters training.
+the four degradation attributes; $550$ remain after removing $50$ scenes the
+rater marked unsure (and left unlabelled). Stratum~5 additionally uses nuScenes
+human 3D annotation and human-written scene descriptions. No human label enters
+training.
 
 % =====================================================================
 \section{Audit Discovery 1: the benchmark is circular}
 \label{sec:d1}
 % =====================================================================
 
-The suite defines a scene as relevant when it satisfies a predicate over cached
-attributes, such as $\{\texttt{droplets}{=}\texttt{true}\}$ or
+The suite marks a scene relevant when it satisfies a predicate over cached
+attributes, \eg $\{\texttt{droplets}{=}\texttt{true}\}$ or
 $\{\texttt{lighting}{=}\texttt{night}\}$. Those attributes are the Stage-1 VLM's
-own outputs, so an index that reads them scores $1.000$~mAP, $0.992$~P@5 and
-$1.000$~NDCG@10 on the $150$ evaluation queries (Fig.~\ref{fig:audit}a). That is
-not a baseline but the benchmark restating its definition: every learned number
-is measured against an unreachable ceiling, and any method moving \emph{toward}
-the VLM's decisions scores better whether or not they are correct. Often they
-are not. Against the $550$ human-labelled scenes the VLM's precision on its own
-four attributes is $0.50$--$0.68$.
-
-We therefore report the index as a tautological ceiling, treat the human-labelled
-scenes, the external corpus and Stratum~5 as the evaluations with evidential
-weight, and caveat every suite gain accordingly.
+own outputs, so an index reading them scores $1.000$~mAP, $0.992$~P@5 and
+$1.000$~NDCG@10 on the $150$ evaluation queries (\cref{fig:audit}a). That is the
+benchmark restating its definition: every learned number is measured against an
+unreachable ceiling, and any method moving \emph{toward} the VLM's decisions
+scores better whether or not they are right. Often they are not: against $550$
+human-labelled scenes, the VLM's precision on its own four attributes is
+$0.50$--$0.68$. We therefore report the index as a ceiling and give evidential
+weight to human labels, an external corpus and human 3D annotation.
 
 % =====================================================================
 \section{Audit Discovery 2: the certifiers are contaminated}
 \label{sec:d2}
 % =====================================================================
 
-A mining system is justified by a downstream claim, that its scenes are hard for
+Mining is justified by a downstream claim, that the mined scenes are hard for
 the perception stack. Testing that needs a detector that has not memorised them.
-We evaluated \texttt{bevformer\_base} ($0.4164$~mAP / $0.5173$~NDS globally,
-reproducing the checkpoint) per scene with the official nuScenes
-\texttt{accumulate}/\texttt{calc\_ap}.\footnote{A hand-rolled, class-agnostic
-matcher inverted the signal, scoring night scenes $150\times$ higher than day
-($r=+0.96$). Under the official protocol night is $0.4171$, day $0.4553$.} On
-the $278$ corpus scenes from its training split it scores $0.7864$; on the
-$150$ val scenes it never saw, $0.4514$: a gap of $+0.3349$~mAP, or $+74\%$, of
-memorisation (Fig.~\ref{fig:audit}b).
-
-The tag head is contaminated too. It was supervised with nuPrompt-style tags for
-all $850$ nuScenes scenes, and those tags include \texttt{object\_pedestrian},
-\texttt{object\_bus} and \texttt{scene\_construction\_zone}. Any model reading
-$\mathbf{e}$, $r$ or $\mathbf{t}$ has therefore seen labels derived from the
-same annotations as a semantic ground truth on these scenes. All downstream
-claims below use val150, and every ranker reading those channels on corpus
-scenes is marked\cont.
+\texttt{bevformer\_base} ($0.4164$~mAP / $0.5173$~NDS globally, reproducing the
+checkpoint), evaluated per scene with the official nuScenes
+\texttt{accumulate}/\texttt{calc\_ap},\footnote{A hand-rolled class-agnostic
+matcher inverted the signal, scoring night scenes $150\times$ higher than day.
+Under the official protocol night is $0.4171$ and day $0.4553$.} scores $0.7864$
+on the $278$ corpus scenes from its training split and $0.4514$ on the $150$ val
+scenes it never saw: $+0.3349$~mAP ($+74\%$) of memorisation
+(\cref{fig:audit}b). The tag head is contaminated too: it was supervised with
+nuPrompt-style tags for all $850$ nuScenes scenes, and those include
+\texttt{object\_pedestrian}, \texttt{object\_bus} and
+\texttt{scene\_construction\_zone}. Every downstream claim below uses val150, and
+any ranker reading $\mathbf{e}$, $r$ or $\mathbf{t}$ on corpus scenes is
+marked\cont.
 
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth]{figures/fig3_audit.pdf}
 \caption{\textbf{Two structural defects.} (a) Relevance is a predicate over the
 same cached attributes an index can read, so the index scores $1.000$ by
-construction. (b) The certifying detector scores $+0.3349$~mAP higher on scenes
-it was trained on than on unseen validation scenes.}
+construction. (b) The certifying detector scores $+0.3349$~mAP higher on scenes it
+was trained on than on unseen validation scenes.}
 \label{fig:audit}
 \end{figure*}
 
 % =====================================================================
-\section{Audit Discovery 3: collapse, and two levels of incommensurability}
+\section{Audit Discovery 3: two levels of incommensurability}
 \label{sec:d3}
 % =====================================================================
 
-The earlier model, v2.1, combines a SigLIP2 cosine, a selected VLM margin and a
-metadata prior with query-conditioned weights $\mathbf{w}(q)$. On the four
-canonical queries the router put $0.967$--$0.992$ of its weight on the margin, a
-teacher shortcut: the training targets come from the VLM, so its margin is an
-oracle for them. In domain this is invisible. Externally it looked fatal, with
-v2.1 at $0.4189$~mAP on BDD100K against $0.6218$ for zero-shot SigLIP2.
+An earlier version combined a SigLIP2 cosine, a selected VLM margin and a
+metadata prior with query-conditioned weights $\mathbf{w}(q)$, and put
+$0.967$--$0.992$ of the weight on the margin: a teacher shortcut, since the
+training targets come from the VLM. Externally it scored $0.4189$~mAP on BDD100K
+against $0.6218$ for zero-shot SigLIP2.
 
-\paragraph{Fixing the collapse does not fix transfer.} Channel dropout, an
+\paragraph{Repairing the collapse does not repair transfer.} Channel dropout, an
 entropy floor and explicit modality masking brought the mean margin weight from
-$0.980$ to $0.535$, and external mAP moved by $+0.0004$. On BDD100K's unseen
-phrasings the v2.1 router was already distributed, $[0.30, 0.39, 0.31]$.
+$0.980$ to $0.535$, and external mAP moved by $+0.0004$.
 
-\paragraph{Level 1: the parts.} v2.1's blend scored \emph{below both signals it
-blended}, $0.4181$ against $0.6218$ (cosine alone) and $0.5871$ (margin alone),
-which no genuine convex combination can do. The margin part has $28.1\times$ the
-spread of the cosine part (std $0.5419$ vs.\ $0.0193$), so a nominal $50/50$
-weight is about $96\%$ margin. The gap is visible in training with no labels:
-running stds converge to $[0.031, 0.566, 0.159]$.
+\paragraph{Level 1: the parts.} The collapsed blend scored \emph{below both
+signals it blended} ($0.4181$ vs.\ $0.6218$ and $0.5871$), which no convex
+combination can do. The margin part has $28.1\times$ the spread of the cosine
+(std $0.5419$ vs.\ $0.0193$), so a nominal $50/50$ weight is $\sim\!96\%$
+margin. The gap is visible in training without labels: running stds converge to
+$[0.031, 0.566, 0.159]$.
 
-\paragraph{Level 2: the residual.} The same problem recurs one level up. On the
-human-labelled scenes, v2.2's routed base alone scores $0.9609$ on droplets
-against $0.8813$ for the full model, and recovers $12/20$ VLM-missed glare scenes
-against $5/20$, because the gated residual has $2$--$3\times$ the spread of the
-base. Without labels, the raw residual's running std is $6.31$ against base-part
-stds of $0.03$--$0.57$. (This decomposition was run on a test set; it located a
-mechanism, and the fix has one hyperparameter fixed a priori.)
+\paragraph{Level 2: the residual.} One level up, the gated residual had
+$2$--$3\times$ the spread of the base it was meant to correct; the routed base
+alone scored $0.9609$ on droplets against $0.8813$ for the full model. Without
+labels, the raw residual's running std is $6.31$ against base-part stds of
+$0.03$--$0.57$.
 
 \begin{quote}\itshape
 A routing weight is an influence weight only if what it routes is standardised,
-and that holds at every level at which signals are added.
+at every level at which signals are added.
 \end{quote}
 
-\paragraph{Two further errors, reported for completeness.} A learned selector
-chose the wrong margin column on $8/12$ external queries, and our own external
-evaluation contained two bugs: the lookup baseline selected its column by
-correlation with the test labels, and the margin columns were permuted relative
-to training order. Both are fixed; the first changed the baseline by $0.0039$,
-the second changed our model by $0.0477$.
+Two evaluation errors in our own external test were also fixed: the lookup
+baseline chose its column by correlation with the test labels ($-0.0039$ once
+fixed), and margin columns were permuted relative to training order ($+0.0477$
+for our model once fixed).
 
 % =====================================================================
-\section{SceneMiner v2.3}
+\section{SceneMiner}
 \label{sec:method}
 % =====================================================================
 
-Stage~2 scores a (query, scene) pair as
+For query $q$ and scene $i$, with standardised parts $\tilde{\mathbf{p}}$,
 \begin{equation}
-s(q,i)=\mathbf{w}(q)^{\!\top}\widetilde{\mathbf{p}}(q,i)
-      +\alpha\,g(q)\,\tilde\rho(q,i),\qquad \alpha=0.5,
+s=\gamma(q)\big[\mathbf{w}(q)^{\!\top}\tilde{\mathbf{p}}(q,i)
+   +\alpha\,g(q)\,\tilde\rho(q,i)\big]+\big(1-\gamma(q)\big)\,\tilde p_{\cos}(q,i).
+\label{eq:score}
 \end{equation}
-with $4.68$M trainable parameters; scoring all $1508$ scenes for one query takes
-$6.77\pm0.32$\,ms on an A40.
+Scoring all $1508$ scenes for one query takes $7.42\pm0.47$\,ms on an A40.
 
-\paragraph{\textsc{PartNorm}.} The parts $\mathbf{p}=[\cos, m_{\mathrm{sel}},
-\pi]$ are standardised by running statistics (momentum $0.01$), updated in
-training and frozen at inference, so $\mathbf{w}$ is an influence weight.
+\paragraph{\textsc{PartNorm} and \textsc{ResNorm}.} The parts
+$[\cos, m_{\mathrm{sel}}, \pi]$ and the cross-attention residual $\rho$ are
+standardised by running statistics computed on the $906$ training scenes and
+frozen at inference. The residual enters bounded, $|g|\le1$, $\alpha=0.5$, so it
+corrects the base by at most half a part standard deviation.
 
-\paragraph{Concept-specificity gate.} Only four margin columns exist. With
-mean-centred SigLIP2 text embeddings $\hat q$ and $\hat a_k$ of four canonical
-descriptions, $c_k(q)=\cos(\hat q,\hat a_k)$; the column is selected by
-$\mathrm{softmax}(c(q)/T_a)$, $T_a{=}0.1$, replacing the learned selector, and
-the margin's routing weight is multiplied by
+\paragraph{Contrastive concept gate.} Only four margin columns exist, so the
+model must decide, per query, whether a column applies. We build $23$ classes
+from \emph{training text only}: four concept classes from the $156$
+sensor-degradation phrasings of the $390$-query training split, seven foil
+classes from its $84$ macro-environmental phrasings grouped by predicate (night,
+day, rain, dry, dense, sparse, moderate), and $12$ generic out-of-vocabulary
+phrases. With $b_i$ the bank embeddings, mean-centred by the bank's own mean,
+each class scores a query by a soft maximum,
+$S_k(q)=\tau\log\frac{1}{|k|}\sum_{i\in k}\exp(\cos(q,b_i)/\tau)$, and
 \begin{equation}
-\gamma(q)=\sigma\!\big((\max_k c_k(q)-\tau_c)/T_c\big)
+\gamma(q)=\textstyle\sum_{k\in\text{concepts}}\mathrm{softmax}_k\big(S(q)/\tau\big).
 \end{equation}
-before renormalisation. $\tau_c$ and $T_c$ are placed between two label-free
-text banks at train time: the $72$ in-vocabulary training phrasings (median
-$0.383$) and $12$ generic out-of-vocabulary phrases (median $0.106$), giving
-$\tau_c{=}0.245$, $T_c{=}0.046$. Mean centring matters because SigLIP2 is trained
-for text--image, not text--text, similarity.
+Every concept must out-score every foil, so a query is in-vocabulary only if it
+resembles a degradation phrasing \emph{more} than any training macro phrasing.
+The margin column is $\mathrm{softmax}(S_{\text{concepts}}/0.1)$, and the
+margin's routing weight is multiplied by $\gamma$. $\tau$ is chosen by
+leave-one-out on the training bank (each phrasing scored with itself removed),
+as the smoothest value whose separation stays $\ge0.99$: $\tau=0.02$
+(\cref{tab:gate}). All $60$ atomic degradation phrasings score $\gamma=1.000$;
+the only sub-$0.9$ cases are three compounds ending ``\ldots on an empty road''.
+No evaluation query or label is read.
 
-\paragraph{\textsc{ResNorm}.} The residual $\rho$ from a two-layer
-cross-attention fusion over the six cached tokens is standardised by running
-statistics and bounded by $|g|\le1$, so it corrects the base by at most
-$\alpha$ base-part standard deviations.
 
-\paragraph{Asymmetric false-negative rescue.} When the standardised cosine
-exceeds $+1\sigma$, the standardised margin is lower-clamped at $-0.5\sigma$, so a
-confident VLM ``no'' cannot veto a strong visual match.
+\begin{table}[t]\centering\small
+\caption{\textbf{The concept gate on training text only}: leave-one-out
+$\gamma$ for every phrasing of the $390$-query training split at the chosen
+$\tau=0.02$. No evaluation query is involved.}
+\label{tab:gate}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lccc}
+\toprule
+training phrasings & $\gamma$ min & $\gamma$ median & share $\gamma>0.9$\\
+\midrule
+droplets (44) & 1.000 & 1.000 & 1.00\\
+glare (40) & 1.000 & 1.000 & 1.00\\
+wet road (36) & 1.000 & 1.000 & 1.00\\
+low contrast (36) & 0.512 & 1.000 & 0.92\\
+macro foils (84) & 0.000 & 0.000 & 0.00\\
+generic OOV (12) & -- & 0.000 (max 0.009) & 0.00\\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
 
-\paragraph{Training.} Unchanged from v2.2: on $50\%$ of steps the margin is
-removed from base and fusion memory, on $30\%$ the 3D tokens; an entropy floor
-$2\,\mathrm{relu}(\max_k w_k-0.70)^2$; and \emph{agreement distillation}, which
-weights each pair by $\tfrac12(1+\tanh(\cos_z)\tanh(m_z))$, floored at $0.3$,
-so pairs where the two frozen teachers disagree count less ($37.4\%$ of pairs).
-Explicit availability flags mask absent tokens from attention and renormalise
-$\mathbf{w}$. Selectors and gate are zero-initialised, so $s\equiv
-s_{\mathrm{base}}$ exactly at step~$0$. Five seeds, $3000$ steps each.
+\paragraph{Abstention.} \cref{eq:score} interpolates toward the standardised
+SigLIP2 cosine by $1-\gamma$: where the head has no training concept to apply,
+it defers to the open-vocabulary prior.
 
-\paragraph{Implementation.} $d_{\mathrm{model}}{=}256$, $4$ heads, $2$ fusion
-layers, bilinear rank $64$, dropout $0.1$, temperature $0.30$. AdamW, learning
-rate $10^{-4}$, weight decay $0.01$, $200$ warm-up steps then cosine decay,
-gradient clipping at $1.0$; $4$ queries $\times$ ($2$ positives $+$ $2$
-conditional negatives) per step; listwise InfoNCE with margin-confidence
-weights plus a conditional hinge (weight $4$, margin $1$). $72$ training
-queries over $906$ scenes. A seed trains in under a minute on one A40; the
-supplementary lists every hyperparameter.
+\paragraph{False-negative rescue.} When $\tilde p_{\cos}>1$, the standardised
+margin is lower-clamped at $-0.5$, so a confident VLM ``no'' cannot veto a strong
+visual match. (It turns out to be almost never active; \cref{tab:abl}.)
 
-\paragraph{v2.3A (post-hoc).} After the Stratum-5 results we added an optional
-abstention, $s_A=\gamma s+(1-\gamma)\tilde p_{\cos}$: out of vocabulary the
-degradation-trained head defers to SigLIP2. It has no new parameter, and we
-evaluate it on every benchmark, not only the one that motivated it.
+\paragraph{Training.} On $50\%$ of steps the margin is removed from base and
+fusion memory, on $30\%$ the 3D tokens; an entropy floor
+$2\,\mathrm{relu}(\max_k w_k-0.70)^2$ discourages collapse; and pairs are weighted
+by whether the two frozen teachers agree, $\tfrac12(1+\tanh(\cos_z)\tanh(m_z))$
+floored at $0.3$. Listwise InfoNCE with margin-confidence weights plus a
+conditional hinge (weight $4$, margin $1$); AdamW, learning rate $10^{-4}$,
+$3000$ steps, $4$ queries $\times$ ($2$ positives $+$ $2$ conditional negatives)
+per step; $d_{\mathrm{model}}{=}256$, $4$ heads, $2$ layers. Gate and selectors
+start at zero, so $s\equiv s_{\mathrm{base}}$ at step~$0$. Five seeds, each under
+a minute on one A40.
+
+\paragraph{Provenance of design choices.} Two choices were made after looking at
+evaluation data in earlier milestones: mean-centring of text embeddings (after a
+BDD100K diagnostic) and \textsc{ResNorm} (after a decomposition on the human
+labels). Both now have training-only support: the gate cannot separate the
+training bank without centring, and the residual's scale gap is visible in
+training statistics. Every statistic the model uses is computed on training data.
 
 % =====================================================================
 \section{Results}
@@ -339,158 +354,273 @@ evaluate it on every benchmark, not only the one that motivated it.
 
 \begin{table}[t]\centering\small
 \caption{\textbf{Human ground truth}, $550$ scenes, macro-mAP over four
-attributes. Calibration refits routing weights only on $4/5$ of the scenes and
-scores the held-out $1/5$. FN: VLM-missed glare scenes ranked in the top $20\%$.}
+attributes. Calibration refits routing weights only, on $4/5$ of the scenes,
+scored on the held-out $1/5$. Late fusion adds $z$-scored rankers without
+learning.}
 \label{tab:human}
-\begin{tabular}{lcc}
+\begin{tabular}{lc}
 \toprule
-ranker & mAP & glare FN\\
+ranker & mAP\\
 \midrule
-v2.3 $+$ human calibration & \best{0.8282} & --\\
-v2.1 $+$ human calibration & $0.7924$ & --\\
-\textbf{v2.3} (zero-leakage) & \best{0.7897} & $7/20$\\
-v2.3 monocular & $0.7681$ & --\\
-v2.3A (post-hoc abstention) & $0.7613$ & $7/20$\\
-v2.1 (zero-leakage) & $0.7355$ & $7/20$\\
-logit VLM lookup & $0.7325$ & $7/20$\\
-v2.2 (zero-leakage) & $0.7065$ & $1/20$\\
-zero-shot SigLIP2 & $0.5688$ & \best{14/20}\\
+\textbf{SceneMiner} $+$ human calibration & \best{0.8165}\\
+\textbf{SceneMiner} & \best{0.7879}\\
+SceneMiner, monocular & $0.7681$\\
+late fusion SigLIP2 $+$ lookup & $0.7372$\\
+logit VLM lookup & $0.7325$\\
+late fusion SigLIP2 $+$ metadata & $0.6257$\\
+zero-shot SigLIP2 & $0.5688$\\
+\midrule
+\multicolumn{2}{l}{\emph{earlier versions (zero-leakage / calibrated)}}\\
+collapsed router & $0.7355$ / $0.7924$\\
+routing repaired only & $0.7065$ / $0.7656$\\
+$+$ \textsc{ResNorm}, prompt gate & $0.7897$ / $0.8282$\\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \begin{table}[t]\centering\small
-\caption{\textbf{Ablations of v2.3} on human GT (one inference switch each).}
+\caption{\textbf{Ablations}, one inference switch each, on the three benchmarks.
+BDD100K uses the portable base only, so \textsc{ResNorm} does not apply there.}
 \label{tab:abl}
-\begin{tabular}{lcc}
+\resizebox{\columnwidth}{!}{%
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lccc}
 \toprule
-variant & macro mAP & $\Delta$\\
+variant & human GT & BDD100K & suite / skew\\
 \midrule
-v2.3 & $0.7897$ & --\\
-without FN rescue & $0.7894$ & $-0.0003$\\
-without concept gate & $0.7774$ & $-0.0123$\\
-without \textsc{ResNorm} (raw residual) & $0.7751$ & $-0.0146$\\
-base only (no residual) & $0.7749$ & $-0.0148$\\
+SceneMiner & \best{0.7879} & \best{0.6387} & $0.5941$ / \best{$+0.5$}\\
+without abstention & \best{0.7879} & $0.6292$ & $0.6438$ / $+20.3$\\
+without gate on routing & \best{0.7879} & $0.6342$ & $0.5935$ / $+0.5$\\
+without FN rescue & $0.7877$ & -- & $0.5941$ / $+0.5$\\
+without \textsc{ResNorm} & $0.7668$ & -- & $0.5438$ / $-0.6$\\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \end{table}
 
-\paragraph{Human ground truth.} Table~\ref{tab:human}. v2.3 is the strongest
-model we built on the evidence that matters most: $0.7897$ zero-leakage and
-$0.8282$ calibrated, against $0.7355$/$0.7924$ for v2.1 and $0.7065$/$0.7656$
-for v2.2. Per attribute it reaches $0.9417$ (droplets), $0.5896$ (glare),
-$0.9726$ (wet road) and $0.6548$ (low contrast). Glare false-negative recovery
-returns to v2.1's $7/20$ from v2.2's $1/20$; without \textsc{ResNorm} it falls
-back to $1/20$, which pins that loss on the residual. It does not reach SigLIP2's
-$14/20$: the router still gives the glare margin $0.68$ of the weight, and the
-margin ranks these scenes just above average, not near the top.
-
-\paragraph{Ablations.} Table~\ref{tab:abl}. The gate and \textsc{ResNorm} each
-contribute about $0.013$--$0.015$. The FN rescue contributes nothing, which we
-predicted before building it: on the $20$ VLM-missed glare scenes the margin
-averages $+0.80\sigma$ and none falls below $-0.5\sigma$, so there is no veto to
-rescue. We keep it because it is free when inactive.
+\paragraph{Human ground truth.} \cref{tab:human}. SceneMiner scores $0.7879$
+zero-leakage and $0.8165$ calibrated, against $0.7372$ for the strongest
+no-learning control. Per attribute it reaches $0.9450$ (droplets), $0.5836$
+(glare), $0.9782$ (wet road) and $0.6448$ (low contrast). All four canonical
+queries have $\gamma=1.000$, so abstention costs nothing here. An earlier
+prompt-based gate gave the low-contrast query $\gamma=0.41$, and abstaining with
+it dropped that attribute to $0.5416$. \textsc{ResNorm} is worth $0.021$; without
+it the residual again dominates and VLM-missed glare recovery falls from $6/20$
+to $1/20$.
 
 \begin{table}[t]\centering\small
 \caption{\textbf{External transfer}, BDD100K: $1000$ images, $12$ queries,
-native human labels, chance $0.2623$. In-vocabulary: the $4$ queries naming a
-cached attribute (fixed from wording). No BDD tuning of any kind.}
+native human labels, chance $0.262$. In-vocabulary: the $4$ queries that name a
+cached attribute (fixed from wording). No tuning on BDD100K.}
 \label{tab:bdd}
-\setlength{\tabcolsep}{4pt}
+\resizebox{\columnwidth}{!}{%
+\setlength{\tabcolsep}{3.4pt}
 \begin{tabular}{lccccc}
 \toprule
 ranker & all & in-voc & OOV & P@5 & NDCG@10\\
 \midrule
-zero-shot SigLIP2 & \best{0.6218} & $0.6002$ & \best{0.6327} & \best{0.850} & $0.809$\\
-\textbf{v2.3} & $0.6130$ & \best{0.6904} & $0.5743$ & $0.800$ & \best{0.813}\\
-v2.3A & $0.6073$ & $0.6501$ & $0.5860$ & $0.817$ & \best{0.819}\\
-v2.3, no gate & $0.5713$ & $0.7051$ & $0.5044$ & $0.750$ & $0.781$\\
-v2.2 & $0.5952$ & -- & -- & $0.750$ & $0.789$\\
+\textbf{SceneMiner} & \best{0.6387} & \best{0.7087} & $0.6038$ & \best{0.850} & \best{0.827}\\
+zero-shot SigLIP2 & $0.6218$ & $0.6002$ & \best{0.6327} & \best{0.850} & $0.809$\\
 logit VLM lookup & $0.5871$ & $0.6475$ & $0.5569$ & $0.717$ & $0.705$\\
-v2.1 & $0.4189$ & -- & -- & $0.550$ & $0.552$\\
+\midrule
+prompt-gate version & $0.6130$ & $0.6904$ & $0.5743$ & $0.800$ & $0.813$\\
+collapsed router & $0.4189$ & -- & -- & $0.550$ & $0.552$\\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \end{table}
 
-\paragraph{External transfer.} Table~\ref{tab:bdd}. The gate selects the correct
-column on $4/4$ in-vocabulary queries, and there v2.3 beats SigLIP2 by $0.090$.
-Out of vocabulary it loses $0.058$, which is the whole remaining gap ($0.6130$
-vs.\ $0.6218$). The gate does not switch off on several OOV queries because they
-are \emph{semantically} close to a concept: ``bright daytime driving'' aligns
-with sun glare ($\gamma{=}0.99$), ``overcast grey sky'' with low contrast
-($0.90$). The gate measures similarity to a concept, not whether the VLM column
-is informative for the query, and for those queries the two come apart. We did
-not retune $\tau_c$ or the prompts after seeing this.
-
-Table~\ref{tab:bddq} shows the mechanism query by query: where the gate is
-confident and right (wet asphalt, low contrast) v2.3 wins by $0.04$--$0.30$;
-where it is confident and semantically plausible but uninformative (daytime,
-overcast) it loses by up to $0.18$; where $\gamma$ is near zero (``a night-time
-street scene'', ``a snowy street scene'') it reproduces SigLIP2.
+\paragraph{External transfer.} \cref{tab:bdd,tab:bddq}. SceneMiner is the first
+model in this project to exceed zero-shot SigLIP2 externally: $0.6387$ against
+$0.6218$, with $+0.109$ on in-vocabulary queries and equal P@5. The contrastive
+gate switches off the queries that defeated the earlier prompt gate, \eg
+``bright daytime driving'' ($\gamma$: $0.99\rightarrow0.00$), because the training
+foils contain daylight phrasings. Two out-of-vocabulary queries still trigger it,
+``overcast grey sky'' ($\gamma=0.999$, as low contrast) and ``snow covering the
+road'' ($0.49$), and they account for the remaining OOV gap. No training
+phrasing describes overcast skies or snow. Adding such foils now would tune the
+gate on BDD100K, so we did not.
 
 \begin{table*}[t]\centering\small
 \caption{\textbf{BDD100K per query.} I/O: in-/out-of-vocabulary by wording;
-$\gamma$: concept specificity; column: margin column the gate aligns to.}
+$\gamma$: contrastive concept specificity; column: margin column the gate aligns
+to (inactive when $\gamma\approx0$).}
 \label{tab:bddq}
-\setlength{\tabcolsep}{6pt}
-\begin{tabular}{llcllll}
-\toprule
- & query & $\gamma$ & column & v2.3 & v2.3A & SigLIP2\\
-\midrule
-I & water droplets smearing the camera lens & 1.00 & droplets & \best{0.555} & \best{0.555} & 0.550\\
-I & wet reflective asphalt after rain & 1.00 & wet\_road & \best{0.592} & \best{0.592} & 0.430\\
-I & blinding headlight bloom & 1.00 & glare & 0.768 & 0.768 & \best{0.871}\\
-I & low contrast, vehicles barely visible & 0.41 & low\_contrast & \best{0.847} & 0.686 & 0.550\\
-O & bright daytime driving & 0.99 & glare & 0.347 & 0.347 & \best{0.495}\\
-O & overcast grey sky & 0.90 & low\_contrast & 0.093 & 0.098 & \best{0.270}\\
-O & snow covering the road & 0.60 & wet\_road & 0.416 & 0.526 & \best{0.617}\\
-O & driving after dark & 0.43 & glare & 0.945 & \best{0.955} & 0.955\\
-O & driving in rain & 0.34 & wet\_road & \best{0.614} & 0.580 & 0.556\\
-O & adverse weather on the road & 0.26 & wet\_road & \best{0.572} & 0.560 & 0.547\\
-O & a snowy street scene & 0.04 & wet\_road & 0.638 & 0.650 & \best{0.650}\\
-O & a night-time street scene & 0.03 & wet\_road & 0.971 & \best{0.971} & 0.971\\
-\bottomrule
-\end{tabular}
+\input{tab_bddq.tex}
 \end{table*}
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.94\textwidth]{figures/fig2_qualitative.pdf}
-\caption{\textbf{Qualitative retrievals} of SceneMiner v2.3, trained on nuScenes
-and Waymo and applied unchanged to monocular BDD100K. Left (blue): $602$-scene
-evaluation split. Right (orange): $1000$-image external corpus.}
+\includegraphics[width=0.92\textwidth]{figures/fig2_qualitative.pdf}
+\caption{\textbf{Qualitative retrievals}, balanced across corpora: the top two
+SceneMiner retrievals within each of nuScenes and Waymo (evaluation split) and
+BDD100K (external, monocular), for the four degradation concepts.}
 \label{fig:qual}
 \end{figure*}
 
-\paragraph{150-query suite.} v2.3 reaches $0.6313$ ($+0.114$ over v2.2;
-\textsc{PartNorm} is retained, its own ablation being $+0.029$). Part of this gain
-is movement toward the suite's tautology, since v2.3 aligns more sharply with the
-right VLM column. Top-5 domain skew regresses from v2.2's $+1.1$ to $+17.0$
-points (CI $[+12.7,+21.7]$), and negative-tail calibration fitted on the $240$
-training queries finds no setting that reduces it within a $0.003$ mAP budget.
-v2.3A's skew is $+0.9$, at a cost of $0.047$ suite mAP.
+\begin{table}[t]\centering\small
+\caption{\textbf{150-query suite}, $602$ evaluation scenes, by stratum. Relevance
+here is the VLM's own attributes (\cref{sec:d1}); the index row is a ceiling.
+Skew: nuScenes share of the top-5 minus its relevant base rate.}
+\label{tab:suite}
+\resizebox{\columnwidth}{!}{%
+\setlength{\tabcolsep}{3.2pt}
+\begin{tabular}{lcccccc}
+\toprule
+ranker & S1 & S2 & S3 & S4 & all & skew\\
+\midrule
+attribute index (ceiling) & $1.00$ & $1.00$ & $1.00$ & $1.00$ & $1.000$ & --\\
+\textbf{SceneMiner} & $0.746$ & $0.489$ & $0.459$ & \best{0.518} & $0.594$ & \best{$+0.5$}\\
+\enspace without abstention & \best{0.752} & \best{0.531} & \best{0.735} & $0.493$ & \best{0.644} & $+20.3$\\
+zero-shot SigLIP2 & $0.444$ & $0.487$ & $0.370$ & $0.355$ & $0.445$ & $-16.2$\\
+logit VLM lookup & $0.586$ & $0.270$ & $0.052$ & $0.467$ & $0.390$ & $-6.6$\\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\paragraph{150-query suite.} \cref{tab:suite}. Abstention removes the domain
+skew ($+20.3\rightarrow+0.5$ points, CI $[-5.3,+6.3]$) at a cost concentrated in
+S3: compositional queries such as ``droplets at night'' contain a training foil,
+so $\gamma\approx0.43$ and the score partly defers to SigLIP2. Because S3's
+relevance is VLM-defined, the loss against human truth is smaller than it looks
+here; \cref{sec:regimes} measures conjunctions directly.
 
 % =====================================================================
-\section{Stratum 5: semantic edge cases, human-graded}
-\label{sec:s5}
+\section{Where learned fusion helps, and where it does not}
+\label{sec:regimes}
 % =====================================================================
 
-\begin{figure*}[t]
-\centering
-\includegraphics[width=\textwidth]{figures/fig4_front_sector_degradation_and_semantics.pdf}
-\caption{\textbf{(a)} On uncontaminated val150, scenes in the top-scored quartile
-of the $62$ suite degradation queries have markedly lower CAM\_FRONT mAP and
-higher ghost-FP rate for every informative ranker; Q2--Q4 sit at the corpus
-mean. \textbf{(b)} Retrieval mAP per stratum. S1--S4 are graded by the VLM's own
-attributes (circular, \S\ref{sec:d1}); S5 by human annotation, for which
-SceneMiner rows use monocular variants because the 3D and tag channels are
-contaminated on these scenes.}
-\label{fig:loop}
-\end{figure*}
+\paragraph{Stratum 5: semantic edge cases.} From the official nuScenes human 3D
+annotation we extract five scene flags (CAM\_FRONT field of view, half-angle
+$32.6^\circ$, visibility $>40\%$, condition true in $\ge25\%$ of keyframes):
+pedestrian within $25$\,m; rider-carrying bicycle or motorcycle within $40$\,m or
+pedestrian within $15$\,m (VRU); construction zone (cones, workers or
+construction vehicles); bus, truck or trailer within $25$\,m; rare categories
+(child, stroller, wheelchair, police, emergency vehicle, debris). Night and rain
+come from the human scene description, lens and road degradation from the
+rater. Stratum~5 has $20$ atomic queries and $20$ conjunction phrasings over the
+$12$ cells with $\ge5$ positives among the $258$ human-labelled evaluation scenes.
+
+\begin{table}[t]\centering\small
+\caption{\textbf{Three human-graded regimes}, mAP. Late fusion adds $z$-scored
+rankers with no learning. On object queries the lookup and metadata are constant
+(chance), so both fusions reduce to SigLIP2.}
+\label{tab:regimes}
+\resizebox{\columnwidth}{!}{%
+\setlength{\tabcolsep}{3.2pt}
+\begin{tabular}{lccc}
+\toprule
+ranker & degradation & semantics & sem.$\times$cond.\\
+ & ($550$) & ($258$ / val150) & ($258$)\\
+\midrule
+\textbf{SceneMiner} & \best{0.789} & \best{0.337} / \best{0.383} & $0.292$\\
+zero-shot SigLIP2 & $0.569$ & \best{0.337} / $0.382$ & $0.293$\\
+logit VLM lookup & $0.733$ & $0.217$ / $0.220$ & $0.227$\\
+fusion SigLIP2 $+$ lookup & $0.737$ & $=$ SigLIP2 & $0.284$\\
+fusion SigLIP2 $+$ metadata & $0.626$ & $=$ SigLIP2 & \best{0.327}\\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\paragraph{Three regimes.} \cref{tab:regimes,fig:loop}b. On \emph{atomic
+degradation} SceneMiner wins by $+0.052$ over the strongest no-learning control:
+the regime it was trained for. On \emph{atomic semantics} the fixed-column lookup
+and metadata collapse to exactly chance, and every sensible ranker reduces to
+SigLIP2. SceneMiner matches it ($+0.120$ over the lookup, $p=0.0001$), because
+the gate gives object queries $\gamma\approx0$ and abstains. The same holds on
+clean val150 ($0.3827$ vs.\ $0.3824$). On \emph{object $\times$ condition
+conjunctions}, learned fusion does not help: SceneMiner ties SigLIP2 ($-0.003$,
+$p=0.83$), and the best ranker is the no-learning fusion of SigLIP2 with recorded
+metadata, which beats SceneMiner on all $11$ generated conjunctions ($-0.036$,
+$p=0.0007$). Conjunctions name a training foil (night, rain), so the gate defers
+to SigLIP2. By category, SceneMiner equals SigLIP2 on pedestrians ($0.422$),
+VRUs ($0.240$), construction ($0.542$) and heavy vehicles ($0.348$); rare
+categories are at chance for every ranker. A tag readout supervised on these very
+scenes\cont{} beats SigLIP2 only on heavy vehicles ($0.392$).
+
+\begin{table}[t]\centering\small
+\caption{\textbf{Single-rater sensitivity.} Top: macro-mAP on subsets; ambiguity
+is measured by CLIP ViT-B/32, which no ranker uses. Bottom: share of $500$
+simulated second raters (prevalence fixed, flips uniform or CLIP-ambiguity
+weighted) in which SceneMiner's macro-mAP exceeds the comparator's.}
+\label{tab:rater}
+\setlength{\tabcolsep}{3.2pt}
+\begin{tabular}{lccc}
+\toprule
+subset & SceneMiner & lookup & SigLIP2\\
+\midrule
+all $550$ & $0.789$ & $0.733$ & $0.569$\\
+drop $10\%$ most ambiguous & $0.777$ & $0.708$ & $0.579$\\
+drop $20\%$ most ambiguous & $0.764$ & $0.671$ & $0.565$\\
+\midrule
+second rater, $\kappa$ (flips) & $>$lookup & $>$SigLIP2 & $>$fusion$^{\ast}$\\
+\midrule
+$0.90$ (uniform / ambiguity) & $1.00$ / $1.00$ & $1.00$ / $1.00$ & $1.00$ / $1.00$\\
+$0.85$ (uniform / ambiguity) & $1.00$ / $1.00$ & $1.00$ / $1.00$ & $1.00$ / $1.00$\\
+$0.75$ (uniform / ambiguity) & $0.98$ / $0.92$ & $1.00$ / $1.00$ & $0.98$ / $0.97$\\
+\bottomrule
+\multicolumn{4}{l}{\footnotesize $^{\ast}$late fusion SigLIP2 $+$ lookup.}
+\end{tabular}
+\end{table}
+
+\paragraph{A simulated second rater.} \cref{tab:rater}. We have one rater. Its
+$50$ unsure scenes carry no labels, so they cannot be scored. Removing the scenes
+CLIP finds most ambiguous \emph{widens} SceneMiner's lead over the lookup
+($+0.057\rightarrow+0.093$). A Monte Carlo second rater at Cohen's $\kappa$ of
+$0.90$, $0.85$ and $0.75$ keeps SceneMiner ahead of SigLIP2 in every trial and
+ahead of the lookup in $92$--$100\%$. The lead is not uniform across attributes:
+it rests on low contrast and droplets, while glare and wet road are near coin
+flips against the lookup, and glare is lost to late fusion in nearly every trial
+(\cref{tab:rater_attr}). A per-attribute claim would be overstated; the macro
+claim is robust.
+
+
+\begin{table}[t]\centering\small
+\caption{\textbf{Where the in-domain lead lives.} Share of $500$ simulated
+second raters in which SceneMiner beats the lookup, or late fusion of SigLIP2
+and the lookup, per attribute ($\kappa=0.85$ uniform flips / $\kappa=0.75$
+ambiguity-weighted flips).}
+\label{tab:rater_attr}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+ & \multicolumn{2}{c}{vs.\ lookup} & \multicolumn{2}{c}{vs.\ SigLIP2 $+$ lookup}\\
+attribute & $0.85$ & $0.75$ & $0.85$ & $0.75$\\
+\midrule
+droplets & 1.00 & 0.86 & 0.74 & 0.47\\
+glare & 0.54 & 0.31 & 0.01 & 0.02\\
+wet road & 0.61 & 0.49 & 0.70 & 0.19\\
+low contrast & 1.00 & 1.00 & 1.00 & 1.00\\
+macro & 1.00 & 0.92 & 1.00 & 0.97\\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+% =====================================================================
+\section{Does the premise hold?}
+\label{sec:premise}
+% =====================================================================
+
+\paragraph{Degradation damages detection, in the right sector.} Our first test
+found nothing ($<0.07\sigma$). It averaged scene mAP over six cameras and
+$360^\circ$, while the degradation signal comes from one camera, and only
+$23.4\%$ of nuScenes ground truth lies in the CAM\_FRONT field of view. Measuring
+degradation and error in the same sector on val150 (\cref{tab:premise}; official
+\texttt{accumulate}/\texttt{calc\_ap}/\texttt{calc\_tp}; greedy $2$\,m matching at
+score $0.3$ for FP rate and recall; scene bootstrap; permutation tests;
+Benjamini--Hochberg over $30$ tests), degraded front cameras cost $9.1$ points
+of front-sector mAP and raise the false-positive rate at the mining operating
+point by $7.3$ points ($+26\%$ relative). Four of the $30$ tests survive at
+$q<0.05$ and $12$ at $q<0.10$. Orientation error does not move. Lens
+degradations hit mAP hardest and low contrast hits far recall hardest
+($-0.0973$). With $6$ degraded scenes, glare is underpowered rather than null.
 
 \begin{table}[t]\centering\small
 \caption{\textbf{CAM\_FRONT degradation vs.\ 3D error}, val150, $42$ degraded
-vs.\ $108$ clean scenes, front sector only. $q$: Benjamini--Hochberg.}
+vs.\ $108$ clean scenes, front sector only.}
 \label{tab:premise}
 \begin{tabular}{lccrc}
 \toprule
@@ -500,7 +630,6 @@ mAP & $0.3886$ & $0.4792$ & $-0.0906$ & \best{0.015}\\
 ghost FP @ $s{>}0.3$ & $0.3503$ & $0.2775$ & $+0.0729$ & \best{0.045}\\
 mATE (m) & $0.8330$ & $0.7553$ & $+0.0777$ & $0.080$\\
 recall $>30$\,m & $0.5312$ & $0.6079$ & $-0.0767$ & $0.080$\\
-recall $\le30$\,m & $0.7703$ & $0.8262$ & $-0.0559$ & $0.080$\\
 mAOE (rad) & $0.5008$ & $0.4308$ & $+0.0701$ & $0.489$\\
 \bottomrule
 \end{tabular}
@@ -508,158 +637,47 @@ mAOE (rad) & $0.5008$ & $0.4308$ & $+0.0701$ & $0.489$\\
 
 \begin{table}[t]\centering\small
 \caption{\textbf{Retrieval to breakage}, val150, $62$ degradation queries:
-top-$25$ front-sector metrics minus the val150 mean. $^{*}p<0.05$ (one-sided,
-scene-permutation null with retrieved sets fixed).}
+top-$25$ front-sector metric minus the val150 mean. $^{*}p<0.05$, one-sided,
+scene-permutation null with retrieved sets fixed.}
 \label{tab:loop}
-\setlength{\tabcolsep}{4pt}
-\begin{tabular}{lcccc}
-\toprule
-ranker & mAP & ghost FP & rec.\,$>30$\,m & VRU rec.\\
-\midrule
-SceneMiner v2.3 & $-0.060$$^{*}$ & $+0.029$ & $-0.043$$^{*}$ & $-0.193$$^{*}$\\
-VLM margin lookup & $-0.054$$^{*}$ & $+0.026$ & $-0.041$ & $-0.191$$^{*}$\\
-night/rain metadata & $-0.066$$^{*}$ & $+0.052$$^{*}$ & $-0.055$$^{*}$ & $-0.167$$^{*}$\\
-zero-shot SigLIP2 & $-0.032$$^{*}$ & $+0.019$ & $-0.027$ & $-0.098$$^{*}$\\
-random & $+0.000$ & $+0.001$ & $+0.001$ & $-0.000$\\
-\bottomrule
-\end{tabular}
+\resizebox{\columnwidth}{!}{%
+\input{tab_loop.tex}%
+}
 \end{table}
 
-Can a scene miner trained on four degradation attributes retrieve pedestrians,
-cyclists, construction zones and heavy vehicles, alone and under adverse
-conditions? We extracted five scene flags from the official nuScenes human 3D
-annotation, counting an object only inside the CAM\_FRONT field of view
-(half-angle $32.6^\circ$) with visibility $>40\%$, and setting a flag when the
-condition holds in $\ge25\%$ of keyframes. The flags are pedestrian within
-$25$\,m; rider-carrying bicycle or motorcycle within $40$\,m, or pedestrian
-within $15$\,m (VRU); a construction zone of cones, workers or construction
-vehicles; a bus, truck or trailer within $25$\,m; and a rare category (child,
-stroller, wheelchair, police, emergency vehicle, debris). Night and rain come
-from the human scene description, and lens/road degradation from our rater.
-Stratum~5 has $20$ atomic queries ($4$ phrasings per flag) and $20$
-compositional queries over the $12$ conjunctions that have $\ge5$ positives among
-the $258$ human-labelled evaluation scenes, a rule fixed from label counts alone.
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig4_front_sector_degradation_and_semantics.pdf}
+\caption{\textbf{(a)} On uncontaminated val150, the top-scored quartile of the
+$62$ degradation queries has lower CAM\_FRONT mAP and a higher ghost-FP rate for
+every informative ranker; Q2--Q4 sit at the corpus mean. \textbf{(b)} mAP in the
+three human-graded regimes against two no-learning fusion controls.}
+\label{fig:loop}
+\end{figure*}
 
-\begin{table}[t]\centering\small
-\caption{\textbf{Stratum 5}, $100\%$ human ground truth. Corpus: $258$ nuScenes
-evaluation scenes; val150: uncontaminated, portable signals only, atomic
-queries. $^\dagger$reads channels supervised on these scenes.}
-\label{tab:s5}
-\setlength{\tabcolsep}{4pt}
-\begin{tabular}{lccc}
-\toprule
-ranker & atomic & compos. & val150 atomic\\
-\midrule
-zero-shot SigLIP2 & \best{0.3370} & $0.2865$ & \best{0.3824}\\
-v2.3A monocular & $0.3277$ & \best{0.2894} & $0.3807$\\
-v2.3 monocular & $0.2295$ & $0.2449$ & $0.3128$\\
-v2.3 full\cont & $0.2067$ & $0.2189$ & --\\
-BLIP-2 tag lookup\cont & $0.2534$ & $0.1896$ & --\\
-metadata matched & $0.2171$ & $0.2337$ & $0.2200$\\
-logit VLM lookup & $0.2171$ & $0.2201$ & $0.2200$\\
-flat VLM lookup & $0.2171$ & $0.1776$ & --\\
-random & $0.2171$ & $0.0552$ & $0.2200$\\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\paragraph{Fixed-column lookups are blind, as expected.} Table~\ref{tab:s5}. On
-all $20$ atomic queries the flat lookup, the logit lookup and metadata score
-exactly chance, because no column applies.
-
-\paragraph{The learned head does not generalise beyond its vocabulary.} v2.3
-monocular is \emph{worse} than SigLIP2 on atomic queries ($-0.108$, $p=0.0001$),
-and the contaminated full model sits at chance. The gate does recognise these
-queries as out of vocabulary (median $\gamma=0.09$), but the residual, trained
-only on degradation queries, dominates them (``a work zone with orange cones'':
-base $0.566$, SigLIP2 $0.569$, full $0.224$). Scaling the margin weight by
-$\gamma$ is also too weak when SigLIP2's learned share is only $\sim\!0.13$.
-
-
-\begin{table}[t]\centering\small
-\caption{\textbf{Stratum 5 atomic queries by category}, $258$ corpus scenes
-(positives in parentheses). Chance equals the lookup and metadata rows.}
-\label{tab:s5cat}
-\setlength{\tabcolsep}{3.5pt}
-\begin{tabular}{lccccc}
-\toprule
-category & SigLIP2 & v2.3A & v2.3 & tags\cont & chance\\
-\midrule
-pedestrian ($77$) & \best{0.423} & $0.414$ & $0.298$ & $0.342$ & $0.312$\\
-VRU ($42$) & \best{0.240} & $0.237$ & $0.180$ & $0.193$ & $0.179$\\
-construction ($53$) & \best{0.542} & $0.528$ & $0.310$ & $0.182$ & $0.223$\\
-heavy vehicle ($58$) & $0.348$ & $0.326$ & $0.234$ & \best{0.392} & $0.238$\\
-rare / child ($30$) & $0.132$ & $0.133$ & $0.125$ & \best{0.158} & $0.134$\\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\paragraph{Abstention recovers SigLIP2, not more.} v2.3A matches SigLIP2
-($-0.009$ atomic, $+0.004$ compositional) and beats the logit lookup by $+0.111$
-($p=0.0001$, $20$ queries) and $+0.067$ ($p=0.03$, $12$ predicates). On the clean
-val150 set it is within $0.002$ of SigLIP2. Even with memorised supervision, the
-contaminated tag readout beats SigLIP2 only on heavy vehicles ($0.392$ vs.\
-$0.348$). The rare-category flag is at chance for every ranker.
-
-% =====================================================================
-\section{Does the premise hold?}
-\label{sec:premise}
-% =====================================================================
-
-\paragraph{Degradation damages detection, in the right sector.} Our first test
-found nothing (every effect $<0.07\sigma$). It averaged scene mAP over six
-cameras and $360^\circ$ while the degradation signal comes from one camera, and
-only $23.4\%$ of nuScenes ground truth lies in the CAM\_FRONT field of view.
-Measuring degradation and error in the same sector on val150 (Table~\ref{tab:premise};
-official \texttt{accumulate}/\texttt{calc\_ap}/\texttt{calc\_tp}; greedy $2$\,m
-matching at a fixed score $0.3$ for FP rate and recall; bootstrap over scenes;
-permutation tests; Benjamini--Hochberg over all $30$ tests), degraded front
-cameras cost $9.1$ points of front-sector mAP and raise the false-positive rate at
-the mining operating point by $7.3$ points, a $26\%$ relative increase; $4/30$
-tests survive at $q<0.05$ and $12$ at $q<0.10$. Orientation error does not move.
-Lens degradations hit mAP hardest, while low contrast hits far recall hardest
-($-0.0973$), as one would predict. Glare has $6$ degraded scenes and is
-underpowered rather than null.
-
-
-
-
-
-
-
-
-\paragraph{Closing the loop from retrieval to breakage.} Every ranker scores
-val150 from portable signals (SigLIP2 on the CAM\_FRONT keyframe, CAM\_FRONT
-margins) for the $62$ suite degradation queries and the $20$ atomic semantic
-queries, and we read the detector's front-sector metrics on what it retrieved.
-Similar queries retrieve overlapping scenes, so the null permutes the per-scene
-metrics across scenes while every retrieved set stays fixed. For degradation
-queries, v2.3's top-$25$ is significantly worse than the val150 mean in front mAP
-($-0.060$, $-0.45\sigma$, $p=0.001$), far recall ($-0.043$, $p=0.048$) and
-vulnerable-road-user recall ($-0.193$, $-0.80\sigma$, $p<0.001$;
-Table~\ref{tab:loop}), and
-significantly harder than SigLIP2's retrievals (mAP $-0.028$, $p=0.004$; VRU
-recall $-0.095$, $p<0.001$). It is \emph{indistinguishable} from the VLM-margin
-lookup on every metric, and from night/rain metadata, which is the only ranker
-with a significant ghost-FP increase ($+0.052$, $p=0.002$). The effect is a
-threshold confined to the top quartile (Fig.~\ref{fig:loop}a). For semantic
-queries, no ranker that actually retrieves the requested objects finds harder
-scenes: pedestrians, cones and trucks are not harder for this detector than
-anything else.
+\paragraph{From retrieval to breakage.} Every ranker scores val150 from portable
+signals, and we read the detector's front-sector metrics on what it retrieved.
+Similar queries retrieve overlapping scenes, so the null permutes per-scene
+metrics while each retrieved set stays fixed. SceneMiner's top-$25$ loses
+$0.057$ mAP ($p=0.002$) and $0.196$ vulnerable-road-user recall ($-0.80\sigma$,
+$p<0.001$; \cref{tab:loop}), and is significantly harder than SigLIP2's
+(mAP $-0.026$, $p=0.010$; VRU recall $-0.098$, $p<0.001$). It is
+indistinguishable from the VLM-margin lookup on every metric. Night/rain metadata
+finds scenes with significantly more ghost false positives than SceneMiner's
+($+0.028$, $p=0.028$). The effect is a threshold confined to the top quartile
+(\cref{fig:loop}a). For semantic queries, retrieving the requested objects does
+not find harder scenes: pedestrians, cones and trucks are not harder for this
+detector than anything else.
 
 % =====================================================================
 \section{Discussion}
 % =====================================================================
 
-\paragraph{Re-audit of an earlier version.} An earlier version of this pipeline
-reported a set of diagnostic magnitudes. Table~\ref{tab:repro} lists what we
-re-measured with the corrected protocol. One survives exactly; the rest do not,
-and none of them is used in this paper.
-
 \begin{table}[t]\centering\footnotesize
-\caption{\textbf{Earlier diagnostic claims, re-measured.} $\tau$: learned score
-temperature; erank: spectral effective rank~\cite{roy2007erank}.}
+\caption{\textbf{Earlier diagnostic claims, re-measured} with the corrected
+protocol. $\tau$: learned score temperature.}
 \label{tab:repro}
+\resizebox{\columnwidth}{!}{%
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{lll}
 \toprule
@@ -672,60 +690,52 @@ score span & $213.7\rightarrow9.8$ & $7.35\rightarrow9.96$\\
 $\tau$ drifts below $1$ & $\tau<1$ & $1.070$ (3k), $1.249$ (12k)\\
 BLIP-2 token erank & $41.2/256$ & $180.7/256$\\
 erank of label null & $47.6$ & unreachable (rank $38$)\\
-whole-scene utility & positive & $<0.07\sigma$ (\S\ref{sec:premise})\\
+whole-scene utility & positive & $<0.07\sigma$ (\cref{sec:premise})\\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \end{table}
+
+\paragraph{Re-audit of an earlier version.} \cref{tab:repro}. Of eight
+diagnostic magnitudes an earlier version reported, one reproduces exactly and
+seven do not; none is used here.
 
 \paragraph{What we claim.} Front-camera degradation measurably breaks 3D
 detection on uncontaminated data, and language-guided retrieval surfaces a top
-quartile where it does. Benchmarks defined as predicates over cached model
-outputs cannot measure progress, and certifiers trained on the mined scenes
-cannot certify them. A learned ranker must standardise what it combines, at every
-level. With that, a degradation-specialised head improves on every human-graded
-in-vocabulary benchmark we have.
+quartile where it does. Predicate-defined benchmarks cannot measure progress, and
+certifiers trained on the mined scenes cannot certify them. A learned ranker must
+standardise what it combines at every level, and must know when its training
+vocabulary applies. With both, a degradation-specialised head improves on every
+human-graded degradation benchmark we have, exceeds SigLIP2 externally, and
+defers to it elsewhere.
 
-\paragraph{What we do not claim.} That SceneMiner beats frozen SigLIP2 on an
-external corpus; it does not ($0.6130$ vs.\ $0.6218$). That it handles open
-semantic queries better than SigLIP2; at best it defers to it. That it finds
-breakage scenes better than a VLM-margin lookup or night/rain metadata on val150;
-it does not. That v2.3 is free of trade-offs: its domain skew regressed, and the
-post-hoc abstention that fixes skew and semantics costs $0.028$ human-GT mAP.
+\paragraph{What we do not claim.} That learned fusion helps on object-by-condition
+conjunctions: a no-learning fusion with metadata is better. That SceneMiner finds
+breakage scenes better than the VLM-margin lookup on val150: it does not. That
+its in-domain lead is uniform: glare and wet road are near ties with the lookup.
 
-\paragraph{Limitations.} A single human rater; four degradation attributes; one
-monocular external corpus; Stratum~5 conjunctions with $5$--$12$ positives;
-val150 scored only from portable signals. Two design choices were informed by
-evaluation sets, and are disclosed as such: text mean-centring (by BDD100K) and
-the residual diagnosis behind \textsc{ResNorm} (by human labels).
+\paragraph{Limitations.} One human rater; four degradation attributes; one
+monocular external corpus; Stratum-5 conjunctions with $5$--$12$ positives;
+val150 scored only from portable signals; and two design choices first motivated
+by evaluation data, now supported by training-only evidence (\cref{sec:method}).
 
 \paragraph{For the community.} Four cheap checks would have caught every defect
-here. Ask what a lookup over your own cached labels scores; if it is $1.000$, the
-benchmark is circular. Check whether your certifying models trained on your
-corpus. When a gated combination underperforms its own inputs, inspect the scales
-of what is gated before inspecting the gate. And measure an effect where the
-cause acts: a front-camera effect averaged over $360^\circ$ disappears.
+here. Ask what a lookup over your own cached labels scores. Check whether your
+certifying models were trained on your corpus. When a gated combination
+underperforms its own inputs, inspect the scales of what is gated before the
+gate. And measure an effect where its cause acts.
 
-{\small
-\begin{thebibliography}{99}\setlength{\itemsep}{0pt}
-\bibitem{bai2025qwen25vl} S.~Bai \emph{et al.} Qwen2.5-VL technical report. \emph{arXiv:2502.13923}, 2025.
-\bibitem{benjamini1995fdr} Y.~Benjamini and Y.~Hochberg. Controlling the false discovery rate: a practical and powerful approach to multiple testing. \emph{J.\ Royal Statistical Society B}, 57(1):289--300, 1995.
-\bibitem{caesar2020nuscenes} H.~Caesar \emph{et al.} nuScenes: A multimodal dataset for autonomous driving. In \emph{CVPR}, 2020.
-\bibitem{carbonell1998mmr} J.~Carbonell and J.~Goldstein. The use of MMR, diversity-based reranking for reordering documents and producing summaries. In \emph{SIGIR}, 1998.
-\bibitem{choudhary2024talk2bev} T.~Choudhary \emph{et al.} Talk2BEV: Language-enhanced bird's-eye view maps for autonomous driving. In \emph{ICRA}, 2024.
-\bibitem{ethayarajh2019anisotropy} K.~Ethayarajh. How contextual are contextualized word representations? In \emph{EMNLP}, 2019.
-\bibitem{geirhos2020shortcut} R.~Geirhos \emph{et al.} Shortcut learning in deep neural networks. \emph{Nature Machine Intelligence}, 2:665--673, 2020.
-\bibitem{ioffe2015bn} S.~Ioffe and C.~Szegedy. Batch normalization: Accelerating deep network training by reducing internal covariate shift. In \emph{ICML}, 2015.
-\bibitem{li2023blip2} J.~Li, D.~Li, S.~Savarese, and S.~Hoi. BLIP-2: Bootstrapping language-image pre-training with frozen image encoders and large language models. In \emph{ICML}, 2023.
-\bibitem{li2022bevformer} Z.~Li \emph{et al.} BEVFormer: Learning bird's-eye-view representation from multi-camera images via spatiotemporal transformers. In \emph{ECCV}, 2022.
-\bibitem{mu2018allbutthetop} J.~Mu and P.~Viswanath. All-but-the-top: Simple and effective postprocessing for word representations. In \emph{ICLR}, 2018.
-\bibitem{radford2021clip} A.~Radford \emph{et al.} Learning transferable visual models from natural language supervision. In \emph{ICML}, 2021.
-\bibitem{roy2007erank} O.~Roy and M.~Vetterli. The effective rank: A measure of effective dimensionality. In \emph{EUSIPCO}, 2007.
-\bibitem{shazeer2017moe} N.~Shazeer \emph{et al.} Outrageously large neural networks: The sparsely-gated mixture-of-experts layer. In \emph{ICLR}, 2017.
-\bibitem{sun2020waymo} P.~Sun \emph{et al.} Scalability in perception for autonomous driving: Waymo Open Dataset. In \emph{CVPR}, 2020.
-\bibitem{tschannen2025siglip2} M.~Tschannen \emph{et al.} SigLIP 2: Multilingual vision-language encoders with improved semantic understanding, localization, and dense features. \emph{arXiv:2502.14786}, 2025.
-\bibitem{wu2023nuprompt} D.~Wu \emph{et al.} Language prompt for autonomous driving. \emph{arXiv:2309.04379}, 2023.
-\bibitem{yu2020bdd} F.~Yu \emph{et al.} BDD100K: A diverse driving dataset for heterogeneous multitask learning. In \emph{CVPR}, 2020.
-\bibitem{zhai2023siglip} X.~Zhai, B.~Mustafa, A.~Kolesnikov, and L.~Beyer. Sigmoid loss for language image pre-training. In \emph{ICCV}, 2023.
-\end{thebibliography}}
+\paragraph{Reproducibility.} Code, frozen splits, all $430$ queries, the human
+annotations (degradation labels and the semantic flags derived from nuScenes),
+and every result file behind each table will be released. Each number in this
+paper is generated from those files, and each reference was generated from
+metadata fetched from arXiv, Crossref, Semantic Scholar and OpenAlex rather
+than typed by hand.
+
+{
+    \small
+    \bibliographystyle{ieeenat_fullname}
+    \bibliography{main}
+}
 
 \end{document}

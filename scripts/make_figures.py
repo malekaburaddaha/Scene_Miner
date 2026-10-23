@@ -33,7 +33,7 @@ def fig1():
                                      lw=lw, mutation_scale=7, shrinkA=0, shrinkB=0))
 
     ax.text(1, 43.4, "Stage 1 — frozen, cached once", fontsize=8, fontweight="bold", color=CG)
-    ax.text(55.5, 43.4, "Stage 2 — SceneMiner v2.3, 4.68 M trainable", fontsize=8, fontweight="bold", color=C1)
+    ax.text(55.5, 43.4, "Stage 2 — SceneMiner, 4.68 M trainable", fontsize=8, fontweight="bold", color=C1)
     ax.plot([53, 53], [1, 42], color="#cbd5e0", lw=0.8, ls=(0, (3, 3)))
 
     box(1, 31.5, 22, 8, "BEVFormer 50$\\times$50\n+ MotionHead", "#ebf8ff", C1, fs=6.8)
@@ -49,7 +49,7 @@ def fig1():
 
     box(56, 33.5, 19, 7.5, "query text $q$\n(SigLIP2 text tower)", "#fffaf0", C2, fs=6.8)
     box(78.5, 33.5, 20.5, 7.5,
-        "concept gate $\\gamma(q)$\nmargin column by text\nalignment; off when OOV", "#fff5f5", C2,
+        "contrastive concept gate\n$\\gamma(q)$ vs training foils;\npicks the margin column", "#fff5f5", C2,
         fs=6.0, ls=(0, (2.5, 1.8)))
 
     box(56, 20, 19, 10, "PartNorm\nbase parts $\\mathbf{p}(q)$\n[cos, margin, prior]",
@@ -60,8 +60,9 @@ def fig1():
         "cross-attn. fusion $\\rightarrow\\rho$; ResNorm bounds it: $\\alpha\\,g(q)\\,\\tilde\\rho$, $\\alpha=0.5$",
         "#f0fff4", C3, fs=6.6)
     box(56, 1.5, 43, 6.5,
-        "$s(q,i)=\\mathbf{w}(q)^{\\!\\top}\\mathbf{p}(q,i)+\\alpha\\,g(q)\\,\\tilde\\rho(q,i)$\n"
-        "$g\\!=\\!0$ at init $\\Rightarrow\\; s\\equiv s_{\\mathrm{base}}$",
+        "$s=\\gamma\\,[\\mathbf{w}^{\\!\\top}\\tilde{\\mathbf{p}}+\\alpha\\,g\\,\\tilde\\rho\\,]"
+        "+(1-\\gamma)\\,\\tilde p_{\\cos}$\n"
+        "abstains to SigLIP2 out of vocabulary; $g\\!=\\!0$ at init",
         "#ffffff", C3, fs=6.8, bold=True)
 
     arrow(65.5, 33.5, 65.5, 30)
@@ -83,10 +84,10 @@ def fig3():
     fig, (axa, axb) = plt.subplots(1, 2, figsize=(7.0, 2.7))
 
     suite = dict(suite)
-    suite["SceneMiner_v2.3"] = json.load(open("results/cvpr/milestone14_v2_3.json"))["C_suite150"]["overall"]["v2.3_full"]
-    order = ["attribute_index(TAUTOLOGY)", "SceneMiner_v2.1", "SceneMiner_v2.3",
+    suite["SceneMiner_v2.4"] = json.load(open("results/cvpr/milestone18_v2_4.json"))["C_suite150"]["overall"]["v2.4_full"]
+    order = ["attribute_index(TAUTOLOGY)", "SceneMiner_v2.1", "SceneMiner_v2.4",
              "zeroshot_SigLIP2", "logit_VLM_lookup"]
-    lab = ["attribute\nindex", "SceneMiner\nv2.1", "SceneMiner\nv2.3",
+    lab = ["attribute\nindex", "earlier\nversion", "SceneMiner",
            "zero-shot\nSigLIP2", "VLM margin\nlookup"]
     vals = [suite[k]["mAP"] for k in order]
     cols = ["#c53030", C1, C1, CG, CG]
@@ -135,7 +136,7 @@ def fig3():
 
 
 # ---------------------------------------------------------------- figure 2
-QUERIES = ["water droplets smearing the camera lens",
+QUERIES_OLD = ["water droplets smearing the camera lens",
            "wet reflective asphalt after rainfall",
            "a low contrast scene where vehicles are barely distinguishable from the background"]
 SHORT = ["\"water droplets smearing the camera lens\"",
@@ -143,116 +144,15 @@ SHORT = ["\"water droplets smearing the camera lens\"",
          "\"a low contrast scene, vehicles barely distinguishable\""]
 
 
-def fig2(args):
-    import torch, torch.nn.functional as F
-    from PIL import Image
-    dev = torch.device("cuda")
-    z = np.load("work_dirs/unified_filter/features_v2.npz", allow_pickle=False)
-    corpus = [str(t) for t in z["scene_tokens"]]
-    dom = z["domain"].astype(int)
-    evset = set(json.load(open("benchmark_cvpr/split_906_602.json"))["eval"])
-    T = lambda k: torch.from_numpy(z[k]).float().to(dev)
-    emb, tlog, risk = T("emb"), T("tag_logits"), T("risk")
-    sig, mz, prior = T("siglip_img"), T("vlm_margin_z"), T("prior")
-    qwen = torch.zeros(len(corpus), 2048, device=dev)
-    vc = Path("work_dirs/unified_filter/V_frozen_cache.pt")
-    if vc.exists(): qwen = torch.load(vc, map_location=dev).float()
-    rk = risk.reshape(-1).cpu().numpy()
-
-    from transformers import AutoModel, GemmaTokenizerFast
-    P = "google/siglip2-base-patch16-224"
-    sm = AutoModel.from_pretrained(P, use_safetensors=True).to(dev).eval()
-    tkz = GemmaTokenizerFast.from_pretrained(P)
-    ft = lambda o: (o if torch.is_tensor(o) else o.pooler_output).float()
-    with torch.no_grad():
-        ti = tkz(QUERIES, padding="max_length", truncation=True, max_length=64,
-                 return_tensors="pt").to(dev)
-        QT = ft(sm.get_text_features(**ti))
-    del sm; torch.cuda.empty_cache()
-
-    from eval_semantic_edge_cases import load_v23
-    M = load_v23(rk)
-
-    # BDD100K signals, with the margin columns in TRAINING order
-    broot = Path("/nfs/turbo/umd-srawa/scene_mining/datasets/external_adverse/bdd100k")
-    bz = np.load(broot/"signals.npz", allow_pickle=False)
-    bnames = sorted(json.load(open(broot/"labels.json")))
-    ASKED = ["wet_road", "glare", "droplets", "low_contrast"]
-    TRAIN_ORDER = ["droplets", "glare", "wet_road", "low_contrast"]
-    BM = bz["margin"][:, [ASKED.index(k) for k in TRAIN_ORDER]]
-    BMZ = (BM - BM.mean(0, keepdims=True)) / (BM.std(0, keepdims=True) + 1e-6)
-    BS = torch.from_numpy(bz["siglip"]).float().to(dev)
-    BMZt = torch.from_numpy(BMZ).float().to(dev)
-    BPR = torch.zeros(len(bnames), 26, device=dev)
-    nb = len(bnames)
-    av2 = torch.stack([torch.ones(nb, device=dev), torch.ones(nb, device=dev),
-                       torch.zeros(nb, device=dev)], -1)
-    on = torch.ones(len(corpus), device=dev)
-
-    import textwrap
-    n_in, n_bdd = 3, 2
-    fig, axes = plt.subplots(len(QUERIES), n_in + n_bdd,
-                             figsize=(7.2, 1.08 * len(QUERIES) + 0.5))
-    fig.subplots_adjust(left=0.205, right=0.995, top=0.895, bottom=0.015,
-                        wspace=0.05, hspace=0.17)
-    thumbs = Path("work_dirs/unified_filter/scene_thumbs")
-    for r, q in enumerate(QUERIES):
-        qv = QT[r].unsqueeze(0).expand(len(corpus), -1)
-        with torch.no_grad():
-            s = np.mean([m(qv, qv, emb, tlog, risk, qwen, sig, mz, prior, has_3d=on)
-                         .cpu().numpy() for m in M], 0)
-            qb = QT[r].unsqueeze(0).expand(nb, -1)
-            sb = np.mean([m.base_score(qb, BS, BMZt, BPR, av2).cpu().numpy() for m in M], 0)
-        # in-domain: eval split only, one scene per segment, thumb must exist
-        cand = [i for i in np.argsort(-s)
-                if corpus[i] in evset and (thumbs/f"{corpus[i]}.jpg").exists()]
-        seen, pick = set(), []
-        for i in cand:
-            seg = corpus[i].split("#c")[0]
-            if seg in seen: continue
-            seen.add(seg); pick.append(i)
-            if len(pick) == n_in: break
-        for c, i in enumerate(pick):
-            axes[r, c].imshow(Image.open(thumbs/f"{corpus[i]}.jpg").convert("RGB"))
-            axes[r, c].set_title(f"{'nuScenes' if dom[i]==0 else 'Waymo'}  rank {c+1}",
-                                 fontsize=5.8, color=C1, pad=1.6)
-            axes[r, c].set_anchor("N")
-        for c, i in enumerate(np.argsort(-sb)[:n_bdd]):
-            ax = axes[r, n_in + c]
-            ax.imshow(Image.open(broot/"images"/bnames[i]).convert("RGB"))
-            ax.set_anchor("N")
-            ax.set_title(f"BDD100K  rank {c+1}", fontsize=5.8, color=C2, pad=1.6)
-        for c in range(n_in + n_bdd):
-            axes[r, c].set_xticks([]); axes[r, c].set_yticks([])
-            for sp in axes[r, c].spines.values():
-                sp.set_color(C1 if c < n_in else C2); sp.set_lw(0.9)
-        axes[r, 0].set_ylabel(textwrap.fill(SHORT[r], 26), fontsize=6.0, labelpad=5,
-                              rotation=0, ha="right", va="center", style="italic",
-                              linespacing=1.4)
-    fig.suptitle("SceneMiner v2.3 top retrievals — trained on nuScenes $+$ Waymo, "
-                 "applied unchanged to monocular BDD100K (external)",
-                 fontsize=7.6, y=0.985)
-    fig.savefig(OUT/"fig2_qualitative.pdf", bbox_inches="tight", dpi=200)
-    plt.close(fig); print("  fig2_qualitative.pdf")
 
 
-if __name__ == "__main__":
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--skip-fig2", action="store_true")
-    args = ap.parse_args()
-    OUT.mkdir(parents=True, exist_ok=True)
-    print("[figures]")
-    fig1(); meta = fig3()
-    if not args.skip_fig2: fig2(args)
-    Path("results/cvpr/milestone12_figure_numbers.json").write_text(json.dumps(meta, indent=2))
-    print(f"[figures] wrote {OUT}")
 
 
 # ---------------------------------------------------------------- val150 quartiles
 # Categorical slots 1-4 of the validated reference palette, fixed order; random
 # is a neutral dashed reference. Contrast WARN on aqua/yellow is relieved by a
 # distinct marker per series and direct end labels (identity never colour-only).
-SER = [("SceneMiner_v2.3", "SceneMiner v2.3", "#2a78d6", "o"),
+SER = [("SceneMiner_v2.4", "SceneMiner", "#2a78d6", "o"),
        ("zeroshot_SigLIP2", "zero-shot SigLIP2", "#eb6834", "s"),
        ("logit_VLM_lookup", "VLM margin lookup", "#1baf7a", "^"),
        ("metadata_matched", "night/rain metadata", "#eda100", "D")]
@@ -277,7 +177,7 @@ def quartile_panels(axes, d, kind="degradation", label_end=True):
 
 
 def fig_val150_quartiles():
-    d = json.load(open("results/cvpr/milestone16_val150_retrieval_to_3d.json"))
+    d = json.load(open("results/cvpr/milestone20_val150_retrieval_v24.json"))
     fig, axes = plt.subplots(1, 2, figsize=(7.0, 2.45))
     quartile_panels(axes, d)
     axes[0].set_title("(a) detection quality by retrieval quartile", fontsize=7.6, fontweight="bold")
@@ -298,12 +198,20 @@ SUPP_Q = [("water droplets smearing the camera lens", False),
           ("large truck or bus ahead", True)]
 
 
-def fig_supp_strips():
-    """2 nuScenes + 2 Waymo + 2 BDD100K per query. Degradation queries use v2.3;
-    semantic queries use v2.3A (post-hoc abstention) in MONOCULAR mode, because
-    the BEV and tag channels are contaminated for object queries on these scenes."""
+
+# ---------------------------------------------------------------- figure 4
+
+
+# ---------------------------------------------------------------- balanced strips
+# Every qualitative figure shows the SAME number of retrievals from each corpus
+# (nuScenes, Waymo, BDD100K), each ranked within its own corpus, so no dataset
+# can dominate the examples.
+def balanced_strips(queries, out, title, n_per=2, row_h=0.70):
+    """queries: list of (text, label). SceneMiner (v2.4, abstention on) ranks the
+    602-scene eval split separately per corpus, and BDD100K with portable signals."""
     import textwrap, torch
     from PIL import Image
+    from eval_semantic_edge_cases import text_embed, load_v23
     dev = torch.device("cuda")
     z = np.load("work_dirs/unified_filter/features_v2.npz", allow_pickle=False)
     corpus = [str(t) for t in z["scene_tokens"]]; dom = z["domain"].astype(int)
@@ -312,9 +220,9 @@ def fig_supp_strips():
     emb, tlog, risk = T("emb"), T("tag_logits"), T("risk")
     sig, mz, prior = T("siglip_img"), T("vlm_margin_z"), T("prior")
     qwen = torch.load("work_dirs/unified_filter/V_frozen_cache.pt", map_location=dev).float()
-    from eval_semantic_edge_cases import text_embed, load_v23
-    M = load_v23(risk.reshape(-1).cpu().numpy())
-    QT = text_embed([q for q, _ in SUPP_Q])
+    M = load_v23(risk.reshape(-1).cpu().numpy(), which="v24")
+    for m in M: m.use_abstain = True
+    QT = text_embed([q for q, _ in queries])
     broot = Path("/nfs/turbo/umd-srawa/scene_mining/datasets/external_adverse/bdd100k")
     bz = np.load(broot/"signals.npz", allow_pickle=False); bn = sorted(json.load(open(broot/"labels.json")))
     ASK = ["wet_road", "glare", "droplets", "low_contrast"]; TO = ["droplets", "glare", "wet_road", "low_contrast"]
@@ -322,88 +230,115 @@ def fig_supp_strips():
     BS = torch.from_numpy(bz["siglip"]).float().to(dev); BMt = torch.from_numpy(BM).float().to(dev)
     nb = len(bn); PR = torch.zeros(nb, 26, device=dev)
     av = torch.stack([torch.ones(nb, device=dev), torch.ones(nb, device=dev), torch.zeros(nb, device=dev)], -1)
-    N = len(corpus); on, off = torch.ones(N, device=dev), torch.zeros(N, device=dev)
+    N = len(corpus); on = torch.ones(N, device=dev)
     thumbs = Path("work_dirs/unified_filter/scene_thumbs")
-    fig, axes = plt.subplots(len(SUPP_Q), 6, figsize=(7.2, 0.70 * len(SUPP_Q) + 0.45))
-    fig.subplots_adjust(left=0.2, right=0.995, top=0.92, bottom=0.01, wspace=0.05, hspace=0.30)
-    for r, (q, semantic) in enumerate(SUPP_Q):
-        for m in M: m.use_abstain = semantic
+    fig, axes = plt.subplots(len(queries), 3 * n_per, figsize=(7.2, row_h * len(queries) + 0.55))
+    fig.subplots_adjust(left=0.2, right=0.995, top=0.90, bottom=0.01, wspace=0.05, hspace=0.30)
+    COLS = [("nuScenes", "#2a78d6"), ("Waymo", "#1baf7a"), ("BDD100K", "#eb6834")]
+    picked = []
+    for r, (q, lab) in enumerate(queries):
         qv = QT[r].unsqueeze(0).expand(N, -1)
         with torch.no_grad():
-            s = np.mean([m(qv, qv, emb, tlog, risk, qwen, sig, mz, prior,
-                           has_3d=off if semantic else on).cpu().numpy() for m in M], 0)
+            s_ = np.mean([m(qv, qv, emb, tlog, risk, qwen, sig, mz, prior, has_3d=on).cpu().numpy() for m in M], 0)
             qb = QT[r].unsqueeze(0).expand(nb, -1)
             sb = np.mean([m.base_score(qb, BS, BMt, PR, av).cpu().numpy() for m in M], 0)
-        for m in M: m.use_abstain = False
-        cols = []
+        cells = []
         for d_ in (0, 1):
             seen, got = set(), []
-            for i in np.argsort(-s):
+            for i in np.argsort(-s_):
                 if corpus[i] not in evset or dom[i] != d_ or not (thumbs/f"{corpus[i]}.jpg").exists(): continue
                 seg = corpus[i].split("#c")[0]
                 if seg in seen: continue
-                seen.add(seg); got.append(i)
-                if len(got) == 2: break
-            cols += [("nuScenes" if d_ == 0 else "Waymo", thumbs/f"{corpus[i]}.jpg", C1) for i in got]
-        cols += [("BDD100K", broot/"images"/bn[i], C2) for i in np.argsort(-sb)[:2]]
-        for c, (name, path, col) in enumerate(cols):
+                seen.add(seg); got.append(thumbs/f"{corpus[i]}.jpg")
+                if len(got) == n_per: break
+            cells += [(COLS[d_], g) for g in got]
+        cells += [(COLS[2], broot/"images"/bn[i]) for i in np.argsort(-sb)[:n_per]]
+        picked.append([str(c[1].name) for c in cells])
+        for c, ((name, col), path) in enumerate(cells):
             ax = axes[r, c]; ax.imshow(Image.open(path).convert("RGB")); ax.set_anchor("N")
             ax.set_xticks([]); ax.set_yticks([])
-            ax.set_title(f"{name} #{c % 2 + 1}", fontsize=5.6, color=col, pad=1.4)
-            for sp in ax.spines.values(): sp.set_color(col); sp.set_lw(0.9)
-        tag = "  [v2.3A, monocular]" if semantic else ""
-        axes[r, 0].set_ylabel(textwrap.fill(f"\"{q}\"", 28) + tag, fontsize=5.6, rotation=0,
-                              ha="right", va="center", style="italic", labelpad=5, linespacing=1.35)
-    fig.suptitle("Top-2 retrievals per corpus: nuScenes and Waymo (602-scene eval split), "
-                 "BDD100K (external, monocular)", fontsize=7.2, y=0.985)
-    fig.savefig(OUT/"supp_strips.pdf", bbox_inches="tight", dpi=170)
-    plt.close(fig); print("  supp_strips.pdf")
+            ax.set_title(f"{name} #{c % n_per + 1}", fontsize=5.7, color=col, pad=1.4)
+            for sp in ax.spines.values(): sp.set_color(col); sp.set_lw(1.0)
+        axes[r, 0].set_ylabel(textwrap.fill(f"\"{q}\"", 26) + (f"\n[{lab}]" if lab else ""), fontsize=5.8,
+                              rotation=0, ha="right", va="center", style="italic", labelpad=5, linespacing=1.35)
+    fig.suptitle(title, fontsize=7.3, y=0.985)
+    fig.savefig(OUT/out, bbox_inches="tight", dpi=170)
+    plt.close(fig); print(f"  {out}  ({n_per} per corpus x 3 corpora x {len(queries)} queries)")
+    return picked
+
+
+def fig2(args=None):
+    Q = [("water droplets smearing the camera lens", ""),
+         ("blinding headlight bloom from oncoming traffic", ""),
+         ("wet reflective asphalt after rainfall", ""),
+         ("a low contrast scene where vehicles are barely distinguishable from the background", "")]
+    return balanced_strips(Q, "fig2_qualitative.pdf",
+        "SceneMiner top-2 per corpus: nuScenes and Waymo (602-scene eval split), BDD100K (external, monocular)")
+
+
+def fig_supp_strips():
+    Q = [("road construction zone with traffic cones and barriers", "semantic, OOV"),
+         ("large truck or bus ahead", "semantic, OOV"),
+         ("pedestrians walking near the roadway", "semantic, OOV"),
+         ("driving after dark", "macro, OOV"),
+         ("rain droplets on the lens at night", "degradation x macro"),
+         ("harsh low-sun glare", "degradation")]
+    return balanced_strips(Q, "supp_strips.pdf",
+        "Additional SceneMiner retrievals, top-2 per corpus (nuScenes / Waymo / BDD100K)")
 
 
 # ---------------------------------------------------------------- figure 4
 def fig4():
-    """(left) val150 CAM_FRONT mAP and ghost FP by retrieval quartile, degradation
-    queries; (right) mAP per query stratum. One measure per axis - no dual axes."""
-    d16 = json.load(open("results/cvpr/milestone16_val150_retrieval_to_3d.json"))
-    m14 = json.load(open("results/cvpr/milestone14_v2_3.json"))["C_suite150"]["per_stratum"]
-    m10 = json.load(open("results/cvpr/milestone10_query_suite_150.json"))["per_stratum"]
-    m15 = json.load(open("results/cvpr/milestone15_semantic_edge_cases.json"))["corpus_258"]["summary"]
+    """(a) val150 CAM_FRONT mAP and ghost FP by retrieval quartile; (b) mAP in the
+    three human-graded regimes with the two no-learning late-fusion controls."""
+    from matplotlib.lines import Line2D
+    d16 = json.load(open("results/cvpr/milestone20_val150_retrieval_v24.json"))
+    reg = json.load(open("results/cvpr/milestone19_compositional_synergy.json"))["regimes"]
     fig = plt.figure(figsize=(7.0, 2.85))
-    gs = fig.add_gridspec(2, 2, width_ratios=[1.0, 1.25], hspace=0.12, wspace=0.42)
+    gs = fig.add_gridspec(2, 2, width_ratios=[1.0, 1.1], hspace=0.12, wspace=0.62)
     a1 = fig.add_subplot(gs[0, 0]); a2 = fig.add_subplot(gs[1, 0], sharex=a1)
     quartile_panels([a1, a2], d16)
     a1.set_ylabel("front mAP", fontsize=6.8); a2.set_ylabel("ghost FP rate", fontsize=6.8)
     plt.setp(a1.get_xticklabels(), visible=False)
     a1.set_title("(a) val150: 3D quality of retrieved scenes", fontsize=7.4, fontweight="bold")
     ax = fig.add_subplot(gs[:, 1])
-    rows = [("S1 sensor degr.", "sensor_degradation"), ("S2 macro-env.", "macro_environmental"),
-            ("S3 compositional", "compositional_heldout"), ("S4 negated", "negated"),
-            ("S5a semantic atomic*", "semantic_atomic"), ("S5b semantic x degr.*", "semantic_compositional")]
-    ser = [("SceneMiner v2.3", "#2a78d6", "o", lambda s: m14[s]["v2.3_full"] if s in m14 else m15[s]["v2.3_monocular"]["mAP"]),
-           ("v2.3A (post-hoc)", "#6250d6", "v", lambda s: m14[s]["v2.3_abstain"] if s in m14 else m15[s]["v2.3A_monocular"]["mAP"]),
-           ("zero-shot SigLIP2", "#eb6834", "s", lambda s: m14[s]["zeroshot_SigLIP2"] if s in m14 else m15[s]["zeroshot_SigLIP2"]["mAP"]),
-           ("VLM margin lookup", "#1baf7a", "^", lambda s: m10[s]["logit_VLM_lookup"] if s in m10 else m15[s]["logit_VLM_lookup"]["mAP"])]
+    rows = [("degradation\n(550)", "atomic_degradation_550"),
+            ("semantics\n(258)", "atomic_semantics_corpus258"),
+            ("semantics x\ncondition (258)", "conjunctions_corpus258_all30phrasings")]
+    ser = [("SceneMiner", "#2a78d6", "o", "SceneMiner_v2.4"), ("zero-shot SigLIP2", "#eb6834", "s", "zeroshot_SigLIP2"),
+           ("VLM margin lookup", "#1baf7a", "^", "logit_VLM_lookup"),
+           ("SigLIP2 + lookup (late fusion)", "#6250d6", "v", "late_fusion SigLIP2+lookup"),
+           ("SigLIP2 + metadata (late fusion)", "#eda100", "D", "late_fusion SigLIP2+metadata")]
     y = np.arange(len(rows))[::-1]
-    for k, (lab, col, mk, f) in enumerate(ser):
-        xs = [f(s) for _, s in rows]
-        ax.scatter(xs, y + (k - 1.5) * 0.19, color=col, marker=mk, s=34, zorder=3,
+    for k, (lab, col, mk, key) in enumerate(ser):
+        xs = [reg[r][key] for _, r in rows]
+        ax.scatter(xs, y + (k - 2) * 0.15, color=col, marker=mk, s=34, zorder=3,
                    edgecolor="white", linewidth=0.7, label=lab)
-    # S5 is graded by humans; S1-S4 by the VLM's own attributes (see caption)
-    ax.axhspan(-0.55, 1.5, color="#f1f0ec", zorder=0, lw=0)
-    ax.text(0.84, 1.42, "human GT", fontsize=5.6, color="#55554f", ha="right", va="top")
-    ax.text(0.84, 5.55, "VLM-attribute GT", fontsize=5.6, color="#55554f", ha="right", va="top")
     ax.set_yticks(y); ax.set_yticklabels([r for r, _ in rows], fontsize=6.4)
-    ax.set_ylim(-0.6, 5.65)
-    ax.set_xlabel("mAP", fontsize=6.8); ax.set_xlim(0.0, 0.85); ax.tick_params(labelsize=6.4)
+    ax.set_ylim(-0.55, 2.55); ax.set_xlim(0.15, 0.85)
+    ax.set_xlabel("mAP (human ground truth)", fontsize=6.8); ax.tick_params(labelsize=6.4)
     ax.grid(axis="x", lw=0.4, color="#e2e8f0", zorder=0)
     for sp in ("top", "right"): ax.spines[sp].set_visible(False)
-    ax.set_title("(b) retrieval mAP by query stratum", fontsize=7.4, fontweight="bold")
+    ax.set_title("(b) where learned fusion helps", fontsize=7.4, fontweight="bold")
     hb, lb = ax.get_legend_handles_labels(); ha, la = a1.get_legend_handles_labels()
-    from matplotlib.lines import Line2D
-    extra = [(h, l) for h, l in zip(ha, la) if l == "night/rain metadata"]
+    meta = [(h, l) for h, l in zip(ha, la) if l == "night/rain metadata"]
     rnd = Line2D([], [], color="#8a8a85", lw=1.2, ls=(0, (4, 3)))
-    fig.legend(hb + [e[0] for e in extra] + [rnd], lb + [e[1] for e in extra] + ["random"],
-               loc="lower center", ncol=6, fontsize=5.9, frameon=False, bbox_to_anchor=(0.5, -0.07),
-               handlelength=1.8, columnspacing=1.2)
+    fig.legend(hb + [m[0] for m in meta] + [rnd], lb + [m[1] for m in meta] + ["random"],
+               loc="lower center", ncol=4, fontsize=5.8, frameon=False, bbox_to_anchor=(0.5, -0.12),
+               handlelength=1.8, columnspacing=1.1)
     fig.savefig(OUT/"fig4_front_sector_degradation_and_semantics.pdf", bbox_inches="tight")
     plt.close(fig); print("  fig4_front_sector_degradation_and_semantics.pdf")
+
+
+if __name__ == "__main__":
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--skip-gpu", action="store_true")
+    args = ap.parse_args()
+    OUT.mkdir(parents=True, exist_ok=True)
+    print("[figures]")
+    fig1(); meta = fig3(); fig4(); fig_val150_quartiles()
+    Path("results/cvpr/milestone12_figure_numbers.json").write_text(json.dumps(meta, indent=2))
+    if not args.skip_gpu:
+        picks = {"fig2": fig2(), "supp_strips": fig_supp_strips()}
+        Path("results/cvpr/figure_retrieval_picks.json").write_text(json.dumps(picks, indent=1))
+    print(f"[figures] wrote {OUT}")

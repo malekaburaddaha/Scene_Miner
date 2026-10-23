@@ -1,163 +1,163 @@
-\begin{longtable}{r l p{4.3cm} p{3.0cm} r r r r r}
-\caption{Per-query mAP, 150 evaluation queries of the 390-query suite, 602 eval-split scenes. Relevance is a predicate over cached VLM attributes (circular; \S\ref{sec:supp-circ}). Lookup reads the column of the attribute the predicate names; -- where it names none. v2.3A is the post-hoc abstention variant.}\label{tab:pq-suite}\\
+\begin{longtable}{r l p{5.0cm} p{3.4cm} r r r r}
+\caption{Per-query mAP, 150 evaluation queries of the 390-query suite, 602 eval-split scenes. Relevance is a predicate over cached VLM attributes (circular; \S\ref{sec:supp-circ}). Lookup reads the column of the attribute the predicate names; -- where it names none.}\label{tab:pq-suite}\\
 \toprule
-\# & S & query & predicate & pos & v2.3 & v2.3A & SigLIP2 & lookup\\
+\# & S & query & predicate & pos & SceneMiner & SigLIP2 & lookup\\
 \midrule
 \endfirsthead
 \toprule
-\# & S & query & predicate & pos & v2.3 & v2.3A & SigLIP2 & lookup\\
+\# & S & query & predicate & pos & SceneMiner & SigLIP2 & lookup\\
 \midrule
 \endhead
 \bottomrule
 \endfoot
-1 & S1 & a few water specks on the lens & droplets=T & 119 & 0.964 & 0.964 & 0.788 & 1.000\\
-2 & S1 & light droplets scattered on the lens & droplets=T & 119 & 0.963 & 0.963 & 0.795 & 1.000\\
-3 & S1 & water droplets smearing the camera lens & droplets=T & 119 & 0.956 & 0.956 & 0.888 & 1.000\\
-4 & S1 & rain beading across the lens & droplets=T & 119 & 0.963 & 0.963 & 0.886 & 1.000\\
-5 & S1 & a faint halo around a street light & glare=T & 40 & 0.899 & 0.823 & 0.216 & 1.000\\
-6 & S1 & mild light flare at the frame edge & glare=T & 40 & 0.879 & 0.880 & 0.480 & 1.000\\
-7 & S1 & noticeable glare washing across the image & glare=T & 40 & 0.924 & 0.920 & 0.381 & 1.000\\
-8 & S1 & specular glare washing out the image & glare=T & 40 & 0.924 & 0.924 & 0.527 & 1.000\\
-9 & S1 & a lightly damp road surface & wet\_road=T & 124 & 0.989 & 0.989 & 0.560 & 1.000\\
-10 & S1 & patchy wet tarmac & wet\_road=T & 124 & 0.987 & 0.987 & 0.615 & 1.000\\
-11 & S1 & wet reflective asphalt after rainfall & wet\_road=T & 124 & 0.985 & 0.985 & 0.810 & 1.000\\
-12 & S1 & slick wet pavement throwing reflections & wet\_road=T & 124 & 0.984 & 0.984 & 0.747 & 1.000\\
-13 & S1 & slightly flat lighting & low\_contrast=T & 103 & 0.532 & 0.532 & 0.388 & 1.000\\
-14 & S1 & a dim view where shapes lose definition & low\_contrast=T & 103 & 0.953 & 0.952 & 0.160 & 1.000\\
-15 & S1 & hazy washed out view with unclear boundaries & low\_contrast=T & 103 & 0.966 & 0.966 & 0.372 & 1.000\\
-16 & S1 & poor visibility with objects blending in & low\_contrast=T & 103 & 0.967 & 0.967 & 0.399 & 1.000\\
-17 & S1 & a few water specks on the lens at night & droplets=T, lighting=night & 31 & 0.874 & 0.874 & 0.655 & 0.283\\
-18 & S1 & a few water specks on the lens in daylight & droplets=T, lighting=day & 78 & 0.901 & 0.901 & 0.653 & 0.675\\
-19 & S1 & a few water specks on the lens in rain & droplets=T, weather=rain & 55 & 1.000 & 1.000 & 0.664 & 0.566\\
-20 & S1 & a few water specks on the lens in dense traffic & droplets=T, density=dense & 82 & 0.800 & 0.807 & 0.511 & 0.739\\
-21 & S1 & a few water specks on the lens on an empty road & droplets=T, density=sparse & 10 & 0.050 & 0.055 & 0.059 & 0.066\\
-22 & S1 & light droplets scattered on the lens at night & droplets=T, lighting=night & 31 & 0.876 & 0.876 & 0.757 & 0.283\\
-23 & S1 & light droplets scattered on the lens in daylight & droplets=T, lighting=day & 78 & 0.735 & 0.735 & 0.455 & 0.675\\
-24 & S1 & light droplets scattered on the lens in rain & droplets=T, weather=rain & 55 & 0.850 & 0.850 & 0.511 & 0.566\\
-25 & S1 & light droplets scattered on the lens in dense traffic & droplets=T, density=dense & 82 & 0.659 & 0.658 & 0.413 & 0.739\\
-26 & S1 & light droplets scattered on the lens on an empty road & droplets=T, density=sparse & 10 & 0.230 & 0.195 & 0.170 & 0.066\\
-27 & S1 & water droplets smearing the camera lens at night & droplets=T, lighting=night & 31 & 0.861 & 0.861 & 0.724 & 0.283\\
-28 & S1 & water droplets smearing the camera lens in daylight & droplets=T, lighting=day & 78 & 0.889 & 0.889 & 0.788 & 0.675\\
-29 & S1 & water droplets smearing the camera lens in rain & droplets=T, weather=rain & 55 & 1.000 & 1.000 & 0.687 & 0.566\\
-30 & S1 & water droplets smearing the camera lens in dense traffic & droplets=T, density=dense & 82 & 0.790 & 0.791 & 0.697 & 0.739\\
-31 & S1 & water droplets smearing the camera lens on an empty road & droplets=T, density=sparse & 10 & 0.052 & 0.052 & 0.052 & 0.066\\
-32 & S1 & a faint halo around a street light at night & glare=T, lighting=night & 9 & 0.918 & 0.155 & 0.119 & 0.263\\
-33 & S1 & a faint halo around a street light in daylight & glare=T, lighting=day & 25 & 0.610 & 0.634 & 0.223 & 0.628\\
-34 & S1 & a faint halo around a street light in rain & glare=T, weather=rain & 5 & 0.814 & 0.085 & 0.070 & 0.185\\
-35 & S1 & a faint halo around a street light in dense traffic & glare=T, density=dense & 19 & 0.374 & 0.132 & 0.112 & 0.381\\
-36 & S1 & a faint halo around a street light on an empty road & glare=T, density=sparse & 7 & 0.652 & 0.237 & 0.209 & 0.346\\
-37 & S1 & mild light flare at the frame edge at night & glare=T, lighting=night & 9 & 0.773 & 0.722 & 0.123 & 0.263\\
-38 & S1 & mild light flare at the frame edge in daylight & glare=T, lighting=day & 25 & 0.675 & 0.678 & 0.604 & 0.628\\
-39 & S1 & mild light flare at the frame edge in rain & glare=T, weather=rain & 5 & 0.900 & 0.547 & 0.054 & 0.185\\
-40 & S1 & mild light flare at the frame edge in dense traffic & glare=T, density=dense & 19 & 0.332 & 0.342 & 0.232 & 0.381\\
-41 & S1 & mild light flare at the frame edge on an empty road & glare=T, density=sparse & 7 & 0.515 & 0.520 & 0.388 & 0.346\\
-42 & S1 & noticeable glare washing across the image at night & glare=T, lighting=night & 9 & 0.977 & 0.977 & 0.151 & 0.263\\
-43 & S1 & noticeable glare washing across the image in daylight & glare=T, lighting=day & 25 & 0.626 & 0.624 & 0.457 & 0.628\\
-44 & S1 & noticeable glare washing across the image in rain & glare=T, weather=rain & 5 & 0.900 & 0.511 & 0.042 & 0.185\\
-45 & S1 & noticeable glare washing across the image in dense traffic & glare=T, density=dense & 19 & 0.333 & 0.372 & 0.124 & 0.381\\
-46 & S1 & noticeable glare washing across the image on an empty road & glare=T, density=sparse & 7 & 0.691 & 0.679 & 0.440 & 0.346\\
-47 & S1 & a lightly damp road surface at night & wet\_road=T, lighting=night & 27 & 0.920 & 0.921 & 0.478 & 0.193\\
-48 & S1 & a lightly damp road surface in daylight & wet\_road=T, lighting=day & 86 & 0.889 & 0.892 & 0.314 & 0.738\\
-49 & S1 & a lightly damp road surface in rain & wet\_road=T, weather=rain & 56 & 0.978 & 0.977 & 0.607 & 0.726\\
-50 & S1 & a lightly damp road surface in dense traffic & wet\_road=T, density=dense & 93 & 0.866 & 0.815 & 0.446 & 0.784\\
-51 & S1 & a lightly damp road surface on an empty road & wet\_road=T, density=sparse & 6 & 0.035 & 0.035 & 0.028 & 0.031\\
-52 & S1 & patchy wet tarmac at night & wet\_road=T, lighting=night & 27 & 0.901 & 0.902 & 0.472 & 0.193\\
-53 & S1 & patchy wet tarmac in daylight & wet\_road=T, lighting=day & 86 & 0.886 & 0.886 & 0.383 & 0.738\\
-54 & S1 & patchy wet tarmac in rain & wet\_road=T, weather=rain & 56 & 0.977 & 0.976 & 0.524 & 0.726\\
-55 & S1 & patchy wet tarmac in dense traffic & wet\_road=T, density=dense & 93 & 0.865 & 0.864 & 0.594 & 0.784\\
-56 & S1 & patchy wet tarmac on an empty road & wet\_road=T, density=sparse & 6 & 0.035 & 0.035 & 0.089 & 0.031\\
-57 & S1 & wet reflective asphalt after rainfall at night & wet\_road=T, lighting=night & 27 & 0.780 & 0.780 & 0.622 & 0.193\\
-58 & S1 & wet reflective asphalt after rainfall in daylight & wet\_road=T, lighting=day & 86 & 0.878 & 0.878 & 0.656 & 0.738\\
-59 & S1 & wet reflective asphalt after rainfall in rain & wet\_road=T, weather=rain & 56 & 0.966 & 0.966 & 0.623 & 0.726\\
-60 & S1 & wet reflective asphalt after rainfall in dense traffic & wet\_road=T, density=dense & 93 & 0.866 & 0.866 & 0.679 & 0.784\\
-61 & S1 & wet reflective asphalt after rainfall on an empty road & wet\_road=T, density=sparse & 6 & 0.035 & 0.035 & 0.055 & 0.031\\
-62 & S1 & slightly flat lighting at night & low\_contrast=T, lighting=night & 48 & 0.730 & 0.770 & 0.799 & 0.525\\
-63 & S2 & driving after dark & lighting=night & 62 & 0.806 & 0.896 & 0.869 & --\\
-64 & S2 & a night-time street scene & lighting=night & 62 & 1.000 & 0.888 & 0.870 & --\\
-65 & S2 & low ambient light driving & lighting=night & 62 & 0.388 & 0.390 & 0.744 & --\\
-66 & S2 & bright daytime driving & lighting=day & 508 & 0.788 & 0.789 & 0.871 & --\\
-67 & S2 & a clear daylight street & lighting=day & 508 & 0.788 & 0.825 & 0.915 & --\\
-68 & S2 & a midday road scene & lighting=day & 508 & 0.866 & 0.949 & 0.939 & --\\
-69 & S2 & driving in rain & weather=rain & 57 & 0.981 & 0.883 & 0.712 & --\\
-70 & S2 & a rainy street & weather=rain & 57 & 0.965 & 0.929 & 0.712 & --\\
-71 & S2 & wet weather driving & weather=rain & 57 & 0.967 & 0.920 & 0.677 & --\\
-72 & S2 & dry road conditions & weather=dry & 545 & 0.762 & 0.766 & 0.926 & --\\
-73 & S2 & a dry clear day & weather=dry & 545 & 0.769 & 0.778 & 0.900 & --\\
-74 & S2 & no precipitation on the road & weather=dry & 545 & 0.757 & 0.759 & 0.775 & --\\
-75 & S2 & dense bumper-to-bumper traffic & density=dense & 381 & 0.646 & 0.712 & 0.745 & --\\
-76 & S2 & a congested roadway & density=dense & 381 & 0.792 & 0.738 & 0.735 & --\\
-77 & S2 & a heavy traffic jam & density=dense & 381 & 0.760 & 0.701 & 0.698 & --\\
-78 & S2 & an almost empty road & density=sparse & 76 & 0.133 & 0.485 & 0.450 & --\\
-79 & S2 & sparse traffic & density=sparse & 76 & 0.118 & 0.126 & 0.129 & --\\
-80 & S2 & a deserted street & density=sparse & 76 & 0.113 & 0.206 & 0.230 & --\\
-81 & S2 & a moderately busy road & density=moderate & 145 & 0.209 & 0.256 & 0.259 & --\\
-82 & S2 & a few vehicles around & density=moderate & 145 & 0.245 & 0.214 & 0.210 & --\\
-83 & S2 & light traffic flow & density=moderate & 145 & 0.259 & 0.268 & 0.269 & --\\
-84 & S2 & driving after dark, driving in rain & lighting=night, weather=rain & 5 & 0.639 & 0.089 & 0.071 & --\\
-85 & S2 & driving after dark, dry road conditions & lighting=night, weather=dry & 57 & 0.679 & 0.824 & 0.822 & --\\
-86 & S2 & driving after dark, dense bumper-to-bumper traffic & lighting=night, density=dense & 35 & 0.513 & 0.617 & 0.549 & --\\
-87 & S2 & driving after dark, an almost empty road & lighting=night, density=sparse & 10 & 0.360 & 0.473 & 0.406 & --\\
-88 & S2 & driving after dark, a moderately busy road & lighting=night, density=moderate & 17 & 0.264 & 0.448 & 0.449 & --\\
-89 & S2 & bright daytime driving, driving in rain & lighting=day, weather=rain & 48 & 0.814 & 0.859 & 0.782 & --\\
-90 & S2 & bright daytime driving, dry road conditions & lighting=day, weather=dry & 460 & 0.636 & 0.690 & 0.863 & --\\
-91 & S2 & bright daytime driving, dense bumper-to-bumper traffic & lighting=day, density=dense & 334 & 0.512 & 0.513 & 0.605 & --\\
-92 & S2 & bright daytime driving, an almost empty road & lighting=day, density=sparse & 59 & 0.140 & 0.377 & 0.348 & --\\
-93 & S2 & bright daytime driving, a moderately busy road & lighting=day, density=moderate & 115 & 0.175 & 0.203 & 0.231 & --\\
-94 & S2 & driving in rain, dense bumper-to-bumper traffic & weather=rain, density=dense & 42 & 0.622 & 0.456 & 0.447 & --\\
-95 & S2 & driving in rain, an almost empty road & weather=rain, density=sparse & 2 & 0.107 & 0.026 & 0.015 & --\\
-96 & S2 & driving in rain, a moderately busy road & weather=rain, density=moderate & 13 & 0.242 & 0.180 & 0.171 & --\\
-97 & S2 & dry road conditions, dense bumper-to-bumper traffic & weather=dry, density=dense & 339 & 0.520 & 0.537 & 0.534 & --\\
-98 & S2 & dry road conditions, an almost empty road & weather=dry, density=sparse & 74 & 0.100 & 0.159 & 0.399 & --\\
-99 & S2 & dry road conditions, a moderately busy road & weather=dry, density=moderate & 132 & 0.171 & 0.274 & 0.280 & --\\
-100 & S3 & heavy rain at night & weather=rain, lighting=night & 5 & 0.602 & 0.052 & 0.030 & --\\
-101 & S3 & a dark rainy street after dark & weather=rain, lighting=night & 5 & 0.401 & 0.053 & 0.035 & --\\
-102 & S3 & a night-time downpour & weather=rain, lighting=night & 5 & 0.605 & 0.048 & 0.030 & --\\
-103 & S3 & rainfall on an unlit road & weather=rain, lighting=night & 5 & 0.243 & 0.037 & 0.017 & --\\
-104 & S3 & driving through rain in darkness & weather=rain, lighting=night & 5 & 0.685 & 0.072 & 0.056 & --\\
-105 & S3 & rain droplets on the lens at night & droplets=T, lighting=night & 31 & 0.869 & 0.869 & 0.682 & 0.283\\
-106 & S3 & glare reflecting off a wet road & glare=T, wet\_road=T & 15 & 0.794 & 0.794 & 0.247 & 0.375\\
-107 & S3 & dense traffic after dark & density=dense, lighting=night & 35 & 0.739 & 0.570 & 0.562 & --\\
-108 & S3 & slick pavement in the dark & wet\_road=T, lighting=night & 27 & 0.899 & 0.891 & 0.365 & 0.193\\
-109 & S3 & indistinct shapes after dark & low\_contrast=T, lighting=night & 48 & 0.777 & 0.891 & 0.883 & 0.525\\
-110 & S3 & water droplets smearing the camera lens together with driving after dark & droplets=T, lighting=night & 31 & 0.554 & 0.554 & 0.597 & 0.283\\
-111 & S3 & water droplets smearing the camera lens together with driving in rain & droplets=T, weather=rain & 55 & 1.000 & 1.000 & 0.662 & 0.566\\
-112 & S3 & noticeable glare washing across the image together with driving after dark & glare=T, lighting=night & 9 & 0.866 & 0.877 & 0.242 & 0.263\\
-113 & S3 & noticeable glare washing across the image together with driving in rain & glare=T, weather=rain & 5 & 0.943 & 0.230 & 0.186 & 0.185\\
-114 & S3 & wet reflective asphalt after rainfall together with driving after dark & wet\_road=T, lighting=night & 27 & 0.711 & 0.711 & 0.634 & 0.193\\
-115 & S3 & wet reflective asphalt after rainfall together with driving in rain & wet\_road=T, weather=rain & 56 & 0.970 & 0.970 & 0.667 & 0.726\\
-116 & S3 & hazy washed out view with unclear boundaries together with driving after dark & low\_contrast=T, lighting=night & 48 & 0.972 & 0.770 & 0.360 & 0.525\\
-117 & S3 & hazy washed out view with unclear boundaries together with driving in rain & low\_contrast=T, weather=rain & 26 & 0.585 & 0.483 & 0.407 & 0.218\\
-118 & S4 & heavy rain but not at night & weather=rain, lighting=day & 48 & 0.376 & 0.439 & 0.714 & --\\
-119 & S4 & night driving without any rain & lighting=night, weather=dry & 57 & 0.787 & 0.765 & 0.698 & --\\
-120 & S4 & a wet road but in daylight & wet\_road=T, lighting=day & 86 & 0.869 & 0.870 & 0.505 & 0.738\\
-121 & S4 & an empty road that is not dark & density=sparse, lighting=day & 59 & 0.096 & 0.207 & 0.236 & --\\
-122 & S4 & rain beading across the lens but not after dark & droplets=T, lighting=day & 78 & 0.395 & 0.395 & 0.383 & 0.675\\
-123 & S4 & heavy rain spatter obscuring the camera without rainfall & droplets=T, weather=dry & 64 & 0.314 & 0.315 & 0.359 & 0.475\\
-124 & S4 & specular glare washing out the image but not after dark & glare=T, lighting=day & 25 & 0.315 & 0.314 & 0.153 & 0.628\\
-125 & S4 & strong headlight bloom from oncoming traffic without rainfall & glare=T, weather=dry & 35 & 0.664 & 0.660 & 0.223 & 0.879\\
-126 & S4 & slick wet pavement throwing reflections but not after dark & wet\_road=T, lighting=day & 86 & 0.491 & 0.490 & 0.336 & 0.738\\
-127 & S4 & standing water pooling on the road without rainfall & wet\_road=T, weather=dry & 68 & 0.340 & 0.339 & 0.259 & 0.401\\
-128 & S4 & poor visibility with objects blending in but not after dark & low\_contrast=T, lighting=day & 44 & 0.235 & 0.235 & 0.186 & 0.374\\
-129 & S4 & a low contrast scene where vehicles are barely distinguishable without rainfall & low\_contrast=T, weather=dry & 77 & 0.662 & 0.442 & 0.213 & 0.816\\
-130 & S2 & a night-time street scene with a rainy street & lighting=night, weather=rain & 5 & 0.434 & 0.047 & 0.031 & --\\
-131 & S2 & a night-time street scene with a dry clear day & lighting=night, weather=dry & 57 & 0.881 & 0.581 & 0.554 & --\\
-132 & S2 & a night-time street scene with a congested roadway & lighting=night, density=dense & 35 & 0.703 & 0.723 & 0.712 & --\\
-133 & S2 & a night-time street scene with sparse traffic & lighting=night, density=sparse & 10 & 0.213 & 0.145 & 0.140 & --\\
-134 & S2 & a night-time street scene with a few vehicles around & lighting=night, density=moderate & 17 & 0.274 & 0.253 & 0.251 & --\\
-135 & S2 & a clear daylight street with a rainy street & lighting=day, weather=rain & 48 & 0.990 & 0.910 & 0.592 & --\\
-136 & S2 & a clear daylight street with a dry clear day & lighting=day, weather=dry & 460 & 0.686 & 0.917 & 0.917 & --\\
-137 & S2 & a clear daylight street with a congested roadway & lighting=day, density=dense & 334 & 0.766 & 0.703 & 0.700 & --\\
-138 & S2 & a clear daylight street with sparse traffic & lighting=day, density=sparse & 59 & 0.084 & 0.126 & 0.128 & --\\
-139 & S2 & a clear daylight street with a few vehicles around & lighting=day, density=moderate & 115 & 0.144 & 0.233 & 0.234 & --\\
-140 & S2 & a rainy street with a congested roadway & weather=rain, density=dense & 42 & 0.899 & 0.808 & 0.709 & --\\
-141 & S2 & a rainy street with sparse traffic & weather=rain, density=sparse & 2 & 0.028 & 0.014 & 0.004 & --\\
-142 & S2 & a rainy street with a few vehicles around & weather=rain, density=moderate & 13 & 0.203 & 0.159 & 0.201 & --\\
-143 & S2 & a dry clear day with a congested roadway & weather=dry, density=dense & 339 & 0.529 & 0.638 & 0.638 & --\\
-144 & S2 & a dry clear day with sparse traffic & weather=dry, density=sparse & 74 & 0.103 & 0.180 & 0.181 & --\\
-145 & S2 & a dry clear day with a few vehicles around & weather=dry, density=moderate & 132 & 0.167 & 0.210 & 0.211 & --\\
-146 & S2 & wet weather driving during low ambient light driving & lighting=night, weather=rain & 5 & 0.712 & 0.062 & 0.048 & --\\
-147 & S2 & no precipitation on the road during low ambient light driving & lighting=night, weather=dry & 57 & 0.443 & 0.544 & 0.550 & --\\
-148 & S2 & a heavy traffic jam during low ambient light driving & lighting=night, density=dense & 35 & 0.518 & 0.285 & 0.279 & --\\
-149 & S2 & a deserted street during low ambient light driving & lighting=night, density=sparse & 10 & 0.350 & 0.269 & 0.305 & --\\
-150 & S2 & light traffic flow during low ambient light driving & lighting=night, density=moderate & 17 & 0.109 & 0.170 & 0.237 & --\\
+1 & S1 & a few water specks on the lens & droplets=T & 119 & 0.966 & 0.788 & 1.000\\
+2 & S1 & light droplets scattered on the lens & droplets=T & 119 & 0.964 & 0.795 & 1.000\\
+3 & S1 & water droplets smearing the camera lens & droplets=T & 119 & 0.958 & 0.888 & 1.000\\
+4 & S1 & rain beading across the lens & droplets=T & 119 & 0.964 & 0.886 & 1.000\\
+5 & S1 & a faint halo around a street light & glare=T & 40 & 0.907 & 0.216 & 1.000\\
+6 & S1 & mild light flare at the frame edge & glare=T & 40 & 0.905 & 0.480 & 1.000\\
+7 & S1 & noticeable glare washing across the image & glare=T & 40 & 0.930 & 0.381 & 1.000\\
+8 & S1 & specular glare washing out the image & glare=T & 40 & 0.935 & 0.527 & 1.000\\
+9 & S1 & a lightly damp road surface & wet\_road=T & 124 & 0.991 & 0.560 & 1.000\\
+10 & S1 & patchy wet tarmac & wet\_road=T & 124 & 0.990 & 0.615 & 1.000\\
+11 & S1 & wet reflective asphalt after rainfall & wet\_road=T & 124 & 0.989 & 0.810 & 1.000\\
+12 & S1 & slick wet pavement throwing reflections & wet\_road=T & 124 & 0.990 & 0.747 & 1.000\\
+13 & S1 & slightly flat lighting & low\_contrast=T & 103 & 0.856 & 0.388 & 1.000\\
+14 & S1 & a dim view where shapes lose definition & low\_contrast=T & 103 & 0.971 & 0.160 & 1.000\\
+15 & S1 & hazy washed out view with unclear boundaries & low\_contrast=T & 103 & 0.966 & 0.372 & 1.000\\
+16 & S1 & poor visibility with objects blending in & low\_contrast=T & 103 & 0.969 & 0.399 & 1.000\\
+17 & S1 & a few water specks on the lens at night & droplets=T, lighting=night & 31 & 0.785 & 0.655 & 0.283\\
+18 & S1 & a few water specks on the lens in daylight & droplets=T, lighting=day & 78 & 0.886 & 0.653 & 0.675\\
+19 & S1 & a few water specks on the lens in rain & droplets=T, weather=rain & 55 & 0.988 & 0.664 & 0.566\\
+20 & S1 & a few water specks on the lens in dense traffic & droplets=T, density=dense & 82 & 0.795 & 0.511 & 0.739\\
+21 & S1 & a few water specks on the lens on an empty road & droplets=T, density=sparse & 10 & 0.056 & 0.059 & 0.066\\
+22 & S1 & light droplets scattered on the lens at night & droplets=T, lighting=night & 31 & 0.790 & 0.757 & 0.283\\
+23 & S1 & light droplets scattered on the lens in daylight & droplets=T, lighting=day & 78 & 0.712 & 0.455 & 0.675\\
+24 & S1 & light droplets scattered on the lens in rain & droplets=T, weather=rain & 55 & 0.857 & 0.511 & 0.566\\
+25 & S1 & light droplets scattered on the lens in dense traffic & droplets=T, density=dense & 82 & 0.665 & 0.413 & 0.739\\
+26 & S1 & light droplets scattered on the lens on an empty road & droplets=T, density=sparse & 10 & 0.226 & 0.170 & 0.066\\
+27 & S1 & water droplets smearing the camera lens at night & droplets=T, lighting=night & 31 & 0.750 & 0.724 & 0.283\\
+28 & S1 & water droplets smearing the camera lens in daylight & droplets=T, lighting=day & 78 & 0.892 & 0.788 & 0.675\\
+29 & S1 & water droplets smearing the camera lens in rain & droplets=T, weather=rain & 55 & 0.994 & 0.687 & 0.566\\
+30 & S1 & water droplets smearing the camera lens in dense traffic & droplets=T, density=dense & 82 & 0.799 & 0.697 & 0.739\\
+31 & S1 & water droplets smearing the camera lens on an empty road & droplets=T, density=sparse & 10 & 0.052 & 0.052 & 0.066\\
+32 & S1 & a faint halo around a street light at night & glare=T, lighting=night & 9 & 0.870 & 0.119 & 0.263\\
+33 & S1 & a faint halo around a street light in daylight & glare=T, lighting=day & 25 & 0.596 & 0.223 & 0.628\\
+34 & S1 & a faint halo around a street light in rain & glare=T, weather=rain & 5 & 0.844 & 0.070 & 0.185\\
+35 & S1 & a faint halo around a street light in dense traffic & glare=T, density=dense & 19 & 0.332 & 0.112 & 0.381\\
+36 & S1 & a faint halo around a street light on an empty road & glare=T, density=sparse & 7 & 0.674 & 0.209 & 0.346\\
+37 & S1 & mild light flare at the frame edge at night & glare=T, lighting=night & 9 & 0.657 & 0.123 & 0.263\\
+38 & S1 & mild light flare at the frame edge in daylight & glare=T, lighting=day & 25 & 0.698 & 0.604 & 0.628\\
+39 & S1 & mild light flare at the frame edge in rain & glare=T, weather=rain & 5 & 0.911 & 0.054 & 0.185\\
+40 & S1 & mild light flare at the frame edge in dense traffic & glare=T, density=dense & 19 & 0.325 & 0.232 & 0.381\\
+41 & S1 & mild light flare at the frame edge on an empty road & glare=T, density=sparse & 7 & 0.592 & 0.388 & 0.346\\
+42 & S1 & noticeable glare washing across the image at night & glare=T, lighting=night & 9 & 0.877 & 0.151 & 0.263\\
+43 & S1 & noticeable glare washing across the image in daylight & glare=T, lighting=day & 25 & 0.623 & 0.457 & 0.628\\
+44 & S1 & noticeable glare washing across the image in rain & glare=T, weather=rain & 5 & 0.871 & 0.042 & 0.185\\
+45 & S1 & noticeable glare washing across the image in dense traffic & glare=T, density=dense & 19 & 0.322 & 0.124 & 0.381\\
+46 & S1 & noticeable glare washing across the image on an empty road & glare=T, density=sparse & 7 & 0.705 & 0.440 & 0.346\\
+47 & S1 & a lightly damp road surface at night & wet\_road=T, lighting=night & 27 & 0.478 & 0.478 & 0.193\\
+48 & S1 & a lightly damp road surface in daylight & wet\_road=T, lighting=day & 86 & 0.894 & 0.314 & 0.738\\
+49 & S1 & a lightly damp road surface in rain & wet\_road=T, weather=rain & 56 & 0.989 & 0.607 & 0.726\\
+50 & S1 & a lightly damp road surface in dense traffic & wet\_road=T, density=dense & 93 & 0.861 & 0.446 & 0.784\\
+51 & S1 & a lightly damp road surface on an empty road & wet\_road=T, density=sparse & 6 & 0.035 & 0.028 & 0.031\\
+52 & S1 & patchy wet tarmac at night & wet\_road=T, lighting=night & 27 & 0.753 & 0.472 & 0.193\\
+53 & S1 & patchy wet tarmac in daylight & wet\_road=T, lighting=day & 86 & 0.889 & 0.383 & 0.738\\
+54 & S1 & patchy wet tarmac in rain & wet\_road=T, weather=rain & 56 & 0.985 & 0.524 & 0.726\\
+55 & S1 & patchy wet tarmac in dense traffic & wet\_road=T, density=dense & 93 & 0.862 & 0.594 & 0.784\\
+56 & S1 & patchy wet tarmac on an empty road & wet\_road=T, density=sparse & 6 & 0.036 & 0.089 & 0.031\\
+57 & S1 & wet reflective asphalt after rainfall at night & wet\_road=T, lighting=night & 27 & 0.627 & 0.622 & 0.193\\
+58 & S1 & wet reflective asphalt after rainfall in daylight & wet\_road=T, lighting=day & 86 & 0.882 & 0.656 & 0.738\\
+59 & S1 & wet reflective asphalt after rainfall in rain & wet\_road=T, weather=rain & 56 & 0.973 & 0.623 & 0.726\\
+60 & S1 & wet reflective asphalt after rainfall in dense traffic & wet\_road=T, density=dense & 93 & 0.860 & 0.679 & 0.784\\
+61 & S1 & wet reflective asphalt after rainfall on an empty road & wet\_road=T, density=sparse & 6 & 0.035 & 0.055 & 0.031\\
+62 & S1 & slightly flat lighting at night & low\_contrast=T, lighting=night & 48 & 0.697 & 0.799 & 0.525\\
+63 & S2 & driving after dark & lighting=night & 62 & 0.869 & 0.869 & --\\
+64 & S2 & a night-time street scene & lighting=night & 62 & 0.870 & 0.870 & --\\
+65 & S2 & low ambient light driving & lighting=night & 62 & 0.744 & 0.744 & --\\
+66 & S2 & bright daytime driving & lighting=day & 508 & 0.871 & 0.871 & --\\
+67 & S2 & a clear daylight street & lighting=day & 508 & 0.915 & 0.915 & --\\
+68 & S2 & a midday road scene & lighting=day & 508 & 0.939 & 0.939 & --\\
+69 & S2 & driving in rain & weather=rain & 57 & 0.712 & 0.712 & --\\
+70 & S2 & a rainy street & weather=rain & 57 & 0.712 & 0.712 & --\\
+71 & S2 & wet weather driving & weather=rain & 57 & 0.677 & 0.677 & --\\
+72 & S2 & dry road conditions & weather=dry & 545 & 0.926 & 0.926 & --\\
+73 & S2 & a dry clear day & weather=dry & 545 & 0.900 & 0.900 & --\\
+74 & S2 & no precipitation on the road & weather=dry & 545 & 0.775 & 0.775 & --\\
+75 & S2 & dense bumper-to-bumper traffic & density=dense & 381 & 0.745 & 0.745 & --\\
+76 & S2 & a congested roadway & density=dense & 381 & 0.735 & 0.735 & --\\
+77 & S2 & a heavy traffic jam & density=dense & 381 & 0.698 & 0.698 & --\\
+78 & S2 & an almost empty road & density=sparse & 76 & 0.450 & 0.450 & --\\
+79 & S2 & sparse traffic & density=sparse & 76 & 0.129 & 0.129 & --\\
+80 & S2 & a deserted street & density=sparse & 76 & 0.230 & 0.230 & --\\
+81 & S2 & a moderately busy road & density=moderate & 145 & 0.259 & 0.259 & --\\
+82 & S2 & a few vehicles around & density=moderate & 145 & 0.210 & 0.210 & --\\
+83 & S2 & light traffic flow & density=moderate & 145 & 0.269 & 0.269 & --\\
+84 & S2 & driving after dark, driving in rain & lighting=night, weather=rain & 5 & 0.071 & 0.071 & --\\
+85 & S2 & driving after dark, dry road conditions & lighting=night, weather=dry & 57 & 0.822 & 0.822 & --\\
+86 & S2 & driving after dark, dense bumper-to-bumper traffic & lighting=night, density=dense & 35 & 0.549 & 0.549 & --\\
+87 & S2 & driving after dark, an almost empty road & lighting=night, density=sparse & 10 & 0.406 & 0.406 & --\\
+88 & S2 & driving after dark, a moderately busy road & lighting=night, density=moderate & 17 & 0.449 & 0.449 & --\\
+89 & S2 & bright daytime driving, driving in rain & lighting=day, weather=rain & 48 & 0.782 & 0.782 & --\\
+90 & S2 & bright daytime driving, dry road conditions & lighting=day, weather=dry & 460 & 0.863 & 0.863 & --\\
+91 & S2 & bright daytime driving, dense bumper-to-bumper traffic & lighting=day, density=dense & 334 & 0.605 & 0.605 & --\\
+92 & S2 & bright daytime driving, an almost empty road & lighting=day, density=sparse & 59 & 0.348 & 0.348 & --\\
+93 & S2 & bright daytime driving, a moderately busy road & lighting=day, density=moderate & 115 & 0.231 & 0.231 & --\\
+94 & S2 & driving in rain, dense bumper-to-bumper traffic & weather=rain, density=dense & 42 & 0.447 & 0.447 & --\\
+95 & S2 & driving in rain, an almost empty road & weather=rain, density=sparse & 2 & 0.019 & 0.015 & --\\
+96 & S2 & driving in rain, a moderately busy road & weather=rain, density=moderate & 13 & 0.171 & 0.171 & --\\
+97 & S2 & dry road conditions, dense bumper-to-bumper traffic & weather=dry, density=dense & 339 & 0.534 & 0.534 & --\\
+98 & S2 & dry road conditions, an almost empty road & weather=dry, density=sparse & 74 & 0.399 & 0.399 & --\\
+99 & S2 & dry road conditions, a moderately busy road & weather=dry, density=moderate & 132 & 0.280 & 0.280 & --\\
+100 & S3 & heavy rain at night & weather=rain, lighting=night & 5 & 0.031 & 0.030 & --\\
+101 & S3 & a dark rainy street after dark & weather=rain, lighting=night & 5 & 0.035 & 0.035 & --\\
+102 & S3 & a night-time downpour & weather=rain, lighting=night & 5 & 0.030 & 0.030 & --\\
+103 & S3 & rainfall on an unlit road & weather=rain, lighting=night & 5 & 0.017 & 0.017 & --\\
+104 & S3 & driving through rain in darkness & weather=rain, lighting=night & 5 & 0.056 & 0.056 & --\\
+105 & S3 & rain droplets on the lens at night & droplets=T, lighting=night & 31 & 0.763 & 0.682 & 0.283\\
+106 & S3 & glare reflecting off a wet road & glare=T, wet\_road=T & 15 & 0.765 & 0.247 & 0.375\\
+107 & S3 & dense traffic after dark & density=dense, lighting=night & 35 & 0.562 & 0.562 & --\\
+108 & S3 & slick pavement in the dark & wet\_road=T, lighting=night & 27 & 0.365 & 0.365 & 0.193\\
+109 & S3 & indistinct shapes after dark & low\_contrast=T, lighting=night & 48 & 0.801 & 0.883 & 0.525\\
+110 & S3 & water droplets smearing the camera lens together with driving after dark & droplets=T, lighting=night & 31 & 0.495 & 0.597 & 0.283\\
+111 & S3 & water droplets smearing the camera lens together with driving in rain & droplets=T, weather=rain & 55 & 0.995 & 0.662 & 0.566\\
+112 & S3 & noticeable glare washing across the image together with driving after dark & glare=T, lighting=night & 9 & 0.245 & 0.242 & 0.263\\
+113 & S3 & noticeable glare washing across the image together with driving in rain & glare=T, weather=rain & 5 & 0.186 & 0.186 & 0.185\\
+114 & S3 & wet reflective asphalt after rainfall together with driving after dark & wet\_road=T, lighting=night & 27 & 0.576 & 0.634 & 0.193\\
+115 & S3 & wet reflective asphalt after rainfall together with driving in rain & wet\_road=T, weather=rain & 56 & 0.975 & 0.667 & 0.726\\
+116 & S3 & hazy washed out view with unclear boundaries together with driving after dark & low\_contrast=T, lighting=night & 48 & 0.873 & 0.360 & 0.525\\
+117 & S3 & hazy washed out view with unclear boundaries together with driving in rain & low\_contrast=T, weather=rain & 26 & 0.496 & 0.407 & 0.218\\
+118 & S4 & heavy rain but not at night & weather=rain, lighting=day & 48 & 0.714 & 0.714 & --\\
+119 & S4 & night driving without any rain & lighting=night, weather=dry & 57 & 0.698 & 0.698 & --\\
+120 & S4 & a wet road but in daylight & wet\_road=T, lighting=day & 86 & 0.869 & 0.505 & 0.738\\
+121 & S4 & an empty road that is not dark & density=sparse, lighting=day & 59 & 0.235 & 0.236 & --\\
+122 & S4 & rain beading across the lens but not after dark & droplets=T, lighting=day & 78 & 0.459 & 0.383 & 0.675\\
+123 & S4 & heavy rain spatter obscuring the camera without rainfall & droplets=T, weather=dry & 64 & 0.343 & 0.359 & 0.475\\
+124 & S4 & specular glare washing out the image but not after dark & glare=T, lighting=day & 25 & 0.424 & 0.153 & 0.628\\
+125 & S4 & strong headlight bloom from oncoming traffic without rainfall & glare=T, weather=dry & 35 & 0.675 & 0.223 & 0.879\\
+126 & S4 & slick wet pavement throwing reflections but not after dark & wet\_road=T, lighting=day & 86 & 0.533 & 0.336 & 0.738\\
+127 & S4 & standing water pooling on the road without rainfall & wet\_road=T, weather=dry & 68 & 0.345 & 0.259 & 0.401\\
+128 & S4 & poor visibility with objects blending in but not after dark & low\_contrast=T, lighting=day & 44 & 0.238 & 0.186 & 0.374\\
+129 & S4 & a low contrast scene where vehicles are barely distinguishable without rainfall & low\_contrast=T, weather=dry & 77 & 0.680 & 0.213 & 0.816\\
+130 & S2 & a night-time street scene with a rainy street & lighting=night, weather=rain & 5 & 0.031 & 0.031 & --\\
+131 & S2 & a night-time street scene with a dry clear day & lighting=night, weather=dry & 57 & 0.554 & 0.554 & --\\
+132 & S2 & a night-time street scene with a congested roadway & lighting=night, density=dense & 35 & 0.712 & 0.712 & --\\
+133 & S2 & a night-time street scene with sparse traffic & lighting=night, density=sparse & 10 & 0.140 & 0.140 & --\\
+134 & S2 & a night-time street scene with a few vehicles around & lighting=night, density=moderate & 17 & 0.251 & 0.251 & --\\
+135 & S2 & a clear daylight street with a rainy street & lighting=day, weather=rain & 48 & 0.592 & 0.592 & --\\
+136 & S2 & a clear daylight street with a dry clear day & lighting=day, weather=dry & 460 & 0.917 & 0.917 & --\\
+137 & S2 & a clear daylight street with a congested roadway & lighting=day, density=dense & 334 & 0.700 & 0.700 & --\\
+138 & S2 & a clear daylight street with sparse traffic & lighting=day, density=sparse & 59 & 0.128 & 0.128 & --\\
+139 & S2 & a clear daylight street with a few vehicles around & lighting=day, density=moderate & 115 & 0.234 & 0.234 & --\\
+140 & S2 & a rainy street with a congested roadway & weather=rain, density=dense & 42 & 0.905 & 0.709 & --\\
+141 & S2 & a rainy street with sparse traffic & weather=rain, density=sparse & 2 & 0.005 & 0.004 & --\\
+142 & S2 & a rainy street with a few vehicles around & weather=rain, density=moderate & 13 & 0.201 & 0.201 & --\\
+143 & S2 & a dry clear day with a congested roadway & weather=dry, density=dense & 339 & 0.638 & 0.638 & --\\
+144 & S2 & a dry clear day with sparse traffic & weather=dry, density=sparse & 74 & 0.181 & 0.181 & --\\
+145 & S2 & a dry clear day with a few vehicles around & weather=dry, density=moderate & 132 & 0.211 & 0.211 & --\\
+146 & S2 & wet weather driving during low ambient light driving & lighting=night, weather=rain & 5 & 0.048 & 0.048 & --\\
+147 & S2 & no precipitation on the road during low ambient light driving & lighting=night, weather=dry & 57 & 0.550 & 0.550 & --\\
+148 & S2 & a heavy traffic jam during low ambient light driving & lighting=night, density=dense & 35 & 0.279 & 0.279 & --\\
+149 & S2 & a deserted street during low ambient light driving & lighting=night, density=sparse & 10 & 0.260 & 0.305 & --\\
+150 & S2 & light traffic flow during low ambient light driving & lighting=night, density=moderate & 17 & 0.236 & 0.237 & --\\
 \end{longtable}
