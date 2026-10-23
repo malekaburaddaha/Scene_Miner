@@ -37,6 +37,14 @@ availability). Three changes, each tied to a measurement:
     margin is not strongly negative - mean +0.80 sigma, none below -0.5 - so
     this term is expected to matter little there; it is kept because the veto
     case is real in principle and costs nothing when inactive.)
+
+(4) OOV ABSTENTION - POST-HOC, OFF BY DEFAULT (`use_abstain`). Added in
+    Milestone 15 AFTER the Stratum-5 semantic results were seen. Every learned
+    part of the head (routing, residual) was trained on in-vocabulary
+    degradation queries only, and on semantic queries it degraded SigLIP2 badly.
+    With abstention the score interpolates toward the standardised SigLIP2 part
+    by the same specificity:  s_A = gamma * s + (1 - gamma) * p_siglip.
+    No new hyperparameter; at gamma ~ 1 it is v2.3 unchanged.
 """
 from __future__ import annotations
 import torch
@@ -74,7 +82,8 @@ class ResNorm(PartNorm):
 
 class SceneMinerV23(SceneMinerV22):
     def __init__(self, *args, alpha_res=0.5, rescue_sig=1.0, rescue_floor=-0.5,
-                 T_a=0.10, use_gate=True, use_rescue=True, use_resnorm=True, **kw):
+                 T_a=0.10, use_gate=True, use_rescue=True, use_resnorm=True,
+                 use_abstain=False, **kw):
         super().__init__(*args, **kw)
         d_text = self.W_route.in_features
         n_m = self.margin_select.out_features
@@ -86,6 +95,7 @@ class SceneMinerV23(SceneMinerV22):
         self.alpha_res, self.rescue_sig, self.rescue_floor = alpha_res, rescue_sig, rescue_floor
         # ablation switches (inference-time; training uses all three)
         self.use_gate, self.use_rescue, self.use_resnorm = use_gate, use_rescue, use_resnorm
+        self.use_abstain = use_abstain
         # semantic alignment replaces the learned selector entirely
         for p in self.margin_select.parameters(): p.requires_grad_(False)
 
@@ -140,6 +150,17 @@ class SceneMinerV23(SceneMinerV22):
         fallback = torch.zeros_like(w); fallback[:, 0] = 1.0
         return torch.where(s > 1e-6, w / s.clamp(min=1e-6), fallback)
 
+    def abstain(self, q_text, s, parts):
+        if not self.use_abstain: return s
+        _, gamma, _ = self.concept(q_text)
+        return gamma * s + (1.0 - gamma) * parts[:, 0]
+
+    def base_score(self, q_text, siglip_img, margins_z, prior, avail):
+        """Portable routed base (used where no 3D rig / tags exist)."""
+        parts = self.base_parts(q_text, q_text, siglip_img, margins_z, prior)
+        s = (self.route(q_text, avail) * parts * avail).sum(-1)
+        return self.abstain(q_text, s, parts)
+
     # ---------------------------------------------------------------- forward
     def forward(self, q_text, q_siglip, e, t, r, v, s_img, marg_z,
                 prior, has_3d=None, drop_margin=None, return_parts=False):
@@ -155,7 +176,7 @@ class SceneMinerV23(SceneMinerV22):
         gate = torch.tanh(self.gate_head(q_text)).squeeze(-1)
         if self.use_resnorm:
             res = self.alpha_res * self.res_norm(res)
-        s = base + gate * res
+        s = self.abstain(q_text, base + gate * res, parts)
         if return_parts: return s, base, res, w, parts, gate
         return s
 
@@ -180,4 +201,8 @@ if __name__ == "__main__":
     assert float(w0[:, 1].max()) < 1e-6 and torch.allclose(w0.sum(-1), torch.ones(B), atol=1e-5)
     print(f"  OOV routing (gamma~0): {w0[0].detach().numpy().round(4)}")
     print(f"  trainable params: {sum(p.numel() for p in m.parameters() if p.requires_grad):,}")
+    m.use_abstain = True; m.tau_c.fill_(10.0)
+    sA, _, _, _, pA, _ = m(qt, qt, e, t, r, v, si, mz, pr, return_parts=True)
+    assert torch.allclose(sA, pA[:, 0], atol=1e-5), "gamma~0 must abstain to SigLIP2"
+    print("  abstention at gamma~0 returns the SigLIP2 part exactly")
     print("  v2.3 OK")

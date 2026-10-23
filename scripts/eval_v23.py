@@ -18,6 +18,8 @@ row differs from the full model in exactly one mechanism:
   no_rescue   - asymmetric FN rescue off
   no_resnorm  - raw residual, as in v2.2
   base_only   - the routed base score with no residual at all
+  abstain     - POST-HOC (added in Milestone 15 after the semantic results):
+                interpolate toward standardised SigLIP2 by (1 - gamma)
 """
 from __future__ import annotations
 import argparse, glob, json, re, sys
@@ -30,7 +32,7 @@ from eval_human_gt_full import load_human, ATTRS, QUERY
 
 dev = torch.device("cuda")
 SEG = re.compile(r"#c\d+$")
-ABL = ["full", "no_gate", "no_rescue", "no_resnorm", "base_only"]
+ABL = ["full", "abstain", "no_gate", "no_rescue", "no_resnorm", "base_only"]
 BDD_INVOCAB = {"wet reflective asphalt after rainfall": "wet_road",
                "water droplets smearing the camera lens": "droplets",
                "a low contrast scene where vehicles are barely distinguishable from the background": "low_contrast",
@@ -42,6 +44,7 @@ def set_mode(models, mode):
         m.use_gate = mode != "no_gate"
         m.use_rescue = mode != "no_rescue"
         m.use_resnorm = mode != "no_resnorm"
+        m.use_abstain = mode == "abstain"
 
 
 def score(models, mode, qv, F_, has_3d):
@@ -179,10 +182,10 @@ def bench_bdd(a, M):
         att, sgn = CHANNEL[qt]; j = TRAIN_ORDER.index(att)
         R = {"zeroshot_SigLIP2": cos, "logit_VLM_lookup": sgn * MZ[:, j]}
         with torch.no_grad():
-            for mode in ["full", "no_gate", "no_rescue"]:
+            for mode in ["full", "abstain", "no_gate", "no_rescue"]:
                 set_mode(M, mode)
-                R[f"v2.3_{mode}"] = np.mean([(m.route(qv, av2) * m.base_parts(qv, qv, S, Mz, PR) * av2)
-                                             .sum(-1).cpu().numpy() for m in M], 0)
+                R[f"v2.3_{mode}"] = np.mean([m.base_score(qv, S, Mz, PR, av2).cpu().numpy()
+                                             for m in M], 0)
             set_mode(M, "full")
             a_, gam, c = M[0].concept(QT[qi:qi+1])
             w = np.mean([m.route(qv[:1], av2[:1])[0].cpu().numpy() for m in M], 0)
