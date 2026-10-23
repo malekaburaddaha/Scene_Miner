@@ -251,3 +251,44 @@ if __name__ == "__main__":
     if not args.skip_fig2: fig2(args)
     Path("results/cvpr/milestone12_figure_numbers.json").write_text(json.dumps(meta, indent=2))
     print(f"[figures] wrote {OUT}")
+
+
+# ---------------------------------------------------------------- val150 quartiles
+# Categorical slots 1-4 of the validated reference palette, fixed order; random
+# is a neutral dashed reference. Contrast WARN on aqua/yellow is relieved by a
+# distinct marker per series and direct end labels (identity never colour-only).
+SER = [("SceneMiner_v2.3", "SceneMiner v2.3", "#2a78d6", "o"),
+       ("zeroshot_SigLIP2", "zero-shot SigLIP2", "#eb6834", "s"),
+       ("logit_VLM_lookup", "VLM margin lookup", "#1baf7a", "^"),
+       ("metadata_matched", "night/rain metadata", "#eda100", "D")]
+
+
+def quartile_panels(axes, d, kind="degradation", label_end=True):
+    Q = d["quartiles"][kind]
+    for ax, m, yl in zip(axes, ["mAP_front", "fp_rate"],
+                         ["CAM_FRONT-sector mAP", "ghost FP rate (score > 0.3)"]):
+        x = np.arange(1, 5)
+        ax.plot(x, Q["random"][m], color="#8a8a85", lw=1.2, ls=(0, (4, 3)), zorder=2)
+        ax.text(4.12, Q["random"][m][-1], "random", fontsize=6.2, color="#55554f", va="center")
+        for key, lab, col, mk in SER:
+            y = Q[key][m]
+            ax.plot(x, y, color=col, lw=2.0, marker=mk, ms=4.6, zorder=3,
+                    markeredgecolor="white", markeredgewidth=0.8, label=lab)
+        ax.set_xticks(x); ax.set_xticklabels(["Q1\n(top-scored)", "Q2", "Q3", "Q4"], fontsize=6.6)
+        ax.set_xlim(0.8, 4.9); ax.set_ylabel(yl, fontsize=7)
+        ax.grid(axis="y", lw=0.4, color="#e2e8f0", zorder=0)
+        for sp in ("top", "right"): ax.spines[sp].set_visible(False)
+        ax.tick_params(labelsize=6.6)
+
+
+def fig_val150_quartiles():
+    d = json.load(open("results/cvpr/milestone16_val150_retrieval_to_3d.json"))
+    fig, axes = plt.subplots(1, 2, figsize=(7.0, 2.45))
+    quartile_panels(axes, d)
+    axes[0].set_title("(a) detection quality by retrieval quartile", fontsize=7.6, fontweight="bold")
+    axes[1].set_title("(b) false positives by retrieval quartile", fontsize=7.6, fontweight="bold")
+    h, l = axes[0].get_legend_handles_labels()
+    fig.legend(h, l, loc="lower center", ncol=4, fontsize=6.5, frameon=False, bbox_to_anchor=(0.5, -0.04))
+    fig.tight_layout(pad=0.4, rect=[0, 0.07, 1, 1])
+    fig.savefig(OUT/"fig_val150_quartiles.pdf", bbox_inches="tight")
+    plt.close(fig); print("  fig_val150_quartiles.pdf")
