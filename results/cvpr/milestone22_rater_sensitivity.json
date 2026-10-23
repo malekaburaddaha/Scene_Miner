@@ -1,0 +1,448 @@
+{
+ "doc": "MILESTONE 19 - single-rater sensitivity on the 550 human-labelled scenes.\n\n1. Rater's own uncertainty. The 50 scenes the rater flagged \"unsure\" carry NO\n   labels (none was set), so they cannot be scored; Mode A (drop skipped\n   scenes) vs Mode B (keep unambiguous skips as negatives) is the available\n   check, and is reported.\n2. Boundary-exclusion subsets. \"Boundary\" is defined by CLIP ViT-B/32 - a model\n   that NONE of the rankers uses, so the subset is not selected by any of the\n   compared systems. A scene is on the boundary for an attribute when CLIP's\n   attribute-vs-neutral probability is near 0.5; the 10 % and 20 % most\n   ambiguous scenes are removed in turn.\n3. Monte Carlo second rater. For a target Cohen's kappa (0.90, 0.85, 0.75)\n   with prevalence held fixed, f positives and f negatives are flipped per\n   attribute, f = N (1 - p_e)(1 - kappa) / 2. Which labels flip is drawn either\n   uniformly or weighted toward CLIP-ambiguous scenes; 500 trials each. Ranker\n   scores are fixed; only the labels move.\nRankers: SceneMiner v2.4 (5-seed mean), logit VLM lookup, zero-shot SigLIP2,\nand the two late-fusion controls z(SigLIP2)+z(lookup), z(SigLIP2)+metadata.\n",
+ "n_scenes": 550,
+ "n_unsure_unlabelled": 50,
+ "full_550": {
+  "SceneMiner_v2.5": {
+   "droplets": 0.9449453526177741,
+   "glare": 0.5836477533230647,
+   "wet_road": 0.977401348453646,
+   "low_contrast": 0.6496872953119036,
+   "macro": 0.7889204374265971
+  },
+  "logit_VLM_lookup": {
+   "droplets": 0.8238017685557508,
+   "glare": 0.5886638446257638,
+   "wet_road": 0.9652501059933786,
+   "low_contrast": 0.5521388576613958,
+   "macro": 0.7324636442090723
+  },
+  "zeroshot_SigLIP2": {
+   "droplets": 0.9129275459510545,
+   "glare": 0.4143846277626952,
+   "wet_road": 0.8433058865036837,
+   "low_contrast": 0.1045141425862662,
+   "macro": 0.5687830507009249
+  },
+  "late_fusion SigLIP2+lookup": {
+   "droplets": 0.9120232153395623,
+   "glare": 0.6668280427733118,
+   "wet_road": 0.9599083786131657,
+   "low_contrast": 0.4099228006677306,
+   "macro": 0.7371706093484426
+  },
+  "late_fusion SigLIP2+metadata": {
+   "droplets": 0.9430563252441256,
+   "glare": 0.371422872322226,
+   "wet_road": 0.9227699986589228,
+   "low_contrast": 0.2657376817349745,
+   "macro": 0.6257467194900622
+  }
+ },
+ "mode_A": {
+  "n": 530,
+  "table": {
+   "SceneMiner_v2.5": {
+    "droplets": 0.9456286366146682,
+    "glare": 0.5841239249964855,
+    "wet_road": 0.977401348453646,
+    "low_contrast": 0.6510626766521548,
+    "macro": 0.7895541466792386
+   },
+   "logit_VLM_lookup": {
+    "droplets": 0.8245407095239841,
+    "glare": 0.5893270461666811,
+    "wet_road": 0.9653116217414102,
+    "low_contrast": 0.5535886006543048,
+    "macro": 0.7331919945215951
+   },
+   "zeroshot_SigLIP2": {
+    "droplets": 0.9145865304956701,
+    "glare": 0.4149503480050155,
+    "wet_road": 0.8478310459737859,
+    "low_contrast": 0.10776762623418185,
+    "macro": 0.5712838876771633
+   },
+   "late_fusion SigLIP2+lookup": {
+    "droplets": 0.9126346177751181,
+    "glare": 0.6669906911880936,
+    "wet_road": 0.9604449901506337,
+    "low_contrast": 0.4117892001751205,
+    "macro": 0.7379648748222415
+   },
+   "late_fusion SigLIP2+metadata": {
+    "droplets": 0.9439160166356034,
+    "glare": 0.3719394625735422,
+    "wet_road": 0.9246808084061916,
+    "low_contrast": 0.2744582172231733,
+    "macro": 0.6287486262096277
+   }
+  }
+ },
+ "clip_ambiguity_mean": {
+  "droplets": 0.07485300302505493,
+  "glare": 0.3898236155509949,
+  "wet_road": 0.11691388487815857,
+  "low_contrast": 0.32164451479911804
+ },
+ "boundary_excluded": {
+  "drop_10pct": {
+   "SceneMiner_v2.5": {
+    "droplets": 0.8574185410406031,
+    "glare": 0.6364123240852646,
+    "wet_road": 0.9928282922004664,
+    "low_contrast": 0.6337509861634435,
+    "macro": 0.7801025358724444
+   },
+   "logit_VLM_lookup": {
+    "droplets": 0.6862065623123119,
+    "glare": 0.6343153630957116,
+    "wet_road": 0.9765962684716306,
+    "low_contrast": 0.5333537755970086,
+    "macro": 0.7076179923691657
+   },
+   "zeroshot_SigLIP2": {
+    "droplets": 0.8435074929403492,
+    "glare": 0.451657007562948,
+    "wet_road": 0.9324928183730887,
+    "low_contrast": 0.08764696768242278,
+    "macro": 0.5788260716397022
+   },
+   "late_fusion SigLIP2+lookup": {
+    "droplets": 0.8288068977398234,
+    "glare": 0.7159364621372626,
+    "wet_road": 0.9755760919904293,
+    "low_contrast": 0.36973077107359564,
+    "macro": 0.7225125557352777
+   },
+   "late_fusion SigLIP2+metadata": {
+    "droplets": 0.8727898316603427,
+    "glare": 0.3919626347792109,
+    "wet_road": 0.9740115571279208,
+    "low_contrast": 0.22099040159768416,
+    "macro": 0.6149386062912896
+   }
+  },
+  "drop_20pct": {
+   "SceneMiner_v2.5": {
+    "droplets": 0.7711999187264803,
+    "glare": 0.6465403484246869,
+    "wet_road": 0.9974789520327906,
+    "low_contrast": 0.6240775123545994,
+    "macro": 0.7598241828846393
+   },
+   "logit_VLM_lookup": {
+    "droplets": 0.5385050530442688,
+    "glare": 0.6532901273869419,
+    "wet_road": 0.9773724997400153,
+    "low_contrast": 0.5144858606241487,
+    "macro": 0.6709133851988436
+   },
+   "zeroshot_SigLIP2": {
+    "droplets": 0.7385162245423291,
+    "glare": 0.4897372142833158,
+    "wet_road": 0.9575752589467145,
+    "low_contrast": 0.07501578607572208,
+    "macro": 0.5652111209620203
+   },
+   "late_fusion SigLIP2+lookup": {
+    "droplets": 0.7572987841063483,
+    "glare": 0.7430942188197975,
+    "wet_road": 0.9799925391089561,
+    "low_contrast": 0.36357030517676875,
+    "macro": 0.7109889618029678
+   },
+   "late_fusion SigLIP2+metadata": {
+    "droplets": 0.8302829639262277,
+    "glare": 0.41487133711477453,
+    "wet_road": 0.9860874084441092,
+    "low_contrast": 0.21067226396734265,
+    "macro": 0.6104784933631136
+   }
+  }
+ },
+ "monte_carlo": {
+  "kappa_0.9_uniform": {
+   "realised_kappa_mean": 0.8975995994473907,
+   "win_rate": {
+    "SceneMiner_v2.5 > logit_VLM_lookup": {
+     "droplets": 0.998,
+     "glare": 0.446,
+     "wet_road": 0.628,
+     "low_contrast": 1.0,
+     "macro": 1.0
+    },
+    "SceneMiner_v2.5 > zeroshot_SigLIP2": {
+     "droplets": 0.838,
+     "glare": 1.0,
+     "wet_road": 1.0,
+     "low_contrast": 1.0,
+     "macro": 1.0
+    },
+    "SceneMiner_v2.5 > late_fusion SigLIP2+lookup": {
+     "droplets": 0.852,
+     "glare": 0.004,
+     "wet_road": 0.73,
+     "low_contrast": 1.0,
+     "macro": 1.0
+    },
+    "SceneMiner_v2.5 > late_fusion SigLIP2+metadata": {
+     "droplets": 0.544,
+     "glare": 1.0,
+     "wet_road": 0.996,
+     "low_contrast": 1.0,
+     "macro": 1.0
+    }
+   },
+   "macro_mAP_mean": {
+    "SceneMiner_v2.5": 0.6867413389729257,
+    "logit_VLM_lookup": 0.6389599777453134,
+    "zeroshot_SigLIP2": 0.5006779270264082,
+    "late_fusion SigLIP2+lookup": 0.6422780185660231,
+    "late_fusion SigLIP2+metadata": 0.5497805129498763
+   },
+   "macro_mAP_p05": {
+    "SceneMiner_v2.5": 0.6621529800417797,
+    "logit_VLM_lookup": 0.6159497974648754,
+    "zeroshot_SigLIP2": 0.47950274926684533,
+    "late_fusion SigLIP2+lookup": 0.6171247815492524,
+    "late_fusion SigLIP2+metadata": 0.530207168321433
+   }
+  },
+  "kappa_0.9_clip_boundary": {
+   "realised_kappa_mean": 0.8975995994473907,
+   "win_rate": {
+    "SceneMiner_v2.5 > logit_VLM_lookup": {
+     "droplets": 0.994,
+     "glare": 0.344,
+     "wet_road": 0.67,
+     "low_contrast": 1.0,
+     "macro": 1.0
+    },
+    "SceneMiner_v2.5 > zeroshot_SigLIP2": {
+     "droplets": 0.802,
+     "glare": 1.0,
+     "wet_road": 1.0,
+     "low_contrast": 1.0,
+     "macro": 1.0
+    },
+    "SceneMiner_v2.5 > late_fusion SigLIP2+lookup": {
+     "droplets": 0.698,
+     "glare": 0.0,
+     "wet_road": 0.574,
+     "low_contrast": 1.0,
+     "macro": 1.0
+    },
+    "SceneMiner_v2.5 > late_fusion SigLIP2+metadata": {
+     "droplets": 0.6,
+     "glare": 1.0,
+     "wet_road": 1.0,
+     "low_contrast": 1.0,
+     "macro": 1.0
+    }
+   },
+   "macro_mAP_mean": {
+    "SceneMiner_v2.5": 0.7064743039013441,
+    "logit_VLM_lookup": 0.6660570605866606,
+    "zeroshot_SigLIP2": 0.5186288566481453,
+    "late_fusion SigLIP2+lookup": 0.6675692850032056,
+    "late_fusion SigLIP2+metadata": 0.5615857462519005
+   },
+   "macro_mAP_p05": {
+    "SceneMiner_v2.5": 0.683186060836636,
+    "logit_VLM_lookup": 0.6463954408604207,
+    "zeroshot_SigLIP2": 0.5002920666424553,
+    "late_fusion SigLIP2+lookup": 0.6475516301335457,
+    "late_fusion SigLIP2+metadata": 0.5434246239524982
+   }
+  },
+  "kappa_0.85_uniform": {
+   "realised_kappa_mean": 0.8465076649938198,
+   "win_rate": {
+    "SceneMiner_v2.5 > logit_VLM_lookup": {
+     "droplets": 0.994,
+     "glare": 0.462,
+     "wet_road": 0.586,
+     "low_contrast": 1.0,
+     "macro": 0.998
+    },
+    "SceneMiner_v2.5 > zeroshot_SigLIP2": {
+     "droplets": 0.776,
+     "glare": 0.998,
+     "wet_road": 1.0,
+     "low_contrast": 1.0,
+     "macro": 1.0
+    },
+    "SceneMiner_v2.5 > late_fusion SigLIP2+lookup": {
+     "droplets": 0.738,
+     "glare": 0.012,
+     "wet_road": 0.676,
+     "low_contrast": 1.0,
+     "macro": 0.998
+    },
+    "SceneMiner_v2.5 > late_fusion SigLIP2+metadata": {
+     "droplets": 0.48,
+     "glare": 1.0,
+     "wet_road": 0.97,
+     "low_contrast": 1.0,
+     "macro": 1.0
+    }
+   },
+   "macro_mAP_mean": {
+    "SceneMiner_v2.5": 0.6354988732589781,
+    "logit_VLM_lookup": 0.5938407335173126,
+    "zeroshot_SigLIP2": 0.46810436509449665,
+    "late_fusion SigLIP2+lookup": 0.596480115073283,
+    "late_fusion SigLIP2+metadata": 0.5129150097123041
+   },
+   "macro_mAP_p05": {
+    "SceneMiner_v2.5": 0.6060960266229428,
+    "logit_VLM_lookup": 0.5649364825681413,
+    "zeroshot_SigLIP2": 0.44582065697582235,
+    "late_fusion SigLIP2+lookup": 0.5693080587197641,
+    "late_fusion SigLIP2+metadata": 0.4912833226926837
+   }
+  },
+  "kappa_0.85_clip_boundary": {
+   "realised_kappa_mean": 0.8465076649938198,
+   "win_rate": {
+    "SceneMiner_v2.5 > logit_VLM_lookup": {
+     "droplets": 0.974,
+     "glare": 0.316,
+     "wet_road": 0.558,
+     "low_contrast": 1.0,
+     "macro": 0.996
+    },
+    "SceneMiner_v2.5 > zeroshot_SigLIP2": {
+     "droplets": 0.708,
+     "glare": 1.0,
+     "wet_road": 1.0,
+     "low_contrast": 1.0,
+     "macro": 1.0
+    },
+    "SceneMiner_v2.5 > late_fusion SigLIP2+lookup": {
+     "droplets": 0.616,
+     "glare": 0.0,
+     "wet_road": 0.358,
+     "low_contrast": 1.0,
+     "macro": 1.0
+    },
+    "SceneMiner_v2.5 > late_fusion SigLIP2+metadata": {
+     "droplets": 0.632,
+     "glare": 1.0,
+     "wet_road": 0.966,
+     "low_contrast": 1.0,
+     "macro": 1.0
+    }
+   },
+   "macro_mAP_mean": {
+    "SceneMiner_v2.5": 0.6670523667229316,
+    "logit_VLM_lookup": 0.6333774225639546,
+    "zeroshot_SigLIP2": 0.4956221118530759,
+    "late_fusion SigLIP2+lookup": 0.6333112233106479,
+    "late_fusion SigLIP2+metadata": 0.5316694564391619
+   },
+   "macro_mAP_p05": {
+    "SceneMiner_v2.5": 0.6396524734900588,
+    "logit_VLM_lookup": 0.6096136829667819,
+    "zeroshot_SigLIP2": 0.474398123875511,
+    "late_fusion SigLIP2+lookup": 0.6078768418126441,
+    "late_fusion SigLIP2+metadata": 0.5101041961605092
+   }
+  },
+  "kappa_0.75_uniform": {
+   "realised_kappa_mean": 0.7506959845523806,
+   "win_rate": {
+    "SceneMiner_v2.5 > logit_VLM_lookup": {
+     "droplets": 0.964,
+     "glare": 0.466,
+     "wet_road": 0.592,
+     "low_contrast": 0.992,
+     "macro": 0.98
+    },
+    "SceneMiner_v2.5 > zeroshot_SigLIP2": {
+     "droplets": 0.66,
+     "glare": 0.988,
+     "wet_road": 0.988,
+     "low_contrast": 1.0,
+     "macro": 1.0
+    },
+    "SceneMiner_v2.5 > late_fusion SigLIP2+lookup": {
+     "droplets": 0.672,
+     "glare": 0.04,
+     "wet_road": 0.606,
+     "low_contrast": 1.0,
+     "macro": 0.98
+    },
+    "SceneMiner_v2.5 > late_fusion SigLIP2+metadata": {
+     "droplets": 0.48,
+     "glare": 0.998,
+     "wet_road": 0.908,
+     "low_contrast": 1.0,
+     "macro": 1.0
+    }
+   },
+   "macro_mAP_mean": {
+    "SceneMiner_v2.5": 0.549330069812702,
+    "logit_VLM_lookup": 0.5165056826673401,
+    "zeroshot_SigLIP2": 0.412017816196019,
+    "late_fusion SigLIP2+lookup": 0.5194560324897698,
+    "late_fusion SigLIP2+metadata": 0.4473988973613025
+   },
+   "macro_mAP_p05": {
+    "SceneMiner_v2.5": 0.5190079496858727,
+    "logit_VLM_lookup": 0.48545746422920466,
+    "zeroshot_SigLIP2": 0.385987250883931,
+    "late_fusion SigLIP2+lookup": 0.4857059028626323,
+    "late_fusion SigLIP2+metadata": 0.42368088551956373
+   }
+  },
+  "kappa_0.75_clip_boundary": {
+   "realised_kappa_mean": 0.7506959845523806,
+   "win_rate": {
+    "SceneMiner_v2.5 > logit_VLM_lookup": {
+     "droplets": 0.848,
+     "glare": 0.282,
+     "wet_road": 0.508,
+     "low_contrast": 0.998,
+     "macro": 0.922
+    },
+    "SceneMiner_v2.5 > zeroshot_SigLIP2": {
+     "droplets": 0.612,
+     "glare": 1.0,
+     "wet_road": 0.99,
+     "low_contrast": 1.0,
+     "macro": 1.0
+    },
+    "SceneMiner_v2.5 > late_fusion SigLIP2+lookup": {
+     "droplets": 0.454,
+     "glare": 0.014,
+     "wet_road": 0.228,
+     "low_contrast": 1.0,
+     "macro": 0.96
+    },
+    "SceneMiner_v2.5 > late_fusion SigLIP2+metadata": {
+     "droplets": 0.69,
+     "glare": 1.0,
+     "wet_road": 0.904,
+     "low_contrast": 1.0,
+     "macro": 1.0
+    }
+   },
+   "macro_mAP_mean": {
+    "SceneMiner_v2.5": 0.5941454760933366,
+    "logit_VLM_lookup": 0.5729627610042034,
+    "zeroshot_SigLIP2": 0.44944254495490726,
+    "late_fusion SigLIP2+lookup": 0.5709368511491649,
+    "late_fusion SigLIP2+metadata": 0.47360111536121824
+   },
+   "macro_mAP_p05": {
+    "SceneMiner_v2.5": 0.5648232627233472,
+    "logit_VLM_lookup": 0.5437713318998751,
+    "zeroshot_SigLIP2": 0.42724424005336825,
+    "late_fusion SigLIP2+lookup": 0.5445668703579968,
+    "late_fusion SigLIP2+metadata": 0.45270558766121
+   }
+  }
+ }
+}

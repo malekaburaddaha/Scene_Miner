@@ -1,0 +1,1202 @@
+[
+ {
+  "text": "a few water specks on the lens",
+  "stratum": "sensor_degradation",
+  "n_pos": 119,
+  "v2.5": 0.9683077633971842,
+  "SigLIP2": 0.7877939690548749,
+  "lookup": 1.0
+ },
+ {
+  "text": "light droplets scattered on the lens",
+  "stratum": "sensor_degradation",
+  "n_pos": 119,
+  "v2.5": 0.9492167424183147,
+  "SigLIP2": 0.7947407214663337,
+  "lookup": 1.0
+ },
+ {
+  "text": "water droplets smearing the camera lens",
+  "stratum": "sensor_degradation",
+  "n_pos": 119,
+  "v2.5": 0.9627405803856665,
+  "SigLIP2": 0.8880120756366253,
+  "lookup": 1.0
+ },
+ {
+  "text": "rain beading across the lens",
+  "stratum": "sensor_degradation",
+  "n_pos": 119,
+  "v2.5": 0.9667455449461844,
+  "SigLIP2": 0.8856581740094043,
+  "lookup": 1.0
+ },
+ {
+  "text": "a faint halo around a street light",
+  "stratum": "sensor_degradation",
+  "n_pos": 40,
+  "v2.5": 0.8927739156650795,
+  "SigLIP2": 0.2155278528488238,
+  "lookup": 1.0
+ },
+ {
+  "text": "mild light flare at the frame edge",
+  "stratum": "sensor_degradation",
+  "n_pos": 40,
+  "v2.5": 0.8795455779494201,
+  "SigLIP2": 0.4802603066015078,
+  "lookup": 1.0
+ },
+ {
+  "text": "noticeable glare washing across the image",
+  "stratum": "sensor_degradation",
+  "n_pos": 40,
+  "v2.5": 0.9231816879578225,
+  "SigLIP2": 0.38144758599074474,
+  "lookup": 1.0
+ },
+ {
+  "text": "specular glare washing out the image",
+  "stratum": "sensor_degradation",
+  "n_pos": 40,
+  "v2.5": 0.9200413185995305,
+  "SigLIP2": 0.5274511718651563,
+  "lookup": 1.0
+ },
+ {
+  "text": "a lightly damp road surface",
+  "stratum": "sensor_degradation",
+  "n_pos": 124,
+  "v2.5": 0.9917438771966736,
+  "SigLIP2": 0.5602193651896887,
+  "lookup": 1.0
+ },
+ {
+  "text": "patchy wet tarmac",
+  "stratum": "sensor_degradation",
+  "n_pos": 124,
+  "v2.5": 0.9898245000478905,
+  "SigLIP2": 0.6153952451864093,
+  "lookup": 1.0
+ },
+ {
+  "text": "wet reflective asphalt after rainfall",
+  "stratum": "sensor_degradation",
+  "n_pos": 124,
+  "v2.5": 0.9884962147648719,
+  "SigLIP2": 0.8099534847915641,
+  "lookup": 1.0
+ },
+ {
+  "text": "slick wet pavement throwing reflections",
+  "stratum": "sensor_degradation",
+  "n_pos": 124,
+  "v2.5": 0.9891999180640474,
+  "SigLIP2": 0.7473130093504193,
+  "lookup": 1.0
+ },
+ {
+  "text": "slightly flat lighting",
+  "stratum": "sensor_degradation",
+  "n_pos": 103,
+  "v2.5": 0.8367320768139214,
+  "SigLIP2": 0.3880990424650139,
+  "lookup": 1.0
+ },
+ {
+  "text": "a dim view where shapes lose definition",
+  "stratum": "sensor_degradation",
+  "n_pos": 103,
+  "v2.5": 0.9620915759960501,
+  "SigLIP2": 0.15992049457802424,
+  "lookup": 1.0
+ },
+ {
+  "text": "hazy washed out view with unclear boundaries",
+  "stratum": "sensor_degradation",
+  "n_pos": 103,
+  "v2.5": 0.9657476052668778,
+  "SigLIP2": 0.37222496469944144,
+  "lookup": 1.0
+ },
+ {
+  "text": "poor visibility with objects blending in",
+  "stratum": "sensor_degradation",
+  "n_pos": 103,
+  "v2.5": 0.9688632529561987,
+  "SigLIP2": 0.39862429822330686,
+  "lookup": 1.0
+ },
+ {
+  "text": "a few water specks on the lens at night",
+  "stratum": "sensor_degradation",
+  "n_pos": 31,
+  "v2.5": 0.8965873175614166,
+  "SigLIP2": 0.6551487401895316,
+  "lookup": 0.28263273009796586
+ },
+ {
+  "text": "a few water specks on the lens in daylight",
+  "stratum": "sensor_degradation",
+  "n_pos": 78,
+  "v2.5": 0.8948434524471861,
+  "SigLIP2": 0.6529022036032013,
+  "lookup": 0.6754985935049002
+ },
+ {
+  "text": "a few water specks on the lens in rain",
+  "stratum": "sensor_degradation",
+  "n_pos": 55,
+  "v2.5": 0.9851257879126161,
+  "SigLIP2": 0.663769458573462,
+  "lookup": 0.5656374217770574
+ },
+ {
+  "text": "a few water specks on the lens in dense traffic",
+  "stratum": "sensor_degradation",
+  "n_pos": 82,
+  "v2.5": 0.7947430250151423,
+  "SigLIP2": 0.5109092396281524,
+  "lookup": 0.7387207056953261
+ },
+ {
+  "text": "a few water specks on the lens on an empty road",
+  "stratum": "sensor_degradation",
+  "n_pos": 10,
+  "v2.5": 0.051612922829743765,
+  "SigLIP2": 0.05890872573611029,
+  "lookup": 0.06574822638769845
+ },
+ {
+  "text": "light droplets scattered on the lens at night",
+  "stratum": "sensor_degradation",
+  "n_pos": 31,
+  "v2.5": 0.8862712137484908,
+  "SigLIP2": 0.7566979203363962,
+  "lookup": 0.28263273009796586
+ },
+ {
+  "text": "light droplets scattered on the lens in daylight",
+  "stratum": "sensor_degradation",
+  "n_pos": 78,
+  "v2.5": 0.6556198898367852,
+  "SigLIP2": 0.45518473067619625,
+  "lookup": 0.6754985935049002
+ },
+ {
+  "text": "light droplets scattered on the lens in rain",
+  "stratum": "sensor_degradation",
+  "n_pos": 55,
+  "v2.5": 0.6644985997354835,
+  "SigLIP2": 0.5107400672571021,
+  "lookup": 0.5656374217770574
+ },
+ {
+  "text": "light droplets scattered on the lens in dense traffic",
+  "stratum": "sensor_degradation",
+  "n_pos": 82,
+  "v2.5": 0.6288283822678186,
+  "SigLIP2": 0.41261816310648186,
+  "lookup": 0.7387207056953261
+ },
+ {
+  "text": "light droplets scattered on the lens on an empty road",
+  "stratum": "sensor_degradation",
+  "n_pos": 10,
+  "v2.5": 0.2623891358348459,
+  "SigLIP2": 0.17002437292746989,
+  "lookup": 0.06574822638769845
+ },
+ {
+  "text": "water droplets smearing the camera lens at night",
+  "stratum": "sensor_degradation",
+  "n_pos": 31,
+  "v2.5": 0.8524675800391299,
+  "SigLIP2": 0.7244042070208397,
+  "lookup": 0.28263273009796586
+ },
+ {
+  "text": "water droplets smearing the camera lens in daylight",
+  "stratum": "sensor_degradation",
+  "n_pos": 78,
+  "v2.5": 0.8999323692710351,
+  "SigLIP2": 0.7879083920769087,
+  "lookup": 0.6754985935049002
+ },
+ {
+  "text": "water droplets smearing the camera lens in rain",
+  "stratum": "sensor_degradation",
+  "n_pos": 55,
+  "v2.5": 0.9978354978354979,
+  "SigLIP2": 0.6866604184417048,
+  "lookup": 0.5656374217770574
+ },
+ {
+  "text": "water droplets smearing the camera lens in dense traffic",
+  "stratum": "sensor_degradation",
+  "n_pos": 82,
+  "v2.5": 0.806549324819647,
+  "SigLIP2": 0.6968239460677924,
+  "lookup": 0.7387207056953261
+ },
+ {
+  "text": "water droplets smearing the camera lens on an empty road",
+  "stratum": "sensor_degradation",
+  "n_pos": 10,
+  "v2.5": 0.0497641435034396,
+  "SigLIP2": 0.05193659540123792,
+  "lookup": 0.06574822638769845
+ },
+ {
+  "text": "a faint halo around a street light at night",
+  "stratum": "sensor_degradation",
+  "n_pos": 9,
+  "v2.5": 0.9200214707461085,
+  "SigLIP2": 0.1189214570122931,
+  "lookup": 0.2626447655085426
+ },
+ {
+  "text": "a faint halo around a street light in daylight",
+  "stratum": "sensor_degradation",
+  "n_pos": 25,
+  "v2.5": 0.5758265912208419,
+  "SigLIP2": 0.2227546600828781,
+  "lookup": 0.6282821245156428
+ },
+ {
+  "text": "a faint halo around a street light in rain",
+  "stratum": "sensor_degradation",
+  "n_pos": 5,
+  "v2.5": 0.7787878787878787,
+  "SigLIP2": 0.069580985619376,
+  "lookup": 0.18474747474747472
+ },
+ {
+  "text": "a faint halo around a street light in dense traffic",
+  "stratum": "sensor_degradation",
+  "n_pos": 19,
+  "v2.5": 0.34392980685598196,
+  "SigLIP2": 0.11244411966407754,
+  "lookup": 0.3809431847884412
+ },
+ {
+  "text": "a faint halo around a street light on an empty road",
+  "stratum": "sensor_degradation",
+  "n_pos": 7,
+  "v2.5": 0.572699028677685,
+  "SigLIP2": 0.20876869531354583,
+  "lookup": 0.3461295146077754
+ },
+ {
+  "text": "mild light flare at the frame edge at night",
+  "stratum": "sensor_degradation",
+  "n_pos": 9,
+  "v2.5": 0.685639885080612,
+  "SigLIP2": 0.12339978161261102,
+  "lookup": 0.2626447655085426
+ },
+ {
+  "text": "mild light flare at the frame edge in daylight",
+  "stratum": "sensor_degradation",
+  "n_pos": 25,
+  "v2.5": 0.7123806324105811,
+  "SigLIP2": 0.6043841887793009,
+  "lookup": 0.6282821245156428
+ },
+ {
+  "text": "mild light flare at the frame edge in rain",
+  "stratum": "sensor_degradation",
+  "n_pos": 5,
+  "v2.5": 0.8400000000000001,
+  "SigLIP2": 0.05355804286913046,
+  "lookup": 0.18474747474747472
+ },
+ {
+  "text": "mild light flare at the frame edge in dense traffic",
+  "stratum": "sensor_degradation",
+  "n_pos": 19,
+  "v2.5": 0.34692623870819767,
+  "SigLIP2": 0.23230919562816132,
+  "lookup": 0.3809431847884412
+ },
+ {
+  "text": "mild light flare at the frame edge on an empty road",
+  "stratum": "sensor_degradation",
+  "n_pos": 7,
+  "v2.5": 0.5486111111111112,
+  "SigLIP2": 0.3882487604292115,
+  "lookup": 0.3461295146077754
+ },
+ {
+  "text": "noticeable glare washing across the image at night",
+  "stratum": "sensor_degradation",
+  "n_pos": 9,
+  "v2.5": 0.9121212121212121,
+  "SigLIP2": 0.15070032915247272,
+  "lookup": 0.2626447655085426
+ },
+ {
+  "text": "noticeable glare washing across the image in daylight",
+  "stratum": "sensor_degradation",
+  "n_pos": 25,
+  "v2.5": 0.6407862242651862,
+  "SigLIP2": 0.45678524386007574,
+  "lookup": 0.6282821245156428
+ },
+ {
+  "text": "noticeable glare washing across the image in rain",
+  "stratum": "sensor_degradation",
+  "n_pos": 5,
+  "v2.5": 0.780952380952381,
+  "SigLIP2": 0.042383459648855544,
+  "lookup": 0.18474747474747472
+ },
+ {
+  "text": "noticeable glare washing across the image in dense traffic",
+  "stratum": "sensor_degradation",
+  "n_pos": 19,
+  "v2.5": 0.3386133490296434,
+  "SigLIP2": 0.12390857893551029,
+  "lookup": 0.3809431847884412
+ },
+ {
+  "text": "noticeable glare washing across the image on an empty road",
+  "stratum": "sensor_degradation",
+  "n_pos": 7,
+  "v2.5": 0.7263038548752835,
+  "SigLIP2": 0.4399874492817694,
+  "lookup": 0.3461295146077754
+ },
+ {
+  "text": "a lightly damp road surface at night",
+  "stratum": "sensor_degradation",
+  "n_pos": 27,
+  "v2.5": 0.9342735658599914,
+  "SigLIP2": 0.47837751389890665,
+  "lookup": 0.1925173935198916
+ },
+ {
+  "text": "a lightly damp road surface in daylight",
+  "stratum": "sensor_degradation",
+  "n_pos": 86,
+  "v2.5": 0.8957172565612047,
+  "SigLIP2": 0.31441361749823993,
+  "lookup": 0.7375568015895179
+ },
+ {
+  "text": "a lightly damp road surface in rain",
+  "stratum": "sensor_degradation",
+  "n_pos": 56,
+  "v2.5": 0.9674521705831073,
+  "SigLIP2": 0.6071389911603741,
+  "lookup": 0.7261142614642845
+ },
+ {
+  "text": "a lightly damp road surface in dense traffic",
+  "stratum": "sensor_degradation",
+  "n_pos": 93,
+  "v2.5": 0.8590067675392885,
+  "SigLIP2": 0.4460212445734567,
+  "lookup": 0.7841884754787553
+ },
+ {
+  "text": "a lightly damp road surface on an empty road",
+  "stratum": "sensor_degradation",
+  "n_pos": 6,
+  "v2.5": 0.034066600946023505,
+  "SigLIP2": 0.02823759434936249,
+  "lookup": 0.030636886816673536
+ },
+ {
+  "text": "patchy wet tarmac at night",
+  "stratum": "sensor_degradation",
+  "n_pos": 27,
+  "v2.5": 0.8986404762683124,
+  "SigLIP2": 0.472229914731281,
+  "lookup": 0.1925173935198916
+ },
+ {
+  "text": "patchy wet tarmac in daylight",
+  "stratum": "sensor_degradation",
+  "n_pos": 86,
+  "v2.5": 0.8910004258858987,
+  "SigLIP2": 0.3834491537914534,
+  "lookup": 0.7375568015895179
+ },
+ {
+  "text": "patchy wet tarmac in rain",
+  "stratum": "sensor_degradation",
+  "n_pos": 56,
+  "v2.5": 0.9605487813671993,
+  "SigLIP2": 0.5243510022764417,
+  "lookup": 0.7261142614642845
+ },
+ {
+  "text": "patchy wet tarmac in dense traffic",
+  "stratum": "sensor_degradation",
+  "n_pos": 93,
+  "v2.5": 0.8641910619549115,
+  "SigLIP2": 0.5939527761310027,
+  "lookup": 0.7841884754787553
+ },
+ {
+  "text": "patchy wet tarmac on an empty road",
+  "stratum": "sensor_degradation",
+  "n_pos": 6,
+  "v2.5": 0.03529973676369796,
+  "SigLIP2": 0.08938045781306293,
+  "lookup": 0.030636886816673536
+ },
+ {
+  "text": "wet reflective asphalt after rainfall at night",
+  "stratum": "sensor_degradation",
+  "n_pos": 27,
+  "v2.5": 0.7611731288841079,
+  "SigLIP2": 0.6220894987897893,
+  "lookup": 0.1925173935198916
+ },
+ {
+  "text": "wet reflective asphalt after rainfall in daylight",
+  "stratum": "sensor_degradation",
+  "n_pos": 86,
+  "v2.5": 0.8842950594960586,
+  "SigLIP2": 0.6559689457675715,
+  "lookup": 0.7375568015895179
+ },
+ {
+  "text": "wet reflective asphalt after rainfall in rain",
+  "stratum": "sensor_degradation",
+  "n_pos": 56,
+  "v2.5": 0.9510446854514477,
+  "SigLIP2": 0.6226197850441638,
+  "lookup": 0.7261142614642845
+ },
+ {
+  "text": "wet reflective asphalt after rainfall in dense traffic",
+  "stratum": "sensor_degradation",
+  "n_pos": 93,
+  "v2.5": 0.8650420234544673,
+  "SigLIP2": 0.6792628979835592,
+  "lookup": 0.7841884754787553
+ },
+ {
+  "text": "wet reflective asphalt after rainfall on an empty road",
+  "stratum": "sensor_degradation",
+  "n_pos": 6,
+  "v2.5": 0.034413222909587336,
+  "SigLIP2": 0.05526681589237096,
+  "lookup": 0.030636886816673536
+ },
+ {
+  "text": "slightly flat lighting at night",
+  "stratum": "sensor_degradation",
+  "n_pos": 48,
+  "v2.5": 0.7511611827025678,
+  "SigLIP2": 0.7988399887949068,
+  "lookup": 0.5247373828516965
+ },
+ {
+  "text": "driving after dark",
+  "stratum": "macro_environmental",
+  "n_pos": 62,
+  "v2.5": 1.0,
+  "SigLIP2": 0.8685476843812526,
+  "lookup": null
+ },
+ {
+  "text": "a night-time street scene",
+  "stratum": "macro_environmental",
+  "n_pos": 62,
+  "v2.5": 1.0,
+  "SigLIP2": 0.8696096752913611,
+  "lookup": null
+ },
+ {
+  "text": "low ambient light driving",
+  "stratum": "macro_environmental",
+  "n_pos": 62,
+  "v2.5": 1.0,
+  "SigLIP2": 0.7443766577618115,
+  "lookup": null
+ },
+ {
+  "text": "bright daytime driving",
+  "stratum": "macro_environmental",
+  "n_pos": 508,
+  "v2.5": 0.9999614620147171,
+  "SigLIP2": 0.8712502872909845,
+  "lookup": null
+ },
+ {
+  "text": "a clear daylight street",
+  "stratum": "macro_environmental",
+  "n_pos": 508,
+  "v2.5": 0.9999884432254187,
+  "SigLIP2": 0.9145653228486593,
+  "lookup": null
+ },
+ {
+  "text": "a midday road scene",
+  "stratum": "macro_environmental",
+  "n_pos": 508,
+  "v2.5": 1.0,
+  "SigLIP2": 0.9393321038121047,
+  "lookup": null
+ },
+ {
+  "text": "driving in rain",
+  "stratum": "macro_environmental",
+  "n_pos": 57,
+  "v2.5": 1.0,
+  "SigLIP2": 0.7116021113923033,
+  "lookup": null
+ },
+ {
+  "text": "a rainy street",
+  "stratum": "macro_environmental",
+  "n_pos": 57,
+  "v2.5": 0.6423222478194969,
+  "SigLIP2": 0.7124491062547967,
+  "lookup": null
+ },
+ {
+  "text": "wet weather driving",
+  "stratum": "macro_environmental",
+  "n_pos": 57,
+  "v2.5": 0.14781977337395344,
+  "SigLIP2": 0.6768139242489898,
+  "lookup": null
+ },
+ {
+  "text": "dry road conditions",
+  "stratum": "macro_environmental",
+  "n_pos": 545,
+  "v2.5": 1.0,
+  "SigLIP2": 0.9261872112721539,
+  "lookup": null
+ },
+ {
+  "text": "a dry clear day",
+  "stratum": "macro_environmental",
+  "n_pos": 545,
+  "v2.5": 1.0,
+  "SigLIP2": 0.9004829265877048,
+  "lookup": null
+ },
+ {
+  "text": "no precipitation on the road",
+  "stratum": "macro_environmental",
+  "n_pos": 545,
+  "v2.5": 1.0,
+  "SigLIP2": 0.774593290791101,
+  "lookup": null
+ },
+ {
+  "text": "dense bumper-to-bumper traffic",
+  "stratum": "macro_environmental",
+  "n_pos": 381,
+  "v2.5": 0.9999931291311099,
+  "SigLIP2": 0.744773333311074,
+  "lookup": null
+ },
+ {
+  "text": "a congested roadway",
+  "stratum": "macro_environmental",
+  "n_pos": 381,
+  "v2.5": 0.9983202963931942,
+  "SigLIP2": 0.7351958194786544,
+  "lookup": null
+ },
+ {
+  "text": "a heavy traffic jam",
+  "stratum": "macro_environmental",
+  "n_pos": 381,
+  "v2.5": 0.9988953605993782,
+  "SigLIP2": 0.6983454071750852,
+  "lookup": null
+ },
+ {
+  "text": "an almost empty road",
+  "stratum": "macro_environmental",
+  "n_pos": 76,
+  "v2.5": 1.0,
+  "SigLIP2": 0.4504523885259174,
+  "lookup": null
+ },
+ {
+  "text": "sparse traffic",
+  "stratum": "macro_environmental",
+  "n_pos": 76,
+  "v2.5": 1.0,
+  "SigLIP2": 0.1289185367995198,
+  "lookup": null
+ },
+ {
+  "text": "a deserted street",
+  "stratum": "macro_environmental",
+  "n_pos": 76,
+  "v2.5": 1.0,
+  "SigLIP2": 0.23017307346069266,
+  "lookup": null
+ },
+ {
+  "text": "a moderately busy road",
+  "stratum": "macro_environmental",
+  "n_pos": 145,
+  "v2.5": 0.25897323747996254,
+  "SigLIP2": 0.2591545422198446,
+  "lookup": null
+ },
+ {
+  "text": "a few vehicles around",
+  "stratum": "macro_environmental",
+  "n_pos": 145,
+  "v2.5": 0.21036306941962865,
+  "SigLIP2": 0.21035907357530673,
+  "lookup": null
+ },
+ {
+  "text": "light traffic flow",
+  "stratum": "macro_environmental",
+  "n_pos": 145,
+  "v2.5": 0.2684824664964668,
+  "SigLIP2": 0.26857639195006877,
+  "lookup": null
+ },
+ {
+  "text": "driving after dark, driving in rain",
+  "stratum": "macro_environmental",
+  "n_pos": 5,
+  "v2.5": 0.7041666666666666,
+  "SigLIP2": 0.07130177514792899,
+  "lookup": null
+ },
+ {
+  "text": "driving after dark, dry road conditions",
+  "stratum": "macro_environmental",
+  "n_pos": 57,
+  "v2.5": 0.9405893403625405,
+  "SigLIP2": 0.8218970707240562,
+  "lookup": null
+ },
+ {
+  "text": "driving after dark, dense bumper-to-bumper traffic",
+  "stratum": "macro_environmental",
+  "n_pos": 35,
+  "v2.5": 0.9216580587755482,
+  "SigLIP2": 0.5486375070417868,
+  "lookup": null
+ },
+ {
+  "text": "driving after dark, an almost empty road",
+  "stratum": "macro_environmental",
+  "n_pos": 10,
+  "v2.5": 0.4124367757136299,
+  "SigLIP2": 0.405813951947949,
+  "lookup": null
+ },
+ {
+  "text": "driving after dark, a moderately busy road",
+  "stratum": "macro_environmental",
+  "n_pos": 17,
+  "v2.5": 0.46825964888805693,
+  "SigLIP2": 0.44889989421977095,
+  "lookup": null
+ },
+ {
+  "text": "bright daytime driving, driving in rain",
+  "stratum": "macro_environmental",
+  "n_pos": 48,
+  "v2.5": 0.9786645997713869,
+  "SigLIP2": 0.78195306984985,
+  "lookup": null
+ },
+ {
+  "text": "bright daytime driving, dry road conditions",
+  "stratum": "macro_environmental",
+  "n_pos": 460,
+  "v2.5": 0.9586038881823143,
+  "SigLIP2": 0.8628197573174193,
+  "lookup": null
+ },
+ {
+  "text": "bright daytime driving, dense bumper-to-bumper traffic",
+  "stratum": "macro_environmental",
+  "n_pos": 334,
+  "v2.5": 0.9281843481562515,
+  "SigLIP2": 0.6049372642544796,
+  "lookup": null
+ },
+ {
+  "text": "bright daytime driving, an almost empty road",
+  "stratum": "macro_environmental",
+  "n_pos": 59,
+  "v2.5": 0.9626259393643419,
+  "SigLIP2": 0.3483972538686849,
+  "lookup": null
+ },
+ {
+  "text": "bright daytime driving, a moderately busy road",
+  "stratum": "macro_environmental",
+  "n_pos": 115,
+  "v2.5": 0.246504892856984,
+  "SigLIP2": 0.23143998156146026,
+  "lookup": null
+ },
+ {
+  "text": "driving in rain, dense bumper-to-bumper traffic",
+  "stratum": "macro_environmental",
+  "n_pos": 42,
+  "v2.5": 0.9475908180421092,
+  "SigLIP2": 0.4466502615615102,
+  "lookup": null
+ },
+ {
+  "text": "driving in rain, an almost empty road",
+  "stratum": "macro_environmental",
+  "n_pos": 2,
+  "v2.5": 0.03207070707070707,
+  "SigLIP2": 0.015268065268065269,
+  "lookup": null
+ },
+ {
+  "text": "driving in rain, a moderately busy road",
+  "stratum": "macro_environmental",
+  "n_pos": 13,
+  "v2.5": 0.2619220519169415,
+  "SigLIP2": 0.17107390417826585,
+  "lookup": null
+ },
+ {
+  "text": "dry road conditions, dense bumper-to-bumper traffic",
+  "stratum": "macro_environmental",
+  "n_pos": 339,
+  "v2.5": 0.9115461596098094,
+  "SigLIP2": 0.5337505286013452,
+  "lookup": null
+ },
+ {
+  "text": "dry road conditions, an almost empty road",
+  "stratum": "macro_environmental",
+  "n_pos": 74,
+  "v2.5": 0.42182623146975107,
+  "SigLIP2": 0.3991188816666728,
+  "lookup": null
+ },
+ {
+  "text": "dry road conditions, a moderately busy road",
+  "stratum": "macro_environmental",
+  "n_pos": 132,
+  "v2.5": 0.29094028470085204,
+  "SigLIP2": 0.28003999441433286,
+  "lookup": null
+ },
+ {
+  "text": "heavy rain at night",
+  "stratum": "compositional_heldout",
+  "n_pos": 5,
+  "v2.5": 0.0900580847723705,
+  "SigLIP2": 0.02956707330604816,
+  "lookup": null
+ },
+ {
+  "text": "a dark rainy street after dark",
+  "stratum": "compositional_heldout",
+  "n_pos": 5,
+  "v2.5": 0.05083051298638943,
+  "SigLIP2": 0.03494968487955865,
+  "lookup": null
+ },
+ {
+  "text": "a night-time downpour",
+  "stratum": "compositional_heldout",
+  "n_pos": 5,
+  "v2.5": 0.0050809439163463045,
+  "SigLIP2": 0.030108118779382142,
+  "lookup": null
+ },
+ {
+  "text": "rainfall on an unlit road",
+  "stratum": "compositional_heldout",
+  "n_pos": 5,
+  "v2.5": 0.054814301625447134,
+  "SigLIP2": 0.016979300178180872,
+  "lookup": null
+ },
+ {
+  "text": "driving through rain in darkness",
+  "stratum": "compositional_heldout",
+  "n_pos": 5,
+  "v2.5": 0.4857448107448108,
+  "SigLIP2": 0.055766288160833954,
+  "lookup": null
+ },
+ {
+  "text": "rain droplets on the lens at night",
+  "stratum": "compositional_heldout",
+  "n_pos": 31,
+  "v2.5": 0.8705095046525946,
+  "SigLIP2": 0.6822819167365135,
+  "lookup": 0.28263273009796586
+ },
+ {
+  "text": "glare reflecting off a wet road",
+  "stratum": "compositional_heldout",
+  "n_pos": 15,
+  "v2.5": 0.7430729220838299,
+  "SigLIP2": 0.24738558698943766,
+  "lookup": 0.37538878290039274
+ },
+ {
+  "text": "dense traffic after dark",
+  "stratum": "compositional_heldout",
+  "n_pos": 35,
+  "v2.5": 0.883637402481981,
+  "SigLIP2": 0.5618579195814,
+  "lookup": null
+ },
+ {
+  "text": "slick pavement in the dark",
+  "stratum": "compositional_heldout",
+  "n_pos": 27,
+  "v2.5": 0.8832048090390027,
+  "SigLIP2": 0.3646537651741459,
+  "lookup": 0.1925173935198916
+ },
+ {
+  "text": "indistinct shapes after dark",
+  "stratum": "compositional_heldout",
+  "n_pos": 48,
+  "v2.5": 0.788518570639135,
+  "SigLIP2": 0.8832134650574012,
+  "lookup": 0.5247373828516965
+ },
+ {
+  "text": "water droplets smearing the camera lens together with driving after dark",
+  "stratum": "compositional_heldout",
+  "n_pos": 31,
+  "v2.5": 0.6225721935053776,
+  "SigLIP2": 0.5974199259748763,
+  "lookup": 0.28263273009796586
+ },
+ {
+  "text": "water droplets smearing the camera lens together with driving in rain",
+  "stratum": "compositional_heldout",
+  "n_pos": 55,
+  "v2.5": 0.994636693041267,
+  "SigLIP2": 0.6622063979671072,
+  "lookup": 0.5656374217770574
+ },
+ {
+  "text": "noticeable glare washing across the image together with driving after dark",
+  "stratum": "compositional_heldout",
+  "n_pos": 9,
+  "v2.5": 0.8277282086479066,
+  "SigLIP2": 0.24239217572550908,
+  "lookup": 0.2626447655085426
+ },
+ {
+  "text": "noticeable glare washing across the image together with driving in rain",
+  "stratum": "compositional_heldout",
+  "n_pos": 5,
+  "v2.5": 0.458974358974359,
+  "SigLIP2": 0.18554112554112553,
+  "lookup": 0.18474747474747472
+ },
+ {
+  "text": "wet reflective asphalt after rainfall together with driving after dark",
+  "stratum": "compositional_heldout",
+  "n_pos": 27,
+  "v2.5": 0.6971300980409957,
+  "SigLIP2": 0.6342622030955242,
+  "lookup": 0.1925173935198916
+ },
+ {
+  "text": "wet reflective asphalt after rainfall together with driving in rain",
+  "stratum": "compositional_heldout",
+  "n_pos": 56,
+  "v2.5": 0.9528239940249345,
+  "SigLIP2": 0.6672254804345735,
+  "lookup": 0.7261142614642845
+ },
+ {
+  "text": "hazy washed out view with unclear boundaries together with driving after dark",
+  "stratum": "compositional_heldout",
+  "n_pos": 48,
+  "v2.5": 0.952305478955318,
+  "SigLIP2": 0.35998524242743635,
+  "lookup": 0.5247373828516965
+ },
+ {
+  "text": "hazy washed out view with unclear boundaries together with driving in rain",
+  "stratum": "compositional_heldout",
+  "n_pos": 26,
+  "v2.5": 0.4837182026580569,
+  "SigLIP2": 0.40651670373158255,
+  "lookup": 0.21791718311482927
+ },
+ {
+  "text": "heavy rain but not at night",
+  "stratum": "negated",
+  "n_pos": 48,
+  "v2.5": 0.04719301177786031,
+  "SigLIP2": 0.7143512656188675,
+  "lookup": null
+ },
+ {
+  "text": "night driving without any rain",
+  "stratum": "negated",
+  "n_pos": 57,
+  "v2.5": 0.9784517928517201,
+  "SigLIP2": 0.697935704451858,
+  "lookup": null
+ },
+ {
+  "text": "a wet road but in daylight",
+  "stratum": "negated",
+  "n_pos": 86,
+  "v2.5": 0.8665366817472245,
+  "SigLIP2": 0.5047400300117483,
+  "lookup": 0.7375568015895179
+ },
+ {
+  "text": "an empty road that is not dark",
+  "stratum": "negated",
+  "n_pos": 59,
+  "v2.5": 0.6570554755896248,
+  "SigLIP2": 0.23556099096042055,
+  "lookup": null
+ },
+ {
+  "text": "rain beading across the lens but not after dark",
+  "stratum": "negated",
+  "n_pos": 78,
+  "v2.5": 0.3918480814025126,
+  "SigLIP2": 0.3826346413347655,
+  "lookup": 0.6754985935049002
+ },
+ {
+  "text": "heavy rain spatter obscuring the camera without rainfall",
+  "stratum": "negated",
+  "n_pos": 64,
+  "v2.5": 0.34613873990496113,
+  "SigLIP2": 0.35930317893126656,
+  "lookup": 0.47528340033505867
+ },
+ {
+  "text": "specular glare washing out the image but not after dark",
+  "stratum": "negated",
+  "n_pos": 25,
+  "v2.5": 0.41318724443028265,
+  "SigLIP2": 0.15266836142494783,
+  "lookup": 0.6282821245156428
+ },
+ {
+  "text": "strong headlight bloom from oncoming traffic without rainfall",
+  "stratum": "negated",
+  "n_pos": 35,
+  "v2.5": 0.6651428575204172,
+  "SigLIP2": 0.22331304972735902,
+  "lookup": 0.8787555745603164
+ },
+ {
+  "text": "slick wet pavement throwing reflections but not after dark",
+  "stratum": "negated",
+  "n_pos": 86,
+  "v2.5": 0.4765027999360685,
+  "SigLIP2": 0.3360142453543554,
+  "lookup": 0.7375568015895179
+ },
+ {
+  "text": "standing water pooling on the road without rainfall",
+  "stratum": "negated",
+  "n_pos": 68,
+  "v2.5": 0.34846799131185774,
+  "SigLIP2": 0.2585577082069249,
+  "lookup": 0.40092038452900114
+ },
+ {
+  "text": "poor visibility with objects blending in but not after dark",
+  "stratum": "negated",
+  "n_pos": 44,
+  "v2.5": 0.2324818212808948,
+  "SigLIP2": 0.18571773373994357,
+  "lookup": 0.37414283111523317
+ },
+ {
+  "text": "a low contrast scene where vehicles are barely distinguishable without rainfall",
+  "stratum": "negated",
+  "n_pos": 77,
+  "v2.5": 0.7090486539461357,
+  "SigLIP2": 0.21344590062983876,
+  "lookup": 0.8158787865079531
+ },
+ {
+  "text": "a night-time street scene with a rainy street",
+  "stratum": "macro_environmental",
+  "n_pos": 5,
+  "v2.5": 0.3234733893557423,
+  "SigLIP2": 0.03107655746256665,
+  "lookup": null
+ },
+ {
+  "text": "a night-time street scene with a dry clear day",
+  "stratum": "macro_environmental",
+  "n_pos": 57,
+  "v2.5": 0.9741762316636404,
+  "SigLIP2": 0.5541542481199689,
+  "lookup": null
+ },
+ {
+  "text": "a night-time street scene with a congested roadway",
+  "stratum": "macro_environmental",
+  "n_pos": 35,
+  "v2.5": 0.8017905879438068,
+  "SigLIP2": 0.7120224998750617,
+  "lookup": null
+ },
+ {
+  "text": "a night-time street scene with sparse traffic",
+  "stratum": "macro_environmental",
+  "n_pos": 10,
+  "v2.5": 0.15635776826174097,
+  "SigLIP2": 0.14043545884957376,
+  "lookup": null
+ },
+ {
+  "text": "a night-time street scene with a few vehicles around",
+  "stratum": "macro_environmental",
+  "n_pos": 17,
+  "v2.5": 0.27347972052635894,
+  "SigLIP2": 0.25072872865147167,
+  "lookup": null
+ },
+ {
+  "text": "a clear daylight street with a rainy street",
+  "stratum": "macro_environmental",
+  "n_pos": 48,
+  "v2.5": 0.9965897817460317,
+  "SigLIP2": 0.5922229626128376,
+  "lookup": null
+ },
+ {
+  "text": "a clear daylight street with a dry clear day",
+  "stratum": "macro_environmental",
+  "n_pos": 460,
+  "v2.5": 0.9794317666696132,
+  "SigLIP2": 0.9169926166163637,
+  "lookup": null
+ },
+ {
+  "text": "a clear daylight street with a congested roadway",
+  "stratum": "macro_environmental",
+  "n_pos": 334,
+  "v2.5": 0.9771430167359239,
+  "SigLIP2": 0.7003493407529254,
+  "lookup": null
+ },
+ {
+  "text": "a clear daylight street with sparse traffic",
+  "stratum": "macro_environmental",
+  "n_pos": 59,
+  "v2.5": 0.21535902409015528,
+  "SigLIP2": 0.1277148088534128,
+  "lookup": null
+ },
+ {
+  "text": "a clear daylight street with a few vehicles around",
+  "stratum": "macro_environmental",
+  "n_pos": 115,
+  "v2.5": 0.16294314087857267,
+  "SigLIP2": 0.23376539229533802,
+  "lookup": null
+ },
+ {
+  "text": "a rainy street with a congested roadway",
+  "stratum": "macro_environmental",
+  "n_pos": 42,
+  "v2.5": 0.8321220868633606,
+  "SigLIP2": 0.7091074722171404,
+  "lookup": null
+ },
+ {
+  "text": "a rainy street with sparse traffic",
+  "stratum": "macro_environmental",
+  "n_pos": 2,
+  "v2.5": 0.02795248078266946,
+  "SigLIP2": 0.003983921265699654,
+  "lookup": null
+ },
+ {
+  "text": "a rainy street with a few vehicles around",
+  "stratum": "macro_environmental",
+  "n_pos": 13,
+  "v2.5": 0.27485394141984487,
+  "SigLIP2": 0.20096975053504126,
+  "lookup": null
+ },
+ {
+  "text": "a dry clear day with a congested roadway",
+  "stratum": "macro_environmental",
+  "n_pos": 339,
+  "v2.5": 0.9420158867416243,
+  "SigLIP2": 0.6378860629803079,
+  "lookup": null
+ },
+ {
+  "text": "a dry clear day with sparse traffic",
+  "stratum": "macro_environmental",
+  "n_pos": 74,
+  "v2.5": 0.42624120160850953,
+  "SigLIP2": 0.1806368707936749,
+  "lookup": null
+ },
+ {
+  "text": "a dry clear day with a few vehicles around",
+  "stratum": "macro_environmental",
+  "n_pos": 132,
+  "v2.5": 0.21094968648904042,
+  "SigLIP2": 0.2110516859317071,
+  "lookup": null
+ },
+ {
+  "text": "wet weather driving during low ambient light driving",
+  "stratum": "macro_environmental",
+  "n_pos": 5,
+  "v2.5": 0.1196031746031746,
+  "SigLIP2": 0.04764725402356064,
+  "lookup": null
+ },
+ {
+  "text": "no precipitation on the road during low ambient light driving",
+  "stratum": "macro_environmental",
+  "n_pos": 57,
+  "v2.5": 0.7582390842381423,
+  "SigLIP2": 0.5495101302609814,
+  "lookup": null
+ },
+ {
+  "text": "a heavy traffic jam during low ambient light driving",
+  "stratum": "macro_environmental",
+  "n_pos": 35,
+  "v2.5": 0.37841024177749844,
+  "SigLIP2": 0.2790292224394024,
+  "lookup": null
+ },
+ {
+  "text": "a deserted street during low ambient light driving",
+  "stratum": "macro_environmental",
+  "n_pos": 10,
+  "v2.5": 0.8423931623931624,
+  "SigLIP2": 0.3050543696875979,
+  "lookup": null
+ },
+ {
+  "text": "light traffic flow during low ambient light driving",
+  "stratum": "macro_environmental",
+  "n_pos": 17,
+  "v2.5": 0.33679407001720835,
+  "SigLIP2": 0.23697763132682184,
+  "lookup": null
+ }
+]

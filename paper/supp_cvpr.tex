@@ -17,8 +17,7 @@
 \renewcommand{\thesection}{S\arabic{section}}
 \setlength{\LTcapwidth}{\textwidth}
 
-\title{SceneMiner: What Survives an Audit of Language-Guided Hard-Scene Mining\\
-       \large Supplementary Material}
+\title{SceneMiner: Calibrated Multi-Modal Fusion and Diagnostic Auditing\\ for Language-Guided Driving Scene Retrieval\\ \large Supplementary Material}
 \author{}
 \date{}
 
@@ -36,8 +35,8 @@ and additional qualitative retrievals.
 
 \begin{table}[h]\centering\small
 \caption{\textbf{SceneMiner specification.} Values are the code defaults used
-for every reported run (\texttt{src/scene\_mining/filter/sceneminer\_v2\_4.py},
-\texttt{scripts/train\_sceneminer\_v24.py}).}
+for every reported run (\texttt{src/scene\_mining/filter/sceneminer\_v2\_5.py},
+\texttt{scripts/train\_sceneminer\_v25.py}).}
 \label{tab:hp}
 \begin{tabular}{lll}
 \toprule
@@ -53,10 +52,12 @@ Base & \textsc{PartNorm} momentum, $\epsilon$ & $0.01$, $10^{-5}$\\
  & router temperature, entropy cap & $1.0$, $\max_k w_k\le0.70$\\
 Concept gate & bank & $252$ training phrasings, $23$ classes\\
  & concept / foil classes & $4$ ($156$ phrasings) / $7$ macro ($84$) $+$ $12$ OOV\\
- & temperature $\tau$ (leave-one-out on the bank) & $0.02$\\
+ & temperature $\tau$ (leave-group-out on the bank) & $0.02$\\
+ & context-subspace removal for $\gamma_{\mathrm{deg}}$ & $0.5$ (span of $7$ context means)\\
  & margin-column temperature $T_a$ & $0.10$\\
  & text mean & mean of the training bank\\
-Abstention & $s=\gamma\,s_{\mathrm{head}}+(1-\gamma)\,\tilde p_{\cos}$ & always on\\
+Abstention & $s=\gamma_{\mathrm{deg}}\,s_{\mathrm{head}}+(1-\gamma_{\mathrm{deg}})\,s_{\mathrm{abst}}$ & always on\\
+ & $s_{\mathrm{abst}}$: SigLIP2 $+$ metadata named by $\gamma_{\mathrm{macro}}$ & $z$-scored on training scenes\\
 Residual & \textsc{ResNorm} bound $\alpha$ & $0.5$\\
 FN rescue & cosine threshold, margin floor & $+1.0\sigma$, $-0.5\sigma$\\
 Optimisation & optimiser, learning rate, weight decay & AdamW, $10^{-4}$, $0.01$\\
@@ -70,36 +71,54 @@ Anti-shortcut & margin dropout / 3D dropout (per step) & $50\%$ / $30\%$\\
  & agreement-distillation floor & $0.30$\\
 Model & trainable parameters & $4{,}678{,}736$\\
  & seeds & $5$ (scores averaged)\\
- & latency, $1508$ scenes, one query, A40 & $7.42\pm0.47$\,ms\\
+ & latency, $1508$ scenes, one query, A40 & $7.93\pm0.20$\,ms\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\paragraph{Contrastive concept gate.} The bank is the $390$-query training
-split: its $156$ sensor-degradation phrasings form the four concept classes, and
-its $84$ macro-environmental phrasings, grouped by predicate, form seven foil
-classes; twelve generic phrases form singleton foil classes. $\tau$ is chosen
-by leave-one-out on that bank alone (\cref{tab:loo}): the largest value whose
-separation (5th percentile of concept $\gamma$ minus 95th percentile of foil
-$\gamma$) stays $\ge0.99$. No evaluation query or label is read.
+\paragraph{Factored concept gate.} The bank is the $390$-query training split: its
+$156$ sensor-degradation phrasings form four concept classes, its $84$
+macro-environmental phrasings, grouped by predicate, form seven context classes,
+and twelve generic phrases form singleton classes. $\gamma_{\mathrm{deg}}$ is the
+concept mass of a softmax over all classes computed after removing part of the
+context subspace (the span of the seven context-class means);
+$\gamma_{\mathrm{macro}}$ is the unprojected mass on each context class that has
+a recorded-metadata column. The variant and $\tau$ are chosen on training text
+alone (\cref{tab:loo}). Positives are scored \emph{leave-group-out}: a base
+phrasing and all its compounds are removed together. Negatives are the context
+and generic phrasings (leave-one-out) and $60$ synthetic context$\times$context
+conjunctions joined from two training phrasings. Rule: per variant, the smoothest
+$\tau$ whose separation stays $\ge0.99$; then maximise the share of positives with
+$\gamma_{\mathrm{deg}}>0.9$ subject to every negative $\le0.2$. No evaluation
+query or label is read.
 
 \begin{table}[h]\centering\small
-\caption{\textbf{Leave-one-out choice of $\tau$} on the training bank. Positives:
-the $156$ degradation phrasings; negatives: the $84$ macro phrasings and $12$
-generic phrases. Each phrasing is scored with itself removed from its class.}
+\caption{\textbf{Gate selection on training text.} Share of the $156$
+degradation phrasings with $\gamma_{\mathrm{deg}}>0.9$ (leave-group-out); 10th
+percentile over the $96$ compound phrasings; maximum $\gamma_{\mathrm{deg}}$ over
+context/generic phrasings and over synthetic conjunctions; separation (5th
+percentile of positives minus 95th percentile of negatives).}
 \label{tab:loo}
-\begin{tabular}{lccccc}
+\begin{tabular}{llccccc}
 \toprule
-$\tau$ & pos.\ p5 & pos.\ min & neg.\ p95 & neg.\ max & separation\\
+variant & $\tau$ & pos.\ $>0.9$ & compound p10 & neg.\ max & conj.\ max & separation\\
 \midrule
-0.01 & 1.000 & 0.512 & 0.000 & 0.009 & 1.000\\
-0.015 & 1.000 & 0.381 & 0.000 & 0.010 & 1.000\\
-0.02 & 0.999 & 0.322 & 0.000 & 0.012 & 0.999 (chosen)\\
-0.03 & 0.983 & 0.277 & 0.001 & 0.017 & 0.982\\
-0.04 & 0.944 & 0.263 & 0.004 & 0.034 & 0.940\\
-0.05 & 0.889 & 0.258 & 0.010 & 0.049 & 0.879\\
-0.07 & 0.735 & 0.251 & 0.032 & 0.067 & 0.703\\
-0.1 & 0.484 & 0.230 & 0.069 & 0.111 & 0.415\\
+single softmax & 0.01 & 0.98 & 1.000 & 0.009 & 0.061 & +1.000\\
+single softmax & 0.02 & 0.96 & 0.997 & 0.012 & 0.102 & +0.971\\
+single softmax & 0.03 & 0.95 & 0.966 & 0.017 & 0.128 & +0.883\\
+single softmax & 0.05 & 0.89 & 0.781 & 0.049 & 0.161 & +0.646\\
+half projection & 0.01 & 1.00 & 1.000 & 0.079 & 0.000 & +1.000\\
+half projection (chosen) & 0.02 & 0.99 & 1.000 & 0.152 & 0.007 & +0.999\\
+half projection & 0.03 & 0.98 & 0.996 & 0.183 & 0.022 & +0.985\\
+half projection & 0.05 & 0.94 & 0.931 & 0.190 & 0.073 & +0.843\\
+0.75 projection & 0.01 & 1.00 & 1.000 & 0.763 & 0.000 & +1.000\\
+0.75 projection & 0.02 & 0.99 & 1.000 & 0.502 & 0.002 & +0.997\\
+0.75 projection & 0.03 & 0.99 & 0.998 & 0.400 & 0.014 & +0.977\\
+0.75 projection & 0.05 & 0.94 & 0.947 & 0.297 & 0.103 & +0.796\\
+full projection & 0.01 & 1.00 & 1.000 & 0.904 & 0.000 & +1.000\\
+full projection & 0.02 & 1.00 & 1.000 & 0.644 & 0.005 & +0.997\\
+full projection & 0.03 & 0.99 & 0.998 & 0.496 & 0.030 & +0.978\\
+full projection & 0.05 & 0.95 & 0.945 & 0.342 & 0.156 & +0.815\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -126,8 +145,8 @@ lighting and weather from the nuScenes/Waymo metadata, density from 3D boxes, an
 the four degradation flags from the Stage-1 VLM. An index reading the same
 attributes therefore scores $1.000$~mAP. Per-query results on this suite
 (Table~\ref{tab:pq-suite}) measure agreement with the VLM, and gains there
-partly reflect sharper alignment with the correct VLM column. Human-graded
-evidence is in the main paper's Tables~1, 3, 7 and~8.
+partly reflect sharper alignment with the correct VLM column. Human-graded evidence is in the main paper's Tables~2, 4, 7
+and~8.
 
 % =====================================================================
 \section{Human annotation protocols}
@@ -211,10 +230,9 @@ SceneMiner's head saw their text during training.
 SceneMiner retrievals within each of nuScenes and Waymo (evaluation split) and
 BDD100K (external), for three semantic queries, one macro query, one
 degradation-by-condition query and one degradation query. The semantic and macro
-queries are out of vocabulary ($\gamma\approx0$), so SceneMiner defers to
-SigLIP2 and returns the requested objects rather than degraded scenes. The
-earlier prompt-gated version returned rainy scenes for ``large truck or bus
-ahead''.}
+queries are out of vocabulary ($\gamma_{\mathrm{deg}}\approx0$), so SceneMiner
+defers to SigLIP2, plus the recorded night metadata for ``driving after dark'',
+and returns the requested objects rather than degraded scenes.}
 \label{fig:strips}
 \end{figure}
 
@@ -242,17 +260,17 @@ at score $>0.3$ (b) of the scenes each ranker places in each score quartile.}
 
 {\small
 \begin{verbatim}
-python scripts/check_v24_gate_train.py       # gate + tau on training text only
-scripts/launch_seeds.sh scripts/train_sceneminer_v24.py work_dirs/sceneminer_v24 v24
-python scripts/eval_v23.py --model v24 --ckpts "work_dirs/sceneminer_v24/s*/final.pt"
+python scripts/explore_factored_gate_train.py # gate variant + tau, training text only
+scripts/launch_seeds.sh scripts/train_sceneminer_v25.py work_dirs/sceneminer_v25 v25
+python scripts/eval_v23.py --model v25 --ckpts "work_dirs/sceneminer_v25/s*/final.pt"
 python scripts/extract_human_semantic_gt.py  # human flags from nuScenes tables
 python scripts/build_semantic_queries.py
-python scripts/eval_semantic_edge_cases.py   # Stratum 5, corpus + clean val150
-python scripts/eval_compositional_synergy.py # three regimes, late-fusion controls
-python scripts/eval_rater_sensitivity.py     # subsets + Monte Carlo second rater
+python scripts/eval_semantic_edge_cases.py --final v25   # Stratum 5
+SM_FINAL=v25 python scripts/eval_compositional_synergy.py
+SM_FINAL=v25 python scripts/eval_rater_sensitivity.py
 python scripts/val150_camfront_errors.py     # front-sector degradation study
 python scripts/val150_ped_vru_metrics.py
-python scripts/val150_retrieval_to_3d.py --model v24
+python scripts/val150_retrieval_to_3d.py --model v25
 python scripts/verify_bibliography.py && python scripts/build_bib.py
 python scripts/make_figures.py && python scripts/make_supp_tables.py
 \end{verbatim}

@@ -31,6 +31,8 @@ from eval_semantic_edge_cases import (text_embed, load_v23, portable, metrics, p
 from eval_human_gt_full import load_human, ATTRS
 
 dev = torch.device("cuda")
+import os
+FINAL = os.environ.get("SM_FINAL", "v24")
 SEM = {"pedestrian_close": "pedestrians near the road", "vru": "a cyclist or motorcyclist",
        "construction_zone": "a construction zone with traffic cones",
        "heavy_vehicle": "a bus or large truck"}
@@ -66,7 +68,7 @@ def main():
     sig, mz, prior = T("siglip_img"), T("vlm_margin_z"), T("prior")
     qwen = torch.load(W/"V_frozen_cache.pt", map_location=dev).float()
     rk = risk.reshape(-1).cpu().numpy()
-    M24 = load_v23(rk, which="v24"); [setattr(m, "use_abstain", True) for m in M24]
+    M24 = load_v23(rk, which=FINAL); [setattr(m, "use_abstain", True) for m in M24]
     M23 = load_v23(rk, which="v23")
     vlm = json.load(open(W/"binary_flags_with_logits.json")); strict = json.load(open(W/"lowcontrast_strict.json"))
     meta = json.load(open(W/"deterministic_gt.json"))
@@ -131,7 +133,7 @@ def main():
     out["by_predicate"] = {k: {"n_pos": per[g[0]]["n_pos"],
                                **{r: float(np.mean([rows[r][i]["mAP"] for i in g])) for r in rows}}
                            for k, g in grp.items()}
-    Path("results/cvpr/milestone19_compositional_synergy.json").write_text(json.dumps(out, indent=1))
+    Path(os.environ.get("SM_OUT", "results/cvpr/milestone19_compositional_synergy.json")).write_text(json.dumps(out, indent=1))
     for name, d in out["summary"].items():
         print(f"\n-- {name} --")
         for k, v in sorted(d.items(), key=lambda kv: -kv[1]): print(f"   {k:<30}{v:.4f}")

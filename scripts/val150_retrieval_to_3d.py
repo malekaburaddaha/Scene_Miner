@@ -46,7 +46,7 @@ def main():
     ap.add_argument("--topk", type=int, default=25)
     ap.add_argument("--perm", type=int, default=2000)
     ap.add_argument("--out", default="results/cvpr/milestone16_val150_retrieval_to_3d.json")
-    ap.add_argument("--model", default="v23", choices=["v23", "v24"])
+    ap.add_argument("--model", default="v23", choices=["v23", "v24", "v25"])
     a = ap.parse_args()
     per = json.load(open(a.per_scene)); G = json.load(open(a.gt))["scenes"]
     vz = np.load(a.val_siglip, allow_pickle=False); scenes = [str(t) for t in vz["scenes"]]
@@ -64,15 +64,21 @@ def main():
          [(q["text"], "semantic", q["semantic"]) for q in sem]
     QT = text_embed([q[0] for q in QS]); QN = F.normalize(QT, dim=-1)
     M = load_v23(np.array([0.417797, 0.081112]), which=a.model)   # risk stats unused in portable mode
-    for m in M: m.use_abstain = (a.model == "v24")
+    for m in M: m.use_abstain = (a.model in ("v24", "v25"))
+    VPR = torch.zeros(n, 26, device=dev)
+    if a.model == "v25":       # recorded metadata from the human scene description
+        for i, t in enumerate(scenes):
+            VPR[i, 20] = float(G[t]["night"]); VPR[i, 21] = float(not G[t]["night"])
+            VPR[i, 22] = float(G[t]["rain"]); VPR[i, 23] = float(not G[t]["rain"])
     rng = np.random.default_rng(0)
 
     # rankings: ranker -> list of score vectors (None = no information -> random)
-    SM = "SceneMiner_v2.4" if a.model == "v24" else "SceneMiner_v2.3"
+    SM = {"v24": "SceneMiner_v2.4", "v25": "SceneMiner_v2.4"}.get(a.model, "SceneMiner_v2.3")
     R = {k: [] for k in [SM, "zeroshot_SigLIP2", "logit_VLM_lookup", "metadata_matched", "random"]}
     for qi, (text, kind, attr) in enumerate(QS):
         qv = QT[qi].unsqueeze(0).expand(n, -1)
-        R[SM].append(portable(M, qv, S, MZt, abstain=(a.model == "v24")))
+        R[SM].append(portable(M, qv, S, MZt, abstain=(a.model in ("v24", "v25")),
+                              PR=VPR if a.model == "v25" else None))
         R["zeroshot_SigLIP2"].append((S @ QN[qi]).cpu().numpy())
         if kind == "degradation":
             R["logit_VLM_lookup"].append(VM[:, TRAIN_ORDER.index(attr)])

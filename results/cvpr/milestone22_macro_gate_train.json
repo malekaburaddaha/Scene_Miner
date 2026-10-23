@@ -1,0 +1,72 @@
+{
+ "droplets": {
+  "n": 44,
+  "argmax_correct": null,
+  "macro_mass_median": 1.3890887172343745e-15,
+  "gamma_deg_median": 1.0
+ },
+ "glare": {
+  "n": 40,
+  "argmax_correct": null,
+  "macro_mass_median": 6.978900964071943e-14,
+  "gamma_deg_median": 1.0
+ },
+ "wet_road": {
+  "n": 36,
+  "argmax_correct": null,
+  "macro_mass_median": 6.82588886672178e-14,
+  "gamma_deg_median": 1.0
+ },
+ "low_contrast": {
+  "n": 36,
+  "argmax_correct": null,
+  "macro_mass_median": 3.40263949828723e-13,
+  "gamma_deg_median": 1.0
+ },
+ "macro:lighting=night": {
+  "n": 12,
+  "argmax_correct": 1.0,
+  "macro_mass_median": 1.0,
+  "gamma_deg_median": 2.656611901153522e-16
+ },
+ "macro:lighting=day": {
+  "n": 12,
+  "argmax_correct": 1.0,
+  "macro_mass_median": 1.0,
+  "gamma_deg_median": 7.211245436696028e-17
+ },
+ "macro:weather=rain": {
+  "n": 12,
+  "argmax_correct": 1.0,
+  "macro_mass_median": 1.0,
+  "gamma_deg_median": 7.610176514331326e-16
+ },
+ "macro:weather=dry": {
+  "n": 12,
+  "argmax_correct": 1.0,
+  "macro_mass_median": 1.0,
+  "gamma_deg_median": 3.4980298140609145e-16
+ },
+ "macro:density=dense": {
+  "n": 12,
+  "argmax_correct": 1.0,
+  "macro_mass_median": 0.9999999403953552,
+  "gamma_deg_median": 7.971426007819036e-16
+ },
+ "macro:density=sparse": {
+  "n": 12,
+  "argmax_correct": 1.0,
+  "macro_mass_median": 1.0,
+  "gamma_deg_median": 4.476531856789298e-14
+ },
+ "macro:density=moderate": {
+  "n": 12,
+  "argmax_correct": 0.0,
+  "macro_mass_median": 9.990112630475778e-07,
+  "gamma_deg_median": 9.542480483771447e-16
+ },
+ "oov_bank": {
+  "macro_mass_max": 8.755525059307712e-13,
+  "gamma_deg_max": 4.302137249130735e-17
+ }
+}

@@ -99,6 +99,8 @@ def load_v23(rk, d_qwen=2048, which="v23"):
     from scene_mining.filter.sceneminer_v2_3 import SceneMinerV23
     if which == "v24":
         from scene_mining.filter.sceneminer_v2_4 import SceneMinerV24 as SceneMinerV23
+    if which == "v25":
+        from scene_mining.filter.sceneminer_v2_5 import SceneMinerV25 as SceneMinerV23
     M = []
     for c in sorted(glob.glob(f"work_dirs/sceneminer_{which}/s*/final.pt")):
         d = torch.load(c, map_location=dev, weights_only=False)
@@ -108,9 +110,11 @@ def load_v23(rk, d_qwen=2048, which="v23"):
     return M
 
 
-def portable(M, qv, S, MZt, abstain=False):
-    """v2.3 base score with the meta channel declared absent (no rig, no tags)."""
-    N = S.shape[0]; PR = torch.zeros(N, 26, device=dev)
+def portable(M, qv, S, MZt, abstain=False, PR=None):
+    """Base score with the meta channel declared absent (no rig, no tags). PR may
+    carry recorded metadata (columns 20-25) for the abstention target."""
+    N = S.shape[0]
+    if PR is None: PR = torch.zeros(N, 26, device=dev)
     av = torch.stack([torch.ones(N, device=dev), torch.ones(N, device=dev), torch.zeros(N, device=dev)], -1)
     prev = [m.use_abstain for m in M]
     for m in M: m.use_abstain = abstain
@@ -170,6 +174,8 @@ def main():
     ap.add_argument("--val-siglip", default="work_dirs/val150_siglip.npz")
     ap.add_argument("--val-thumbs", default="work_dirs/val150_thumbs")
     ap.add_argument("--out", default="results/cvpr/milestone18_semantic_edge_cases.json")
+    ap.add_argument("--final", default="v24", choices=["v24", "v25"],
+                    help="checkpoint family reported in the 'v2.4_*' rows (labels kept for downstream tools)")
     a = ap.parse_args()
     Q = json.load(open(a.queries))["queries"]
     G = json.load(open(a.gt))["scenes"]
@@ -187,7 +193,7 @@ def main():
     sig, mz, prior = T("siglip_img"), T("vlm_margin_z"), T("prior")
     qwen = torch.load(Path(a.work)/"V_frozen_cache.pt", map_location=dev).float()
     M = load_v23(risk.reshape(-1).cpu().numpy())
-    M24 = load_v23(risk.reshape(-1).cpu().numpy(), which="v24")
+    M24 = load_v23(risk.reshape(-1).cpu().numpy(), which=a.final)
     for m in M24: m.use_abstain = True
     W = Path(a.work)
     vlm = json.load(open(W/"binary_flags_with_logits.json"))
@@ -247,7 +253,7 @@ def main():
                                                 .cpu().numpy() for m in M24], 0)[idx]
             R["v2.4_monocular"] = np.mean([m(qv, qv, emb, tlog, risk, qwen, sig, mz, prior, has_3d=off)
                                            .cpu().numpy() for m in M24], 0)[idx]
-        R["v2.4_portable_base"] = portable(M24, qv, sig, mz, abstain=True)[idx]
+        R["v2.4_portable_base"] = portable(M24, qv, sig, mz, abstain=True, PR=prior)[idx]
         res = {k: metrics(v, rel) for k, v in R.items()}
         for k in rows: rows[k].append(res[k])
         per_q.append({"text": q["text"], "stratum": q["stratum"], "predicate": q["predicate"],
@@ -272,6 +278,12 @@ def main():
     order = [vm_sc.index(t) for t in vs]; VM = VM[order]
     VMZ = (VM - VM.mean(0)) / (VM.std(0) + 1e-6)
     S = torch.from_numpy(VS).float().to(dev); MZt = torch.from_numpy(VMZ).float().to(dev)
+    # recorded metadata for val150, from the human scene description (same source
+    # as the corpus metadata); density is not recorded there, so it stays empty
+    VPR = torch.zeros(len(vs), 26, device=dev)
+    for i, t in enumerate(vs):
+        VPR[i, 20] = float(G[t]["night"]); VPR[i, 21] = float(not G[t]["night"])
+        VPR[i, 22] = float(G[t]["rain"]); VPR[i, 23] = float(not G[t]["rain"])
     vQ = [q for q in Q if q["condition"] in (None, "night", "rain")]
     vrows = {k: [] for k in ["random", "logit_VLM_lookup", "metadata_matched", "zeroshot_SigLIP2",
                              "v2.3_portable_base", "v2.3A_portable_base", "v2.4_portable_base"]}
@@ -290,7 +302,8 @@ def main():
         R["zeroshot_SigLIP2"] = (S @ QN[qi]).cpu().numpy()
         R["v2.3_portable_base"] = portable(M, QT[qi].unsqueeze(0).expand(len(vs), -1), S, MZt)
         R["v2.3A_portable_base"] = portable(M, QT[qi].unsqueeze(0).expand(len(vs), -1), S, MZt, abstain=True)
-        R["v2.4_portable_base"] = portable(M24, QT[qi].unsqueeze(0).expand(len(vs), -1), S, MZt, abstain=True)
+        R["v2.4_portable_base"] = portable(M24, QT[qi].unsqueeze(0).expand(len(vs), -1), S, MZt, abstain=True,
+                                           PR=VPR if a.final == "v25" else None)
         res = {k: metrics(v, rel) for k, v in R.items()}
         for k in vrows: vrows[k].append(res[k])
         vper.append({"text": q["text"], "stratum": q["stratum"], "predicate": q["predicate"],

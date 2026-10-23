@@ -49,28 +49,28 @@ def fig1():
 
     box(56, 33.5, 19, 7.5, "query text $q$\n(SigLIP2 text tower)", "#fffaf0", C2, fs=6.8)
     box(78.5, 33.5, 20.5, 7.5,
-        "contrastive concept gate\n$\\gamma(q)$ vs training foils;\npicks the margin column", "#fff5f5", C2,
+        "factored concept gate\n$\\gamma_{\\mathrm{deg}}(q)$, $\\gamma_{\\mathrm{macro}}(q)$\nfrom training phrasings", "#fff5f5", C2,
         fs=6.0, ls=(0, (2.5, 1.8)))
 
     box(56, 20, 19, 10, "PartNorm\nbase parts $\\mathbf{p}(q)$\n[cos, margin, prior]",
         "#f0fff4", C3, fs=6.6)
-    box(80, 20, 19, 10, "router $\\mathbf{w}(q)$\nmargin weight $\\times\\gamma(q)$\n"
+    box(80, 20, 19, 10, "router $\\mathbf{w}(q)$\nmargin weight $\\times\\gamma_{\\mathrm{deg}}(q)$\n"
         "renorm. on availability", "#f0fff4", C3, fs=6.1)
-    box(56, 10, 43, 7,
-        "cross-attn. fusion $\\rightarrow\\rho$; ResNorm bounds it: $\\alpha\\,g(q)\\,\\tilde\\rho$, $\\alpha=0.5$",
-        "#f0fff4", C3, fs=6.6)
-    box(56, 1.5, 43, 6.5,
-        "$s=\\gamma\\,[\\mathbf{w}^{\\!\\top}\\tilde{\\mathbf{p}}+\\alpha\\,g\\,\\tilde\\rho\\,]"
-        "+(1-\\gamma)\\,\\tilde p_{\\cos}$\n"
-        "abstains to SigLIP2 out of vocabulary; $g\\!=\\!0$ at init",
-        "#ffffff", C3, fs=6.8, bold=True)
-
+    box(56, 13.2, 43, 5.0,
+        "cross-attention fusion $\\rightarrow\\rho$;  ResNorm: $\\alpha\\,g(q)\\,\\tilde\\rho$,  $\\alpha=0.5$",
+        "#f0fff4", C3, fs=6.4)
+    box(56, 0.4, 43, 10.6,
+        "$s=\\gamma_{\\mathrm{deg}}\\,s_{\\mathrm{head}}+(1-\\gamma_{\\mathrm{deg}})\\,s_{\\mathrm{abst}}$\n"
+        "$s_{\\mathrm{head}}=\\mathbf{w}^{\\!\\top}\\tilde{\\mathbf{p}}+\\alpha\\,g\\,\\tilde\\rho$"
+        "      ($g\\!=\\!0$ at init)\n"
+        "$s_{\\mathrm{abst}}=(\\tilde p_{\\cos}+\\Sigma_m\\gamma_m z_m)\\,/\\,\\sqrt{1+(\\Sigma_m\\gamma_m)^2}$",
+        "#ffffff", C3, fs=6.5)
     arrow(65.5, 33.5, 65.5, 30)
     arrow(88.8, 33.5, 88.8, 30, c=C2)
     arrow(75, 25, 80, 25)
     arrow(47, 24, 56, 25)
-    arrow(65.5, 20, 65.5, 17); arrow(89.5, 20, 89.5, 17)
-    arrow(77.5, 10, 77.5, 8)
+    arrow(65.5, 20, 65.5, 18.2); arrow(89.5, 20, 89.5, 18.2)
+    arrow(77.5, 13.2, 77.5, 11.0)
     fig.tight_layout(pad=0.2)
     fig.savefig(OUT/"fig1_architecture.pdf", bbox_inches="tight")
     plt.close(fig); print("  fig1_architecture.pdf")
@@ -84,10 +84,10 @@ def fig3():
     fig, (axa, axb) = plt.subplots(1, 2, figsize=(7.0, 2.7))
 
     suite = dict(suite)
-    suite["SceneMiner_v2.4"] = json.load(open("results/cvpr/milestone18_v2_4.json"))["C_suite150"]["overall"]["v2.4_full"]
+    suite["SceneMiner_v2.4"] = json.load(open("results/cvpr/milestone22_factored_gate.json"))["C_suite150"]["overall"]["v2.5_full"]
     order = ["attribute_index(TAUTOLOGY)", "SceneMiner_v2.1", "SceneMiner_v2.4",
              "zeroshot_SigLIP2", "logit_VLM_lookup"]
-    lab = ["attribute\nindex", "earlier\nversion", "SceneMiner",
+    lab = ["attribute\nindex", "naive convex\nrouter", "SceneMiner",
            "zero-shot\nSigLIP2", "VLM margin\nlookup"]
     vals = [suite[k]["mAP"] for k in order]
     cols = ["#c53030", C1, C1, CG, CG]
@@ -152,7 +152,7 @@ SHORT = ["\"water droplets smearing the camera lens\"",
 # Categorical slots 1-4 of the validated reference palette, fixed order; random
 # is a neutral dashed reference. Contrast WARN on aqua/yellow is relieved by a
 # distinct marker per series and direct end labels (identity never colour-only).
-SER = [("SceneMiner_v2.4", "SceneMiner", "#2a78d6", "o"),
+SER = [("SceneMiner_v2.5", "SceneMiner", "#2a78d6", "o"),
        ("zeroshot_SigLIP2", "zero-shot SigLIP2", "#eb6834", "s"),
        ("logit_VLM_lookup", "VLM margin lookup", "#1baf7a", "^"),
        ("metadata_matched", "night/rain metadata", "#eda100", "D")]
@@ -177,7 +177,7 @@ def quartile_panels(axes, d, kind="degradation", label_end=True):
 
 
 def fig_val150_quartiles():
-    d = json.load(open("results/cvpr/milestone20_val150_retrieval_v24.json"))
+    d = json.load(open("results/cvpr/milestone22_val150_retrieval_v25.json"))
     fig, axes = plt.subplots(1, 2, figsize=(7.0, 2.45))
     quartile_panels(axes, d)
     axes[0].set_title("(a) detection quality by retrieval quartile", fontsize=7.6, fontweight="bold")
@@ -220,7 +220,7 @@ def balanced_strips(queries, out, title, n_per=2, row_h=0.70):
     emb, tlog, risk = T("emb"), T("tag_logits"), T("risk")
     sig, mz, prior = T("siglip_img"), T("vlm_margin_z"), T("prior")
     qwen = torch.load("work_dirs/unified_filter/V_frozen_cache.pt", map_location=dev).float()
-    M = load_v23(risk.reshape(-1).cpu().numpy(), which="v24")
+    M = load_v23(risk.reshape(-1).cpu().numpy(), which="v25")
     for m in M: m.use_abstain = True
     QT = text_embed([q for q, _ in queries])
     broot = Path("/nfs/turbo/umd-srawa/scene_mining/datasets/external_adverse/bdd100k")
@@ -233,7 +233,7 @@ def balanced_strips(queries, out, title, n_per=2, row_h=0.70):
     N = len(corpus); on = torch.ones(N, device=dev)
     thumbs = Path("work_dirs/unified_filter/scene_thumbs")
     fig, axes = plt.subplots(len(queries), 3 * n_per, figsize=(7.2, row_h * len(queries) + 0.55))
-    fig.subplots_adjust(left=0.2, right=0.995, top=0.90, bottom=0.01, wspace=0.05, hspace=0.30)
+    fig.subplots_adjust(left=0.2, right=0.995, top=0.90, bottom=0.01, wspace=0.06, hspace=0.42)
     COLS = [("nuScenes", "#2a78d6"), ("Waymo", "#1baf7a"), ("BDD100K", "#eb6834")]
     picked = []
     for r, (q, lab) in enumerate(queries):
@@ -257,8 +257,8 @@ def balanced_strips(queries, out, title, n_per=2, row_h=0.70):
         for c, ((name, col), path) in enumerate(cells):
             ax = axes[r, c]; ax.imshow(Image.open(path).convert("RGB")); ax.set_anchor("N")
             ax.set_xticks([]); ax.set_yticks([])
-            ax.set_title(f"{name} #{c % n_per + 1}", fontsize=5.7, color=col, pad=1.4)
-            for sp in ax.spines.values(): sp.set_color(col); sp.set_lw(1.0)
+            ax.set_title(f"{name} #{c % n_per + 1}", fontsize=7.6, color=col, pad=1.8, fontweight="bold")
+            for sp in ax.spines.values(): sp.set_color(col); sp.set_lw(1.2)
         axes[r, 0].set_ylabel(textwrap.fill(f"\"{q}\"", 26) + (f"\n[{lab}]" if lab else ""), fontsize=5.8,
                               rotation=0, ha="right", va="center", style="italic", labelpad=5, linespacing=1.35)
     fig.suptitle(title, fontsize=7.3, y=0.985)
@@ -292,8 +292,8 @@ def fig4():
     """(a) val150 CAM_FRONT mAP and ghost FP by retrieval quartile; (b) mAP in the
     three human-graded regimes with the two no-learning late-fusion controls."""
     from matplotlib.lines import Line2D
-    d16 = json.load(open("results/cvpr/milestone20_val150_retrieval_v24.json"))
-    reg = json.load(open("results/cvpr/milestone19_compositional_synergy.json"))["regimes"]
+    d16 = json.load(open("results/cvpr/milestone22_val150_retrieval_v25.json"))
+    reg = json.load(open("results/cvpr/milestone22_compositional_synergy.json"))["regimes"]
     fig = plt.figure(figsize=(7.0, 2.85))
     gs = fig.add_gridspec(2, 2, width_ratios=[1.0, 1.1], hspace=0.12, wspace=0.62)
     a1 = fig.add_subplot(gs[0, 0]); a2 = fig.add_subplot(gs[1, 0], sharex=a1)
@@ -305,7 +305,7 @@ def fig4():
     rows = [("degradation\n(550)", "atomic_degradation_550"),
             ("semantics\n(258)", "atomic_semantics_corpus258"),
             ("semantics x\ncondition (258)", "conjunctions_corpus258_all30phrasings")]
-    ser = [("SceneMiner", "#2a78d6", "o", "SceneMiner_v2.4"), ("zero-shot SigLIP2", "#eb6834", "s", "zeroshot_SigLIP2"),
+    ser = [("SceneMiner", "#2a78d6", "o", "SceneMiner_v2.5"), ("zero-shot SigLIP2", "#eb6834", "s", "zeroshot_SigLIP2"),
            ("VLM margin lookup", "#1baf7a", "^", "logit_VLM_lookup"),
            ("SigLIP2 + lookup (late fusion)", "#6250d6", "v", "late_fusion SigLIP2+lookup"),
            ("SigLIP2 + metadata (late fusion)", "#eda100", "D", "late_fusion SigLIP2+metadata")]

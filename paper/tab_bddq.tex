@@ -1,14 +1,14 @@
 \setlength{\tabcolsep}{6pt}
 \begin{tabular}{llclccc}
 \toprule
- & query & $\gamma$ & column & SceneMiner & SigLIP2 & lookup\\
+ & query & $\gamma_{\mathrm{deg}}$ & column & SceneMiner & SigLIP2 & lookup\\
 \midrule
-I & wet reflective asphalt after rainfall & 1.000 & wet\_road & 0.595 & 0.430 & \best{0.620}\\
+I & wet reflective asphalt after rainfall & 1.000 & wet\_road & 0.592 & 0.430 & \best{0.620}\\
 I & water droplets smearing the camera lens & 1.000 & droplets & \best{0.554} & 0.550 & 0.411\\
-I & blinding headlight bloom from oncoming traffic & 1.000 & glare & 0.764 & \best{0.871} & 0.602\\
+I & blinding headlight bloom from oncoming traffic & 1.000 & glare & 0.766 & \best{0.871} & 0.602\\
 I & a low contrast scene, vehicles barely distinguishable & 1.000 & low\_contrast & 0.921 & 0.550 & \best{0.957}\\
-O & overcast grey sky & 0.999 & low\_contrast & 0.090 & \best{0.270} & 0.079\\
-O & snow covering the road & 0.485 & wet\_road & 0.566 & \best{0.617} & 0.140\\
+O & overcast grey sky & 1.000 & low\_contrast & 0.090 & \best{0.270} & 0.079\\
+O & snow covering the road & 0.711 & wet\_road & 0.484 & \best{0.617} & 0.140\\
 O & a snowy street scene & 0.000 & -- & \best{0.650} & \best{0.650} & 0.140\\
 O & driving in rain & 0.000 & -- & 0.556 & 0.556 & \best{0.620}\\
 O & bright daytime driving & 0.000 & -- & 0.495 & 0.495 & \best{0.944}\\

@@ -53,7 +53,7 @@ def suite_rows():
     emb, tlog, risk = T("emb"), T("tag_logits"), T("risk")
     sig, mz, prior = T("siglip_img"), T("vlm_margin_z"), T("prior")
     qwen = torch.load(W/"V_frozen_cache.pt", map_location=dev).float()
-    M = load_v23(risk.reshape(-1).cpu().numpy(), which="v24")
+    M = load_v23(risk.reshape(-1).cpu().numpy(), which="v25")
     for m in M: m.use_abstain = True
     attrs = load_attributes(W)
     for f in ("binary_flags_with_logits.json", "lowcontrast_strict.json"):
@@ -81,10 +81,10 @@ def suite_rows():
                 lk = ap_binary(np.argsort(-np.array([float(src.get(t, {}).get(key+"_margin", -9.)) for t in toks])), rel)
             vals = [ap_binary(np.argsort(-s), rel), ap_binary(np.argsort(-c), rel), lk]
         raw.append({"text": q["text"], "stratum": q["stratum"], "n_pos": int(rel.sum()),
-                    "v2.4": vals[0], "SigLIP2": vals[1], "lookup": vals[2]})
+                    "v2.5": vals[0], "SigLIP2": vals[1], "lookup": vals[2]})
         rows.append([str(qi + 1), SHORT[q["stratum"]], tex(q["text"]), pred_str(q["predicate"]),
                      str(int(rel.sum()))] + [fmt(v) for v in vals])
-    json.dump(raw, open("results/cvpr/milestone20_per_query_suite150_v24.json", "w"), indent=1)
+    json.dump(raw, open("results/cvpr/milestone22_per_query_suite150_v25.json", "w"), indent=1)
     return rows
 
 
@@ -97,10 +97,10 @@ def main():
               r"Lookup reads the column of the attribute the predicate names; -- where it names none.",
               "tab:pq-suite", spec)
 
-    d = json.load(open("results/cvpr/milestone18_semantic_edge_cases.json"))["corpus_258"]["per_query"]
+    d = json.load(open("results/cvpr/milestone22_semantic_edge_cases.json"))["corpus_258"]["per_query"]
     rows = [[str(i + 1), SHORT[q["stratum"]], tex(q["text"]), pred_str(q["predicate"]), str(q["n_pos"]),
              f"{q['gamma_v24']:.2f}"] + [fmt(q["mAP"][k]) for k in
-             ["v2.4_monocular", "zeroshot_SigLIP2", "logit_VLM_lookup", "v2.4_full [contam.]"]]
+             ["v2.5_monocular", "zeroshot_SigLIP2", "logit_VLM_lookup", "v2.5_full [contam.]"]]
             for i, q in enumerate(d)]
     longtable(OUT/"per_query_semantic.tex",
               r"\# & S & query & predicate & pos & $\gamma$ & SceneMiner & SigLIP2 & lookup & full$^\dagger$",
@@ -131,7 +131,7 @@ def main():
                      f"{m['perm_p']:.3f}", f"{q[i]:.3f}{star}"])
     longtable(OUT/"bh_table.tex",
               r"partition & $n_{deg}$ & metric & degraded & clean & $\Delta$ & $\sigma$ & 95\,\% CI & $p$ & $q$",
-              rows, r"All 30 CAM\_FRONT-sector tests (Milestone 11), sorted by $p$. 150 uncontaminated "
+              rows, r"All 30 CAM\_FRONT-sector tests, sorted by $p$. 150 uncontaminated "
               r"val scenes; bootstrap CI over scenes (1000); permutation $p$ (1000); Benjamini--Hochberg $q$ "
               r"over the full family. $^{**}q<0.05$, $^{*}q<0.10$.", "tab:bh",
               r"l r l r r r r l r l")

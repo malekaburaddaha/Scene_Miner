@@ -490,6 +490,34 @@ from each of nuScenes, Waymo and BDD100K.
 
 ---
 
+# Part VI — Milestone 22 (23 Oct 2026)
+
+## 22. Factored gate; paper reframed
+
+The S3 / conjunction failures had two distinct causes: context × context queries
+lost their metadata on abstention, and some degradation × context compounds were
+gated off because one softmax made context compete with the concept. SceneMiner
+v2.5 factors the gate: **γ_deg** is computed on context-projected embeddings, and
+**γ_macro** maps context classes to recorded-metadata columns that enter the
+abstention target. The variant and τ were selected on training text by
+leave-group-out (half projection, τ = 0.02).
+
+| | v2.4 | **v2.5 (final)** |
+|---|---|---|
+| human GT zero-leakage / calibrated | 0.7879 / 0.8165 | 0.7845 / **0.8263** |
+| BDD100K | **0.6387** | 0.6317 (> SigLIP2 0.6218) |
+| suite overall / skew / S3 | 0.594 / +0.5 / 0.459 | **0.685** / +2.2 / **0.603** |
+| S5 object × condition | 0.292 | **0.310** (SigLIP2+metadata 0.327, gap n.s.) |
+| S5 atomic corpus / val150 | 0.337 / 0.383 | 0.332 / **0.392** |
+
+The paper is reframed as a first-principles design and diagnostic study. The
+re-audit table of an earlier version is removed; the weaker designs appear as a
+design-progression table; the width-1 LayerNorm dead-modality result is in
+Section 6; and Equation 1, Figure 1 and Figure 2 are fixed. Main text ends on
+page 8, references from page 9.
+
+---
+
 # Where this leaves the paper
 
 **Defensible claims (final):**
@@ -497,28 +525,19 @@ from each of nuScenes, Waymo and BDD100K.
 1. **The premise holds, and retrieval closes the loop.** Front-camera
    degradation costs 0.0906 front-sector mAP and 7.3 points of ghost-FP rate on
    uncontaminated data (q < 0.05). SceneMiner's top retrievals for degradation
-   queries lose 0.057 mAP and 0.196 VRU recall.
-2. **Two structural defects:** circular predicate benchmarks (lookup = 1.000)
-   and certifiers trained on the mined scenes (+0.3349 detector mAP; tag head
+   queries lose 0.057 mAP and 0.197 VRU recall.
+2. **Two structural defects:** circular predicate benchmarks (lookup = 1.000) and
+   certifiers trained on the mined scenes (+0.3349 detector mAP; tag head
    supervised on the same objects).
-3. **Two-level scale incommensurability.** Parts (28.1×) and residual (~10×)
-   must be standardised before learned weights mean anything.
-4. **A single model** that is best on human-graded degradation (0.788 / 0.817),
-   the first above zero-shot SigLIP2 externally (0.639 vs 0.622), equal to
-   SigLIP2 on semantic edge cases, and free of domain skew, with a concept gate
-   that never saw evaluation data.
+3. **Three levels of silent modality failure:** parts (28.1×), residual (~10×),
+   and a width-1 LayerNorm that kills a modality outright while mAP moves 0.004.
+4. **One model**, best on human-graded degradation (0.785 / 0.826), above
+   zero-shot SigLIP2 externally (0.632 vs 0.622), matching SigLIP2 on semantic edge
+   cases, with low domain skew. Its gate never saw evaluation data.
 
-**What does not survive:** learned fusion beating simple fusion on
-object × condition conjunctions; SceneMiner finding breakage scenes better than
-the VLM-margin lookup on val150; a uniform per-attribute lead; and the earlier
-diagnostic magnitudes (Table 12 of the paper).
+**What does not survive:** learned fusion beating simple SigLIP2 + metadata fusion
+on object × condition conjunctions; SceneMiner finding breakage scenes better
+than the VLM-margin lookup on val150; a uniform per-attribute lead.
 
-**Disclosures carried in the paper:** text mean-centring and ResNorm were first
-motivated by evaluation data in earlier milestones. Both now have
-training-only support, and every statistic the model uses is computed on
-training data.
-
-**Before submission, for the authors:** fill in `\paperID`; the paper uses a
-one-line compatibility edit in `cvpr.sty` (marked in the file) that can be
-reverted on Overleaf or any current TeX Live; and decide whether to keep the
-re-audit table of the earlier version (Table 12) given double-blind review.
+**Before submission, for the authors:** fill in `\paperID`; `cvpr.sty` carries one
+marked TeX Live 2018 compatibility edit that can be reverted on Overleaf.

@@ -30,6 +30,8 @@ from eval_semantic_edge_cases import text_embed, load_v23, zs
 from annotate_ui import find_thumb
 
 dev = torch.device("cuda")
+import os
+FINAL = os.environ.get("SM_FINAL", "v24")
 CLIP_PROMPT = {"droplets": "a photo taken through a camera lens with water droplets on it",
                "glare": "a photo with strong headlight or sun glare",
                "wet_road": "a photo of a wet reflective road",
@@ -69,7 +71,7 @@ def main():
     emb, tlog, risk = T("emb"), T("tag_logits"), T("risk")
     sig, mz, prior = T("siglip_img"), T("vlm_margin_z"), T("prior")
     qwen = torch.load(W/"V_frozen_cache.pt", map_location=dev).float()
-    M = load_v23(risk.reshape(-1).cpu().numpy(), which="v24"); [setattr(m, "use_abstain", True) for m in M]
+    M = load_v23(risk.reshape(-1).cpu().numpy(), which=FINAL); [setattr(m, "use_abstain", True) for m in M]
     vlm = json.load(open(W/"binary_flags_with_logits.json")); strict = json.load(open(W/"lowcontrast_strict.json"))
     meta = json.load(open(W/"deterministic_gt.json"))
     QT = text_embed([QUERY[a] for a in ATTRS]); QN = F.normalize(QT, dim=-1)
@@ -141,7 +143,7 @@ def main():
                 "win_rate": {k: {at: v / 500 for at, v in d.items()} for k, d in wins.items()},
                 "macro_mAP_mean": {k: float(np.mean(v)) for k, v in maps.items()},
                 "macro_mAP_p05": {k: float(np.percentile(v, 5)) for k, v in maps.items()}}
-    Path("results/cvpr/milestone19_rater_sensitivity.json").write_text(json.dumps(out, indent=1))
+    Path(os.environ.get("SM_OUT", "results/cvpr/milestone19_rater_sensitivity.json")).write_text(json.dumps(out, indent=1))
     def show(name, t):
         print(f"\n-- {name} --  " + "  ".join(f"{k[:22]} {t[k]['macro']:.4f}" for k in RK))
     show("full 550 (Mode B)", out["full_550"]); show(f"Mode A ({out['mode_A']['n']})", out["mode_A"]["table"])
