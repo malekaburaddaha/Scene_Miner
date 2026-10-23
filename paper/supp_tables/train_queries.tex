@@ -1,0 +1,253 @@
+\begin{longtable}{r l p{8.6cm} p{5.6cm}}
+\caption{The 240 training queries of the 390-query suite. They are listed for completeness and \emph{not scored}: SceneMiner's head saw their text during training.}\label{tab:train-q}\\
+\toprule
+\# & S & training query & predicate\\
+\midrule
+\endfirsthead
+\toprule
+\# & S & training query & predicate\\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+1 & S1 & heavy rain spatter obscuring the camera & droplets=T\\
+2 & S1 & the lens drowned in rain streaks & droplets=T\\
+3 & S1 & drizzle marking the lens & droplets=T\\
+4 & S1 & persistent droplet smear on the glass & droplets=T\\
+5 & S1 & strong headlight bloom from oncoming traffic & glare=T\\
+6 & S1 & blinding light bloom swallowing the scene & glare=T\\
+7 & S1 & harsh low-sun glare & glare=T\\
+8 & S1 & scattered street-light halos & glare=T\\
+9 & S1 & standing water pooling on the road & wet\_road=T\\
+10 & S1 & a soaked roadway with mirror-like sheen & wet\_road=T\\
+11 & S1 & rain-slicked carriageway & wet\_road=T\\
+12 & S1 & puddled road surface & wet\_road=T\\
+13 & S1 & a low contrast scene where vehicles are barely distinguishable & low\_contrast=T\\
+14 & S1 & murky scene with indistinct vehicle outlines & low\_contrast=T\\
+15 & S1 & grey scene with little tonal separation & low\_contrast=T\\
+16 & S1 & objects dissolving into the background & low\_contrast=T\\
+17 & S1 & heavy rain spatter obscuring the camera in daylight & droplets=T, lighting=day\\
+18 & S1 & heavy rain spatter obscuring the camera in dense traffic & droplets=T, density=dense\\
+19 & S1 & heavy rain spatter obscuring the camera on an empty road & droplets=T, density=sparse\\
+20 & S1 & the lens drowned in rain streaks in daylight & droplets=T, lighting=day\\
+21 & S1 & the lens drowned in rain streaks in dense traffic & droplets=T, density=dense\\
+22 & S1 & the lens drowned in rain streaks on an empty road & droplets=T, density=sparse\\
+23 & S1 & drizzle marking the lens in daylight & droplets=T, lighting=day\\
+24 & S1 & drizzle marking the lens in dense traffic & droplets=T, density=dense\\
+25 & S1 & drizzle marking the lens on an empty road & droplets=T, density=sparse\\
+26 & S1 & persistent droplet smear on the glass in daylight & droplets=T, lighting=day\\
+27 & S1 & persistent droplet smear on the glass in dense traffic & droplets=T, density=dense\\
+28 & S1 & persistent droplet smear on the glass on an empty road & droplets=T, density=sparse\\
+29 & S1 & strong headlight bloom from oncoming traffic in daylight & glare=T, lighting=day\\
+30 & S1 & strong headlight bloom from oncoming traffic in dense traffic & glare=T, density=dense\\
+31 & S1 & strong headlight bloom from oncoming traffic on an empty road & glare=T, density=sparse\\
+32 & S1 & blinding light bloom swallowing the scene in daylight & glare=T, lighting=day\\
+33 & S1 & blinding light bloom swallowing the scene in dense traffic & glare=T, density=dense\\
+34 & S1 & blinding light bloom swallowing the scene on an empty road & glare=T, density=sparse\\
+35 & S1 & harsh low-sun glare in daylight & glare=T, lighting=day\\
+36 & S1 & harsh low-sun glare in dense traffic & glare=T, density=dense\\
+37 & S1 & harsh low-sun glare on an empty road & glare=T, density=sparse\\
+38 & S1 & scattered street-light halos in daylight & glare=T, lighting=day\\
+39 & S1 & scattered street-light halos in dense traffic & glare=T, density=dense\\
+40 & S1 & scattered street-light halos on an empty road & glare=T, density=sparse\\
+41 & S1 & standing water pooling on the road in daylight & wet\_road=T, lighting=day\\
+42 & S1 & standing water pooling on the road in dense traffic & wet\_road=T, density=dense\\
+43 & S1 & standing water pooling on the road on an empty road & wet\_road=T, density=sparse\\
+44 & S1 & a soaked roadway with mirror-like sheen in daylight & wet\_road=T, lighting=day\\
+45 & S1 & a soaked roadway with mirror-like sheen in dense traffic & wet\_road=T, density=dense\\
+46 & S1 & a soaked roadway with mirror-like sheen on an empty road & wet\_road=T, density=sparse\\
+47 & S1 & rain-slicked carriageway in daylight & wet\_road=T, lighting=day\\
+48 & S1 & rain-slicked carriageway in dense traffic & wet\_road=T, density=dense\\
+49 & S1 & rain-slicked carriageway on an empty road & wet\_road=T, density=sparse\\
+50 & S1 & puddled road surface in daylight & wet\_road=T, lighting=day\\
+51 & S1 & puddled road surface in dense traffic & wet\_road=T, density=dense\\
+52 & S1 & puddled road surface on an empty road & wet\_road=T, density=sparse\\
+53 & S1 & a low contrast scene where vehicles are barely distinguishable in daylight & low\_contrast=T, lighting=day\\
+54 & S1 & a low contrast scene where vehicles are barely distinguishable in dense traffic & low\_contrast=T, density=dense\\
+55 & S1 & a low contrast scene where vehicles are barely distinguishable on an empty road & low\_contrast=T, density=sparse\\
+56 & S1 & murky scene with indistinct vehicle outlines in daylight & low\_contrast=T, lighting=day\\
+57 & S1 & murky scene with indistinct vehicle outlines in dense traffic & low\_contrast=T, density=dense\\
+58 & S1 & murky scene with indistinct vehicle outlines on an empty road & low\_contrast=T, density=sparse\\
+59 & S1 & grey scene with little tonal separation in daylight & low\_contrast=T, lighting=day\\
+60 & S1 & grey scene with little tonal separation in dense traffic & low\_contrast=T, density=dense\\
+61 & S1 & grey scene with little tonal separation on an empty road & low\_contrast=T, density=sparse\\
+62 & S1 & objects dissolving into the background in daylight & low\_contrast=T, lighting=day\\
+63 & S1 & objects dissolving into the background in dense traffic & low\_contrast=T, density=dense\\
+64 & S1 & objects dissolving into the background on an empty road & low\_contrast=T, density=sparse\\
+65 & S2 & night driving on an unlit road & lighting=night\\
+66 & S2 & the street under lamplight & lighting=night\\
+67 & S2 & driving under full daylight & lighting=day\\
+68 & S2 & an afternoon street view & lighting=day\\
+69 & S2 & rainfall over the roadway & weather=rain\\
+70 & S2 & driving through a shower & weather=rain\\
+71 & S2 & driving in settled weather & weather=dry\\
+72 & S2 & a rain-free street & weather=dry\\
+73 & S2 & queued vehicles filling the lane & density=dense\\
+74 & S2 & packed traffic ahead & density=dense\\
+75 & S2 & an open road with few cars & density=sparse\\
+76 & S2 & a near-empty carriageway & density=sparse\\
+77 & S2 & steady but unhurried traffic & density=moderate\\
+78 & S2 & a handful of cars on the road & density=moderate\\
+79 & S1 & a few water specks on the lens, seen in daylight & droplets=T, lighting=day\\
+80 & S1 & a few water specks on the lens, seen in dense traffic & droplets=T, density=dense\\
+81 & S1 & a few water specks on the lens, seen on an empty road & droplets=T, density=sparse\\
+82 & S1 & light droplets scattered on the lens, seen in daylight & droplets=T, lighting=day\\
+83 & S1 & light droplets scattered on the lens, seen in dense traffic & droplets=T, density=dense\\
+84 & S1 & light droplets scattered on the lens, seen on an empty road & droplets=T, density=sparse\\
+85 & S1 & water droplets smearing the camera lens, seen in daylight & droplets=T, lighting=day\\
+86 & S1 & water droplets smearing the camera lens, seen in dense traffic & droplets=T, density=dense\\
+87 & S1 & water droplets smearing the camera lens, seen on an empty road & droplets=T, density=sparse\\
+88 & S1 & rain beading across the lens, seen in daylight & droplets=T, lighting=day\\
+89 & S1 & rain beading across the lens, seen in dense traffic & droplets=T, density=dense\\
+90 & S1 & rain beading across the lens, seen on an empty road & droplets=T, density=sparse\\
+91 & S1 & a faint halo around a street light, seen in daylight & glare=T, lighting=day\\
+92 & S1 & a faint halo around a street light, seen in dense traffic & glare=T, density=dense\\
+93 & S1 & a faint halo around a street light, seen on an empty road & glare=T, density=sparse\\
+94 & S1 & mild light flare at the frame edge, seen in daylight & glare=T, lighting=day\\
+95 & S1 & mild light flare at the frame edge, seen in dense traffic & glare=T, density=dense\\
+96 & S1 & mild light flare at the frame edge, seen on an empty road & glare=T, density=sparse\\
+97 & S1 & noticeable glare washing across the image, seen in daylight & glare=T, lighting=day\\
+98 & S1 & noticeable glare washing across the image, seen in dense traffic & glare=T, density=dense\\
+99 & S1 & noticeable glare washing across the image, seen on an empty road & glare=T, density=sparse\\
+100 & S1 & specular glare washing out the image, seen in daylight & glare=T, lighting=day\\
+101 & S1 & specular glare washing out the image, seen in dense traffic & glare=T, density=dense\\
+102 & S1 & specular glare washing out the image, seen on an empty road & glare=T, density=sparse\\
+103 & S1 & a lightly damp road surface, seen in daylight & wet\_road=T, lighting=day\\
+104 & S1 & a lightly damp road surface, seen in dense traffic & wet\_road=T, density=dense\\
+105 & S1 & a lightly damp road surface, seen on an empty road & wet\_road=T, density=sparse\\
+106 & S1 & patchy wet tarmac, seen in daylight & wet\_road=T, lighting=day\\
+107 & S1 & patchy wet tarmac, seen in dense traffic & wet\_road=T, density=dense\\
+108 & S1 & patchy wet tarmac, seen on an empty road & wet\_road=T, density=sparse\\
+109 & S1 & wet reflective asphalt after rainfall, seen in daylight & wet\_road=T, lighting=day\\
+110 & S1 & wet reflective asphalt after rainfall, seen in dense traffic & wet\_road=T, density=dense\\
+111 & S1 & wet reflective asphalt after rainfall, seen on an empty road & wet\_road=T, density=sparse\\
+112 & S1 & slick wet pavement throwing reflections, seen in daylight & wet\_road=T, lighting=day\\
+113 & S1 & slick wet pavement throwing reflections, seen in dense traffic & wet\_road=T, density=dense\\
+114 & S1 & slick wet pavement throwing reflections, seen on an empty road & wet\_road=T, density=sparse\\
+115 & S1 & slightly flat lighting, seen in daylight & low\_contrast=T, lighting=day\\
+116 & S1 & slightly flat lighting, seen in dense traffic & low\_contrast=T, density=dense\\
+117 & S1 & slightly flat lighting, seen on an empty road & low\_contrast=T, density=sparse\\
+118 & S1 & a dim view where shapes lose definition, seen in daylight & low\_contrast=T, lighting=day\\
+119 & S1 & a dim view where shapes lose definition, seen in dense traffic & low\_contrast=T, density=dense\\
+120 & S1 & a dim view where shapes lose definition, seen on an empty road & low\_contrast=T, density=sparse\\
+121 & S1 & hazy washed out view with unclear boundaries, seen in daylight & low\_contrast=T, lighting=day\\
+122 & S1 & hazy washed out view with unclear boundaries, seen in dense traffic & low\_contrast=T, density=dense\\
+123 & S1 & hazy washed out view with unclear boundaries, seen on an empty road & low\_contrast=T, density=sparse\\
+124 & S1 & poor visibility with objects blending in, seen in daylight & low\_contrast=T, lighting=day\\
+125 & S1 & poor visibility with objects blending in, seen in dense traffic & low\_contrast=T, density=dense\\
+126 & S1 & poor visibility with objects blending in, seen on an empty road & low\_contrast=T, density=sparse\\
+127 & S2 & a scene showing driving after dark & lighting=night\\
+128 & S2 & a scene showing a night-time street scene & lighting=night\\
+129 & S2 & a scene showing low ambient light driving & lighting=night\\
+130 & S2 & a scene showing night driving on an unlit road & lighting=night\\
+131 & S2 & a scene showing the street under lamplight & lighting=night\\
+132 & S2 & a scene showing bright daytime driving & lighting=day\\
+133 & S2 & a scene showing a clear daylight street & lighting=day\\
+134 & S2 & a scene showing a midday road scene & lighting=day\\
+135 & S2 & a scene showing driving under full daylight & lighting=day\\
+136 & S2 & a scene showing an afternoon street view & lighting=day\\
+137 & S2 & a scene showing driving in rain & weather=rain\\
+138 & S2 & a scene showing a rainy street & weather=rain\\
+139 & S2 & a scene showing wet weather driving & weather=rain\\
+140 & S2 & a scene showing rainfall over the roadway & weather=rain\\
+141 & S2 & a scene showing driving through a shower & weather=rain\\
+142 & S2 & a scene showing dry road conditions & weather=dry\\
+143 & S2 & a scene showing a dry clear day & weather=dry\\
+144 & S2 & a scene showing no precipitation on the road & weather=dry\\
+145 & S2 & a scene showing driving in settled weather & weather=dry\\
+146 & S2 & a scene showing a rain-free street & weather=dry\\
+147 & S2 & a scene showing dense bumper-to-bumper traffic & density=dense\\
+148 & S2 & a scene showing a congested roadway & density=dense\\
+149 & S2 & a scene showing a heavy traffic jam & density=dense\\
+150 & S2 & a scene showing queued vehicles filling the lane & density=dense\\
+151 & S2 & a scene showing packed traffic ahead & density=dense\\
+152 & S2 & a scene showing an almost empty road & density=sparse\\
+153 & S2 & a scene showing sparse traffic & density=sparse\\
+154 & S2 & a scene showing a deserted street & density=sparse\\
+155 & S2 & a scene showing an open road with few cars & density=sparse\\
+156 & S2 & a scene showing a near-empty carriageway & density=sparse\\
+157 & S2 & a scene showing a moderately busy road & density=moderate\\
+158 & S2 & a scene showing a few vehicles around & density=moderate\\
+159 & S2 & a scene showing light traffic flow & density=moderate\\
+160 & S2 & a scene showing steady but unhurried traffic & density=moderate\\
+161 & S2 & a scene showing a handful of cars on the road & density=moderate\\
+162 & S2 & footage of driving after dark & lighting=night\\
+163 & S2 & footage of a night-time street scene & lighting=night\\
+164 & S2 & footage of low ambient light driving & lighting=night\\
+165 & S2 & footage of night driving on an unlit road & lighting=night\\
+166 & S2 & footage of the street under lamplight & lighting=night\\
+167 & S2 & footage of bright daytime driving & lighting=day\\
+168 & S2 & footage of a clear daylight street & lighting=day\\
+169 & S2 & footage of a midday road scene & lighting=day\\
+170 & S2 & footage of driving under full daylight & lighting=day\\
+171 & S2 & footage of an afternoon street view & lighting=day\\
+172 & S2 & footage of driving in rain & weather=rain\\
+173 & S2 & footage of a rainy street & weather=rain\\
+174 & S2 & footage of wet weather driving & weather=rain\\
+175 & S2 & footage of rainfall over the roadway & weather=rain\\
+176 & S2 & footage of driving through a shower & weather=rain\\
+177 & S2 & footage of dry road conditions & weather=dry\\
+178 & S2 & footage of a dry clear day & weather=dry\\
+179 & S2 & footage of no precipitation on the road & weather=dry\\
+180 & S2 & footage of driving in settled weather & weather=dry\\
+181 & S2 & footage of a rain-free street & weather=dry\\
+182 & S2 & footage of dense bumper-to-bumper traffic & density=dense\\
+183 & S2 & footage of a congested roadway & density=dense\\
+184 & S2 & footage of a heavy traffic jam & density=dense\\
+185 & S2 & footage of queued vehicles filling the lane & density=dense\\
+186 & S2 & footage of packed traffic ahead & density=dense\\
+187 & S2 & footage of an almost empty road & density=sparse\\
+188 & S2 & footage of sparse traffic & density=sparse\\
+189 & S2 & footage of a deserted street & density=sparse\\
+190 & S2 & footage of an open road with few cars & density=sparse\\
+191 & S2 & footage of a near-empty carriageway & density=sparse\\
+192 & S2 & footage of a moderately busy road & density=moderate\\
+193 & S2 & footage of a few vehicles around & density=moderate\\
+194 & S2 & footage of light traffic flow & density=moderate\\
+195 & S2 & footage of steady but unhurried traffic & density=moderate\\
+196 & S2 & footage of a handful of cars on the road & density=moderate\\
+197 & S1 & a recording with a few water specks on the lens & droplets=T\\
+198 & S1 & a recording with light droplets scattered on the lens & droplets=T\\
+199 & S1 & a recording with water droplets smearing the camera lens & droplets=T\\
+200 & S1 & a recording with rain beading across the lens & droplets=T\\
+201 & S1 & a recording with heavy rain spatter obscuring the camera & droplets=T\\
+202 & S1 & a recording with the lens drowned in rain streaks & droplets=T\\
+203 & S1 & a recording with drizzle marking the lens & droplets=T\\
+204 & S1 & a recording with persistent droplet smear on the glass & droplets=T\\
+205 & S1 & a recording with a faint halo around a street light & glare=T\\
+206 & S1 & a recording with mild light flare at the frame edge & glare=T\\
+207 & S1 & a recording with noticeable glare washing across the image & glare=T\\
+208 & S1 & a recording with specular glare washing out the image & glare=T\\
+209 & S1 & a recording with strong headlight bloom from oncoming traffic & glare=T\\
+210 & S1 & a recording with blinding light bloom swallowing the scene & glare=T\\
+211 & S1 & a recording with harsh low-sun glare & glare=T\\
+212 & S1 & a recording with scattered street-light halos & glare=T\\
+213 & S1 & a recording with a lightly damp road surface & wet\_road=T\\
+214 & S1 & a recording with patchy wet tarmac & wet\_road=T\\
+215 & S1 & a recording with wet reflective asphalt after rainfall & wet\_road=T\\
+216 & S1 & a recording with slick wet pavement throwing reflections & wet\_road=T\\
+217 & S1 & a recording with standing water pooling on the road & wet\_road=T\\
+218 & S1 & a recording with a soaked roadway with mirror-like sheen & wet\_road=T\\
+219 & S1 & a recording with rain-slicked carriageway & wet\_road=T\\
+220 & S1 & a recording with puddled road surface & wet\_road=T\\
+221 & S1 & a recording with slightly flat lighting & low\_contrast=T\\
+222 & S1 & a recording with a dim view where shapes lose definition & low\_contrast=T\\
+223 & S1 & a recording with hazy washed out view with unclear boundaries & low\_contrast=T\\
+224 & S1 & a recording with poor visibility with objects blending in & low\_contrast=T\\
+225 & S1 & a recording with a low contrast scene where vehicles are barely distinguishable & low\_contrast=T\\
+226 & S1 & a recording with murky scene with indistinct vehicle outlines & low\_contrast=T\\
+227 & S1 & a recording with grey scene with little tonal separation & low\_contrast=T\\
+228 & S1 & a recording with objects dissolving into the background & low\_contrast=T\\
+229 & S1 & dashcam footage showing a few water specks on the lens & droplets=T\\
+230 & S1 & dashcam footage showing light droplets scattered on the lens & droplets=T\\
+231 & S1 & dashcam footage showing water droplets smearing the camera lens & droplets=T\\
+232 & S1 & dashcam footage showing rain beading across the lens & droplets=T\\
+233 & S1 & dashcam footage showing heavy rain spatter obscuring the camera & droplets=T\\
+234 & S1 & dashcam footage showing the lens drowned in rain streaks & droplets=T\\
+235 & S1 & dashcam footage showing drizzle marking the lens & droplets=T\\
+236 & S1 & dashcam footage showing persistent droplet smear on the glass & droplets=T\\
+237 & S1 & dashcam footage showing a faint halo around a street light & glare=T\\
+238 & S1 & dashcam footage showing mild light flare at the frame edge & glare=T\\
+239 & S1 & dashcam footage showing noticeable glare washing across the image & glare=T\\
+240 & S1 & dashcam footage showing specular glare washing out the image & glare=T\\
+\end{longtable}

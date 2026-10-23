@@ -352,39 +352,104 @@ CAM_FRONT analysis, which does reproduce.
 
 ---
 
+# Part IV — Milestones 14–17 (23 Oct 2026)
+
+## 14. SceneMiner v2.3 — the diagnosis was partly wrong, the model is better
+
+Two mechanisms proposed for v2.2's trade-off were checked before building and
+**did not hold**: on the 20 VLM-missed glare scenes the margin averages +0.80σ
+(none below −0.5σ), so no negative margin vetoes SigLIP2; and v2.2 gave SigLIP2
+0.21 of the low_contrast weight, not ~0.47. What did hold: **the gated residual
+dominated the ranking** with 2–3× the base's spread (raw residual running std
+6.31, visible without labels). The base alone scored 0.9609 vs 0.8813 on
+droplets and recovered 12/20 vs 5/20 missed glare scenes.
+
+v2.3 = specified concept gate + FN rescue, plus **ResNorm** (standardised,
+bounded residual, α = 0.5 a priori).
+
+| benchmark | v2.1 | v2.2 | **v2.3** | target |
+|---|---|---|---|---|
+| human GT zero-leakage | 0.7355 | 0.7065 | **0.7897** | > 0.76 ✓ |
+| human GT calibrated | 0.7924 | 0.7656 | **0.8282** | > 0.795 ✓ |
+| glare FN recovery | 7/20 | 1/20 | 7/20 | ≥ 12/20 ✗ |
+| BDD100K | 0.4189 | 0.5952 | 0.6130 | ≥ 0.6218 ✗ |
+| 150-suite mAP / skew | 0.5312 / +8.7 | 0.5178 / +1.1 | 0.6313 / **+17.0** | skew preserved ✗ |
+
+Ablations: gate −0.0123, ResNorm −0.0146, FN rescue −0.0003 (as predicted). On
+BDD100K the gate picks the right column on 4/4 in-vocabulary queries and wins
+there by +0.090, but loses 0.058 out of vocabulary where weather phrases are
+semantically close to a concept ("bright daytime driving" → sun glare, γ 0.99).
+No calibration within budget fixes the skew regression.
+
+## 15. Stratum 5 — the expected headline does not hold
+
+Human semantic ground truth from nuScenes 3D annotation (pedestrian, VRU,
+construction, heavy vehicle, rare/child; front sector, visibility > 40 %), 40
+queries, 12 compositional predicates with ≥ 5 positives.
+
+**Contamination finding:** the 700 corpus nuScenes scenes are the official
+nuScenes *train* split, so BEVFormer (e, r) and the nuPrompt-supervised tag head
+(t, which includes pedestrian/bus/construction tags) saw labels for them. Those
+rankers are flagged, and a fully clean evaluation runs on val150.
+
+v2.3 is **worse than SigLIP2** on semantic queries (atomic 0.2295 vs 0.3370,
+p = 0.0001; clean val150 0.3128 vs 0.3824). The fixed-column lookups and
+metadata sit at exactly chance (0.2171). A **post-hoc** abstention variant
+(v2.3A: `s = γ·s + (1−γ)·p_siglip`) matches SigLIP2 and beats the logit lookup
+by +0.111 atomic (p = 0.0001) and +0.067 compositional (p = 0.03), and brings
+suite skew to +0.9. It costs human GT 0.7897 → 0.7613 and BDD 0.6130 → 0.6073,
+almost entirely through the low_contrast query (γ = 0.409). v2.3 stays the main
+model.
+
+## 16. Retrieval → 3D breakage on val150
+
+Portable signals only; null permutes per-scene metrics with retrieved sets fixed.
+For the 62 degradation queries, v2.3's top-25: front mAP −0.060 (p 0.001), VRU
+recall −0.193 (p < 0.001), far recall −0.043 (p 0.048); harder than SigLIP2's
+(mAP −0.028, p 0.004) but **indistinguishable from the VLM-margin lookup and from
+night/rain metadata**, the latter being the only ranker with a significant
+ghost-FP rise (+0.052, p 0.002). The effect is a threshold confined to the top
+quartile. Semantic retrievals (pedestrians, cones, trucks) are not harder than
+random for this detector.
+
+## 17. Manuscript and supplementary
+
+`paper/main_cvpr.tex`: 8 pages + references, 4 figures, 9 tables, a
+related-work section and a bibliography; every figure inspected after rendering.
+`paper/supp_cvpr.tex`: 13 pages, with the full hyperparameter table, both
+annotation protocols and a real screenshot of the annotation UI, all 30 BH tests,
+per-query results for all 190 evaluated queries, the 240 training queries
+(listed, not scored), and extra figures. All tables are generated from JSON.
+
+---
+
 # Where this leaves the paper
 
-**The strongest defensible claims, as of Milestone 13:**
+**Defensible claims, as of Milestone 17:**
 
-1. **The premise holds.** Front-camera degradation costs the 3D detector 0.0906
-   front-sector mAP and 7.3 points of false-positive rate, surviving
-   multiple-comparison correction on uncontaminated data. This is the result the
-   WACV submission needed and did not have.
-2. **Two structural defects in this class of pipeline.** A benchmark whose
-   relevance is a predicate over cached model outputs is circular (lookup =
-   1.000); a detector that trained on the scenes it certifies inflates per-scene
-   mAP by +0.3349 (+74 %).
-3. **A general mechanism result.** A convex router must standardise what it
-   routes, or its weights are not influence weights — demonstrated by a blend
-   scoring below both of its inputs at a 28.1× scale gap.
-4. **A measured trade-off.** De-shortcutting a VLM teacher costs 0.029 mAP in
-   domain and buys 0.176 mAP externally.
+1. **The premise holds, and retrieval closes the loop.** Front-camera
+   degradation costs 0.0906 front-sector mAP and 7.3 points of ghost-FP rate on
+   uncontaminated data (q < 0.05); the top quartile retrieved for a degradation
+   query loses 0.060 mAP and 0.193 VRU recall.
+2. **Two structural defects:** circular predicate benchmarks (lookup = 1.000) and
+   certifiers trained on the mined scenes (+0.3349 detector mAP; tag head
+   supervised on the same objects).
+3. **Two-level scale incommensurability:** parts (28.1×) and residual (~10×)
+   must be standardised before a learned combination's weights mean anything.
+4. **v2.3 is the best model on human ground truth** (0.7897 / 0.8282).
 
-**What still does not survive:** the system does **not** beat zero-shot SigLIP2
-on the external monocular corpus (0.5952 vs 0.6218); de-shortcutting collapses
-glare VLM false-negative recovery (7/20 → 1/20); the Table 1 and §4.2/§4.3
-magnitudes do not reproduce; and skew differences of a few points are not
-resolvable at 150 queries.
+**What does not survive:** beating SigLIP2 externally (0.6130 vs 0.6218);
+beating SigLIP2 on semantic edge cases (it does not; v2.3A at best matches it);
+finding breakage scenes better than a VLM lookup or night/rain metadata;
+v2.3's domain skew (+17.0); glare FN recovery ≥ 12/20 (7/20); and the earlier
+diagnostic magnitudes (Table 9 of the paper).
 
-**The honest frame:** this is a paper about auditing a language-guided mining
-pipeline — what breaks, why, and what survives repair — with a correctly
-targeted demonstration that the underlying premise is sound. It is not a paper
-claiming state-of-the-art retrieval. Row A_true still demonstrates the central
-thesis cleanly (a modality 100 % dead, 1 distinct row, std 0.0000, while mAP
-moves 0.004), and the de-confounded Table 2 shows deterministic labels are the
-entire effect.
+**Disclosures carried into the paper:** text mean-centring was informed by
+BDD100K; the residual diagnosis behind ResNorm was run on the human-labelled
+scenes; v2.3A was designed after seeing Stratum 5.
 
-**One disclosure carried into the paper:** the text mean-centring design choice
-was informed by BDD100K measurements. It is a label-free selector prior fixed at
-train time and it helps in 4/4 in-domain strata, but it is not a blind choice,
-and no further tuning against BDD100K was performed.
+**For the authors to verify before submission:** the bibliography (19 entries,
+written from memory, including arXiv numbers); the official CVPR style kit
+(drop `cvpr.sty` into `paper/`); and whether to present v2.3 or v2.3A as the
+headline model, which is a judgment about which trade-off the paper should lead
+with.

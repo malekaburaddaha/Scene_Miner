@@ -220,9 +220,19 @@ python scripts/diag_bdd_blend.py         # the scale-incommensurability diagnost
 python scripts/eval_domain_calibrated_v2.py   # (q,alpha) fit on train queries
 python scripts/val150_camfront_errors.py      # CAM_FRONT degradation vs error
 
-# ── Milestone 12: figures and paper ─────────────────────────────────────
-python scripts/make_figures.py
+# ── Milestones 14-16: v2.3, Stratum 5, retrieval -> 3D breakage ─────────
+scripts/launch_seeds.sh scripts/train_sceneminer_v23.py work_dirs/sceneminer_v23 v23
+python scripts/eval_v23.py                      # human GT, BDD100K, suite, ablations
+python scripts/extract_human_semantic_gt.py     # human flags from nuScenes tables
+python scripts/build_semantic_queries.py
+python scripts/eval_semantic_edge_cases.py      # corpus + clean val150
+python scripts/val150_ped_vru_metrics.py
+python scripts/val150_retrieval_to_3d.py
+
+# ── figures, tables and paper ────────────────────────────────────────────
+python scripts/make_figures.py && python scripts/make_supp_tables.py
 cd paper && pdflatex main_cvpr.tex && pdflatex main_cvpr.tex
+pdflatex supp_cvpr.tex && pdflatex supp_cvpr.tex
 
 # ── external dataset ────────────────────────────────────────────────
 python scripts/fetch_bdd100k.py                            # 1,000 stratified images
@@ -236,52 +246,54 @@ python scripts/annotate_ui.py --rater <name> --port 8800
 
 ## 7. Headline results
 
-**Against 550 human-labelled scenes** (macro-mAP over the four attributes):
+**Human ground truth, 550 scenes** (macro-mAP over the four degradation attributes):
 
 | ranker | mAP |
 |---|---|
-| **SceneMiner v2.1 + 5-fold human calibration** | **0.7924** |
-| SceneMiner v2.2 + 5-fold human calibration | 0.7656 |
+| **SceneMiner v2.3 + 5-fold human calibration** | **0.8282** |
+| SceneMiner v2.1 + 5-fold human calibration | 0.7924 |
+| **SceneMiner v2.3 (zero-leakage)** | **0.7897** |
 | SceneMiner v2.1 (zero-leakage) | 0.7355 |
 | logit VLM lookup | 0.7325 |
-| SceneMiner v2.2 (monocular) | 0.7167 |
 | SceneMiner v2.2 (zero-leakage) | 0.7065 |
 | zero-shot SigLIP2 | 0.5688 |
-| metadata prior | 0.5297 |
 
-**External transfer, BDD100K** (1000 images, 12 queries, BDD's own human
-weather/time-of-day labels, chance 0.2623):
+**External transfer, BDD100K** (1000 images, 12 queries, BDD's own human labels):
 
-| ranker | mAP | P@5 | NDCG@10 |
+| ranker | all 12 | in-vocab (4) | out-of-vocab (8) |
 |---|---|---|---|
-| zero-shot SigLIP2 | **0.6218** | **0.8500** | **0.8088** |
-| **SceneMiner v2.2** (monocular) | 0.5952 | 0.7500 | 0.7892 |
-| logit VLM lookup | 0.5871 | 0.7167 | 0.7054 |
-| SceneMiner v2.1 (portable) | 0.4189 | 0.5500 | 0.5524 |
+| zero-shot SigLIP2 | **0.6218** | 0.6002 | **0.6327** |
+| **SceneMiner v2.3** | 0.6130 | **0.6904** | 0.5743 |
+| logit VLM lookup | 0.5871 | 0.6475 | 0.5569 |
+| SceneMiner v2.1 | 0.4189 | — | — |
 
-v2.2 lifts external transfer by **+0.1763 mAP** over v2.1 and beats both lookup
-baselines, but **does not beat zero-shot SigLIP2** — stated plainly because it
-is the number a reviewer will look for.
+v2.3 does **not** beat zero-shot SigLIP2 externally; it wins in vocabulary and loses out of it.
 
-**The premise, tested correctly** (150 uncontaminated nuScenes val scenes,
-CAM_FRONT degradation vs front-sector detection error):
+**Stratum 5: semantic edge cases, 100 % human ground truth** (258 nuScenes eval scenes):
 
-| metric | degraded | clean | Δ | q (BH) |
-|---|---|---|---|---|
-| front-sector mAP | 0.3886 | 0.4792 | **−0.0906** | 0.015 |
-| FP rate @ score>0.3 | 0.3503 | 0.2775 | **+0.0729** | 0.045 |
-| mATE (m) | 0.8330 | 0.7553 | +0.0777 | 0.080 |
-| recall > 30 m | 0.5312 | 0.6079 | −0.0767 | 0.080 |
+| ranker | atomic (20) | semantic × condition (20) |
+|---|---|---|
+| zero-shot SigLIP2 | **0.3370** | 0.2865 |
+| v2.3A monocular (post-hoc abstention) | 0.3277 | **0.2894** |
+| v2.3 monocular | 0.2295 | 0.2449 |
+| VLM lookups / metadata | 0.2171 (= chance) | 0.18–0.23 |
 
-Only 23.4 % of nuScenes GT lies in the CAM_FRONT FOV, which is why an earlier
-360° scene average found nothing (< 0.07σ) and this targeted test finds
-0.42–0.74σ.
+The fixed-column lookups fall to chance on object queries. The degradation-trained head does not beat SigLIP2 on semantics; at best it defers to it.
 
-**Known costs of v2.2**, not buried: −0.029 mAP in domain, and glare VLM
-false-negative recovery falls from 7/20 to 1/20.
+**The premise, on 150 uncontaminated nuScenes val scenes** (CAM_FRONT sector):
+
+| | Δ | q / p |
+|---|---|---|
+| degraded vs clean front camera: mAP | −0.0906 | q = 0.015 |
+| degraded vs clean: ghost FP rate @ score > 0.3 | +0.0729 | q = 0.045 |
+| v2.3 top-25 for degradation queries vs mean: front mAP | −0.0599 | p = 0.001 |
+| v2.3 top-25 vs mean: VRU recall | −0.1931 | p < 0.001 |
+| v2.3 top-25 vs SigLIP2 top-25: front mAP | −0.0282 | p = 0.004 |
+
+v2.3's retrievals are indistinguishable from those of the VLM-margin lookup and of night/rain metadata.
 
 `results/cvpr/MASTER_REPORT.md` carries every table, including the claims that
-**do not** reproduce and the open limitations.
+**do not** reproduce, the contamination map, and the open limitations.
 
 ---
 
@@ -293,12 +305,17 @@ src/scene_mining/      model, adapters, losses, diagnostic hooks
   filter/lora_grounded_filter.py  v1 head, legacy/pre-repair switches
   filter/sceneminer_v2.py      v2 and v2.1 (query-conditioned routing)
   filter/sceneminer_v2_2.py    v2.2: PartNorm, entropy floor, modality masking
+  filter/sceneminer_v2_3.py    v2.3: concept gate, ResNorm, FN rescue, optional abstention
   adapters/qformer.py          BLIP-2 Q-Former adapter
 scripts/               training, evaluation, baselines, diagnostics, annotation UI
-benchmark_cvpr/        frozen split, 390-query suite, human annotations
-results/cvpr/          MILESTONE1-13.md, MASTER_REPORT.md, all metric JSONs
-paper/main_cvpr.tex    the CVPR manuscript (6 pp, compiles with pdflatex)
-paper/figures/         fig1 architecture, fig2 qualitative, fig3 audit
+benchmark_cvpr/        frozen split, 390-query suite, Stratum-5 queries, human annotations,
+                       human semantic GT from nuScenes 3D annotation
+results/cvpr/          MILESTONE1-17.md, MASTER_REPORT.md, all metric JSONs
+paper/main_cvpr.tex    the CVPR manuscript (8 pp + references, pdflatex)
+paper/supp_cvpr.tex    supplementary (13 pp): specs, protocols, 30-test BH table,
+                       per-query results, training queries, extra figures
+paper/supp_tables/     generated LaTeX tables (scripts/make_supp_tables.py)
+paper/figures/         fig1-fig4 plus supplementary figures
 ```
 
 Checkpoints, feature stores and datasets are untracked — see `.gitignore`.
