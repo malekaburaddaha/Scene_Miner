@@ -137,6 +137,46 @@ deviations of the three base parts converge to $0.031$ (cosine), $0.566$
 of the main paper are therefore visible without any label.
 
 % =====================================================================
+\section{Re-implemented baselines}
+\label{sec:baselines}
+% =====================================================================
+
+The comparison with published paradigms in the main paper (Table~2,
+\texttt{scripts/eval\_related\_work\_baselines.py}) re-implements each paradigm
+on the signals cached for SceneMiner. None is the authors' system: the released
+systems need inputs our corpora lack (object tracks, HD maps, an LLM service),
+and no external API was called. Every method sees the same queries, scenes and
+metrics; trained methods use the same $906$ training scenes and $72$ training
+queries as SceneMiner and five seeds.
+\begin{itemize}\setlength{\itemsep}{1pt}
+\item \textbf{BEV-TSR-style} (text-to-BEV): an MLP ($257\to512\to768$) maps the
+  BEVFormer embedding and standardised risk into SigLIP2 text space, trained with
+  InfoNCE and a learned temperature.
+\item \textbf{RefAV-style} (programmatic filter): a fixed rule-based compiler maps
+  query words to a conjunction of predicates over the VLM's binary attribute
+  decisions, recorded metadata and tag decisions (logit $>0$), with negation
+  handling; the score is the share of predicates satisfied, ties broken by mean
+  standardised evidence ($\times10^{-3}$). RefAV itself has an LLM write programs
+  over tracked 3D objects.
+\item \textbf{CARIM-style} (captions): one Qwen2.5-VL-3B caption per image (greedy,
+  $96$ tokens, $3.6$\,s per image on an A40), scored by z-scored SigLIP2 text
+  cosine plus z-scored BM25. Our caption prompt lists the degradations, and $64\%$
+  of corpus captions mention droplets or glare only to deny them, which hurts
+  both matchers; CARIM's inclusive matching is learned, ours is not.
+\item \textbf{Tag map} (Talk2BEV/nuPrompt-style): soft query-to-tag weights from
+  SigLIP2 text similarity (temperature $0.05$) over the $20$ standardised tag
+  logits.
+\item \textbf{ReferGPT-style}: z-scored CLIP image--text score plus z-scored CLIP
+  text--text score between the query and a text description of the scene's
+  structured state (lighting, weather, density, tags present).
+\item \textbf{SigLIP2 + adapter}: a zero-initialised residual linear adapter on the
+  SigLIP2 image embedding, trained like BEV-TSR-style.
+\item \textbf{CLIP, SigLIP, SigLIP2}: zero-shot image--text cosine; \textbf{lookup}:
+  the a-priori VLM margin column; \textbf{naive convex router}: the first design
+  of Table~1.
+\end{itemize}
+
+% =====================================================================
 \section{Why the 150-query suite is circular}
 \label{sec:supp-circ}
 % =====================================================================
@@ -221,6 +261,54 @@ $\gamma_{\mathrm{deg}}$: concept specificity; column: margin column the gate ali
 when $\gamma_{\mathrm{deg}}\approx0$).}
 \label{tab:bddq}
 \input{tab_bddq.tex}
+\end{table}
+
+\begin{table}[!ht]\centering\small
+\caption{\textbf{Single-rater sensitivity.} Top: macro-mAP on subsets;
+ambiguity is measured by CLIP ViT-B/32, which no ranker uses. Bottom: share of
+$500$ simulated second raters (prevalence fixed; flips uniform or
+ambiguity-weighted) in which SceneMiner's macro-mAP exceeds the comparator's.}
+\label{tab:rater}
+\resizebox{0.6\textwidth}{!}{%
+\begin{tabular}{lccc}
+\toprule
+subset & SceneMiner & lookup & SigLIP2\\
+\midrule
+all $550$ & $0.789$ & $0.733$ & $0.569$\\
+drop $10\%$ most ambiguous & $0.780$ & $0.708$ & $0.579$\\
+drop $20\%$ most ambiguous & $0.760$ & $0.671$ & $0.565$\\
+\midrule
+second rater: Cohen's $\kappa$ & $>$lookup & $>$SigLIP2 & $>$fusion$^{\ast}$\\
+\midrule
+$\kappa=0.90$ (uniform / ambiguity) & $1.00$ / $1.00$ & $1.00$ / $1.00$ & $1.00$ / $1.00$\\
+$\kappa=0.85$ (uniform / ambiguity) & $1.00$ / $1.00$ & $1.00$ / $1.00$ & $1.00$ / $1.00$\\
+$\kappa=0.75$ (uniform / ambiguity) & $0.98$ / $0.92$ & $1.00$ / $1.00$ & $0.98$ / $0.96$\\
+\bottomrule
+\multicolumn{4}{l}{\footnotesize $^{\ast}$late fusion SigLIP2 $+$ lookup.}
+\end{tabular}%
+}
+\end{table}
+
+\begin{table}[!ht]\centering\small
+\caption{\textbf{Where the in-domain lead lives.} Share of $500$ simulated second
+raters in which SceneMiner beats the lookup, or late fusion of SigLIP2 and the
+lookup, per attribute (Cohen's $\kappa=0.85$ uniform flips / $\kappa=0.75$
+ambiguity-weighted flips).}
+\label{tab:rater_attr}
+\resizebox{0.6\textwidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+ & \multicolumn{2}{c}{vs.\ lookup} & \multicolumn{2}{c}{vs.\ SigLIP2 $+$ lookup}\\
+attribute & $\kappa=0.85$ & $\kappa=0.75$ & $\kappa=0.85$ & $\kappa=0.75$\\
+\midrule
+droplets & $0.99$ & $0.85$ & $0.74$ & $0.45$\\
+glare & $0.46$ & $0.28$ & $0.01$ & $0.01$\\
+wet road & $0.59$ & $0.51$ & $0.68$ & $0.23$\\
+low contrast & $1.00$ & $1.00$ & $1.00$ & $1.00$\\
+macro & $1.00$ & $0.92$ & $1.00$ & $0.96$\\
+\bottomrule
+\end{tabular}%
+}
 \end{table}
 
 {\footnotesize
