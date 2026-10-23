@@ -433,7 +433,9 @@
     \def\pid{\parbox{1in}{\begin{center}\bf\sf{\small \confName}\\\small \#\paperID\end{center}}}
     \AtTextUpperLeft{%paperID in corners
       \put(\LenToUnit{-65pt},\LenToUnit{45pt}){\pid}
-      \put(\LenToUnit{\textwidth-12pt},\LenToUnit{45pt}){\pid}
+      % local compatibility edit: \dimexpr so TeX Live 2018's eso-pic evaluates the
+      % length instead of printing "-12pt"; identical output on current TeX.
+      \put(\LenToUnit{\dimexpr\textwidth-12pt\relax},\LenToUnit{45pt}){\pid}
     }
     \AtTextUpperLeft{%confidential
       \put(0,\LenToUnit{1cm}){\parbox{\textwidth}{\centering\cvprtenhv

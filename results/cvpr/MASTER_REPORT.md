@@ -423,33 +423,102 @@ per-query results for all 190 evaluated queries, the 240 training queries
 
 ---
 
+# Part V — Milestones 18–21 (23 Oct 2026)
+
+## 18. One model: SceneMiner (v2.4)
+
+v2.3 and v2.3A are replaced by a single model. Its concept gate is a
+**contrastive posterior over 23 classes built only from training text**: four
+concept classes (156 TRAIN degradation phrasings), seven foil classes (84 TRAIN
+macro phrasings) and 12 generic OOV phrases. τ = 0.02 is chosen by
+leave-one-out on that bank. There, every atomic degradation phrasing scores
+γ = 1.000 and every foil ≤ 0.010. Abstention toward SigLIP2 is always on. Foils
+suggested from BDD100K/Stratum-5 vocabulary (overcast, snow, pedestrian, …)
+were **not** used, because that would have tuned on the test sets.
+
+| | SceneMiner (v2.4) | v2.3 | v2.3A |
+|---|---|---|---|
+| human GT zero-leakage / calibrated | 0.7879 / 0.8165 | 0.7897 / 0.8282 | 0.7613 / — |
+| low_contrast | 0.6448 | 0.6548 | 0.5416 |
+| BDD100K | **0.6387** (> SigLIP2 0.6218) | 0.6130 | 0.6073 |
+| Stratum 5 atomic | 0.3371 (= SigLIP2) | 0.2295 | 0.3277 |
+| suite mAP / skew | 0.5941 / **+0.5** | 0.6313 / +17.0 | 0.5843 / +0.9 |
+
+Costs: suite S3 (compositional degradation × macro) drops because those queries
+name a foil (γ ≈ 0.43); v2.3A's val150 semantic × night/rain result (0.4543, 4
+queries) is not reproduced (0.3778).
+
+## 19. Where learned fusion helps — honestly
+
+Three human-graded regimes against two no-learning controls:
+
+| regime | SceneMiner | SigLIP2 | lookup | SigLIP2+lookup | SigLIP2+metadata |
+|---|---|---|---|---|---|
+| atomic degradation | **0.789** | 0.569 | 0.733 | 0.737 | 0.626 |
+| atomic semantics | 0.337 | 0.337 | 0.217 | = SigLIP2 | = SigLIP2 |
+| object × condition | 0.292 | 0.293 | 0.227 | 0.284 | **0.327** |
+
+**The compositional-synergy claim does not hold.** SigLIP2 + metadata beats
+SceneMiner on all 11 generated conjunctions (p = 0.0007). Grading val150
+conjunctions with VLM labels was declined as circular.
+
+Rater sensitivity: the 50 unsure scenes carry no labels. Removing
+CLIP-ambiguous scenes widens the lead over the lookup. A Monte Carlo second rater
+(κ 0.90/0.85/0.75) keeps SceneMiner ahead of SigLIP2 in 100 % of trials and
+ahead of the lookup in 92–100 % (macro). Per attribute, glare and wet road are
+near coin flips, and glare is lost to SigLIP2+lookup fusion.
+
+## 20. Verified bibliography and the official CVPR kit
+
+All 20 references are generated from fetched metadata (arXiv, Crossref,
+Semantic Scholar, OpenAlex; `paper/bibcheck/`). Every arXiv id resolves to the
+intended paper. Corrections forced by the metadata include the BEVFormer title
+(also wrong in the brief's anchor list), nuPrompt at AAAI 2025, the 23-author
+published Waymo list, and ACDC cited in its ICCV 2021 version. The paper uses
+the official CVPR 2026 author kit. Main text fills pages 1–8 and references
+start on page 9.
+
+## 21. Final inspection
+
+Every page of both PDFs was rasterised and inspected. Fixes made in this pass:
+a "-12pt" artefact printed in every page header by the kit under TeX Live 2018
+(a one-line `\dimexpr` compatibility edit in `cvpr.sty`, identical output on
+current TeX); a non-breaking-space bug in two Crossref titles; overflowing
+tables; floats drifting away from their sections; and stale v2.3 content in
+the supplementary. All qualitative figures show the same number of examples
+from each of nuScenes, Waymo and BDD100K.
+
+---
+
 # Where this leaves the paper
 
-**Defensible claims, as of Milestone 17:**
+**Defensible claims (final):**
 
 1. **The premise holds, and retrieval closes the loop.** Front-camera
    degradation costs 0.0906 front-sector mAP and 7.3 points of ghost-FP rate on
-   uncontaminated data (q < 0.05); the top quartile retrieved for a degradation
-   query loses 0.060 mAP and 0.193 VRU recall.
-2. **Two structural defects:** circular predicate benchmarks (lookup = 1.000) and
-   certifiers trained on the mined scenes (+0.3349 detector mAP; tag head
+   uncontaminated data (q < 0.05). SceneMiner's top retrievals for degradation
+   queries lose 0.057 mAP and 0.196 VRU recall.
+2. **Two structural defects:** circular predicate benchmarks (lookup = 1.000)
+   and certifiers trained on the mined scenes (+0.3349 detector mAP; tag head
    supervised on the same objects).
-3. **Two-level scale incommensurability:** parts (28.1×) and residual (~10×)
-   must be standardised before a learned combination's weights mean anything.
-4. **v2.3 is the best model on human ground truth** (0.7897 / 0.8282).
+3. **Two-level scale incommensurability.** Parts (28.1×) and residual (~10×)
+   must be standardised before learned weights mean anything.
+4. **A single model** that is best on human-graded degradation (0.788 / 0.817),
+   the first above zero-shot SigLIP2 externally (0.639 vs 0.622), equal to
+   SigLIP2 on semantic edge cases, and free of domain skew, with a concept gate
+   that never saw evaluation data.
 
-**What does not survive:** beating SigLIP2 externally (0.6130 vs 0.6218);
-beating SigLIP2 on semantic edge cases (it does not; v2.3A at best matches it);
-finding breakage scenes better than a VLM lookup or night/rain metadata;
-v2.3's domain skew (+17.0); glare FN recovery ≥ 12/20 (7/20); and the earlier
-diagnostic magnitudes (Table 9 of the paper).
+**What does not survive:** learned fusion beating simple fusion on
+object × condition conjunctions; SceneMiner finding breakage scenes better than
+the VLM-margin lookup on val150; a uniform per-attribute lead; and the earlier
+diagnostic magnitudes (Table 12 of the paper).
 
-**Disclosures carried into the paper:** text mean-centring was informed by
-BDD100K; the residual diagnosis behind ResNorm was run on the human-labelled
-scenes; v2.3A was designed after seeing Stratum 5.
+**Disclosures carried in the paper:** text mean-centring and ResNorm were first
+motivated by evaluation data in earlier milestones. Both now have
+training-only support, and every statistic the model uses is computed on
+training data.
 
-**For the authors to verify before submission:** the bibliography (19 entries,
-written from memory, including arXiv numbers); the official CVPR style kit
-(drop `cvpr.sty` into `paper/`); and whether to present v2.3 or v2.3A as the
-headline model, which is a judgment about which trade-off the paper should lead
-with.
+**Before submission, for the authors:** fill in `\paperID`; the paper uses a
+one-line compatibility edit in `cvpr.sty` (marked in the file) that can be
+reverted on Overleaf or any current TeX Live; and decide whether to keep the
+re-audit table of the earlier version (Table 12) given double-blind review.

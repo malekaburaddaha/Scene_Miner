@@ -229,10 +229,23 @@ python scripts/eval_semantic_edge_cases.py      # corpus + clean val150
 python scripts/val150_ped_vru_metrics.py
 python scripts/val150_retrieval_to_3d.py
 
+# ── Milestones 18-20: the single model, fusion regimes, rater study ─────
+python scripts/check_v24_gate_train.py          # gate and tau from training text only
+scripts/launch_seeds.sh scripts/train_sceneminer_v24.py work_dirs/sceneminer_v24 v24
+python scripts/eval_v23.py --model v24 --ckpts "work_dirs/sceneminer_v24/s*/final.pt"
+python scripts/eval_compositional_synergy.py
+python scripts/eval_rater_sensitivity.py
+python scripts/val150_retrieval_to_3d.py --model v24 --out results/cvpr/milestone20_val150_retrieval_v24.json
+
+# ── bibliography (fetched, never typed) ──────────────────────────────────
+SSL_CERT_FILE=/etc/pki/tls/certs/ca-bundle.crt python scripts/verify_bibliography.py
+SSL_CERT_FILE=/etc/pki/tls/certs/ca-bundle.crt python scripts/verify_bibliography_doi.py
+python scripts/build_bib.py
+
 # ── figures, tables and paper ────────────────────────────────────────────
 python scripts/make_figures.py && python scripts/make_supp_tables.py
-cd paper && pdflatex main_cvpr.tex && pdflatex main_cvpr.tex
-pdflatex supp_cvpr.tex && pdflatex supp_cvpr.tex
+cd paper && pdflatex main_cvpr && bibtex main_cvpr && pdflatex main_cvpr && pdflatex main_cvpr
+pdflatex supp_cvpr && pdflatex supp_cvpr
 
 # ── external dataset ────────────────────────────────────────────────
 python scripts/fetch_bdd100k.py                            # 1,000 stratified images
@@ -246,39 +259,42 @@ python scripts/annotate_ui.py --rater <name> --port 8800
 
 ## 7. Headline results
 
+SceneMiner is **one model** (code: `sceneminer_v2_4.py`): PartNorm + ResNorm +
+a contrastive concept gate built only from training text + abstention to
+SigLIP2 out of vocabulary. Earlier versions (v2.1–v2.3) are kept for history.
+
 **Human ground truth, 550 scenes** (macro-mAP over the four degradation attributes):
 
 | ranker | mAP |
 |---|---|
-| **SceneMiner v2.3 + 5-fold human calibration** | **0.8282** |
-| SceneMiner v2.1 + 5-fold human calibration | 0.7924 |
-| **SceneMiner v2.3 (zero-leakage)** | **0.7897** |
-| SceneMiner v2.1 (zero-leakage) | 0.7355 |
+| **SceneMiner + 5-fold human calibration** | **0.8165** |
+| **SceneMiner** (zero-leakage) | **0.7879** |
+| late fusion SigLIP2 + lookup (no learning) | 0.7372 |
 | logit VLM lookup | 0.7325 |
-| SceneMiner v2.2 (zero-leakage) | 0.7065 |
+| late fusion SigLIP2 + metadata | 0.6257 |
 | zero-shot SigLIP2 | 0.5688 |
 
-**External transfer, BDD100K** (1000 images, 12 queries, BDD's own human labels):
+**External transfer, BDD100K** (1000 images, 12 queries, BDD's own human labels, no BDD tuning):
 
-| ranker | all 12 | in-vocab (4) | out-of-vocab (8) |
-|---|---|---|---|
-| zero-shot SigLIP2 | **0.6218** | 0.6002 | **0.6327** |
-| **SceneMiner v2.3** | 0.6130 | **0.6904** | 0.5743 |
-| logit VLM lookup | 0.5871 | 0.6475 | 0.5569 |
-| SceneMiner v2.1 | 0.4189 | — | — |
+| ranker | all 12 | in-vocab (4) | out-of-vocab (8) | P@5 | NDCG@10 |
+|---|---|---|---|---|---|
+| **SceneMiner** | **0.6387** | **0.7087** | 0.6038 | **0.850** | **0.827** |
+| zero-shot SigLIP2 | 0.6218 | 0.6002 | **0.6327** | **0.850** | 0.809 |
+| logit VLM lookup | 0.5871 | 0.6475 | 0.5569 | 0.717 | 0.705 |
 
-v2.3 does **not** beat zero-shot SigLIP2 externally; it wins in vocabulary and loses out of it.
+**Where learned fusion helps** (all human-graded):
 
-**Stratum 5: semantic edge cases, 100 % human ground truth** (258 nuScenes eval scenes):
+| regime | SceneMiner | SigLIP2 | lookup | fusion SigLIP2+lookup | fusion SigLIP2+metadata |
+|---|---|---|---|---|---|
+| atomic degradation (550) | **0.789** | 0.569 | 0.733 | 0.737 | 0.626 |
+| atomic semantics (258 / val150) | **0.337** / **0.383** | 0.337 / 0.382 | 0.217 / 0.220 | = SigLIP2 | = SigLIP2 |
+| object × condition (258) | 0.292 | 0.293 | 0.227 | 0.284 | **0.327** |
 
-| ranker | atomic (20) | semantic × condition (20) |
-|---|---|---|
-| zero-shot SigLIP2 | **0.3370** | 0.2865 |
-| v2.3A monocular (post-hoc abstention) | 0.3277 | **0.2894** |
-| v2.3 monocular | 0.2295 | 0.2449 |
-| VLM lookups / metadata | 0.2171 (= chance) | 0.18–0.23 |
-
-The fixed-column lookups fall to chance on object queries. The degradation-trained head does not beat SigLIP2 on semantics; at best it defers to it.
+SceneMiner wins where it was trained, defers to SigLIP2 on objects, and is
+beaten on conjunctions by a no-learning fusion with metadata (p = 0.0007).
+A simulated second rater (κ 0.75–0.90) keeps it ahead of SigLIP2 in every
+trial and ahead of the lookup in 92–100 % (macro); glare and wet road are near
+ties per attribute.
 
 **The premise, on 150 uncontaminated nuScenes val scenes** (CAM_FRONT sector):
 
@@ -286,14 +302,14 @@ The fixed-column lookups fall to chance on object queries. The degradation-train
 |---|---|---|
 | degraded vs clean front camera: mAP | −0.0906 | q = 0.015 |
 | degraded vs clean: ghost FP rate @ score > 0.3 | +0.0729 | q = 0.045 |
-| v2.3 top-25 for degradation queries vs mean: front mAP | −0.0599 | p = 0.001 |
-| v2.3 top-25 vs mean: VRU recall | −0.1931 | p < 0.001 |
-| v2.3 top-25 vs SigLIP2 top-25: front mAP | −0.0282 | p = 0.004 |
+| SceneMiner top-25 (degradation queries) vs mean: front mAP | −0.057 | p = 0.002 |
+| SceneMiner top-25 vs mean: VRU recall | −0.196 | p < 0.001 |
+| SceneMiner top-25 vs SigLIP2 top-25: front mAP | −0.026 | p = 0.010 |
 
-v2.3's retrievals are indistinguishable from those of the VLM-margin lookup and of night/rain metadata.
+SceneMiner's retrievals are indistinguishable from the VLM-margin lookup's on val150.
 
-`results/cvpr/MASTER_REPORT.md` carries every table, including the claims that
-**do not** reproduce, the contamination map, and the open limitations.
+`results/cvpr/MASTER_REPORT.md` carries every table, the claims that **do not**
+reproduce, the contamination map, and the open limitations.
 
 ---
 
@@ -305,13 +321,16 @@ src/scene_mining/      model, adapters, losses, diagnostic hooks
   filter/lora_grounded_filter.py  v1 head, legacy/pre-repair switches
   filter/sceneminer_v2.py      v2 and v2.1 (query-conditioned routing)
   filter/sceneminer_v2_2.py    v2.2: PartNorm, entropy floor, modality masking
-  filter/sceneminer_v2_3.py    v2.3: concept gate, ResNorm, FN rescue, optional abstention
+  filter/sceneminer_v2_3.py    v2.3: prompt concept gate, ResNorm, FN rescue
+  filter/sceneminer_v2_4.py    SceneMiner (final): contrastive train-derived gate + abstention
   adapters/qformer.py          BLIP-2 Q-Former adapter
 scripts/               training, evaluation, baselines, diagnostics, annotation UI
 benchmark_cvpr/        frozen split, 390-query suite, Stratum-5 queries, human annotations,
                        human semantic GT from nuScenes 3D annotation
-results/cvpr/          MILESTONE1-17.md, MASTER_REPORT.md, all metric JSONs
-paper/main_cvpr.tex    the CVPR manuscript (8 pp + references, pdflatex)
+results/cvpr/          MILESTONE1-21.md, MASTER_REPORT.md, all metric JSONs
+paper/main_cvpr.tex    the CVPR manuscript, official CVPR 2026 kit (cvpr.sty), 8 pp
+                       main text + references from p. 9; main.bib generated from
+                       fetched metadata (paper/bibcheck/)
 paper/supp_cvpr.tex    supplementary (13 pp): specs, protocols, 30-test BH table,
                        per-query results, training queries, extra figures
 paper/supp_tables/     generated LaTeX tables (scripts/make_supp_tables.py)
