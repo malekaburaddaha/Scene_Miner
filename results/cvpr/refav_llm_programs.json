@@ -1,0 +1,3297 @@
+{
+ "doc": "MILESTONE 28 - RefAV-style baseline with LLM-compiled programs.\n\nRefAV has an LLM translate a scenario description into an executable program over\nperception outputs. Here the local Qwen2.5-VL-3B, in text-only mode with greedy\ndecoding and a fixed 5-shot prompt, compiles every benchmark query into a JSON\nconjunction of predicates over the attributes our corpora expose:\n  {\"flag\": droplets|glare|wet_road|low_contrast, \"value\": bool}      (VLM decisions)\n  {\"meta\": lighting|weather|density, \"value\": night|day|rain|dry|dense|sparse}\n  {\"tag\": <one of 20 scene/object tags>, \"value\": bool}               (corpus only)\nThe five examples are invented phrasings that are not benchmark queries (checked\nbelow). Output: results/cvpr/refav_llm_programs.json (raw text, parsed program,\nvalidity), reused by eval_related_work_baselines.py. No external API is called.\n",
+ "system_prompt": "You translate a driving-scene search query into a JSON list of predicates that a matching scene must satisfy. Allowed predicates:\n  {\"flag\": one of ['droplets', 'glare', 'wet_road', 'low_contrast'], \"value\": true or false}  - camera/road degradation seen by a vision model\n  {\"meta\": \"lighting\" | \"weather\" | \"density\", \"value\": \"night\"|\"day\" | \"rain\"|\"dry\" | \"dense\"|\"sparse\"}\n  {\"tag\": one of ['dark', 'rainy', 'construction zone', 'intersection', 'parking lot', 'highway', 'school zone', 'residential', 'pedestrians', 'bicycles', 'motorcycles', 'trucks', 'buses', 'cars', 'emergency vehicles', 'animals', 'jaywalking', 'running pedestrians', 'erratic driving', 'stopped traffic'], \"value\": true or false}\nUse only these. Use as few predicates as needed. Answer with the JSON list only.",
+ "shots": [
+  [
+   "a dim street with headlights glaring",
+   [
+    {
+     "flag": "glare",
+     "value": true
+    },
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ]
+  ],
+  [
+   "a truck parked in heavy traffic",
+   [
+    {
+     "tag": "trucks",
+     "value": true
+    },
+    {
+     "meta": "density",
+     "value": "dense"
+    }
+   ]
+  ],
+  [
+   "a dry sunny road and a clean lens",
+   [
+    {
+     "meta": "weather",
+     "value": "dry"
+    },
+    {
+     "meta": "lighting",
+     "value": "day"
+    },
+    {
+     "flag": "droplets",
+     "value": false
+    }
+   ]
+  ],
+  [
+   "kids walking near a school",
+   [
+    {
+     "tag": "school zone",
+     "value": true
+    },
+    {
+     "tag": "pedestrians",
+     "value": true
+    }
+   ]
+  ],
+  [
+   "a puddle-covered intersection",
+   [
+    {
+     "flag": "wet_road",
+     "value": true
+    },
+    {
+     "tag": "intersection",
+     "value": true
+    }
+   ]
+  ]
+ ],
+ "programs": {
+  "water droplets smearing the camera lens": {
+   "raw": "[{\"flag\": \"droplets\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "droplets",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "blinding headlight bloom from oncoming traffic": {
+   "raw": "[{\"flag\": \"glare\", \"value\": true}, {\"tag\": \"oncoming traffic\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "glare",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "wet reflective asphalt after rainfall": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}, {\"flag\": \"droplets\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    },
+    {
+     "flag": "droplets",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a low contrast scene where vehicles are barely distinguishable from the background": {
+   "raw": "[{\"flag\": \"low_contrast\", \"value\": true}, {\"tag\": \"highway\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "low_contrast",
+     "value": true
+    },
+    {
+     "tag": "highway",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "driving in rain": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}, {\"meta\": \"weather\", \"value\": \"rain\"}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    },
+    {
+     "meta": "weather",
+     "value": "rain"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "snow covering the road": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}, {\"meta\": \"weather\", \"value\": \"snow\"}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "a snowy street scene": {
+   "raw": "[{\"meta\": \"weather\", \"value\": \"snowy\"}]",
+   "program": [],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "driving after dark": {
+   "raw": "[{\"meta\": \"lighting\", \"value\": \"night\"}]",
+   "program": [
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a night-time street scene": {
+   "raw": "[{\"meta\": \"lighting\", \"value\": \"night\"}]",
+   "program": [
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "bright daytime driving": {
+   "raw": "[{\"meta\": \"lighting\", \"value\": \"day\"}, {\"meta\": \"weather\", \"value\": \"dry\"}]",
+   "program": [
+    {
+     "meta": "lighting",
+     "value": "day"
+    },
+    {
+     "meta": "weather",
+     "value": "dry"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "overcast grey sky": {
+   "raw": "[{\"meta\": \"weather\", \"value\": \"overcast\"}, {\"meta\": \"sky\", \"value\": \"grey\"}]",
+   "program": [],
+   "parsed": true,
+   "n_dropped": 2
+  },
+  "adverse weather on the road": {
+   "raw": "[{\"meta\": \"weather\", \"value\": \"rainy\"}]",
+   "program": [],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "pedestrians walking near the roadway": {
+   "raw": "[{\"tag\": \"pedestrians\", \"value\": true}, {\"tag\": \"roadway\", \"value\": true}]",
+   "program": [
+    {
+     "tag": "pedestrians",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "a person crossing the street in front of the car": {
+   "raw": "[{\"tag\": \"pedestrians\", \"value\": true}]",
+   "program": [
+    {
+     "tag": "pedestrians",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "people on foot close to the vehicle": {
+   "raw": "[{\"tag\": \"pedestrians\", \"value\": true}]",
+   "program": [
+    {
+     "tag": "pedestrians",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "pedestrians at a crosswalk ahead": {
+   "raw": "[{\"tag\": \"crosswalk\", \"value\": true}, {\"tag\": \"pedestrians\", \"value\": true}]",
+   "program": [
+    {
+     "tag": "pedestrians",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "bicyclist or motorcyclist in traffic": {
+   "raw": "[{\"tag\": \"bicycles\", \"value\": true}, {\"tag\": \"motorcycles\", \"value\": true}, {\"meta\": \"density\", \"value\": \"dense\"}]",
+   "program": [
+    {
+     "tag": "bicycles",
+     "value": true
+    },
+    {
+     "tag": "motorcycles",
+     "value": true
+    },
+    {
+     "meta": "density",
+     "value": "dense"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a cyclist riding on the road ahead": {
+   "raw": "[{\"tag\": \"bicycles\", \"value\": true}]",
+   "program": [
+    {
+     "tag": "bicycles",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a motorcycle rider sharing the lane": {
+   "raw": "[{\"tag\": \"motorcycles\", \"value\": true}, {\"tag\": \"driving\", \"value\": true}]",
+   "program": [
+    {
+     "tag": "motorcycles",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "vulnerable road users close to the car": {
+   "raw": "[{\"tag\": \"pedestrians\", \"value\": true}, {\"tag\": \"bicycles\", \"value\": true}, {\"tag\": \"motorcycles\", \"value\": true}, {\"tag\": \"trucks\", \"value\": true}, {\"tag\": \"buses\", \"value\": true}, {\"tag\": \"cars\", \"value\": true}, {\"tag\": \"emergency vehicles\", \"value\": true}, {\"tag\": \"animals\", \"value\": true}, {\"tag\": \"jaywalking\", \"value\": true}, {\"tag\": \"running pedestrians\", \"value\": true",
+   "program": [],
+   "parsed": false,
+   "n_dropped": null
+  },
+  "road construction zone with traffic cones and barriers": {
+   "raw": "[{\"tag\": \"construction zone\", \"value\": true}, {\"tag\": \"barriers\", \"value\": true}, {\"tag\": \"traffic cones\", \"value\": true}]",
+   "program": [
+    {
+     "tag": "construction zone",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 2
+  },
+  "traffic cones blocking part of the lane": {
+   "raw": "[{\"tag\": \"construction zone\", \"value\": true}]",
+   "program": [
+    {
+     "tag": "construction zone",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "construction workers and equipment on the road": {
+   "raw": "[{\"tag\": \"construction zone\", \"value\": true}]",
+   "program": [
+    {
+     "tag": "construction zone",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a work zone with orange cones": {
+   "raw": "[{\"tag\": \"construction zone\", \"value\": true}]",
+   "program": [
+    {
+     "tag": "construction zone",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "large truck or bus ahead": {
+   "raw": "[{\"tag\": \"trucks\", \"value\": true}, {\"tag\": \"buses\", \"value\": true}]",
+   "program": [
+    {
+     "tag": "trucks",
+     "value": true
+    },
+    {
+     "tag": "buses",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a city bus right in front of the car": {
+   "raw": "[{\"tag\": \"buses\", \"value\": true}, {\"tag\": \"cars\", \"value\": true}]",
+   "program": [
+    {
+     "tag": "buses",
+     "value": true
+    },
+    {
+     "tag": "cars",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a heavy truck driving close by": {
+   "raw": "[{\"tag\": \"trucks\", \"value\": true}, {\"meta\": \"density\", \"value\": \"dense\"}]",
+   "program": [
+    {
+     "tag": "trucks",
+     "value": true
+    },
+    {
+     "meta": "density",
+     "value": "dense"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a trailer or construction vehicle nearby": {
+   "raw": "[{\"tag\": \"trailer\", \"value\": true}, {\"tag\": \"construction zone\", \"value\": true}]",
+   "program": [
+    {
+     "tag": "construction zone",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "a child, stroller or wheelchair user near the road": {
+   "raw": "[{\"tag\": \"pedestrians\", \"value\": true}]",
+   "program": [
+    {
+     "tag": "pedestrians",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "rare or unusual road users near the vehicle": {
+   "raw": "[{\"tag\": \"bicycles\", \"value\": true}, {\"tag\": \"motorcycles\", \"value\": true}, {\"tag\": \"trucks\", \"value\": true}, {\"tag\": \"buses\", \"value\": true}, {\"tag\": \"cars\", \"value\": true}, {\"tag\": \"emergency vehicles\", \"value\": true}]",
+   "program": [
+    {
+     "tag": "bicycles",
+     "value": true
+    },
+    {
+     "tag": "motorcycles",
+     "value": true
+    },
+    {
+     "tag": "trucks",
+     "value": true
+    },
+    {
+     "tag": "buses",
+     "value": true
+    },
+    {
+     "tag": "cars",
+     "value": true
+    },
+    {
+     "tag": "emergency vehicles",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a police officer, emergency vehicle or debris on the street": {
+   "raw": "[{\"tag\": \"emergency vehicles\", \"value\": true}]",
+   "program": [
+    {
+     "tag": "emergency vehicles",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "unexpected objects or vulnerable people near the lane": {
+   "raw": "[{\"tag\": \"bicycles\", \"value\": true}, {\"tag\": \"buses\", \"value\": true}, {\"tag\": \"motorcycles\", \"value\": true}, {\"tag\": \"trucks\", \"value\": true}, {\"tag\": \"buses\", \"value\": true}, {\"tag\": \"motorcycles\", \"value\": true}, {\"tag\": \"trucks\", \"value\": true}, {\"tag\": \"buses\", \"value\": true}, {\"tag\": \"motorcycles\", \"value\": true}, {\"tag\": \"trucks\", \"value\":",
+   "program": [],
+   "parsed": false,
+   "n_dropped": null
+  },
+  "pedestrians walking near the road at night": {
+   "raw": "[{\"tag\": \"pedestrians\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"night\"}]",
+   "program": [
+    {
+     "tag": "pedestrians",
+     "value": true
+    },
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "people crossing the street after dark": {
+   "raw": "[{\"tag\": \"pedestrians\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"night\"}]",
+   "program": [
+    {
+     "tag": "pedestrians",
+     "value": true
+    },
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "pedestrians walking in the rain": {
+   "raw": "[{\"tag\": \"pedestrians\", \"value\": true}, {\"meta\": \"weather\", \"value\": \"rain\"}]",
+   "program": [
+    {
+     "tag": "pedestrians",
+     "value": true
+    },
+    {
+     "meta": "weather",
+     "value": "rain"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "people on foot near the road on a rainy day": {
+   "raw": "[{\"tag\": \"pedestrians\", \"value\": true}, {\"meta\": \"weather\", \"value\": \"rainy\"}]",
+   "program": [
+    {
+     "tag": "pedestrians",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "pedestrians near a wet reflective road": {
+   "raw": "[{\"tag\": \"pedestrians\", \"value\": true}, {\"flag\": \"wet_road\", \"value\": true}]",
+   "program": [
+    {
+     "tag": "pedestrians",
+     "value": true
+    },
+    {
+     "flag": "wet_road",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "pedestrians visible through raindrops on the camera lens": {
+   "raw": "[{\"flag\": \"droplets\", \"value\": true}, {\"tag\": \"pedestrians\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "droplets",
+     "value": true
+    },
+    {
+     "tag": "pedestrians",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a person on the street seen through a wet, spotted lens": {
+   "raw": "[{\"flag\": \"droplets\", \"value\": true}, {\"tag\": \"street\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "droplets",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "pedestrians barely visible in a low contrast dark scene": {
+   "raw": "[{\"flag\": \"low_contrast\", \"value\": true}, {\"tag\": \"pedestrians\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "low_contrast",
+     "value": true
+    },
+    {
+     "tag": "pedestrians",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "construction zone with cones on a rainy day": {
+   "raw": "[{\"tag\": \"construction zone\", \"value\": true}, {\"meta\": \"weather\", \"value\": \"rainy\"}]",
+   "program": [
+    {
+     "tag": "construction zone",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "road works with traffic cones in the rain": {
+   "raw": "[{\"tag\": \"construction zone\", \"value\": true}, {\"tag\": \"rainy\", \"value\": true}, {\"tag\": \"traffic cones\", \"value\": true}]",
+   "program": [
+    {
+     "tag": "construction zone",
+     "value": true
+    },
+    {
+     "tag": "rainy",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "construction barriers and cones on a wet reflective road": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}, {\"tag\": \"construction zone\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    },
+    {
+     "tag": "construction zone",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "traffic cones on wet glistening pavement": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}, {\"tag\": \"construction zone\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    },
+    {
+     "tag": "construction zone",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "traffic cones seen through water droplets on the lens": {
+   "raw": "[{\"flag\": \"droplets\", \"value\": true}, {\"tag\": \"construction zone\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "droplets",
+     "value": true
+    },
+    {
+     "tag": "construction zone",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a bus or truck ahead in the rain": {
+   "raw": "[{\"tag\": \"buses\", \"value\": true}, {\"tag\": \"trucks\", \"value\": true}, {\"meta\": \"weather\", \"value\": \"rain\"}]",
+   "program": [
+    {
+     "tag": "buses",
+     "value": true
+    },
+    {
+     "tag": "trucks",
+     "value": true
+    },
+    {
+     "meta": "weather",
+     "value": "rain"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "heavy truck driving in rainy weather": {
+   "raw": "[{\"tag\": \"trucks\", \"value\": true}, {\"meta\": \"weather\", \"value\": \"rainy\"}]",
+   "program": [
+    {
+     "tag": "trucks",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "a large truck on a wet reflective road": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}, {\"tag\": \"truck\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "a bus driving on wet pavement": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}, {\"tag\": \"bus\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "a bus or truck seen through rain droplets on the lens": {
+   "raw": "[{\"flag\": \"droplets\", \"value\": true}, {\"tag\": \"buses\", \"value\": true}, {\"tag\": \"trucks\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "droplets",
+     "value": true
+    },
+    {
+     "tag": "buses",
+     "value": true
+    },
+    {
+     "tag": "trucks",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a large vehicle ahead behind a rain-spattered lens": {
+   "raw": "[{\"flag\": \"droplets\", \"value\": true}, {\"tag\": \"large vehicle\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "droplets",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "unusual road users near a wet road": {
+   "raw": "[{\"tag\": \"bicycles\", \"value\": true}, {\"tag\": \"motorcycles\", \"value\": true}, {\"tag\": \"trucks\", \"value\": true}, {\"tag\": \"buses\", \"value\": true}, {\"tag\": \"cars\", \"value\": true}, {\"tag\": \"emergency vehicles\", \"value\": true}]",
+   "program": [
+    {
+     "tag": "bicycles",
+     "value": true
+    },
+    {
+     "tag": "motorcycles",
+     "value": true
+    },
+    {
+     "tag": "trucks",
+     "value": true
+    },
+    {
+     "tag": "buses",
+     "value": true
+    },
+    {
+     "tag": "cars",
+     "value": true
+    },
+    {
+     "tag": "emergency vehicles",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a few water specks on the lens": {
+   "raw": "[{\"flag\": \"droplets\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "droplets",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "light droplets scattered on the lens": {
+   "raw": "[{\"flag\": \"droplets\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "droplets",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "rain beading across the lens": {
+   "raw": "[{\"flag\": \"droplets\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "droplets",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a faint halo around a street light": {
+   "raw": "[{\"flag\": \"glare\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "glare",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "mild light flare at the frame edge": {
+   "raw": "[{\"flag\": \"glare\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"mild\"}]",
+   "program": [
+    {
+     "flag": "glare",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "noticeable glare washing across the image": {
+   "raw": "[{\"flag\": \"glare\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "glare",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "specular glare washing out the image": {
+   "raw": "[{\"flag\": \"glare\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "glare",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a lightly damp road surface": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "patchy wet tarmac": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}, {\"meta\": \"density\", \"value\": \"sparse\"}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    },
+    {
+     "meta": "density",
+     "value": "sparse"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "slick wet pavement throwing reflections": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}, {\"flag\": \"droplets\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    },
+    {
+     "flag": "droplets",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "slightly flat lighting": {
+   "raw": "[{\"meta\": \"lighting\", \"value\": \"slightly flat\"}]",
+   "program": [],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "a dim view where shapes lose definition": {
+   "raw": "[{\"flag\": \"low_contrast\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "low_contrast",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "hazy washed out view with unclear boundaries": {
+   "raw": "[{\"flag\": \"low_contrast\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "low_contrast",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "poor visibility with objects blending in": {
+   "raw": "[{\"flag\": \"low_contrast\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "low_contrast",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a few water specks on the lens at night": {
+   "raw": "[{\"flag\": \"droplets\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"night\"}]",
+   "program": [
+    {
+     "flag": "droplets",
+     "value": true
+    },
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a few water specks on the lens in daylight": {
+   "raw": "[{\"flag\": \"droplets\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"day\"}]",
+   "program": [
+    {
+     "flag": "droplets",
+     "value": true
+    },
+    {
+     "meta": "lighting",
+     "value": "day"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a few water specks on the lens in rain": {
+   "raw": "[{\"flag\": \"droplets\", \"value\": true}, {\"meta\": \"weather\", \"value\": \"rain\"}]",
+   "program": [
+    {
+     "flag": "droplets",
+     "value": true
+    },
+    {
+     "meta": "weather",
+     "value": "rain"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a few water specks on the lens in dense traffic": {
+   "raw": "[{\"flag\": \"droplets\", \"value\": true}, {\"meta\": \"density\", \"value\": \"dense\"}, {\"flag\": \"glare\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "droplets",
+     "value": true
+    },
+    {
+     "meta": "density",
+     "value": "dense"
+    },
+    {
+     "flag": "glare",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a few water specks on the lens on an empty road": {
+   "raw": "[{\"flag\": \"droplets\", \"value\": true}, {\"meta\": \"density\", \"value\": \"sparse\"}, {\"meta\": \"weather\", \"value\": \"dry\"}]",
+   "program": [
+    {
+     "flag": "droplets",
+     "value": true
+    },
+    {
+     "meta": "density",
+     "value": "sparse"
+    },
+    {
+     "meta": "weather",
+     "value": "dry"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "light droplets scattered on the lens at night": {
+   "raw": "[{\"flag\": \"droplets\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"night\"}]",
+   "program": [
+    {
+     "flag": "droplets",
+     "value": true
+    },
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "light droplets scattered on the lens in daylight": {
+   "raw": "[{\"flag\": \"droplets\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"day\"}]",
+   "program": [
+    {
+     "flag": "droplets",
+     "value": true
+    },
+    {
+     "meta": "lighting",
+     "value": "day"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "light droplets scattered on the lens in rain": {
+   "raw": "[{\"flag\": \"droplets\", \"value\": true}, {\"meta\": \"weather\", \"value\": \"rain\"}]",
+   "program": [
+    {
+     "flag": "droplets",
+     "value": true
+    },
+    {
+     "meta": "weather",
+     "value": "rain"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "light droplets scattered on the lens in dense traffic": {
+   "raw": "[{\"flag\": \"droplets\", \"value\": true}, {\"meta\": \"density\", \"value\": \"dense\"}, {\"flag\": \"glare\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "droplets",
+     "value": true
+    },
+    {
+     "meta": "density",
+     "value": "dense"
+    },
+    {
+     "flag": "glare",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "light droplets scattered on the lens on an empty road": {
+   "raw": "[{\"flag\": \"droplets\", \"value\": true}, {\"meta\": \"density\", \"value\": \"sparse\"}, {\"tag\": \"highway\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "droplets",
+     "value": true
+    },
+    {
+     "meta": "density",
+     "value": "sparse"
+    },
+    {
+     "tag": "highway",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "water droplets smearing the camera lens at night": {
+   "raw": "[{\"flag\": \"droplets\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"night\"}]",
+   "program": [
+    {
+     "flag": "droplets",
+     "value": true
+    },
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "water droplets smearing the camera lens in daylight": {
+   "raw": "[{\"flag\": \"droplets\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"day\"}]",
+   "program": [
+    {
+     "flag": "droplets",
+     "value": true
+    },
+    {
+     "meta": "lighting",
+     "value": "day"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "water droplets smearing the camera lens in rain": {
+   "raw": "[{\"flag\": \"droplets\", \"value\": true}, {\"meta\": \"weather\", \"value\": \"rain\"}]",
+   "program": [
+    {
+     "flag": "droplets",
+     "value": true
+    },
+    {
+     "meta": "weather",
+     "value": "rain"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "water droplets smearing the camera lens in dense traffic": {
+   "raw": "[{\"flag\": \"droplets\", \"value\": true}, {\"meta\": \"density\", \"value\": \"dense\"}, {\"flag\": \"glare\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "droplets",
+     "value": true
+    },
+    {
+     "meta": "density",
+     "value": "dense"
+    },
+    {
+     "flag": "glare",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "water droplets smearing the camera lens on an empty road": {
+   "raw": "[{\"flag\": \"droplets\", \"value\": true}, {\"flag\": \"wet_road\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "droplets",
+     "value": true
+    },
+    {
+     "flag": "wet_road",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a faint halo around a street light at night": {
+   "raw": "[{\"flag\": \"glare\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"night\"}]",
+   "program": [
+    {
+     "flag": "glare",
+     "value": true
+    },
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a faint halo around a street light in daylight": {
+   "raw": "[{\"flag\": \"glare\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"day\"}]",
+   "program": [
+    {
+     "flag": "glare",
+     "value": true
+    },
+    {
+     "meta": "lighting",
+     "value": "day"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a faint halo around a street light in rain": {
+   "raw": "[{\"flag\": \"glare\", \"value\": true}, {\"meta\": \"weather\", \"value\": \"rain\"}]",
+   "program": [
+    {
+     "flag": "glare",
+     "value": true
+    },
+    {
+     "meta": "weather",
+     "value": "rain"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a faint halo around a street light in dense traffic": {
+   "raw": "[{\"flag\": \"glare\", \"value\": true}, {\"meta\": \"density\", \"value\": \"dense\"}]",
+   "program": [
+    {
+     "flag": "glare",
+     "value": true
+    },
+    {
+     "meta": "density",
+     "value": "dense"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a faint halo around a street light on an empty road": {
+   "raw": "[{\"flag\": \"glare\", \"value\": true}, {\"meta\": \"density\", \"value\": \"sparse\"}]",
+   "program": [
+    {
+     "flag": "glare",
+     "value": true
+    },
+    {
+     "meta": "density",
+     "value": "sparse"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "mild light flare at the frame edge at night": {
+   "raw": "[{\"flag\": \"glare\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"night\"}]",
+   "program": [
+    {
+     "flag": "glare",
+     "value": true
+    },
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "mild light flare at the frame edge in daylight": {
+   "raw": "[{\"flag\": \"glare\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"day\"}]",
+   "program": [
+    {
+     "flag": "glare",
+     "value": true
+    },
+    {
+     "meta": "lighting",
+     "value": "day"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "mild light flare at the frame edge in rain": {
+   "raw": "[{\"flag\": \"glare\", \"value\": true}, {\"meta\": \"weather\", \"value\": \"rain\"}]",
+   "program": [
+    {
+     "flag": "glare",
+     "value": true
+    },
+    {
+     "meta": "weather",
+     "value": "rain"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "mild light flare at the frame edge in dense traffic": {
+   "raw": "[{\"flag\": \"glare\", \"value\": true}, {\"meta\": \"density\", \"value\": \"dense\"}, {\"meta\": \"lighting\", \"value\": \"mild\"}]",
+   "program": [
+    {
+     "flag": "glare",
+     "value": true
+    },
+    {
+     "meta": "density",
+     "value": "dense"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "mild light flare at the frame edge on an empty road": {
+   "raw": "[{\"flag\": \"glare\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"mild\"}, {\"meta\": \"density\", \"value\": \"sparse\"}]",
+   "program": [
+    {
+     "flag": "glare",
+     "value": true
+    },
+    {
+     "meta": "density",
+     "value": "sparse"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "noticeable glare washing across the image at night": {
+   "raw": "[{\"flag\": \"glare\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"night\"}]",
+   "program": [
+    {
+     "flag": "glare",
+     "value": true
+    },
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "noticeable glare washing across the image in daylight": {
+   "raw": "[{\"flag\": \"glare\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"day\"}]",
+   "program": [
+    {
+     "flag": "glare",
+     "value": true
+    },
+    {
+     "meta": "lighting",
+     "value": "day"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "noticeable glare washing across the image in rain": {
+   "raw": "[{\"flag\": \"glare\", \"value\": true}, {\"meta\": \"weather\", \"value\": \"rain\"}]",
+   "program": [
+    {
+     "flag": "glare",
+     "value": true
+    },
+    {
+     "meta": "weather",
+     "value": "rain"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "noticeable glare washing across the image in dense traffic": {
+   "raw": "[{\"flag\": \"glare\", \"value\": true}, {\"meta\": \"density\", \"value\": \"dense\"}]",
+   "program": [
+    {
+     "flag": "glare",
+     "value": true
+    },
+    {
+     "meta": "density",
+     "value": "dense"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "noticeable glare washing across the image on an empty road": {
+   "raw": "[{\"flag\": \"glare\", \"value\": true}, {\"meta\": \"density\", \"value\": \"sparse\"}]",
+   "program": [
+    {
+     "flag": "glare",
+     "value": true
+    },
+    {
+     "meta": "density",
+     "value": "sparse"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a lightly damp road surface at night": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"night\"}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    },
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a lightly damp road surface in daylight": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"day\"}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    },
+    {
+     "meta": "lighting",
+     "value": "day"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a lightly damp road surface in rain": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}, {\"meta\": \"weather\", \"value\": \"rain\"}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    },
+    {
+     "meta": "weather",
+     "value": "rain"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a lightly damp road surface in dense traffic": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}, {\"meta\": \"density\", \"value\": \"dense\"}, {\"tag\": \"highway\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    },
+    {
+     "meta": "density",
+     "value": "dense"
+    },
+    {
+     "tag": "highway",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a lightly damp road surface on an empty road": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}, {\"meta\": \"density\", \"value\": \"sparse\"}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    },
+    {
+     "meta": "density",
+     "value": "sparse"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "patchy wet tarmac at night": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"night\"}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    },
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "patchy wet tarmac in daylight": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"day\"}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    },
+    {
+     "meta": "lighting",
+     "value": "day"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "patchy wet tarmac in rain": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}, {\"meta\": \"weather\", \"value\": \"rain\"}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    },
+    {
+     "meta": "weather",
+     "value": "rain"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "patchy wet tarmac in dense traffic": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}, {\"meta\": \"density\", \"value\": \"dense\"}, {\"tag\": \"highway\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    },
+    {
+     "meta": "density",
+     "value": "dense"
+    },
+    {
+     "tag": "highway",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "patchy wet tarmac on an empty road": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}, {\"meta\": \"density\", \"value\": \"sparse\"}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    },
+    {
+     "meta": "density",
+     "value": "sparse"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "wet reflective asphalt after rainfall at night": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}, {\"flag\": \"droplets\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"night\"}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    },
+    {
+     "flag": "droplets",
+     "value": true
+    },
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "wet reflective asphalt after rainfall in daylight": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}, {\"meta\": \"weather\", \"value\": \"rain\"}, {\"meta\": \"lighting\", \"value\": \"day\"}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    },
+    {
+     "meta": "weather",
+     "value": "rain"
+    },
+    {
+     "meta": "lighting",
+     "value": "day"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "wet reflective asphalt after rainfall in rain": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}, {\"flag\": \"droplets\", \"value\": true}, {\"meta\": \"weather\", \"value\": \"rain\"}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    },
+    {
+     "flag": "droplets",
+     "value": true
+    },
+    {
+     "meta": "weather",
+     "value": "rain"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "wet reflective asphalt after rainfall in dense traffic": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}, {\"meta\": \"density\", \"value\": \"dense\"}, {\"meta\": \"weather\", \"value\": \"rain\"}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    },
+    {
+     "meta": "density",
+     "value": "dense"
+    },
+    {
+     "meta": "weather",
+     "value": "rain"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "wet reflective asphalt after rainfall on an empty road": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}, {\"meta\": \"weather\", \"value\": \"rain\"}, {\"meta\": \"density\", \"value\": \"sparse\"}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    },
+    {
+     "meta": "weather",
+     "value": "rain"
+    },
+    {
+     "meta": "density",
+     "value": "sparse"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "slightly flat lighting at night": {
+   "raw": "[{\"meta\": \"lighting\", \"value\": \"night\"}, {\"meta\": \"density\", \"value\": \"sparse\"}]",
+   "program": [
+    {
+     "meta": "lighting",
+     "value": "night"
+    },
+    {
+     "meta": "density",
+     "value": "sparse"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "low ambient light driving": {
+   "raw": "[{\"meta\": \"lighting\", \"value\": \"night\"}, {\"flag\": \"low_contrast\", \"value\": true}]",
+   "program": [
+    {
+     "meta": "lighting",
+     "value": "night"
+    },
+    {
+     "flag": "low_contrast",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a clear daylight street": {
+   "raw": "[{\"meta\": \"lighting\", \"value\": \"day\"}, {\"meta\": \"weather\", \"value\": \"dry\"}]",
+   "program": [
+    {
+     "meta": "lighting",
+     "value": "day"
+    },
+    {
+     "meta": "weather",
+     "value": "dry"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a midday road scene": {
+   "raw": "[{\"meta\": \"lighting\", \"value\": \"day\"}]",
+   "program": [
+    {
+     "meta": "lighting",
+     "value": "day"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a rainy street": {
+   "raw": "[{\"tag\": \"rainy\", \"value\": true}]",
+   "program": [
+    {
+     "tag": "rainy",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "wet weather driving": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}, {\"meta\": \"weather\", \"value\": \"rainy\"}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "dry road conditions": {
+   "raw": "[{\"meta\": \"weather\", \"value\": \"dry\"}]",
+   "program": [
+    {
+     "meta": "weather",
+     "value": "dry"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a dry clear day": {
+   "raw": "[{\"meta\": \"weather\", \"value\": \"day\"}, {\"meta\": \"weather\", \"value\": \"dry\"}]",
+   "program": [
+    {
+     "meta": "weather",
+     "value": "dry"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "no precipitation on the road": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": false}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": false
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "dense bumper-to-bumper traffic": {
+   "raw": "[{\"meta\": \"density\", \"value\": \"dense\"}, {\"tag\": \"traffic\", \"value\": true}]",
+   "program": [
+    {
+     "meta": "density",
+     "value": "dense"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "a congested roadway": {
+   "raw": "[{\"meta\": \"density\", \"value\": \"dense\"}, {\"tag\": \"highway\", \"value\": true}]",
+   "program": [
+    {
+     "meta": "density",
+     "value": "dense"
+    },
+    {
+     "tag": "highway",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a heavy traffic jam": {
+   "raw": "[{\"meta\": \"density\", \"value\": \"dense\"}, {\"tag\": \"stopped traffic\", \"value\": true}]",
+   "program": [
+    {
+     "meta": "density",
+     "value": "dense"
+    },
+    {
+     "tag": "stopped traffic",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "an almost empty road": {
+   "raw": "[{\"meta\": \"density\", \"value\": \"sparse\"}, {\"tag\": \"highway\", \"value\": true}]",
+   "program": [
+    {
+     "meta": "density",
+     "value": "sparse"
+    },
+    {
+     "tag": "highway",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "sparse traffic": {
+   "raw": "[{\"meta\": \"density\", \"value\": \"sparse\"}, {\"tag\": \"traffic\", \"value\": true}]",
+   "program": [
+    {
+     "meta": "density",
+     "value": "sparse"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "a deserted street": {
+   "raw": "[{\"tag\": \"residential\", \"value\": true}, {\"meta\": \"density\", \"value\": \"sparse\"}]",
+   "program": [
+    {
+     "tag": "residential",
+     "value": true
+    },
+    {
+     "meta": "density",
+     "value": "sparse"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a moderately busy road": {
+   "raw": "[{\"meta\": \"density\", \"value\": \"moderate\"}]",
+   "program": [],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "a few vehicles around": {
+   "raw": "[{\"tag\": \"cars\", \"value\": true}]",
+   "program": [
+    {
+     "tag": "cars",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "light traffic flow": {
+   "raw": "[{\"meta\": \"density\", \"value\": \"sparse\"}]",
+   "program": [
+    {
+     "meta": "density",
+     "value": "sparse"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "driving after dark, driving in rain": {
+   "raw": "[{\"meta\": \"lighting\", \"value\": \"night\"}, {\"meta\": \"weather\", \"value\": \"rain\"}]",
+   "program": [
+    {
+     "meta": "lighting",
+     "value": "night"
+    },
+    {
+     "meta": "weather",
+     "value": "rain"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "driving after dark, dry road conditions": {
+   "raw": "[{\"meta\": \"lighting\", \"value\": \"night\"}, {\"meta\": \"weather\", \"value\": \"dry\"}, {\"flag\": \"droplets\", \"value\": false}]",
+   "program": [
+    {
+     "meta": "lighting",
+     "value": "night"
+    },
+    {
+     "meta": "weather",
+     "value": "dry"
+    },
+    {
+     "flag": "droplets",
+     "value": false
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "driving after dark, dense bumper-to-bumper traffic": {
+   "raw": "[{\"meta\": \"lighting\", \"value\": \"night\"}, {\"meta\": \"density\", \"value\": \"dense\"}, {\"tag\": \"highway\", \"value\": true}]",
+   "program": [
+    {
+     "meta": "lighting",
+     "value": "night"
+    },
+    {
+     "meta": "density",
+     "value": "dense"
+    },
+    {
+     "tag": "highway",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "driving after dark, an almost empty road": {
+   "raw": "[{\"meta\": \"lighting\", \"value\": \"night\"}, {\"meta\": \"density\", \"value\": \"sparse\"}]",
+   "program": [
+    {
+     "meta": "lighting",
+     "value": "night"
+    },
+    {
+     "meta": "density",
+     "value": "sparse"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "driving after dark, a moderately busy road": {
+   "raw": "[{\"meta\": \"lighting\", \"value\": \"night\"}, {\"meta\": \"density\", \"value\": \"moderate\"}]",
+   "program": [
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "bright daytime driving, driving in rain": {
+   "raw": "[{\"meta\": \"lighting\", \"value\": \"day\"}, {\"meta\": \"weather\", \"value\": \"rain\"}]",
+   "program": [
+    {
+     "meta": "lighting",
+     "value": "day"
+    },
+    {
+     "meta": "weather",
+     "value": "rain"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "bright daytime driving, dry road conditions": {
+   "raw": "[{\"meta\": \"lighting\", \"value\": \"day\"}, {\"meta\": \"weather\", \"value\": \"dry\"}]",
+   "program": [
+    {
+     "meta": "lighting",
+     "value": "day"
+    },
+    {
+     "meta": "weather",
+     "value": "dry"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "bright daytime driving, dense bumper-to-bumper traffic": {
+   "raw": "[{\"meta\": \"lighting\", \"value\": \"day\"}, {\"meta\": \"density\", \"value\": \"dense\"}, {\"tag\": \"highway\", \"value\": true}]",
+   "program": [
+    {
+     "meta": "lighting",
+     "value": "day"
+    },
+    {
+     "meta": "density",
+     "value": "dense"
+    },
+    {
+     "tag": "highway",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "bright daytime driving, an almost empty road": {
+   "raw": "[{\"meta\": \"lighting\", \"value\": \"day\"}, {\"meta\": \"density\", \"value\": \"sparse\"}]",
+   "program": [
+    {
+     "meta": "lighting",
+     "value": "day"
+    },
+    {
+     "meta": "density",
+     "value": "sparse"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "bright daytime driving, a moderately busy road": {
+   "raw": "[{\"meta\": \"lighting\", \"value\": \"day\"}, {\"meta\": \"density\", \"value\": \"moderate\"}]",
+   "program": [
+    {
+     "meta": "lighting",
+     "value": "day"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "driving in rain, dense bumper-to-bumper traffic": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}, {\"meta\": \"density\", \"value\": \"dense\"}, {\"tag\": \"intersection\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    },
+    {
+     "meta": "density",
+     "value": "dense"
+    },
+    {
+     "tag": "intersection",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "driving in rain, an almost empty road": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}, {\"meta\": \"weather\", \"value\": \"rain\"}, {\"meta\": \"density\", \"value\": \"sparse\"}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    },
+    {
+     "meta": "weather",
+     "value": "rain"
+    },
+    {
+     "meta": "density",
+     "value": "sparse"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "driving in rain, a moderately busy road": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}, {\"meta\": \"density\", \"value\": \"moderate\"}, {\"tag\": \"highway\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    },
+    {
+     "tag": "highway",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "dry road conditions, dense bumper-to-bumper traffic": {
+   "raw": "[{\"meta\": \"density\", \"value\": \"dense\"}, {\"meta\": \"weather\", \"value\": \"dry\"}]",
+   "program": [
+    {
+     "meta": "density",
+     "value": "dense"
+    },
+    {
+     "meta": "weather",
+     "value": "dry"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "dry road conditions, an almost empty road": {
+   "raw": "[{\"meta\": \"weather\", \"value\": \"dry\"}, {\"meta\": \"density\", \"value\": \"sparse\"}]",
+   "program": [
+    {
+     "meta": "weather",
+     "value": "dry"
+    },
+    {
+     "meta": "density",
+     "value": "sparse"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "dry road conditions, a moderately busy road": {
+   "raw": "[{\"meta\": \"weather\", \"value\": \"dry\"}, {\"meta\": \"density\", \"value\": \"moderate\"}]",
+   "program": [
+    {
+     "meta": "weather",
+     "value": "dry"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "heavy rain at night": {
+   "raw": "[{\"meta\": \"weather\", \"value\": \"rain\"}, {\"meta\": \"lighting\", \"value\": \"night\"}]",
+   "program": [
+    {
+     "meta": "weather",
+     "value": "rain"
+    },
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a dark rainy street after dark": {
+   "raw": "[{\"tag\": \"dark\", \"value\": true}, {\"tag\": \"rainy\", \"value\": true}, {\"meta\": \"weather\", \"value\": \"night\"}]",
+   "program": [
+    {
+     "tag": "dark",
+     "value": true
+    },
+    {
+     "tag": "rainy",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "a night-time downpour": {
+   "raw": "[{\"meta\": \"lighting\", \"value\": \"night\"}, {\"meta\": \"weather\", \"value\": \"rain\"}]",
+   "program": [
+    {
+     "meta": "lighting",
+     "value": "night"
+    },
+    {
+     "meta": "weather",
+     "value": "rain"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "rainfall on an unlit road": {
+   "raw": "[{\"flag\": \"droplets\", \"value\": true}, {\"meta\": \"weather\", \"value\": \"rain\"}, {\"meta\": \"lighting\", \"value\": \"night\"}]",
+   "program": [
+    {
+     "flag": "droplets",
+     "value": true
+    },
+    {
+     "meta": "weather",
+     "value": "rain"
+    },
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "driving through rain in darkness": {
+   "raw": "[{\"flag\": \"droplets\", \"value\": true}, {\"meta\": \"weather\", \"value\": \"rain\"}, {\"meta\": \"lighting\", \"value\": \"night\"}]",
+   "program": [
+    {
+     "flag": "droplets",
+     "value": true
+    },
+    {
+     "meta": "weather",
+     "value": "rain"
+    },
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "rain droplets on the lens at night": {
+   "raw": "[{\"flag\": \"droplets\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"night\"}]",
+   "program": [
+    {
+     "flag": "droplets",
+     "value": true
+    },
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "glare reflecting off a wet road": {
+   "raw": "[{\"flag\": \"glare\", \"value\": true}, {\"flag\": \"wet_road\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "glare",
+     "value": true
+    },
+    {
+     "flag": "wet_road",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "dense traffic after dark": {
+   "raw": "[{\"meta\": \"density\", \"value\": \"dense\"}, {\"meta\": \"lighting\", \"value\": \"night\"}]",
+   "program": [
+    {
+     "meta": "density",
+     "value": "dense"
+    },
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "slick pavement in the dark": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"night\"}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    },
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "indistinct shapes after dark": {
+   "raw": "[{\"meta\": \"density\", \"value\": \"sparse\"}, {\"meta\": \"weather\", \"value\": \"night\"}]",
+   "program": [
+    {
+     "meta": "density",
+     "value": "sparse"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "water droplets smearing the camera lens together with driving after dark": {
+   "raw": "[{\"flag\": \"droplets\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"night\"}]",
+   "program": [
+    {
+     "flag": "droplets",
+     "value": true
+    },
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "water droplets smearing the camera lens together with driving in rain": {
+   "raw": "[{\"flag\": \"droplets\", \"value\": true}, {\"meta\": \"weather\", \"value\": \"rain\"}]",
+   "program": [
+    {
+     "flag": "droplets",
+     "value": true
+    },
+    {
+     "meta": "weather",
+     "value": "rain"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "noticeable glare washing across the image together with driving after dark": {
+   "raw": "[{\"flag\": \"glare\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"night\"}]",
+   "program": [
+    {
+     "flag": "glare",
+     "value": true
+    },
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "noticeable glare washing across the image together with driving in rain": {
+   "raw": "[{\"flag\": \"glare\", \"value\": true}, {\"flag\": \"wet_road\", \"value\": true}, {\"meta\": \"weather\", \"value\": \"rain\"}]",
+   "program": [
+    {
+     "flag": "glare",
+     "value": true
+    },
+    {
+     "flag": "wet_road",
+     "value": true
+    },
+    {
+     "meta": "weather",
+     "value": "rain"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "wet reflective asphalt after rainfall together with driving after dark": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}, {\"flag\": \"droplets\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"night\"}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    },
+    {
+     "flag": "droplets",
+     "value": true
+    },
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "wet reflective asphalt after rainfall together with driving in rain": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}, {\"flag\": \"droplets\", \"value\": true}, {\"meta\": \"weather\", \"value\": \"rain\"}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    },
+    {
+     "flag": "droplets",
+     "value": true
+    },
+    {
+     "meta": "weather",
+     "value": "rain"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "hazy washed out view with unclear boundaries together with driving after dark": {
+   "raw": "[{\"flag\": \"low_contrast\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"night\"}]",
+   "program": [
+    {
+     "flag": "low_contrast",
+     "value": true
+    },
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "hazy washed out view with unclear boundaries together with driving in rain": {
+   "raw": "[{\"flag\": \"low_contrast\", \"value\": true}, {\"meta\": \"weather\", \"value\": \"rain\"}]",
+   "program": [
+    {
+     "flag": "low_contrast",
+     "value": true
+    },
+    {
+     "meta": "weather",
+     "value": "rain"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "heavy rain but not at night": {
+   "raw": "[{\"meta\": \"weather\", \"value\": \"rain\"}, {\"meta\": \"density\", \"value\": \"dense\"}, {\"meta\": \"time_of_day\", \"value\": \"day\"}]",
+   "program": [
+    {
+     "meta": "weather",
+     "value": "rain"
+    },
+    {
+     "meta": "density",
+     "value": "dense"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "night driving without any rain": {
+   "raw": "[{\"meta\": \"lighting\", \"value\": \"night\"}, {\"meta\": \"weather\", \"value\": \"dry\"}]",
+   "program": [
+    {
+     "meta": "lighting",
+     "value": "night"
+    },
+    {
+     "meta": "weather",
+     "value": "dry"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a wet road but in daylight": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"day\"}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    },
+    {
+     "meta": "lighting",
+     "value": "day"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "an empty road that is not dark": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": false}, {\"meta\": \"density\", \"value\": \"sparse\"}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": false
+    },
+    {
+     "meta": "density",
+     "value": "sparse"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "rain beading across the lens but not after dark": {
+   "raw": "[{\"flag\": \"droplets\", \"value\": true}, {\"meta\": \"weather\", \"value\": \"rain\"}, {\"meta\": \"lighting\", \"value\": \"day\"}]",
+   "program": [
+    {
+     "flag": "droplets",
+     "value": true
+    },
+    {
+     "meta": "weather",
+     "value": "rain"
+    },
+    {
+     "meta": "lighting",
+     "value": "day"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "heavy rain spatter obscuring the camera without rainfall": {
+   "raw": "[{\"flag\": \"droplets\", \"value\": true}, {\"meta\": \"weather\", \"value\": \"rainy\"}]",
+   "program": [
+    {
+     "flag": "droplets",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "specular glare washing out the image but not after dark": {
+   "raw": "[{\"flag\": \"glare\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"day\"}]",
+   "program": [
+    {
+     "flag": "glare",
+     "value": true
+    },
+    {
+     "meta": "lighting",
+     "value": "day"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "strong headlight bloom from oncoming traffic without rainfall": {
+   "raw": "[{\"flag\": \"glare\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"day\"}, {\"meta\": \"weather\", \"value\": \"rainy\"}]",
+   "program": [
+    {
+     "flag": "glare",
+     "value": true
+    },
+    {
+     "meta": "lighting",
+     "value": "day"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "slick wet pavement throwing reflections but not after dark": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}, {\"flag\": \"droplets\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"day\"}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    },
+    {
+     "flag": "droplets",
+     "value": true
+    },
+    {
+     "meta": "lighting",
+     "value": "day"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "standing water pooling on the road without rainfall": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "poor visibility with objects blending in but not after dark": {
+   "raw": "[{\"flag\": \"low_contrast\", \"value\": true}, {\"meta\": \"density\", \"value\": \"sparse\"}]",
+   "program": [
+    {
+     "flag": "low_contrast",
+     "value": true
+    },
+    {
+     "meta": "density",
+     "value": "sparse"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a low contrast scene where vehicles are barely distinguishable without rainfall": {
+   "raw": "[{\"flag\": \"low_contrast\", \"value\": true}, {\"meta\": \"weather\", \"value\": \"dry\"}]",
+   "program": [
+    {
+     "flag": "low_contrast",
+     "value": true
+    },
+    {
+     "meta": "weather",
+     "value": "dry"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a night-time street scene with a rainy street": {
+   "raw": "[{\"meta\": \"lighting\", \"value\": \"night\"}, {\"meta\": \"weather\", \"value\": \"rainy\"}]",
+   "program": [
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "a night-time street scene with a dry clear day": {
+   "raw": "[{\"meta\": \"lighting\", \"value\": \"night\"}, {\"meta\": \"weather\", \"value\": \"dry\"}, {\"meta\": \"density\", \"value\": \"sparse\"}]",
+   "program": [
+    {
+     "meta": "lighting",
+     "value": "night"
+    },
+    {
+     "meta": "weather",
+     "value": "dry"
+    },
+    {
+     "meta": "density",
+     "value": "sparse"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a night-time street scene with a congested roadway": {
+   "raw": "[{\"meta\": \"lighting\", \"value\": \"night\"}, {\"meta\": \"density\", \"value\": \"dense\"}, {\"tag\": \"roadway\", \"value\": true}]",
+   "program": [
+    {
+     "meta": "lighting",
+     "value": "night"
+    },
+    {
+     "meta": "density",
+     "value": "dense"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "a night-time street scene with sparse traffic": {
+   "raw": "[{\"meta\": \"lighting\", \"value\": \"night\"}, {\"meta\": \"density\", \"value\": \"sparse\"}, {\"tag\": \"street\", \"value\": true}]",
+   "program": [
+    {
+     "meta": "lighting",
+     "value": "night"
+    },
+    {
+     "meta": "density",
+     "value": "sparse"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "a night-time street scene with a few vehicles around": {
+   "raw": "[{\"meta\": \"lighting\", \"value\": \"night\"}, {\"tag\": \"highway\", \"value\": true}, {\"tag\": \"cars\", \"value\": true}]",
+   "program": [
+    {
+     "meta": "lighting",
+     "value": "night"
+    },
+    {
+     "tag": "highway",
+     "value": true
+    },
+    {
+     "tag": "cars",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a clear daylight street with a rainy street": {
+   "raw": "[{\"meta\": \"lighting\", \"value\": \"day\"}, {\"meta\": \"weather\", \"value\": \"rainy\"}]",
+   "program": [
+    {
+     "meta": "lighting",
+     "value": "day"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "a clear daylight street with a dry clear day": {
+   "raw": "[{\"meta\": \"lighting\", \"value\": \"day\"}, {\"meta\": \"weather\", \"value\": \"dry\"}]",
+   "program": [
+    {
+     "meta": "lighting",
+     "value": "day"
+    },
+    {
+     "meta": "weather",
+     "value": "dry"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a clear daylight street with a congested roadway": {
+   "raw": "[{\"meta\": \"lighting\", \"value\": \"day\"}, {\"meta\": \"density\", \"value\": \"dense\"}]",
+   "program": [
+    {
+     "meta": "lighting",
+     "value": "day"
+    },
+    {
+     "meta": "density",
+     "value": "dense"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a clear daylight street with sparse traffic": {
+   "raw": "[{\"meta\": \"lighting\", \"value\": \"day\"}, {\"meta\": \"density\", \"value\": \"sparse\"}]",
+   "program": [
+    {
+     "meta": "lighting",
+     "value": "day"
+    },
+    {
+     "meta": "density",
+     "value": "sparse"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a clear daylight street with a few vehicles around": {
+   "raw": "[{\"meta\": \"lighting\", \"value\": \"day\"}, {\"tag\": \"highway\", \"value\": true}, {\"tag\": \"cars\", \"value\": true}]",
+   "program": [
+    {
+     "meta": "lighting",
+     "value": "day"
+    },
+    {
+     "tag": "highway",
+     "value": true
+    },
+    {
+     "tag": "cars",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a rainy street with a congested roadway": {
+   "raw": "[{\"tag\": \"rainy\", \"value\": true}, {\"meta\": \"density\", \"value\": \"dense\"}]",
+   "program": [
+    {
+     "tag": "rainy",
+     "value": true
+    },
+    {
+     "meta": "density",
+     "value": "dense"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a rainy street with sparse traffic": {
+   "raw": "[{\"meta\": \"weather\", \"value\": \"rainy\"}, {\"meta\": \"density\", \"value\": \"sparse\"}, {\"tag\": \"street\", \"value\": true}]",
+   "program": [
+    {
+     "meta": "density",
+     "value": "sparse"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 2
+  },
+  "a rainy street with a few vehicles around": {
+   "raw": "[{\"tag\": \"rainy\", \"value\": true}, {\"tag\": \"cars\", \"value\": true}, {\"meta\": \"density\", \"value\": \"sparse\"}]",
+   "program": [
+    {
+     "tag": "rainy",
+     "value": true
+    },
+    {
+     "tag": "cars",
+     "value": true
+    },
+    {
+     "meta": "density",
+     "value": "sparse"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a dry clear day with a congested roadway": {
+   "raw": "[{\"meta\": \"weather\", \"value\": \"day\"}, {\"meta\": \"density\", \"value\": \"dense\"}, {\"meta\": \"lighting\", \"value\": \"clear\"}]",
+   "program": [
+    {
+     "meta": "density",
+     "value": "dense"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 2
+  },
+  "a dry clear day with sparse traffic": {
+   "raw": "[{\"meta\": \"weather\", \"value\": \"day\"}, {\"meta\": \"density\", \"value\": \"sparse\"}, {\"meta\": \"lighting\", \"value\": \"clear\"}]",
+   "program": [
+    {
+     "meta": "density",
+     "value": "sparse"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 2
+  },
+  "a dry clear day with a few vehicles around": {
+   "raw": "[{\"meta\": \"weather\", \"value\": \"day\"}, {\"meta\": \"density\", \"value\": \"sparse\"}, {\"tag\": \"cars\", \"value\": true}]",
+   "program": [
+    {
+     "meta": "density",
+     "value": "sparse"
+    },
+    {
+     "tag": "cars",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "wet weather driving during low ambient light driving": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}, {\"meta\": \"weather\", \"value\": \"rainy\"}, {\"meta\": \"lighting\", \"value\": \"low_contrast\"}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 2
+  },
+  "no precipitation on the road during low ambient light driving": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": false}, {\"meta\": \"weather\", \"value\": \"dry\"}, {\"meta\": \"lighting\", \"value\": \"night\"}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": false
+    },
+    {
+     "meta": "weather",
+     "value": "dry"
+    },
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a heavy traffic jam during low ambient light driving": {
+   "raw": "[{\"meta\": \"density\", \"value\": \"dense\"}, {\"meta\": \"lighting\", \"value\": \"night\"}]",
+   "program": [
+    {
+     "meta": "density",
+     "value": "dense"
+    },
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a deserted street during low ambient light driving": {
+   "raw": "[{\"meta\": \"lighting\", \"value\": \"night\"}, {\"tag\": \"residential\", \"value\": true}]",
+   "program": [
+    {
+     "meta": "lighting",
+     "value": "night"
+    },
+    {
+     "tag": "residential",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "light traffic flow during low ambient light driving": {
+   "raw": "[{\"meta\": \"density\", \"value\": \"sparse\"}, {\"meta\": \"lighting\", \"value\": \"night\"}]",
+   "program": [
+    {
+     "meta": "density",
+     "value": "sparse"
+    },
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "driving in the rain": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}, {\"meta\": \"weather\", \"value\": \"rain\"}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    },
+    {
+     "meta": "weather",
+     "value": "rain"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a snowy road": {
+   "raw": "[{\"meta\": \"weather\", \"value\": \"snowy\"}]",
+   "program": [],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "fog reducing visibility": {
+   "raw": "[{\"meta\": \"weather\", \"value\": \"fog\"}, {\"flag\": \"low_contrast\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "low_contrast",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "driving at night": {
+   "raw": "[{\"meta\": \"lighting\", \"value\": \"night\"}]",
+   "program": [
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "dusk or dawn light on the road": {
+   "raw": "[{\"meta\": \"lighting\", \"value\": \"dusk\"}, {\"meta\": \"lighting\", \"value\": \"dawn\"}]",
+   "program": [],
+   "parsed": true,
+   "n_dropped": 2
+  },
+  "a partly cloudy sky": {
+   "raw": "[{\"meta\": \"weather\", \"value\": \"partly cloudy\"}]",
+   "program": [],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "an overcast grey sky": {
+   "raw": "[{\"meta\": \"weather\", \"value\": \"overcast\"}, {\"meta\": \"sky\", \"value\": \"grey\"}]",
+   "program": [],
+   "parsed": true,
+   "n_dropped": 2
+  },
+  "wet reflective road after rain": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": true}, {\"flag\": \"droplets\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": true
+    },
+    {
+     "flag": "droplets",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "water droplets on the windshield": {
+   "raw": "[{\"flag\": \"droplets\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "droplets",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "headlight glare at night": {
+   "raw": "[{\"flag\": \"glare\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"night\"}]",
+   "program": [
+    {
+     "flag": "glare",
+     "value": true
+    },
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a dark low-visibility scene": {
+   "raw": "[{\"flag\": \"low_contrast\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"night\"}]",
+   "program": [
+    {
+     "flag": "low_contrast",
+     "value": true
+    },
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "adverse weather conditions": {
+   "raw": "[{\"meta\": \"weather\", \"value\": \"rainy\"}]",
+   "program": [],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "a pedestrian on the street": {
+   "raw": "[{\"tag\": \"pedestrians\", \"value\": true}]",
+   "program": [
+    {
+     "tag": "pedestrians",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a crowd of pedestrians": {
+   "raw": "[{\"tag\": \"pedestrians\", \"value\": true}]",
+   "program": [
+    {
+     "tag": "pedestrians",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a pedestrian close to the car": {
+   "raw": "[{\"tag\": \"pedestrians\", \"value\": true}]",
+   "program": [
+    {
+     "tag": "pedestrians",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a cyclist riding a bicycle": {
+   "raw": "[{\"tag\": \"bicycles\", \"value\": true}]",
+   "program": [
+    {
+     "tag": "bicycles",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a motorcycle on the road": {
+   "raw": "[{\"tag\": \"motorcycles\", \"value\": true}]",
+   "program": [
+    {
+     "tag": "motorcycles",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a bus ahead": {
+   "raw": "[{\"tag\": \"buses\", \"value\": true}]",
+   "program": [
+    {
+     "tag": "buses",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a truck on the road": {
+   "raw": "[{\"tag\": \"trucks\", \"value\": true}]",
+   "program": [
+    {
+     "tag": "trucks",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a large truck close ahead": {
+   "raw": "[{\"tag\": \"trucks\", \"value\": true}, {\"meta\": \"density\", \"value\": \"dense\"}]",
+   "program": [
+    {
+     "tag": "trucks",
+     "value": true
+    },
+    {
+     "meta": "density",
+     "value": "dense"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a traffic light": {
+   "raw": "[{\"tag\": \"traffic light\", \"value\": true}]",
+   "program": [],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "a long line of cars in traffic": {
+   "raw": "[{\"tag\": \"cars\", \"value\": true}, {\"meta\": \"density\", \"value\": \"dense\"}]",
+   "program": [
+    {
+     "tag": "cars",
+     "value": true
+    },
+    {
+     "meta": "density",
+     "value": "dense"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "an empty road with no other vehicles": {
+   "raw": "[{\"flag\": \"wet_road\", \"value\": false}, {\"tag\": \"highway\", \"value\": true}]",
+   "program": [
+    {
+     "flag": "wet_road",
+     "value": false
+    },
+    {
+     "tag": "highway",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a train or a tram": {
+   "raw": "[{\"tag\": \"buses\", \"value\": true}]",
+   "program": [
+    {
+     "tag": "buses",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "pedestrians crossing at night": {
+   "raw": "[{\"tag\": \"pedestrians\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"night\"}]",
+   "program": [
+    {
+     "tag": "pedestrians",
+     "value": true
+    },
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a cyclist at night": {
+   "raw": "[{\"tag\": \"bicycles\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"night\"}]",
+   "program": [
+    {
+     "tag": "bicycles",
+     "value": true
+    },
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a bus in the rain": {
+   "raw": "[{\"tag\": \"buses\", \"value\": true}, {\"meta\": \"weather\", \"value\": \"rain\"}]",
+   "program": [
+    {
+     "tag": "buses",
+     "value": true
+    },
+    {
+     "meta": "weather",
+     "value": "rain"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a truck on a snowy road": {
+   "raw": "[{\"tag\": \"trucks\", \"value\": true}, {\"flag\": \"wet_road\", \"value\": true}]",
+   "program": [
+    {
+     "tag": "trucks",
+     "value": true
+    },
+    {
+     "flag": "wet_road",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "heavy traffic at night": {
+   "raw": "[{\"meta\": \"density\", \"value\": \"dense\"}, {\"meta\": \"lighting\", \"value\": \"night\"}]",
+   "program": [
+    {
+     "meta": "density",
+     "value": "dense"
+    },
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "an empty road at night": {
+   "raw": "[{\"meta\": \"lighting\", \"value\": \"night\"}, {\"flag\": \"wet_road\", \"value\": false}]",
+   "program": [
+    {
+     "meta": "lighting",
+     "value": "night"
+    },
+    {
+     "flag": "wet_road",
+     "value": false
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "a motorcycle in daylight": {
+   "raw": "[{\"tag\": \"motorcycles\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"day\"}]",
+   "program": [
+    {
+     "tag": "motorcycles",
+     "value": true
+    },
+    {
+     "meta": "lighting",
+     "value": "day"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  },
+  "traffic lights at night": {
+   "raw": "[{\"meta\": \"lighting\", \"value\": \"night\"}, {\"tag\": \"traffic lights\", \"value\": true}]",
+   "program": [
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "a busy city street in the rain": {
+   "raw": "[{\"tag\": \"city\", \"value\": true}, {\"meta\": \"weather\", \"value\": \"rainy\"}]",
+   "program": [],
+   "parsed": true,
+   "n_dropped": 2
+  },
+  "a bus at dusk": {
+   "raw": "[{\"meta\": \"lighting\", \"value\": \"dusk\"}, {\"tag\": \"buses\", \"value\": true}]",
+   "program": [
+    {
+     "tag": "buses",
+     "value": true
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 1
+  },
+  "a pedestrian close to the car at night": {
+   "raw": "[{\"tag\": \"pedestrians\", \"value\": true}, {\"meta\": \"lighting\", \"value\": \"night\"}]",
+   "program": [
+    {
+     "tag": "pedestrians",
+     "value": true
+    },
+    {
+     "meta": "lighting",
+     "value": "night"
+    }
+   ],
+   "parsed": true,
+   "n_dropped": 0
+  }
+ },
+ "summary": {
+  "n_queries": 231,
+  "n_unparsable": 2,
+  "n_empty_program": 14
+ }
+}

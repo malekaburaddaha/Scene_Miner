@@ -34,6 +34,7 @@ reading the BEV embedding or the tags is flagged contaminated (those encoders we
 supervised on these scenes); SceneMiner is reported there in monocular mode.
 """
 from __future__ import annotations
+import os
 import glob, json, math, re, sys, time
 from collections import Counter
 from pathlib import Path
@@ -222,10 +223,63 @@ def load_val150(G):
     return _portable_dataset("val150", sc, vz["siglip"], M, PR, md)
 
 
-def load_captions():
+def load_captions(kind="neutral"):
+    """neutral (Milestone 28): affirmative prompt; enumerating (Milestone 23): the prompt
+    that listed the degradations. Holdout captions are keyed 'holdout|<image>'."""
+    pat = "work_dirs/qwen_captions_neutral*_shard*.json" if kind == "neutral" else "work_dirs/qwen_captions_shard*.json"
     cap = {}
-    for f in sorted(glob.glob("work_dirs/qwen_captions_shard*.json")): cap.update(json.load(open(f)))
+    for f in sorted(glob.glob(pat)): cap.update(json.load(open(f)))
     return cap
+
+
+HOLD = Path("/nfs/turbo/umd-srawa/scene_mining/datasets/external_adverse/bdd100k_holdout")
+
+
+def load_holdout(with_meta=False):
+    """Untouched BDD100K holdout (Milestone 28). with_meta gives the methods that read
+    recorded metadata BDD100K's own timeofday/weather tags - which are also the
+    ground truth of the condition queries, so that mode is labelled circular."""
+    labels = json.load(open(HOLD/"labels.json")); names = sorted(labels)
+    z = np.load(HOLD/"signals.npz", allow_pickle=False)
+    assert [str(x) for x in z["names"]] == names
+    ASK = [k for k, _ in QUESTIONS]; M = z["margin"][:, [ASK.index(k) for k in TRAIN_ORDER]]
+    PR = torch.zeros(len(names), 26, device=dev); md = None
+    if with_meta:
+        tod = [labels[n]["timeofday"] for n in names]; wx = [labels[n]["weather"] for n in names]
+        for i in range(len(names)):
+            PR[i, 20] = float(tod[i] == "night"); PR[i, 21] = float(tod[i] == "daytime")
+            PR[i, 22] = float(wx[i] == "rainy"); PR[i, 23] = float(wx[i] in ("clear", "partly cloudy", "overcast"))
+        md = {"lighting": np.array(["night" if t == "night" else "day" if t == "daytime" else "dusk" for t in tod]),
+              "weather": np.array(["rain" if w == "rainy" else "dry" if w in ("clear", "partly cloudy", "overcast") else w
+                                   for w in wx])}
+    MZ = (M - M.mean(0)) / (M.std(0) + 1e-6)
+    D = {"name": "holdout", "toks": names, "n": len(names), "sig2": F.normalize(_t(z["siglip"]), dim=-1),
+         "clip": _t(np.load("work_dirs/emb_clip_holdout.npz")["holdout"]),
+         "sig1": _t(np.load("work_dirs/emb_siglip1_holdout.npz")["holdout"]),
+         "flags": {a: M[:, i] > 0 for i, a in enumerate(TRAIN_ORDER)}, "marg": {a: M[:, i] for i, a in enumerate(TRAIN_ORDER)},
+         "meta": md, "tags": None, "bev": None, "prior": PR, "mz": _t(MZ), "labels": labels}
+    return D
+
+
+def holds(lab, p):
+    """pre-registered predicate (benchmark_cvpr/bdd_holdout_queries_36.json) on BDD100K labels"""
+    if "all" in p: return all(holds(lab, x) for x in p["all"])
+    if "any" in p: return any(holds(lab, x) for x in p["any"])
+    if "box" in p:
+        b = p["box"]
+        n = sum(1 for x in lab["boxes"] if x["label"] in b["labels"] and x["bbox"][2] * x["bbox"][3] >= b["min_area"])
+        return n >= b["min_count"] and ("max_count" not in b or n <= b["max_count"])
+    return all(lab[k] in v for k, v in p.items())
+
+
+# a-priori VLM-margin column for the lookup baseline on the holdout queries, fixed from
+# the query wording before any holdout score was computed (same rules as CHANNEL)
+HOLD_CHANNEL = {"a1": ("wet_road", 1), "a2": ("wet_road", 1), "a3": ("low_contrast", 1), "a4": ("low_contrast", 1),
+                "a5": ("low_contrast", 1), "a6": None, "a7": ("low_contrast", 1), "a8": ("wet_road", 1),
+                "a9": ("droplets", 1), "a10": ("glare", 1), "a11": ("low_contrast", 1), "a12": ("wet_road", 1),
+                "c1": ("low_contrast", 1), "c2": ("wet_road", 1), "c3": ("low_contrast", 1), "c4": ("wet_road", 1),
+                "c5": ("wet_road", 1), "c6": ("low_contrast", 1), "c7": ("low_contrast", 1), "c8": ("low_contrast", -1),
+                "c9": ("low_contrast", 1), "c10": ("wet_road", 1), "c11": ("low_contrast", 1), "c12": ("low_contrast", 1)}
 
 
 # ---------------------------------------------------------------- the rankers
@@ -240,10 +294,11 @@ def _load(cls, pat, **kw):
 class Rankers:
     """Each ranker maps (dataset, query) to scores of shape (n,), or (seeds, n)
     for trained methods, or None when the method cannot run on that dataset."""
-    def __init__(self, enc, captions, rk):
+    def __init__(self, enc, captions, rk, captions_enum=None, programs=None):
         from scene_mining.filter.sceneminer_v2 import SceneMinerV21
-        self.enc, self.cap = enc, captions
-        self.M25 = load_v23(rk, which="v25")
+        self.enc, self.cap, self.cap_enum = enc, captions, captions_enum or {}
+        self.programs = programs or {}
+        self.M25 = load_v23(rk, which=os.environ.get("SM_FINAL", "v26"))
         for m in self.M25: m.use_abstain = True
         self.M21 = _load(SceneMinerV21, "work_dirs/sceneminer_v21/s*/final.pt",
                          d_qwen=2048, d_siglip=768, n_margins=4, n_meta=6, d_text=768)
@@ -279,12 +334,54 @@ class Rankers:
         return run_program(compile_program(q), D["flags"], D["marg"], D["meta"], D["tags"], D["n"])
 
     def carim(self, D, q):
-        if D["name"] not in self.cap_ix:
+        """neutral captions; dense score = max over the caption's clauses (sentence and
+        comma/semicolon splits) of the SigLIP2 text cosine, plus BM25 on the caption."""
+        key = ("neutral", D["name"])
+        if key not in self.cap_ix:
             docs = [self.cap.get(f"{D['name']}|{t}") for t in D["toks"]]
             if any(d is None for d in docs): return None
-            self.cap_ix[D["name"]] = (BM25(docs), self.enc.sig2_t(docs))
-        bm, E = self.cap_ix[D["name"]]
+            cl, owner = [], []
+            for i, d in enumerate(docs):
+                parts = [c.strip() for c in re.split(r"[.;,]\s+|\.$", d) if len(c.strip().split()) >= 2] or [d]
+                cl += parts; owner += [i] * len(parts)
+            E = torch.cat([self.enc.sig2_t(cl[i:i+512]) for i in range(0, len(cl), 512)])
+            self.cap_ix[key] = (BM25(docs), E, torch.as_tensor(owner, device=dev), len(docs))
+        bm, E, own, n = self.cap_ix[key]
+        c = E @ self.enc.sig2_t([q])[0]
+        dense = torch.full((n,), -2.0, device=dev).scatter_reduce(0, own, c, reduce="amax")
+        return zs(dense.cpu().numpy()) + zs(bm.score(q))
+
+    def carim_enum(self, D, q):
+        """Milestone 23 variant: enumerating prompt, whole-caption embedding + BM25."""
+        key = ("enum", D["name"])
+        if key not in self.cap_ix:
+            docs = [self.cap_enum.get(f"{D['name']}|{t}") for t in D["toks"]]
+            if any(d is None for d in docs): return None
+            self.cap_ix[key] = (BM25(docs), self.enc.sig2_t(docs))
+        bm, E = self.cap_ix[key]
         return zs((E @ self.enc.sig2_t([q])[0]).cpu().numpy()) + zs(bm.score(q))
+
+    def refav_llm(self, D, q):
+        """RefAV-style with the program compiled by a local LLM (scripts/refav_llm_compile.py)."""
+        prog = self.programs.get(q, {}).get("program", [])
+        preds = []
+        for p in prog:
+            if "flag" in p: preds.append((("flag", p["flag"]), not p["value"]))
+            elif "meta" in p: preds.append((("meta", (p["meta"], p["value"])), False))
+            elif "tag" in p: preds.append((("tag", [TAG_SHORT.index(p["tag"])]), not p["value"]))
+        return run_program(preds, D["flags"], D["marg"], D["meta"], D["tags"], D["n"])
+
+    def sceneminer_portable(self, D, q):
+        """Uses only frozen web-trained signals: SigLIP2, the Qwen2.5-VL margins and
+        recorded metadata. On the corpus the 20 tag columns of the prior are zeroed and
+        the meta channel is off, exactly as on BDD100K / val150."""
+        if D["name"] != "corpus": return self.sceneminer(D, q)
+        if "prior_meta" not in D:
+            P = D["prior"].clone(); P[:, :20] = 0; D["prior_meta"] = P
+        qv = self.enc.sig2_raw([q])[0].unsqueeze(0).expand(D["n"], -1); N = D["n"]
+        av = torch.stack([torch.ones(N, device=dev), torch.ones(N, device=dev), torch.zeros(N, device=dev)], -1)
+        with torch.no_grad():
+            return np.stack([m.base_score(qv, D["sig2"], D["mz"], D["prior_meta"], av).cpu().numpy() for m in self.M25[:self.k]])
 
     def refergpt(self, D, q):
         img = zs(self.clip(D, q))
@@ -323,17 +420,22 @@ class Rankers:
 
 
 METHODS = [("BEV-TSR-style text-to-BEV", "bev_tsr", ["BEV"]),
-           ("RefAV-style programmatic filter", "refav", ["VLM flags", "tags", "metadata"]),
+           ("RefAV-style programmatic filter", "refav_llm", ["VLM flags", "tags", "metadata"]),
+           ("RefAV-style (rule compiler, M23)", "refav", ["VLM flags", "tags", "metadata"]),
            ("CARIM-style caption retrieval", "carim", ["VLM captions"]),
+           ("CARIM-style (enumerating prompt, M23)", "carim_enum", ["VLM captions"]),
            ("Tag-map (Talk2BEV/nuPrompt-style)", "tag_map", ["tags"]),
            ("ReferGPT-style state + CLIP", "refergpt", ["image", "tags", "metadata"]),
            ("CLIP ViT-B/32", "clip", ["image"]), ("SigLIP ViT-B/16", "siglip1", ["image"]),
            ("SigLIP2 ViT-B/16", "siglip2", ["image"]), ("SigLIP2 + fine-tuned adapter", "siglip2_ft", ["image"]),
            ("Qwen2.5-VL lookup", "lookup", ["VLM margins"]),
            ("Naive uncalibrated fusion", "naive", ["image", "VLM", "metadata", "BEV", "tags"]),
+           ("SceneMiner (portable)", "sceneminer_portable", ["image", "VLM", "metadata"]),
            ("SceneMiner", "sceneminer", ["image", "VLM", "metadata", "BEV", "tags"])]
-CONTAM = {"bev_tsr", "tag_map", "refav", "refergpt", "naive"}   # read the BEV embedding or tags on corpus scenes
-OFFLINE = {"carim": "one Qwen2.5-VL caption per image (timed below)", "lookup": "4 Qwen2.5-VL yes/no passes per image",
+CONTAM = {"bev_tsr", "tag_map", "refav", "refav_llm", "refergpt", "naive"}   # read the BEV embedding or tags on corpus scenes
+OFFLINE = {"carim": "one Qwen2.5-VL caption per image (timed below)", "carim_enum": "one Qwen2.5-VL caption per image",
+           "refav_llm": "VLM flags + tags + metadata (cached); LLM compile per query",
+           "sceneminer_portable": "Qwen2.5-VL + SigLIP2 per image (cached)", "lookup": "4 Qwen2.5-VL yes/no passes per image",
            "sceneminer": "BEVFormer + Qwen2.5-VL + SigLIP2 per scene (Stage 1, cached)",
            "naive": "same Stage-1 cache as SceneMiner", "refav": "VLM flags + tags + metadata (cached)",
            "bev_tsr": "BEVFormer per scene", "tag_map": "BEVFormer + tag head per scene",
@@ -361,10 +463,13 @@ def sign_perm(d, n=10000, seed=0):
 
 def main():
     t_all = time.time()
-    enc = Enc(); cap = load_captions()
-    print(f"[rw] captions: {len(cap)}", flush=True)
+    enc = Enc(); cap = load_captions("neutral"); cap_enum = load_captions("enumerating")
+    prog_path = Path("results/cvpr/refav_llm_programs.json")
+    programs = json.load(open(prog_path))["programs"] if prog_path.exists() else {}
+    print(f"[rw] captions: {len(cap)} neutral, {len(cap_enum)} enumerating; {len(programs)} LLM programs", flush=True)
     z = np.load(W/"features_v2.npz", allow_pickle=False)
-    R = Rankers(enc, cap, z["risk"].reshape(-1))
+    R = Rankers(enc, cap, z["risk"].reshape(-1), cap_enum, programs)
+    OUT = Path(os.environ.get("SM_OUT", "results/cvpr/milestone28_related_work_comparison.json"))
     G = json.load(open(W/"human_semantic_gt.json"))["scenes"]
     C, B, V = load_corpus(), load_bdd(), load_val150(G)
     cidx = {t: i for i, t in enumerate(C["toks"])}
@@ -453,6 +558,45 @@ def main():
               f" s5v {f(r['s5_val150_atomic'])}/{f(r['s5_val150_compositional'])} suite {f(r['suite'])}"
               f" skew {f(r['suite_skew_pts'])} {r['rank_latency_ms_1508']:.2f}ms ({time.time()-t0:.0f}s)", flush=True)
 
+    # ---------------- untouched BDD100K holdout (pre-registered, run once)
+    HQ = json.load(open("benchmark_cvpr/bdd_holdout_queries_36.json"))["queries"]
+    out["holdout"] = {"protocol": json.load(open("benchmark_cvpr/bdd_holdout_queries_36.json"))["doc"], "modes": {}}
+    for mode in ("metadata_free", "metadata_equipped_circular"):
+        H = load_holdout(with_meta=(mode != "metadata_free"))
+        rels = {q["id"]: np.array([holds(H["labels"][n], q["predicate"]) for n in H["toks"]]) for q in HQ}
+        keep = [q for q in HQ if rels[q["id"]].sum() >= 5]
+        enc.sig2_t([q["text"] for q in keep])
+        res = {"n_images": H["n"], "queries_kept": [q["id"] for q in keep],
+               "queries_excluded_lt5_positives": [q["id"] for q in HQ if q not in keep],
+               "n_positives": {q["id"]: int(rels[q["id"]].sum()) for q in HQ}, "methods": {}}
+        for label, meth, mods in METHODS:
+            per = {}
+            for q in keep:
+                ch = HOLD_CHANNEL.get(q["id"])
+                s = ens(call(meth, H, q["text"], col=ch[0] if ch else None, sign=ch[1] if ch else 1))
+                if s is None: per = None; break
+                per[q["id"]] = {"AP": ap_of(s, rels[q["id"]]),
+                                "P@5": float(rels[q["id"]][np.argsort(-s)[:5]].mean()) if np.ptp(s) > 0 else float(rels[q["id"]].mean())}
+            if per is None: res["methods"][label] = None; continue
+            fam = {f: [v["AP"] for k, v in per.items() if k[0] == f] for f in "abc"}
+            res["methods"][label] = {"mAP_all": float(np.mean([v["AP"] for v in per.values()])),
+                                     "P@5_all": float(np.mean([v["P@5"] for v in per.values()])),
+                                     **{f"mAP_{f}": float(np.mean(v)) for f, v in fam.items() if v}, "per_query": per}
+        ref = res["methods"].get("SceneMiner (portable)")
+        res["paired_vs_sceneminer_portable"] = {}
+        for label, v in res["methods"].items():
+            if v is None or label == "SceneMiner (portable)" or ref is None: continue
+            for scope in ("all", "a", "b", "c"):
+                ks = [k for k in ref["per_query"] if scope == "all" or k[0] == scope]
+                d = np.array([ref["per_query"][k]["AP"] - v["per_query"][k]["AP"] for k in ks])
+                res["paired_vs_sceneminer_portable"].setdefault(label, {})[scope] = {
+                    "delta": float(d.mean()), "perm_p": sign_perm(d), "n_queries": len(d)}
+        out["holdout"]["modes"][mode] = res
+        print(f"[holdout:{mode}] kept {len(keep)}/36 queries", flush=True)
+        for label, v in res["methods"].items():
+            if v: print(f"   {label:<38} all {v['mAP_all']:.3f}  a {v.get('mAP_a', float('nan')):.3f}  "
+                        f"b {v.get('mAP_b', float('nan')):.3f}  c {v.get('mAP_c', float('nan')):.3f}  P@5 {v['P@5_all']:.3f}", flush=True)
+
     # paired tests: SceneMiner minus each method, per-query sign-flip permutation
     ref = out["per_query"]["SceneMiner"]; out["paired_vs_sceneminer"] = {}
     for label in out["methods"]:
@@ -471,13 +615,13 @@ def main():
             a = time.perf_counter(); enc.encode(kind, [f"a query {i}"], use_cache=False); torch.cuda.synchronize()
             ts.append(1000 * (time.perf_counter() - a))
         out["text_encoder_ms"][kind] = float(np.median(ts))
-    capt = [json.load(open(f)).get("_meta", {}) for f in sorted(glob.glob("work_dirs/qwen_captions_shard*.json"))]
-    out["caption_offline"] = capt
-    m22 = json.load(open("results/cvpr/milestone22_factored_gate.json"))["A_human_gt"]["macro_mAP"]
-    out["methods"]["SceneMiner"]["human_gt_calibrated"] = m22.get("v2.5_human_calibrated_5fold")
-    out["methods"]["SceneMiner"]["human_gt_m22_full"] = m22.get("v2.5_full")
-    Path("results/cvpr/milestone23_related_work_comparison.json").write_text(json.dumps(out, indent=1))
-    print(f"[rw] wrote results/cvpr/milestone23_related_work_comparison.json ({time.time()-t_all:.0f}s)")
+    cal = Path(os.environ.get("SM_CAL", "results/cvpr/milestone27_v26.json"))
+    if cal.exists():
+        mm = json.load(open(cal))["A_human_gt"]["macro_mAP"]
+        out["methods"]["SceneMiner"]["human_gt_calibrated"] = mm.get("v2.3_human_calibrated_5fold")
+        out["methods"]["SceneMiner"]["human_gt_eval_v23_full"] = mm.get("v2.3_full")
+    OUT.write_text(json.dumps(out, indent=1))
+    print(f"[rw] wrote {OUT} ({time.time()-t_all:.0f}s)")
 
 
 if __name__ == "__main__":

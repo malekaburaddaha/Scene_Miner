@@ -15,6 +15,9 @@ import numpy as np, torch
 sys.path.insert(0, "scripts")
 from annotate_ui import find_thumb
 
+NEUTRAL_PROMPT = ("Describe this driving scene concisely in two sentences, stating the lighting, weather, "
+                  "road surface condition, traffic density, and visible road users or obstacles. Mention only "
+                  "conditions and objects that are present.")
 PROMPT = ("Describe this driving scene in two or three sentences. Cover the weather and lighting, "
           "the road surface, the condition of the camera view (water droplets, glare, blur, low "
           "visibility), and every kind of road user or object you can see (pedestrians, children, "
@@ -35,20 +38,25 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--shard", type=int, required=True); ap.add_argument("--nshard", type=int, required=True)
     ap.add_argument("--qwen", default="/nfs/turbo/umd-srawa/hf_cache/Qwen2.5-VL-3B-Instruct")
+    ap.add_argument("--prompt", default="enumerating", choices=["enumerating", "neutral"],
+                    help="neutral (Milestone 28): affirmative prompt that does not list the degradations")
+    ap.add_argument("--items", default=None, help="optional JSON list of [src, key, path] to caption instead")
     a = ap.parse_args()
+    prompt = NEUTRAL_PROMPT if a.prompt == "neutral" else PROMPT
+    tag = "" if a.prompt == "enumerating" else "_neutral"
     from PIL import Image
     from transformers import AutoProcessor, Qwen2_5_VLForConditionalGeneration
     dev = torch.device("cuda")
     proc = AutoProcessor.from_pretrained(a.qwen)
     m = Qwen2_5_VLForConditionalGeneration.from_pretrained(a.qwen, torch_dtype=torch.bfloat16).to(dev).eval()
-    items = images()[a.shard::a.nshard]
-    outp = Path(f"work_dirs/qwen_captions_shard{a.shard}.json")
+    items = (json.load(open(a.items)) if a.items else images())[a.shard::a.nshard]
+    outp = Path(f"work_dirs/qwen_captions{tag}{'_' + Path(a.items).stem if a.items else ''}_shard{a.shard}.json")
     done = json.load(open(outp)) if outp.exists() else {}
     for i, (src, key, path) in enumerate(items):
         k = f"{src}|{key}"
         if k in done: continue
         img = Image.open(path).convert("RGB")
-        msgs = [{"role": "user", "content": [{"type": "image", "image": img}, {"type": "text", "text": PROMPT}]}]
+        msgs = [{"role": "user", "content": [{"type": "image", "image": img}, {"type": "text", "text": prompt}]}]
         t = proc.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True)
         inp = proc(text=[t], images=[img], return_tensors="pt").to(dev)
         with torch.no_grad():
