@@ -101,6 +101,8 @@ def load_v23(rk, d_qwen=2048, which="v23"):
         from scene_mining.filter.sceneminer_v2_4 import SceneMinerV24 as SceneMinerV23
     if which == "v25":
         from scene_mining.filter.sceneminer_v2_5 import SceneMinerV25 as SceneMinerV23
+    if which == "v26":
+        from scene_mining.filter.sceneminer_v2_6 import SceneMinerV26 as SceneMinerV23
     M = []
     for c in sorted(glob.glob(f"work_dirs/sceneminer_{which}/s*/final.pt")):
         d = torch.load(c, map_location=dev, weights_only=False)
@@ -174,7 +176,7 @@ def main():
     ap.add_argument("--val-siglip", default="work_dirs/val150_siglip.npz")
     ap.add_argument("--val-thumbs", default="work_dirs/val150_thumbs")
     ap.add_argument("--out", default="results/cvpr/milestone18_semantic_edge_cases.json")
-    ap.add_argument("--final", default="v24", choices=["v24", "v25"],
+    ap.add_argument("--final", default="v24", choices=["v24", "v25", "v26"],
                     help="checkpoint family reported in the 'v2.4_*' rows (labels kept for downstream tools)")
     a = ap.parse_args()
     Q = json.load(open(a.queries))["queries"]
@@ -303,7 +305,7 @@ def main():
         R["v2.3_portable_base"] = portable(M, QT[qi].unsqueeze(0).expand(len(vs), -1), S, MZt)
         R["v2.3A_portable_base"] = portable(M, QT[qi].unsqueeze(0).expand(len(vs), -1), S, MZt, abstain=True)
         R["v2.4_portable_base"] = portable(M24, QT[qi].unsqueeze(0).expand(len(vs), -1), S, MZt, abstain=True,
-                                           PR=VPR if a.final == "v25" else None)
+                                           PR=VPR if a.final in ("v25", "v26") else None)
         res = {k: metrics(v, rel) for k, v in R.items()}
         for k in vrows: vrows[k].append(res[k])
         vper.append({"text": q["text"], "stratum": q["stratum"], "predicate": q["predicate"],

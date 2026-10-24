@@ -1,0 +1,27 @@
+{
+ "doc": "MILESTONE 27 - SceneMiner latency, online and offline, on one A40.\n\nOnline (per query, 1508 cached scenes, query text embedding cached, median over\n20 benchmark queries):\n  full      prepare_query (gate, routing, FiLM parameters: query-only work, done once\n            per query) + rank (per-scene work) replayed as a CUDA graph; one model and\n            the 5-seed ensemble; and the reference forward pass for comparison\n  portable  the routed base score with abstention (no residual branch)\nOffline (Stage 1, once per scene):\n  multi-camera path  one 6-camera keyframe through the Stage-1 model (SigLIP2 patches,\n                     BEVFormer, motion head, Q-Former, LoRA-Qwen, heads), bf16 autocast\n                     as in scripts/export_filter_features_scaled.py, batch 1\n  monocular path     SigLIP2 ViT-B/16 image embedding; four Qwen2.5-VL yes/no margins\n-> results/cvpr/milestone27_latency.json\n",
+ "online": {
+  "prepare_1": 2.2668077144771814,
+  "rank_graph_1": 1.241100486367941,
+  "rank_eager_1": 2.4068376515060663,
+  "full_1": 3.5105214919894934,
+  "full_5": 16.096747014671564,
+  "reference_1": 12.392153963446617,
+  "portable_1": 2.4725343100726604,
+  "portable_reference_1": 7.0180026814341545,
+  "max_abs_diff_graph_vs_reference": 2.9355287551879883e-06
+ },
+ "offline": {
+  "siglip2_image_ms": 91.47575357928872,
+  "qwen_four_margins_ms": 926.5091177076101,
+  "stage1_multicamera_keyframe_ms": 114.10347791388631
+ },
+ "SceneMiner": {
+  "ms": 3.5105214919894934,
+  "what": "prepare_query + CUDA-graph rank, one model"
+ },
+ "SceneMiner (portable)": {
+  "ms": 2.4725343100726604,
+  "what": "portable base score, one model"
+ }
+}

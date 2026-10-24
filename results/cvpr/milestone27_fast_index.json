@@ -1,0 +1,82 @@
+{
+ "model": "v26",
+ "per_benchmark": {
+  "human": {
+   "max_abs_score_diff": 1.3709068298339844e-06,
+   "max_abs_ap_diff": 0.0,
+   "n_queries": 4
+  },
+  "suite": {
+   "max_abs_score_diff": 1.3768672943115234e-05,
+   "max_abs_ap_diff": 5.4580896686307057e-05,
+   "n_queries": 150
+  },
+  "s5_mono": {
+   "max_abs_score_diff": 5.900859832763672e-06,
+   "max_abs_ap_diff": 0.0,
+   "n_queries": 40
+  },
+  "bdd_portable": {
+   "max_abs_score_diff": 3.2782554626464844e-06,
+   "max_abs_ap_diff": 0.0,
+   "n_queries": 12
+  }
+ },
+ "skip_thresholds": {
+  "1e-06": {
+   "max_abs_ap_diff": 0.0,
+   "queries_skipped": 31
+  },
+  "0.0001": {
+   "max_abs_ap_diff": 0.0002482621648460803,
+   "queries_skipped": 51
+  },
+  "0.001": {
+   "max_abs_ap_diff": 0.00060532687651349,
+   "queries_skipped": 63
+  },
+  "0.01": {
+   "max_abs_ap_diff": 0.0013790970933827973,
+   "queries_skipped": 77
+  }
+ },
+ "gamma_deg_distribution": {
+  "n": 192,
+  "lt_1e-3": 63
+ },
+ "index_build_ms_5seed": 11.467906646430492,
+ "latency": {
+  "water droplets smearing the camera lens": {
+   "gamma_deg": 1.0,
+   "reference_1model_ms": 12.377387844026089,
+   "cached_1model_ms": 4.639136604964733,
+   "reference_5seed_ms": 61.625410337001085,
+   "cached_5seed_ms": 23.049854673445225,
+   "prepare_query_1model_ms": 2.249673008918762,
+   "rank_1model_ms": 2.37084086984396,
+   "rank_vs_fast_max_abs_diff": 0.0,
+   "rank_cudagraph_1model_ms": 1.238425262272358,
+   "rank_cudagraph_5seed_ms": 5.792476702481508,
+   "prepare_query_5seed_ms": 11.130189523100853,
+   "cudagraph_vs_rank_max_abs_diff": 0.0,
+   "cached_skip_1model_ms": 4.6593258157372475,
+   "skip_threshold": 1e-06
+  },
+  "pedestrians crossing the street after dark": {
+   "gamma_deg": 0.19787955284118652,
+   "reference_1model_ms": 12.376974802464247,
+   "cached_1model_ms": 4.643162712454796,
+   "reference_5seed_ms": 61.666333582252264,
+   "cached_5seed_ms": 23.119496181607246,
+   "prepare_query_1model_ms": 2.266810741275549,
+   "rank_1model_ms": 2.3892917670309544,
+   "rank_vs_fast_max_abs_diff": 0.0,
+   "rank_cudagraph_1model_ms": 1.230723224580288,
+   "rank_cudagraph_5seed_ms": 5.78733254224062,
+   "prepare_query_5seed_ms": 11.168773751705885,
+   "cudagraph_vs_rank_max_abs_diff": 0.0,
+   "cached_skip_1model_ms": 4.671283066272736,
+   "skip_threshold": 1e-06
+  }
+ }
+}

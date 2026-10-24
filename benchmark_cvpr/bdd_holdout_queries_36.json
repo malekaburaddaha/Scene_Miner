@@ -1,0 +1,605 @@
+{
+ "doc": "Pre-registered external holdout benchmark (Milestone 28). Written before any holdout score was computed. Relevance comes only from BDD100K's own human labels: image tags (weather, timeofday, scene) and 2D boxes (area = box width*height as a fraction of the image). Fixed protocol: every method is run once, frozen, with no adjustment; metrics mAP and P@5; a query with fewer than 5 positives in the holdout is excluded on its label counts alone; families (a) condition, (b) object, (c) object x condition are reported separately and pooled; paired sign-flip tests vs SceneMiner. Main mode is metadata-free (no method reads BDD100K tags, which are the ground truth). A second, labelled-circular mode gives the methods that can read recorded metadata the BDD100K timeofday/weather tags as metadata. Queries a8-a10 use a weather/time tag as a proxy for a degradation BDD100K does not label.",
+ "written_utc": "2026-10-24T02:05:08Z",
+ "queries": [
+  {
+   "id": "a1",
+   "text": "driving in the rain",
+   "family": "a",
+   "predicate": {
+    "weather": [
+     "rainy"
+    ]
+   }
+  },
+  {
+   "id": "a2",
+   "text": "a snowy road",
+   "family": "a",
+   "predicate": {
+    "weather": [
+     "snowy"
+    ]
+   }
+  },
+  {
+   "id": "a3",
+   "text": "fog reducing visibility",
+   "family": "a",
+   "predicate": {
+    "weather": [
+     "foggy"
+    ]
+   }
+  },
+  {
+   "id": "a4",
+   "text": "driving at night",
+   "family": "a",
+   "predicate": {
+    "timeofday": [
+     "night"
+    ]
+   }
+  },
+  {
+   "id": "a5",
+   "text": "dusk or dawn light on the road",
+   "family": "a",
+   "predicate": {
+    "timeofday": [
+     "dawn/dusk"
+    ]
+   }
+  },
+  {
+   "id": "a6",
+   "text": "a partly cloudy sky",
+   "family": "a",
+   "predicate": {
+    "weather": [
+     "partly cloudy"
+    ]
+   }
+  },
+  {
+   "id": "a7",
+   "text": "an overcast grey sky",
+   "family": "a",
+   "predicate": {
+    "weather": [
+     "overcast"
+    ]
+   }
+  },
+  {
+   "id": "a8",
+   "text": "wet reflective road after rain",
+   "family": "a",
+   "predicate": {
+    "weather": [
+     "rainy"
+    ]
+   }
+  },
+  {
+   "id": "a9",
+   "text": "water droplets on the windshield",
+   "family": "a",
+   "predicate": {
+    "weather": [
+     "rainy"
+    ]
+   }
+  },
+  {
+   "id": "a10",
+   "text": "headlight glare at night",
+   "family": "a",
+   "predicate": {
+    "timeofday": [
+     "night"
+    ]
+   }
+  },
+  {
+   "id": "a11",
+   "text": "a dark low-visibility scene",
+   "family": "a",
+   "predicate": {
+    "any": [
+     {
+      "timeofday": [
+       "night"
+      ]
+     },
+     {
+      "weather": [
+       "foggy"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "a12",
+   "text": "adverse weather conditions",
+   "family": "a",
+   "predicate": {
+    "weather": [
+     "rainy",
+     "snowy",
+     "foggy"
+    ]
+   }
+  },
+  {
+   "id": "b1",
+   "text": "a pedestrian on the street",
+   "family": "b",
+   "predicate": {
+    "box": {
+     "labels": [
+      "pedestrian"
+     ],
+     "min_count": 1,
+     "min_area": 0.002
+    }
+   }
+  },
+  {
+   "id": "b2",
+   "text": "a crowd of pedestrians",
+   "family": "b",
+   "predicate": {
+    "box": {
+     "labels": [
+      "pedestrian"
+     ],
+     "min_count": 5,
+     "min_area": 0.0005
+    }
+   }
+  },
+  {
+   "id": "b3",
+   "text": "a pedestrian close to the car",
+   "family": "b",
+   "predicate": {
+    "box": {
+     "labels": [
+      "pedestrian"
+     ],
+     "min_count": 1,
+     "min_area": 0.01
+    }
+   }
+  },
+  {
+   "id": "b4",
+   "text": "a cyclist riding a bicycle",
+   "family": "b",
+   "predicate": {
+    "all": [
+     {
+      "box": {
+       "labels": [
+        "bicycle"
+       ],
+       "min_count": 1,
+       "min_area": 0.001
+      }
+     },
+     {
+      "box": {
+       "labels": [
+        "rider"
+       ],
+       "min_count": 1,
+       "min_area": 0.001
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "b5",
+   "text": "a motorcycle on the road",
+   "family": "b",
+   "predicate": {
+    "box": {
+     "labels": [
+      "motorcycle"
+     ],
+     "min_count": 1,
+     "min_area": 0.001
+    }
+   }
+  },
+  {
+   "id": "b6",
+   "text": "a bus ahead",
+   "family": "b",
+   "predicate": {
+    "box": {
+     "labels": [
+      "bus"
+     ],
+     "min_count": 1,
+     "min_area": 0.01
+    }
+   }
+  },
+  {
+   "id": "b7",
+   "text": "a truck on the road",
+   "family": "b",
+   "predicate": {
+    "box": {
+     "labels": [
+      "truck"
+     ],
+     "min_count": 1,
+     "min_area": 0.005
+    }
+   }
+  },
+  {
+   "id": "b8",
+   "text": "a large truck close ahead",
+   "family": "b",
+   "predicate": {
+    "box": {
+     "labels": [
+      "truck"
+     ],
+     "min_count": 1,
+     "min_area": 0.05
+    }
+   }
+  },
+  {
+   "id": "b9",
+   "text": "a traffic light",
+   "family": "b",
+   "predicate": {
+    "box": {
+     "labels": [
+      "traffic light"
+     ],
+     "min_count": 1,
+     "min_area": 0.0005
+    }
+   }
+  },
+  {
+   "id": "b10",
+   "text": "a long line of cars in traffic",
+   "family": "b",
+   "predicate": {
+    "box": {
+     "labels": [
+      "car"
+     ],
+     "min_count": 8,
+     "min_area": 0.0005
+    }
+   }
+  },
+  {
+   "id": "b11",
+   "text": "an empty road with no other vehicles",
+   "family": "b",
+   "predicate": {
+    "box": {
+     "labels": [
+      "car",
+      "truck",
+      "bus"
+     ],
+     "min_count": 0,
+     "min_area": 0.0005,
+     "max_count": 0
+    }
+   }
+  },
+  {
+   "id": "b12",
+   "text": "a train or a tram",
+   "family": "b",
+   "predicate": {
+    "box": {
+     "labels": [
+      "train"
+     ],
+     "min_count": 1,
+     "min_area": 0.0
+    }
+   }
+  },
+  {
+   "id": "c1",
+   "text": "pedestrians crossing at night",
+   "family": "c",
+   "predicate": {
+    "all": [
+     {
+      "box": {
+       "labels": [
+        "pedestrian"
+       ],
+       "min_count": 1,
+       "min_area": 0.002
+      }
+     },
+     {
+      "timeofday": [
+       "night"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "c2",
+   "text": "pedestrians walking in the rain",
+   "family": "c",
+   "predicate": {
+    "all": [
+     {
+      "box": {
+       "labels": [
+        "pedestrian"
+       ],
+       "min_count": 1,
+       "min_area": 0.002
+      }
+     },
+     {
+      "weather": [
+       "rainy"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "c3",
+   "text": "a cyclist at night",
+   "family": "c",
+   "predicate": {
+    "all": [
+     {
+      "box": {
+       "labels": [
+        "rider"
+       ],
+       "min_count": 1,
+       "min_area": 0.001
+      }
+     },
+     {
+      "timeofday": [
+       "night"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "c4",
+   "text": "a bus in the rain",
+   "family": "c",
+   "predicate": {
+    "all": [
+     {
+      "box": {
+       "labels": [
+        "bus"
+       ],
+       "min_count": 1,
+       "min_area": 0.01
+      }
+     },
+     {
+      "weather": [
+       "rainy"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "c5",
+   "text": "a truck on a snowy road",
+   "family": "c",
+   "predicate": {
+    "all": [
+     {
+      "box": {
+       "labels": [
+        "truck"
+       ],
+       "min_count": 1,
+       "min_area": 0.005
+      }
+     },
+     {
+      "weather": [
+       "snowy"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "c6",
+   "text": "heavy traffic at night",
+   "family": "c",
+   "predicate": {
+    "all": [
+     {
+      "box": {
+       "labels": [
+        "car"
+       ],
+       "min_count": 8,
+       "min_area": 0.0005
+      }
+     },
+     {
+      "timeofday": [
+       "night"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "c7",
+   "text": "an empty road at night",
+   "family": "c",
+   "predicate": {
+    "all": [
+     {
+      "box": {
+       "labels": [
+        "car",
+        "truck",
+        "bus"
+       ],
+       "min_count": 0,
+       "min_area": 0.0005,
+       "max_count": 0
+      }
+     },
+     {
+      "timeofday": [
+       "night"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "c8",
+   "text": "a motorcycle in daylight",
+   "family": "c",
+   "predicate": {
+    "all": [
+     {
+      "box": {
+       "labels": [
+        "motorcycle"
+       ],
+       "min_count": 1,
+       "min_area": 0.001
+      }
+     },
+     {
+      "timeofday": [
+       "daytime"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "c9",
+   "text": "traffic lights at night",
+   "family": "c",
+   "predicate": {
+    "all": [
+     {
+      "box": {
+       "labels": [
+        "traffic light"
+       ],
+       "min_count": 1,
+       "min_area": 0.0005
+      }
+     },
+     {
+      "timeofday": [
+       "night"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "c10",
+   "text": "a busy city street in the rain",
+   "family": "c",
+   "predicate": {
+    "all": [
+     {
+      "box": {
+       "labels": [
+        "car"
+       ],
+       "min_count": 5,
+       "min_area": 0.0005
+      }
+     },
+     {
+      "scene": [
+       "city street"
+      ]
+     },
+     {
+      "weather": [
+       "rainy"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "c11",
+   "text": "a bus at dusk",
+   "family": "c",
+   "predicate": {
+    "all": [
+     {
+      "box": {
+       "labels": [
+        "bus"
+       ],
+       "min_count": 1,
+       "min_area": 0.01
+      }
+     },
+     {
+      "timeofday": [
+       "dawn/dusk"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "c12",
+   "text": "a pedestrian close to the car at night",
+   "family": "c",
+   "predicate": {
+    "all": [
+     {
+      "box": {
+       "labels": [
+        "pedestrian"
+       ],
+       "min_count": 1,
+       "min_area": 0.01
+      }
+     },
+     {
+      "timeofday": [
+       "night"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

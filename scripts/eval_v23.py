@@ -81,6 +81,8 @@ def load_models(pat, d_qwen, d_sig, n_m, d_text, rk, cls_name="v23"):
         from scene_mining.filter.sceneminer_v2_4 import SceneMinerV24 as SceneMinerV23
     if cls_name == "v25":
         from scene_mining.filter.sceneminer_v2_5 import SceneMinerV25 as SceneMinerV23
+    if cls_name == "v26":
+        from scene_mining.filter.sceneminer_v2_6 import SceneMinerV26 as SceneMinerV23
     M = []
     for c in sorted(glob.glob(pat)):
         d = torch.load(c, map_location=dev, weights_only=False)
@@ -282,7 +284,7 @@ def main():
     ap.add_argument("--suite", default="benchmark_cvpr/queries_390.json")
     ap.add_argument("--split", default="benchmark_cvpr/split_906_602.json")
     ap.add_argument("--out", default="results/cvpr/milestone14_v2_3.json")
-    ap.add_argument("--model", default="v23", choices=["v23", "v24", "v25"])
+    ap.add_argument("--model", default="v23", choices=["v23", "v24", "v25", "v26"])
     a = ap.parse_args()
     z = np.load(a.features, allow_pickle=False)
     corpus = [str(t) for t in z["scene_tokens"]]
@@ -296,10 +298,10 @@ def main():
          "F": (T("emb"), T("tag_logits"), risk, qwen, T("siglip_img"), T("vlm_margin_z"), T("prior"))}
     assert list(z["margin_attrs"]) == ATTRS
     global ABL, DEFAULT_ABSTAIN
-    if a.model in ("v24", "v25"):
+    if a.model in ("v24", "v25", "v26"):
         DEFAULT_ABSTAIN = True
         ABL = ["full", "no_abstain", "no_gate", "no_rescue", "no_resnorm", "base_only"]
-        if a.model == "v25": ABL.insert(2, "no_macro_prior")
+        if a.model in ("v25", "v26"): ABL.insert(2, "no_macro_prior")
     M = load_models(a.ckpts, qwen.shape[1], 768, 4, 768, rk, a.model)
     set_mode(M, "full")
     print(f"[v2.3] {len(M)} seeds", flush=True)
