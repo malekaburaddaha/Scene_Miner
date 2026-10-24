@@ -1,0 +1,339 @@
+{
+ "registry": [
+  {
+   "claim": "human GT zero-leakage",
+   "value": "0.794",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "human GT calibrated",
+   "value": "0.829",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "human GT portable",
+   "value": "0.762",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "best alternative human GT",
+   "value": "0.735",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "BDD100K SceneMiner",
+   "value": "0.614",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "BDD100K SigLIP2",
+   "value": "0.622",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "BDD in-vocab gain",
+   "value": "+0.098",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "BDD OOV loss",
+   "value": "0.060",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "holdout SceneMiner",
+   "value": "0.400",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "holdout SigLIP2",
+   "value": "0.408",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "holdout p vs SigLIP2",
+   "value": "0.28",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "holdout vs CLIP",
+   "value": "+0.048",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "holdout vs CARIM",
+   "value": "+0.107",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "holdout vs lookup",
+   "value": "+0.169",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "holdout vs naive",
+   "value": "+0.185",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "holdout vs RefAV",
+   "value": "+0.217",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "ranking ms",
+   "value": "1.2",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "query preparation ms",
+   "value": "2.3",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "total ms",
+   "value": "3.5",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "reference ms",
+   "value": "12.4",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "droplets",
+   "value": "0.943",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "glare",
+   "value": "0.592",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "wet road",
+   "value": "0.976",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "low contrast",
+   "value": "0.665",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "ResNorm worth",
+   "value": "0.023",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "BEV/tags over portable",
+   "value": "0.032",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "suite",
+   "value": "0.694",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "suite skew",
+   "value": "+2.6",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "S2",
+   "value": "0.668",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "S3",
+   "value": "0.671",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "S3 un-gated",
+   "value": "0.703",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "regime degradation lead",
+   "value": "+0.065",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "semantics vs SigLIP2",
+   "value": "-0.007",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "semantics vs lookup",
+   "value": "+0.113",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "conjunctions vs SigLIP2+metadata",
+   "value": "-0.031",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "conjunctions p",
+   "value": "0.016",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "rater lead all",
+   "value": "+0.070",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "rater lead drop 20%",
+   "value": "+0.102",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "loop mAP",
+   "value": "0.057",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "loop VRU recall",
+   "value": "0.197",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "loop vs SigLIP2",
+   "value": "-0.025",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "BDD gap to SigLIP2",
+   "value": "0.008",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "design BDD trade",
+   "value": "0.014",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "design suite gain",
+   "value": "+0.100",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "conjunctions vs lookup",
+   "value": "+0.066",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "conjunctions vs SigLIP2",
+   "value": "+0.002",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "Table 2 full human GT",
+   "value": "0.794",
+   "tex": "paper/tab_master.tex",
+   "found": true
+  },
+  {
+   "claim": "Table 2 portable suite",
+   "value": "0.654",
+   "tex": "paper/tab_master.tex",
+   "found": true
+  }
+ ],
+ "scan": {
+  "paper/main_cvpr.tex": {
+   "n_numbers": 179,
+   "n_unsourced": 0,
+   "unsourced": []
+  },
+  "paper/tab_abl.tex": {
+   "n_numbers": 18,
+   "n_unsourced": 0,
+   "unsourced": []
+  },
+  "paper/tab_bdd.tex": {
+   "n_numbers": 15,
+   "n_unsourced": 0,
+   "unsourced": []
+  },
+  "paper/tab_bddq.tex": {
+   "n_numbers": 48,
+   "n_unsourced": 0,
+   "unsourced": []
+  },
+  "paper/tab_design.tex": {
+   "n_numbers": 30,
+   "n_unsourced": 0,
+   "unsourced": []
+  },
+  "paper/tab_loop.tex": {
+   "n_numbers": 20,
+   "n_unsourced": 0,
+   "unsourced": []
+  },
+  "paper/tab_master.tex": {
+   "n_numbers": 106,
+   "n_unsourced": 0,
+   "unsourced": []
+  },
+  "paper/tab_regimes.tex": {
+   "n_numbers": 16,
+   "n_unsourced": 0,
+   "unsourced": []
+  },
+  "paper/tab_suite.tex": {
+   "n_numbers": 35,
+   "n_unsourced": 0,
+   "unsourced": []
+  }
+ }
+}

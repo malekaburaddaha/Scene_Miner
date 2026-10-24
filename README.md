@@ -257,6 +257,18 @@ python scripts/check_macro_subspace_train.py
 python scripts/make_qualitative_showcase.py                 # Fig. 2 + supplementary strips
 python scripts/make_tab_bddq.py && python scripts/make_tab_master.py
 
+# ── Milestones 27-31: cached index, v2.6, holdout, figures, checks ──────
+python scripts/explore_conditional_gate_train.py   # gate variant, training text only
+scripts/launch_seeds.sh scripts/train_sceneminer_v26.py work_dirs/sceneminer_v26 v26
+SM_FINAL=v26 scripts/run_m27_evals.sh              # every benchmark, 4 GPUs
+FP64=1 python scripts/verify_fast_index.py && python scripts/time_sceneminer_latency.py
+python scripts/build_bdd_holdout.py && python scripts/holdout_signals.py --part margins && python scripts/holdout_signals.py --part merge
+python scripts/refav_llm_compile.py && python scripts/eval_related_work_baselines.py
+python scripts/make_main_tables.py && python scripts/make_tab_master.py && python scripts/make_tab_bddq.py
+python scripts/make_fig1_architecture.py && python scripts/make_figures.py && python scripts/make_qualitative_showcase.py
+python scripts/strip_pdf_metadata.py && python scripts/verify_paper_numbers.py && python scripts/check_anonymity.py
+scripts/run_rater2_ui.sh <name>   # second rater, 160 scenes; then: python scripts/incorporate_rater2.py --rater <name>
+
 # ── bibliography (fetched, never typed) ──────────────────────────────────
 SSL_CERT_FILE=/etc/pki/tls/certs/ca-bundle.crt python scripts/verify_bibliography.py
 SSL_CERT_FILE=/etc/pki/tls/certs/ca-bundle.crt python scripts/verify_bibliography_doi.py
@@ -279,85 +291,60 @@ python scripts/annotate_ui.py --rater <name> --port 8800
 
 ## 7. Headline results
 
-SceneMiner is **one model** (code: `sceneminer_v2_5.py`): PartNorm + ResNorm +
-a **factored concept gate** built only from training text — γ_deg (does a
-degradation concept apply?) and γ_macro (which recorded context does the query
-name?) — with abstention to SigLIP2 plus the named metadata. Earlier designs
-(v2.1–v2.4) are kept as the paper's design-progression table.
+SceneMiner is **one model** (`sceneminer_v2_6.py`):
 
-**Human ground truth, 550 scenes** (macro-mAP over four degradation attributes):
+* PartNorm + ResNorm;
+* a **factored concept gate** built only from training text:
+  * γ_deg: does a degradation concept apply? It is computed after removing the context
+    directions the query activates.
+  * γ_macro: which recorded context does the query name?
+* abstention to SigLIP2 plus the named metadata.
 
-| ranker | mAP |
-|---|---|
-| **SceneMiner + 5-fold human calibration** | **0.8263** |
-| **SceneMiner** (zero-leakage) | **0.7845** |
-| late fusion SigLIP2 + lookup (no learning) | 0.7372 |
-| logit VLM lookup | 0.7325 |
-| zero-shot SigLIP2 | 0.5688 |
+**Portable mode** reads only single-camera signals: SigLIP2, the Qwen2.5-VL margins and
+recorded metadata. No BEV embedding or tags, which were supervised on corpus scenes.
 
-**External transfer, BDD100K** (1000 images, 12 queries, human labels, no BDD tuning):
+**Cost.** With the cached scene index (`fast_index.py`), one model ranks 1508 scenes in
+**1.2 ms** after 2.3 ms of query preparation. The plain forward pass takes 12.4 ms, and the
+scores are identical in float64.
 
-| ranker | all 12 | in-vocab (4) | out-of-vocab (8) | P@5 | NDCG@10 |
-|---|---|---|---|---|---|
-| SceneMiner | 0.6164 | **0.7003** | 0.5745 | 0.817 | 0.782 |
-| zero-shot SigLIP2 | **0.6218** | 0.6002 | **0.6327** | **0.850** | **0.809** |
-| logit VLM lookup | 0.5871 | 0.6475 | 0.5569 | 0.717 | 0.705 |
-
-SceneMiner is level with SigLIP2 externally (−0.005, p = 0.94): +0.100 on queries
-naming a trained attribute, −0.058 on the rest. (Milestone 23 found that earlier
-BDD100K evaluations fed L2-normalised query features to heads trained on raw ones;
-these are the corrected numbers.)
-
-**Against published driving-retrieval paradigms and foundation models**
-(Milestone 23; "-style" rows re-implement the paradigm on our cached signals and
-are not the authors' systems; † reads BEV/tags supervised on corpus scenes; ‡ reads
+**Against published paradigms and foundation models** (mAP; "-style" rows re-implement
+the paradigm on our cached signals; † reads BEV/tags supervised on corpus scenes; ‡ reads
 the attributes that define suite relevance):
 
-| method | human GT | BDD100K | S5 258 | S5 val150 | suite | ms |
+| method | human GT (550) | BDD100K (1000) | BDD100K holdout (2000, pre-registered) | S5 258 | S5 val150 | suite |
 |---|---|---|---|---|---|---|
-| BEV-TSR-style | 0.577† | n/a | 0.208† | n/a | 0.459† | 0.39 |
-| RefAV-style program | 0.733† | 0.383 | 0.229† | 0.211 | 0.850†‡ | 0.08 |
-| CARIM-style captions | 0.377 | 0.463 | 0.248 | 0.309 | 0.308 | 1.53 |
-| Tag map (Talk2BEV/nuPrompt-style) | 0.624† | n/a | 0.198† | n/a | 0.378† | 0.69 |
-| ReferGPT-style | 0.469† | 0.612 | 0.252† | 0.376 | 0.543† | 1.39 |
-| CLIP ViT-B/32 | 0.453 | 0.612 | 0.253 | 0.374 | 0.384 | 0.17 |
-| SigLIP ViT-B/16 | 0.507 | 0.607 | 0.281 | 0.385 | 0.427 | 0.17 |
-| SigLIP2 ViT-B/16 | 0.569 | **0.622** | 0.312 | 0.385 | 0.445 | 0.17 |
-| SigLIP2 + adapter (906 scenes) | 0.666 | 0.539 | 0.222 | 0.226 | 0.479 | 0.39 |
-| Qwen2.5-VL lookup | 0.732 | 0.587 | 0.219 | 0.231 | 0.414‡ | 0.01 |
-| naive convex router | 0.735† | 0.486 | 0.188† | 0.212 | 0.531† | 5.84 |
-| **SceneMiner** | **0.785**† | 0.616 | **0.315** | **0.397** | 0.685† | 8.00 |
+| BEV-TSR-style | 0.577† | n/a | n/a | 0.208† | n/a | 0.459† |
+| RefAV-style (LLM program) | 0.717† | 0.432 | 0.184 | 0.188† | 0.198 | 0.823†‡ |
+| CARIM-style (neutral / listing captions) | 0.274 / 0.377 | 0.440 / 0.463 | 0.293 / n/a | 0.227 / 0.248 | 0.320 / 0.309 | 0.268 / 0.308 |
+| Tag map (Talk2BEV/nuPrompt-style) | 0.624† | n/a | n/a | 0.198† | n/a | 0.378† |
+| ReferGPT-style | 0.469† | 0.612 | 0.353 | 0.252† | 0.376 | 0.543† |
+| CLIP ViT-B/32 | 0.453 | 0.612 | 0.353 | 0.253 | 0.374 | 0.384 |
+| SigLIP2 ViT-B/16 | 0.569 | **0.622** | **0.408** | **0.312** | 0.385 | 0.445 |
+| Qwen2.5-VL lookup | 0.732 | 0.587 | 0.231 | 0.219 | 0.231 | 0.414‡ |
+| naive convex router | 0.735† | 0.486 | 0.215 | 0.188† | 0.212 | 0.531† |
+| **SceneMiner (portable)** | 0.762 | 0.614 | 0.400 | 0.311 | **0.394** | 0.654 |
+| **SceneMiner (full)** | **0.794**† (0.829 calibrated) | 0.614 | 0.400 | 0.308 | **0.394** | **0.694**† |
 
-SceneMiner leads on human-labelled degradation and ties SigLIP2 on BDD100K and
-Stratum 5; CLIP and the ReferGPT-style ranker are higher on the 4 val150
-conjunctions (too few to test).
+**What the table shows**
 
-**Where learned fusion helps** (all human-graded):
-
-| regime | SceneMiner | SigLIP2 | lookup | fusion SigLIP2+lookup | fusion SigLIP2+metadata |
-|---|---|---|---|---|---|
-| atomic degradation (550) | **0.789** | 0.569 | 0.733 | 0.737 | 0.626 |
-| atomic semantics (258 / val150) | 0.332 / **0.392** | **0.337** / 0.382 | 0.217 / 0.220 | = SigLIP2 | = SigLIP2 |
-| object × condition (258) | 0.310 | 0.293 | 0.227 | 0.284 | **0.327** |
-
-SceneMiner wins where it was trained and matches SigLIP2 on objects. On
-conjunctions a no-learning fusion with metadata is still ahead (−0.017, p = 0.17).
-A simulated second rater (κ 0.75–0.90) keeps it ahead of SigLIP2 in every trial
-and ahead of the lookup in 92–100 % (macro); glare and wet road are near ties per
-attribute.
+* SceneMiner leads on human-labelled degradation, including in its portable mode.
+* It is **level with zero-shot SigLIP2 externally**:
+  * BDD100K: 0.614 vs 0.622, p = 0.94;
+  * the untouched 36-query holdout: 0.400 vs 0.408, p = 0.28.
+* On the holdout it is above every other baseline's mean, significantly so for CLIP,
+  ReferGPT-style, CARIM-style, the lookup, the naive router and RefAV-style (p ≤ 0.013).
+* On object × condition conjunctions, a no-learning fusion of SigLIP2 with recorded
+  metadata is significantly better (−0.031, p = 0.016).
 
 **The premise, on 150 uncontaminated nuScenes val scenes** (CAM_FRONT sector):
 
-| | Δ | q / p |
-|---|---|---|
-| degraded vs clean front camera: mAP | −0.0906 | q = 0.015 |
-| degraded vs clean: ghost FP rate @ score > 0.3 | +0.0729 | q = 0.045 |
-| SceneMiner top-25 (degradation queries) vs mean: front mAP | −0.057 | p = 0.002 |
-| SceneMiner top-25 vs mean: VRU recall | −0.197 | p < 0.001 |
-| SceneMiner top-25 vs SigLIP2 top-25: front mAP | −0.025 | p = 0.014 |
+* Degraded front cameras cost the detector 0.091 front mAP (q = 0.015) and add 0.073
+  ghost-FP rate (q = 0.045).
+* SceneMiner's top-25 retrievals for degradation queries lose 0.057 mAP (p = 0.002) and
+  0.197 VRU recall (p < 0.001).
 
-`results/cvpr/MASTER_REPORT.md` carries every table, the contamination map, and
-what does not hold.
+`results/cvpr/MASTER_REPORT.md` carries every table, the contamination map, and what does
+not hold. `results/cvpr/MILESTONE27.md`–`MILESTONE31.md` cover the latest work.
 
 ---
 

@@ -9,6 +9,7 @@
   bh_table.tex            all 30 front-sector tests of Milestone 11 with BH q
 """
 from __future__ import annotations
+import os
 import json, sys
 from pathlib import Path
 import numpy as np, torch
@@ -53,7 +54,7 @@ def suite_rows():
     emb, tlog, risk = T("emb"), T("tag_logits"), T("risk")
     sig, mz, prior = T("siglip_img"), T("vlm_margin_z"), T("prior")
     qwen = torch.load(W/"V_frozen_cache.pt", map_location=dev).float()
-    M = load_v23(risk.reshape(-1).cpu().numpy(), which="v25")
+    M = load_v23(risk.reshape(-1).cpu().numpy(), which=os.environ.get("SM_FINAL", "v26"))
     for m in M: m.use_abstain = True
     attrs = load_attributes(W)
     for f in ("binary_flags_with_logits.json", "lowcontrast_strict.json"):
@@ -84,7 +85,7 @@ def suite_rows():
                     "v2.5": vals[0], "SigLIP2": vals[1], "lookup": vals[2]})
         rows.append([str(qi + 1), SHORT[q["stratum"]], tex(q["text"]), pred_str(q["predicate"]),
                      str(int(rel.sum()))] + [fmt(v) for v in vals])
-    json.dump(raw, open("results/cvpr/milestone22_per_query_suite150_v25.json", "w"), indent=1)
+    json.dump(raw, open("results/cvpr/milestone27_per_query_suite150_v26.json", "w"), indent=1)
     return rows
 
 
@@ -97,10 +98,10 @@ def main():
               r"Lookup reads the column of the attribute the predicate names; -- where it names none.",
               "tab:pq-suite", spec)
 
-    d = json.load(open("results/cvpr/milestone22_semantic_edge_cases.json"))["corpus_258"]["per_query"]
+    d = json.load(open("results/cvpr/milestone27_semantic_edge_cases.json"))["corpus_258"]["per_query"]
     rows = [[str(i + 1), SHORT[q["stratum"]], tex(q["text"]), pred_str(q["predicate"]), str(q["n_pos"]),
              f"{q['gamma_v24']:.2f}"] + [fmt(q["mAP"][k]) for k in
-             ["v2.5_monocular", "zeroshot_SigLIP2", "logit_VLM_lookup", "v2.5_full [contam.]"]]
+             ["v2.4_monocular", "zeroshot_SigLIP2", "logit_VLM_lookup", "v2.4_full [contam.]"]]
             for i, q in enumerate(d)]
     longtable(OUT/"per_query_semantic.tex",
               r"\# & S & query & predicate & pos & $\gamma$ & SceneMiner & SigLIP2 & lookup & full$^\dagger$",

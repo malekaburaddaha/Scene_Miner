@@ -37,9 +37,10 @@ def s5(k, part):
 cols = {}
 for k, *_ in ROWS:
     m = M[k]
-    cols[k] = [m["human_gt"], m["bdd"], s5(k, "corpus"), s5(k, "val150"), m["suite"]]
+    ho = R["holdout"]["modes"]["metadata_free"]["methods"].get(k)
+    cols[k] = [m["human_gt"], m["bdd"], s5(k, "corpus"), s5(k, "val150"), m["suite"], ho["mAP_all"] if ho else None]
 # rows marked circular on the suite do not compete for "best" in that column
-best = [max(v[i] for k, v in cols.items() if v[i] is not None and not (i == 4 and k in CIRC)) for i in range(5)]
+best = [max(v[i] for k, v in cols.items() if v[i] is not None and not (i == 4 and k in CIRC)) for i in range(6)]
 lines = []
 for k, lab, cit, mods in ROWS:
     m = M[k]; v = cols[k]
@@ -54,13 +55,13 @@ for k, lab, cit, mods in ROWS:
     skew = "n/a" if m["suite_skew_pts"] is None else f"${m['suite_skew_pts']:+.1f}$"
     lat = LAT[k]["ms"] if k in LAT else m.get("rank_latency_ms_1508_single_model", m["rank_latency_ms_1508"])
     name = lab + (f"~\\cite{{{cit}}}" if cit else "")
-    lines.append(f"{name} & {mods} & {cell[0]} & {cell[1]} & {cell[2]} & {cell[3]} & {cell[4]} & {skew} & ${lat:.2f}$\\\\")
+    lines.append(f"{name} & {mods} & {cell[0]} & {cell[1]} & {cell[5]} & {cell[2]} & {cell[3]} & {cell[4]} & {skew} & ${lat:.2f}$\\\\")
     if k == "Qwen2.5-VL lookup": lines.append("\\midrule")
 lines.insert(6, "\\midrule")
-tex = ["\\setlength{\\tabcolsep}{4pt}", "\\begin{tabular}{llccccccc}", "\\toprule",
-       " & & human GT & BDD100K & \\multicolumn{2}{c}{Stratum 5} & \\multicolumn{2}{c}{150Q suite} & ms\\\\",
-       "\\cmidrule(lr){5-6}\\cmidrule(lr){7-8}",
-       "method & modalities & ($550$) & ($1000$) & $258$ & val150 & mAP & skew & ($1508$)\\\\", "\\midrule",
+tex = ["\\setlength{\\tabcolsep}{3.5pt}", "\\begin{tabular}{llcccccccc}", "\\toprule",
+       " & & human GT & \\multicolumn{2}{c}{BDD100K} & \\multicolumn{2}{c}{Stratum 5} & \\multicolumn{2}{c}{150Q suite} & ms\\\\",
+       "\\cmidrule(lr){4-5}\\cmidrule(lr){6-7}\\cmidrule(lr){8-9}",
+       "method & modalities & ($550$) & $1000$ & holdout & $258$ & val150 & mAP & skew & ($1508$)\\\\", "\\midrule",
        *lines, "\\bottomrule", "\\end{tabular}"]
 Path("paper/tab_master.tex").write_text("\n".join(tex) + "\n")
 print("\n".join(lines))

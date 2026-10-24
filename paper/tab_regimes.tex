@@ -1,0 +1,12 @@
+\begin{tabular}{lccc}
+\toprule
+ranker & degradation & semantics & sem.$\times$cond.\\
+ & ($550$) & ($258$ / val150) & ($258$)\\
+\midrule
+\textbf{SceneMiner} & \best{0.803} & 0.330 / \best{0.390} & 0.297\\
+zero-shot SigLIP2 & 0.569 & \best{0.337} / 0.382 & 0.293\\
+logit VLM lookup & 0.732 & 0.217 / 0.220 & 0.227\\
+fusion SigLIP2 $+$ lookup & 0.737 & $=$ SigLIP2 & 0.284\\
+fusion SigLIP2 $+$ metadata & 0.626 & $=$ SigLIP2 & \best{0.327}\\
+\bottomrule
+\end{tabular}

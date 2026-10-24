@@ -2,6 +2,7 @@
 """MILESTONE 12 - the three paper figures. Every number is read from the result
 JSONs written by Milestones 1-11; nothing here is hard-coded by hand."""
 from __future__ import annotations
+import os
 import argparse, glob, json, sys
 from pathlib import Path
 import numpy as np
@@ -84,7 +85,7 @@ def fig3():
     fig, (axa, axb) = plt.subplots(1, 2, figsize=(7.0, 2.7))
 
     suite = dict(suite)
-    suite["SceneMiner_v2.4"] = json.load(open("results/cvpr/milestone22_factored_gate.json"))["C_suite150"]["overall"]["v2.5_full"]
+    suite["SceneMiner_v2.4"] = json.load(open("results/cvpr/milestone27_v26.json"))["C_suite150"]["overall"]["v2.3_full"]
     order = ["attribute_index(TAUTOLOGY)", "SceneMiner_v2.1", "SceneMiner_v2.4",
              "zeroshot_SigLIP2", "logit_VLM_lookup"]
     lab = ["attribute\nindex", "naive convex\nrouter", "SceneMiner",
@@ -152,7 +153,7 @@ SHORT = ["\"water droplets smearing the camera lens\"",
 # Categorical slots 1-4 of the validated reference palette, fixed order; random
 # is a neutral dashed reference. Contrast WARN on aqua/yellow is relieved by a
 # distinct marker per series and direct end labels (identity never colour-only).
-SER = [("SceneMiner_v2.5", "SceneMiner", "#2a78d6", "o"),
+SER = [("SceneMiner_v2.4", "SceneMiner", "#2a78d6", "o"),
        ("zeroshot_SigLIP2", "zero-shot SigLIP2", "#eb6834", "s"),
        ("logit_VLM_lookup", "VLM margin lookup", "#1baf7a", "^"),
        ("metadata_matched", "night/rain metadata", "#eda100", "D")]
@@ -177,7 +178,7 @@ def quartile_panels(axes, d, kind="degradation", label_end=True):
 
 
 def fig_val150_quartiles():
-    d = json.load(open("results/cvpr/milestone22_val150_retrieval_v25.json"))
+    d = json.load(open("results/cvpr/milestone27_val150_retrieval_v26.json"))
     fig, axes = plt.subplots(1, 2, figsize=(7.0, 2.45))
     quartile_panels(axes, d)
     axes[0].set_title("(a) detection quality by retrieval quartile", fontsize=7.6, fontweight="bold")
@@ -220,7 +221,7 @@ def balanced_strips(queries, out, title, n_per=2, row_h=0.70):
     emb, tlog, risk = T("emb"), T("tag_logits"), T("risk")
     sig, mz, prior = T("siglip_img"), T("vlm_margin_z"), T("prior")
     qwen = torch.load("work_dirs/unified_filter/V_frozen_cache.pt", map_location=dev).float()
-    M = load_v23(risk.reshape(-1).cpu().numpy(), which="v25")
+    M = load_v23(risk.reshape(-1).cpu().numpy(), which=os.environ.get("SM_FINAL", "v26"))
     for m in M: m.use_abstain = True
     QT = text_embed([q for q, _ in queries])
     broot = Path("/nfs/turbo/umd-srawa/scene_mining/datasets/external_adverse/bdd100k")
@@ -292,8 +293,8 @@ def fig4():
     """(a) val150 CAM_FRONT mAP and ghost FP by retrieval quartile; (b) mAP in the
     three human-graded regimes with the two no-learning late-fusion controls."""
     from matplotlib.lines import Line2D
-    d16 = json.load(open("results/cvpr/milestone22_val150_retrieval_v25.json"))
-    reg = json.load(open("results/cvpr/milestone22_compositional_synergy.json"))["regimes"]
+    d16 = json.load(open("results/cvpr/milestone27_val150_retrieval_v26.json"))
+    reg = json.load(open("results/cvpr/milestone27_regimes.json"))["regimes"]
     fig = plt.figure(figsize=(7.0, 2.85))
     gs = fig.add_gridspec(2, 2, width_ratios=[1.0, 1.1], hspace=0.12, wspace=0.62)
     a1 = fig.add_subplot(gs[0, 0]); a2 = fig.add_subplot(gs[1, 0], sharex=a1)
@@ -304,8 +305,8 @@ def fig4():
     ax = fig.add_subplot(gs[:, 1])
     rows = [("degradation\n(550)", "atomic_degradation_550"),
             ("semantics\n(258)", "atomic_semantics_corpus258"),
-            ("semantics x\ncondition (258)", "conjunctions_corpus258_all30phrasings")]
-    ser = [("SceneMiner", "#2a78d6", "o", "SceneMiner_v2.5"), ("zero-shot SigLIP2", "#eb6834", "s", "zeroshot_SigLIP2"),
+            ("semantics x\ncondition (258)", "conjunctions_corpus258")]
+    ser = [("SceneMiner", "#2a78d6", "o", "SceneMiner"), ("zero-shot SigLIP2", "#eb6834", "s", "zeroshot_SigLIP2"),
            ("VLM margin lookup", "#1baf7a", "^", "logit_VLM_lookup"),
            ("SigLIP2 + lookup (late fusion)", "#6250d6", "v", "late_fusion SigLIP2+lookup"),
            ("SigLIP2 + metadata (late fusion)", "#eda100", "D", "late_fusion SigLIP2+metadata")]
@@ -336,9 +337,8 @@ if __name__ == "__main__":
     args = ap.parse_args()
     OUT.mkdir(parents=True, exist_ok=True)
     print("[figures]")
-    fig1(); meta = fig3(); fig4(); fig_val150_quartiles()
+    # Figure 1 is drawn by scripts/make_fig1_architecture.py and the qualitative figures by
+    # scripts/make_qualitative_showcase.py (Milestones 24, 29)
+    meta = fig3(); fig4(); fig_val150_quartiles()
     Path("results/cvpr/milestone12_figure_numbers.json").write_text(json.dumps(meta, indent=2))
-    if not args.skip_gpu:
-        picks = {"fig2": fig2(), "supp_strips": fig_supp_strips()}
-        Path("results/cvpr/figure_retrieval_picks.json").write_text(json.dumps(picks, indent=1))
     print(f"[figures] wrote {OUT}")

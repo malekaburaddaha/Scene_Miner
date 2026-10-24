@@ -1,0 +1,43 @@
+{
+ "doc": "Three human-graded regimes, assembled by scripts/make_main_tables.py",
+ "keys": [
+  "SceneMiner_v2.4",
+  "v2.4_monocular",
+  "v2.4_portable_base",
+  "v2.4_monocular"
+ ],
+ "regimes": {
+  "atomic_degradation_550": {
+   "SceneMiner": 0.802555064247252,
+   "logit_VLM_lookup": 0.7324636442090723,
+   "zeroshot_SigLIP2": 0.5687830507009249,
+   "late_fusion SigLIP2+lookup": 0.7371706093484426,
+   "late_fusion SigLIP2+metadata": 0.6257467194900622
+  },
+  "atomic_semantics_corpus258": {
+   "SceneMiner": 0.3302389889683567,
+   "zeroshot_SigLIP2": 0.33697972637204693,
+   "logit_VLM_lookup": 0.2170951220425353,
+   "late_fusion SigLIP2+lookup": 0.33697972637204693,
+   "late_fusion SigLIP2+metadata": 0.33697972637204693
+  },
+  "atomic_semantics_val150": {
+   "SceneMiner": 0.389809749638487,
+   "zeroshot_SigLIP2": 0.38239120353773365,
+   "logit_VLM_lookup": 0.22000346598642656,
+   "late_fusion SigLIP2+lookup": 0.38239120353773365,
+   "late_fusion SigLIP2+metadata": 0.38239120353773365
+  },
+  "conjunctions_corpus258": {
+   "SceneMiner": 0.2965438105583307,
+   "zeroshot_SigLIP2": 0.2926646274698897,
+   "logit_VLM_lookup": 0.2271950093869281,
+   "metadata_matched": 0.25503852313995146,
+   "late_fusion SigLIP2+lookup": 0.28426557506405314,
+   "late_fusion SigLIP2+metadata": 0.32708054911724443,
+   "v2.4_full [contam.]": 0.28768693198068507,
+   "v2.3A_monocular": 0.2957766791076995,
+   "v2.3_monocular": 0.25419932746909263
+  }
+ }
+}

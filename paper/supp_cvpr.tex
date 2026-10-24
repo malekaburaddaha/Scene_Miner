@@ -10,15 +10,19 @@
 \usepackage{times,graphicx,amsmath,amssymb,booktabs,longtable,array,float}
 \usepackage{caption}
 \usepackage[colorlinks,linkcolor=black,citecolor=black,urlcolor=black]{hyperref}
+% double-blind: no document metadata in the PDF
+\pdfsuppressptexinfo=-1
+\hypersetup{pdfauthor={},pdftitle={},pdfsubject={},pdfkeywords={},pdfcreator={},pdfproducer={}}
 \usepackage{cleveref}
 \captionsetup{font=small,labelfont=bf}
 \renewcommand{\thetable}{S\arabic{table}}
 \newcommand{\best}[1]{\textbf{#1}}
+\newcommand{\gdeg}{\gamma_{\mathrm{deg}}}
 \renewcommand{\thefigure}{S\arabic{figure}}
 \renewcommand{\thesection}{S\arabic{section}}
 \setlength{\LTcapwidth}{\textwidth}
 
-\title{SceneMiner: Calibrated Multi-Modal Fusion and Diagnostic Auditing\\ for Language-Guided Driving Scene Retrieval\\ \large Supplementary Material}
+\title{SceneMiner: Scale-Aware Multi-Modal Fusion and Diagnostic Auditing\\ for Language-Guided Driving Scene Retrieval\\ \large Supplementary Material}
 \author{}
 \date{}
 
@@ -34,10 +38,26 @@ and additional qualitative retrievals.
 \section{Architecture and hyperparameters}
 % =====================================================================
 
+\begin{figure}[!ht]\centering
+\includegraphics[width=\textwidth]{figures/supp_stage1.pdf}
+\caption{\textbf{Stage 1 in detail.} Multi-camera rig path (top; nuScenes and Waymo
+only) and monocular path (bottom; any single camera, including BDD100K and val150).
+Parameter counts of the backbones are measured from their configurations.}
+\label{fig:stage1}
+\end{figure}
+
+\begin{figure}[!ht]\centering
+\includegraphics[width=\textwidth]{figures/supp_stage2.pdf}
+\caption{\textbf{Stage 2 in detail}, with the parameter count of every trainable
+module ($4{,}678{,}736$ in total). The portable mode uses only the routed base
+(cosine, margin, metadata) and the gate; the full mode adds the residual branch.}
+\label{fig:stage2}
+\end{figure}
+
 \begin{table}[h]\centering\small
 \caption{\textbf{SceneMiner specification.} Values are the code defaults used
-for every reported run (\texttt{src/scene\_mining/filter/sceneminer\_v2\_5.py},
-\texttt{scripts/train\_sceneminer\_v25.py}).}
+for every reported run (\texttt{src/scene\_mining/filter/sceneminer\_v2\_6.py},
+\texttt{scripts/train\_sceneminer\_v26.py}).}
 \label{tab:hp}
 \begin{tabular}{lll}
 \toprule
@@ -72,7 +92,9 @@ Anti-shortcut & margin dropout / 3D dropout (per step) & $50\%$ / $30\%$\\
  & agreement-distillation floor & $0.30$\\
 Model & trainable parameters & $4{,}678{,}736$\\
  & seeds & $5$ (scores averaged)\\
- & latency, $1508$ scenes, one query, A40 & $7.93\pm0.20$\,ms\\
+ & ranking $1508$ cached scenes, one model, A40 & $1.24$\,ms (CUDA graph)\\
+ & query preparation (gate, routing, FiLM) & $2.27$\,ms\\
+ & plain forward pass, for reference & $12.39$\,ms\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -81,8 +103,10 @@ Model & trainable parameters & $4{,}678{,}736$\\
 $156$ sensor-degradation phrasings form four concept classes, its $84$
 macro-environmental phrasings, grouped by predicate, form seven context classes,
 and twelve generic phrases form singleton classes. $\gamma_{\mathrm{deg}}$ is the
-concept mass of a softmax over all classes computed after removing part of the
-context subspace (the span of the seven context-class means);
+concept mass of a softmax over all classes computed after removing, at half
+strength, the directions of the context classes the query activates (class score
+above the best generic phrase), or of the whole seven-class context
+subspace in the earlier unconditional variant;
 $\gamma_{\mathrm{macro}}$ is the unprojected mass on each context class that has
 a recorded-metadata column. The variant and $\tau$ are chosen on training text
 alone (\cref{tab:loo}). Positives are scored \emph{leave-group-out}: a base
@@ -109,7 +133,7 @@ single softmax & 0.02 & 0.96 & 0.997 & 0.012 & 0.102 & +0.971\\
 single softmax & 0.03 & 0.95 & 0.966 & 0.017 & 0.128 & +0.883\\
 single softmax & 0.05 & 0.89 & 0.781 & 0.049 & 0.161 & +0.646\\
 half projection & 0.01 & 1.00 & 1.000 & 0.079 & 0.000 & +1.000\\
-half projection (chosen) & 0.02 & 0.99 & 1.000 & 0.152 & 0.007 & +0.999\\
+half projection (unconditional) & 0.02 & 0.99 & 1.000 & 0.152 & 0.007 & +0.999\\
 half projection & 0.03 & 0.98 & 0.996 & 0.183 & 0.022 & +0.985\\
 half projection & 0.05 & 0.94 & 0.931 & 0.190 & 0.073 & +0.843\\
 0.75 projection & 0.01 & 1.00 & 1.000 & 0.763 & 0.000 & +1.000\\
@@ -120,6 +144,11 @@ full projection & 0.01 & 1.00 & 1.000 & 0.904 & 0.000 & +1.000\\
 full projection & 0.02 & 1.00 & 1.000 & 0.644 & 0.005 & +0.997\\
 full projection & 0.03 & 0.99 & 0.998 & 0.496 & 0.030 & +0.978\\
 full projection & 0.05 & 0.95 & 0.945 & 0.342 & 0.156 & +0.815\\
+\midrule
+active directions, half & 0.01 & 1.00 & 1.000 & 0.017 & 0.000 & +1.000\\
+\textbf{active directions, half (chosen)} & 0.02 & 0.99 & 1.000 & 0.080 & 0.021 & +0.996\\
+active directions, half & 0.03 & 0.99 & 0.996 & 0.124 & 0.051 & +0.976\\
+active directions, half & 0.05 & 0.96 & 0.943 & 0.154 & 0.128 & +0.818\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -247,6 +276,56 @@ night / rain & word in the human-written scene description & $84$ / $138$ & $15$
 \input{supp_tables/bh_table.tex}
 
 % =====================================================================
+\section{Ablations and BDD100K summary}
+% =====================================================================
+
+\begin{table}[!ht]\centering\small
+\caption{\textbf{External transfer}, BDD100K: $1000$ images, $12$ queries,
+native human labels, chance $0.262$. In-vocabulary: the $4$ queries naming a
+cached attribute (fixed from wording). BDD100K has no metadata, so
+$s_{\mathrm{abst}}$ is the SigLIP2 cosine. No tuning on BDD100K.}
+\label{tab:bdd}
+\resizebox{0.6\textwidth}{!}{%
+\input{tab_bdd.tex}%
+}
+\end{table}
+
+\begin{table}[!ht]\centering\small
+\caption{\textbf{Ablations of SceneMiner}, one inference switch each.}
+\label{tab:abl}
+\resizebox{0.6\textwidth}{!}{%
+\input{tab_abl.tex}%
+}
+\end{table}
+
+% =====================================================================
+\section{The untouched BDD100K holdout}
+\label{sec:holdout}
+% =====================================================================
+
+From a $10{,}000$-image BDD100K release carrying BDD100K's own human weather,
+time-of-day and scene tags and 2D boxes, the $1000$ images used for the BDD100K
+column were excluded and $2000$ of the remaining $7841$ were drawn with a fixed
+seed, oversampling adverse conditions ($60\%$) as for the first sample. Before any
+score was computed, $36$ queries were fixed in a file with their relevance
+predicates (box classes, minimum box area as a fraction of the image, minimum and
+maximum counts) and the protocol: every method run once, frozen; queries with fewer
+than $5$ positives excluded on their label counts alone (only ``fog reducing
+visibility'', $3$ positives); families reported separately. The lookup's margin
+column per query was fixed from the wording before the run. In the main,
+metadata-free mode no method reads BDD100K's tags, which are the ground truth; the
+metadata-equipped mode gives methods that read recorded metadata the time-of-day and
+weather tags and is circular for the condition queries.
+
+\begin{table}[!ht]\centering\small
+\caption{\textbf{Untouched BDD100K holdout}, $2000$ images, $35$ queries: (a)
+condition, (b) object (graded by human 2D boxes), (c) object$\times$condition.
+$\Delta$: method minus SceneMiner, per-query sign-flip permutation $p$.}
+\label{tab:holdout}
+\resizebox{\textwidth}{!}{\input{supp_tables/holdout_table.tex}}
+\end{table}
+
+% =====================================================================
 \section{Per-query results}
 % =====================================================================
 
@@ -270,22 +349,7 @@ $500$ simulated second raters (prevalence fixed; flips uniform or
 ambiguity-weighted) in which SceneMiner's macro-mAP exceeds the comparator's.}
 \label{tab:rater}
 \resizebox{0.6\textwidth}{!}{%
-\begin{tabular}{lccc}
-\toprule
-subset & SceneMiner & lookup & SigLIP2\\
-\midrule
-all $550$ & $0.789$ & $0.733$ & $0.569$\\
-drop $10\%$ most ambiguous & $0.780$ & $0.708$ & $0.579$\\
-drop $20\%$ most ambiguous & $0.760$ & $0.671$ & $0.565$\\
-\midrule
-second rater: Cohen's $\kappa$ & $>$lookup & $>$SigLIP2 & $>$fusion$^{\ast}$\\
-\midrule
-$\kappa=0.90$ (uniform / ambiguity) & $1.00$ / $1.00$ & $1.00$ / $1.00$ & $1.00$ / $1.00$\\
-$\kappa=0.85$ (uniform / ambiguity) & $1.00$ / $1.00$ & $1.00$ / $1.00$ & $1.00$ / $1.00$\\
-$\kappa=0.75$ (uniform / ambiguity) & $0.98$ / $0.92$ & $1.00$ / $1.00$ & $0.98$ / $0.96$\\
-\bottomrule
-\multicolumn{4}{l}{\footnotesize $^{\ast}$late fusion SigLIP2 $+$ lookup.}
-\end{tabular}%
+\input{supp_tables/rater_table.tex}%
 }
 \end{table}
 
@@ -296,18 +360,7 @@ lookup, per attribute (Cohen's $\kappa=0.85$ uniform flips / $\kappa=0.75$
 ambiguity-weighted flips).}
 \label{tab:rater_attr}
 \resizebox{0.6\textwidth}{!}{%
-\begin{tabular}{lcccc}
-\toprule
- & \multicolumn{2}{c}{vs.\ lookup} & \multicolumn{2}{c}{vs.\ SigLIP2 $+$ lookup}\\
-attribute & $\kappa=0.85$ & $\kappa=0.75$ & $\kappa=0.85$ & $\kappa=0.75$\\
-\midrule
-droplets & $0.99$ & $0.85$ & $0.74$ & $0.45$\\
-glare & $0.46$ & $0.28$ & $0.01$ & $0.01$\\
-wet road & $0.59$ & $0.51$ & $0.68$ & $0.23$\\
-low contrast & $1.00$ & $1.00$ & $1.00$ & $1.00$\\
-macro & $1.00$ & $0.92$ & $1.00$ & $0.96$\\
-\bottomrule
-\end{tabular}%
+\input{supp_tables/rater_attr_table.tex}%
 }
 \end{table}
 
@@ -324,17 +377,18 @@ macro & $1.00$ & $0.92$ & $1.00$ & $0.96$\\
 \begin{figure}[!ht]\centering
 \includegraphics[width=0.9\textwidth]{figures/supp_semantic_strips.pdf}
 \caption{\textbf{Semantic and compositional retrievals, balanced across corpora.}
-Top two SceneMiner retrievals within each of nuScenes and Waymo (evaluation
-split, one image per driving segment) and BDD100K (external, portable signals),
-for ten object, rare-road-user and object$\times$condition queries. Yellow boxes
-are human 3D annotations of the queried class projected into the retrieved frame
-(nuScenes: visibility $\ge40\%$; Waymo: labelled boxes within $60$\,m, which may be
-occluded in the camera); the inset enlarges the smallest one. Red labels mark
-retrievals whose frame has no annotated object of the class. Waymo's label set
-has no truck, bus, cone, barrier, child or emergency classes, and motorcycles are
-labelled as vehicles; no box labels for BDD100K are on disk. The rare-road-user
-row is at chance for every ranker (main paper, Sec.~9), and the
-strip shows it.}
+Top two SceneMiner retrievals within each of nuScenes and Waymo (evaluation split)
+and BDD100K (external, portable signals) for ten object, rare-road-user and
+object$\times$condition queries; every one of the $60$ images comes from a different
+driving segment, so later rows may show a corpus's next-ranked segment (at most rank
+$8$). Yellow boxes are human annotations of the queried class: nuScenes 3D boxes
+(visibility $\ge40\%$) and Waymo 3D boxes within $50$\,m projected into the frame,
+and BDD100K 2D boxes. Waymo labels trucks, buses and motorcycles as vehicles, so
+those classes are selected by labelled size (heavy: length $\ge6.0$\,m or height
+$\ge2.8$\,m; two-wheeler: length $<2.8$\,m and width $<1.2$\,m). The inset enlarges
+the smallest box; a red label marks a frame whose labels contain no object of the
+class. Waymo and BDD100K label no cones, barriers, children or emergency vehicles.
+Of the $48$ cells whose dataset labels the class, $28$ show it.}
 \label{fig:strips}
 \end{figure}
 
@@ -370,24 +424,50 @@ at score $>0.3$ (b) of the scenes each ranker places in each score quartile.}
 }
 
 % =====================================================================
+\section{Dataset licences and ethics}
+\label{sec:licences}
+% =====================================================================
+
+\paragraph{nuScenes} is used under its terms of use, which license the data for
+non-commercial use (CC BY-NC-SA 4.0); this work is non-commercial research.
+\paragraph{Waymo Open Dataset.} This work uses the Waymo Open Dataset under the
+Waymo Dataset License Agreement for Non-Commercial Use, which permits
+non-commercial research, benchmarking for publication, and the inclusion of small
+extracts of the data for illustration in research publications, with attribution;
+the retrieved frames in our figures are such extracts.
+\paragraph{BDD100K} images and labels are used under the BDD100K license terms
+for research use, as published by the dataset authors.
+\paragraph{Human annotation and privacy.} The degradation labels were produced by
+the authors' team on scenes from these datasets; no personal data was collected and no crowd workers were involved. We redistribute only scene
+identifiers, labels and derived features, never images.
+
+% =====================================================================
 \section{Reproduction}
 % =====================================================================
 
 {\small
 \begin{verbatim}
-python scripts/explore_factored_gate_train.py # gate variant + tau, training text only
-scripts/launch_seeds.sh scripts/train_sceneminer_v25.py work_dirs/sceneminer_v25 v25
-python scripts/eval_v23.py --model v25 --ckpts "work_dirs/sceneminer_v25/s*/final.pt"
+python scripts/explore_conditional_gate_train.py  # gate variant + tau, training text only
+scripts/launch_seeds.sh scripts/train_sceneminer_v26.py work_dirs/sceneminer_v26 v26
+python scripts/eval_v23.py --model v26 --ckpts "work_dirs/sceneminer_v26/s*/final.pt"
+python scripts/verify_fast_index.py          # cached index: identity and latency
 python scripts/extract_human_semantic_gt.py  # human flags from nuScenes tables
 python scripts/build_semantic_queries.py
-python scripts/eval_semantic_edge_cases.py --final v25   # Stratum 5
-SM_FINAL=v25 python scripts/eval_compositional_synergy.py
-SM_FINAL=v25 python scripts/eval_rater_sensitivity.py
+python scripts/eval_semantic_edge_cases.py --final v26   # Stratum 5
+SM_FINAL=v26 python scripts/eval_compositional_synergy.py
+SM_FINAL=v26 python scripts/eval_rater_sensitivity.py
 python scripts/val150_camfront_errors.py     # front-sector degradation study
 python scripts/val150_ped_vru_metrics.py
-python scripts/val150_retrieval_to_3d.py --model v25
+python scripts/val150_retrieval_to_3d.py --model v26
+python scripts/build_bdd_holdout.py          # untouched BDD100K holdout
+python scripts/holdout_signals.py --part margins && python scripts/holdout_signals.py --part merge
+python scripts/caption_scenes_qwen.py --prompt neutral   # captions for the caption baseline
+python scripts/refav_llm_compile.py          # LLM-compiled programs for the RefAV-style baseline
+python scripts/eval_related_work_baselines.py
 python scripts/verify_bibliography.py && python scripts/build_bib.py
-python scripts/make_figures.py && python scripts/make_supp_tables.py
+python scripts/make_fig1_architecture.py && python scripts/make_figures.py
+python scripts/make_qualitative_showcase.py && python scripts/make_supp_tables.py
+python scripts/verify_paper_numbers.py && python scripts/check_anonymity.py
 \end{verbatim}
 }
 

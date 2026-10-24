@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """Write paper/tab_bddq.tex (BDD100K per query) from the corrected BDD100K run
-(Milestone 23: raw query features, results/cvpr/milestone23_bdd_rawquery_v25.json)."""
+(final model v2.6, raw query features: results/cvpr/milestone27_v26.json)."""
 import json
 from pathlib import Path
 
 SHORT = {"a low contrast scene where vehicles are barely distinguishable from the background":
          "a low contrast scene, vehicles barely distinguishable"}
-d = json.load(open("results/cvpr/milestone23_bdd_rawquery_v25.json"))["B_bdd100k"]["per_query"]
+d = json.load(open("results/cvpr/milestone27_v26.json"))["B_bdd100k"]["per_query"]
 d = sorted(d, key=lambda q: (q["category"] != "in_vocab", -q["gamma"]))
 rows = []
 for q in d:

@@ -1,0 +1,12 @@
+\begin{tabular}{lccc}
+\toprule
+design & human GT & BDD100K & suite / skew\\
+\midrule
+naive convex router & $0.735$ / $0.792$ & $0.486$ & $0.531$ / $+8.7$\\
+$+$ anti-collapse routing, \textsc{PartNorm} & $0.706$ / $0.766$ & $0.570$ & $0.518$ / $+1.1$\\
+$+$ \textsc{ResNorm}, single-prompt gate & $0.790$ / $0.828$ & $0.589$ & $0.631$ / $+17.0$\\
+$+$ contrastive gate, abstention & $0.788$ / $0.816$ & \best{0.628} & $0.594$ / \best{$+0.5$}\\
+$+$ factored gate & $0.785$ / $0.826$ & $0.616$ & $0.685$ / $+2.2$\\
+\textbf{SceneMiner} (conditional context removal) & \best{0.794} / \best{0.829} & $0.614$ & \best{0.694} / $+2.6$\\
+\bottomrule
+\end{tabular}

@@ -557,6 +557,77 @@ fusion with diagnostic auditing; multi-dataset human evaluation); related work
 covers the driving-retrieval systems; the master comparison table is Table 2.
 Main text is 8 pages with references from the top of page 9.
 
+## 27. Cached scene index; conditional context gate (v2.6); portable mode
+
+**Cached index.** Scene tokens are projected once. Query-only work is done once per
+query, and the decoder's key/value projections are folded onto the query side.
+
+* **Identity:** identical to the plain forward pass in float64, with AP difference 0 on
+  every benchmark.
+* **Latency:** 1.24 ms ranking plus 2.27 ms query preparation for one model, vs 12.39 ms
+  plain. The < 0.5 ms target was not met.
+
+**v2.6 (final).** It removes only the context directions a query activates. The variant
+was selected on training text by the Milestone-22 rule; the worst negative fell from
+0.152 to 0.080.
+
+* Human GT: 0.794, 0.829 calibrated.
+* Suite: 0.694 / +2.6.
+* BDD100K: 0.614. The 0.628 target was not reached: "snow" still activates a weather
+  class.
+
+**Portable mode.** It reads no BEV or tags and scores 0.762 on human GT, above every
+other method.
+
+## 28. Upgraded baselines; untouched holdout
+
+**CARIM-style.** Neutral captions help semantics and hurt degradations, so both prompts are reported.
+
+**RefAV-style.** Programs are now compiled by a local LLM.
+
+**Holdout.** A pre-registered 36-query benchmark on 2000 BDD100K images never used before,
+graded by BDD100K's own tags and 2D boxes:
+
+* SceneMiner 0.400 vs SigLIP2 0.408 (p = 0.28), with identical rankings on object queries;
+* above CLIP / ReferGPT-style, CARIM-style, the lookup, the naive router and RefAV-style
+  (p ≤ 0.013);
+* not significantly above SigLIP v1 (p = 0.42).
+
+## 29. Figures
+
+**Figure 3.** All 42 images are from distinct driving segments.
+
+* Waymo trucks, buses and motorcycles come from labelled vehicle boxes, selected by size.
+* BDD100K human 2D boxes are drawn.
+* Misses are kept: 13/20 labelled cells show the object.
+
+**Figure 1.** Redrawn as a two-tier diagram from measured, current components.
+
+## 30. Second rater, anonymity, licences
+
+**Second rater.** A 160-scene kit is ready to run; no second-rater data exists yet.
+
+**Anonymity.** The leak checker covers decoded PDF content, metadata, EXIF and sources,
+and passes. Figure and paper PDFs carry no creator/producer metadata.
+
+**Licences.** The dataset licence terms were checked against the owners' pages, and the
+Waymo attribution footnote was added.
+
+## 31. Final paper
+
+**Title.** "Scale-Aware Multi-Modal Fusion …".
+
+**Tables.**
+
+* Main tables are generated from the result files at 3 decimals.
+* Table 2 gains the holdout column and both SceneMiner rows.
+
+**Number check.** `verify_paper_numbers.py` passes 48 registry claims. It caught three
+values I had derived from rounded numbers.
+
+**Layout.** Main text is 8 pages, with references from the top of page 9; the
+supplementary is 19 pages.
+
 ---
 
 # Where this leaves the paper
@@ -573,13 +644,17 @@ Main text is 8 pages with references from the top of page 9.
 3. **Three levels of silent modality failure:**
    parts (30.3×), residual (~10×), and a width-1 LayerNorm that kills a modality
    outright while mAP moves 0.004.
-4. **One model**, best of twelve methods on human-graded degradation (0.785 /
-   0.826), level with zero-shot SigLIP2 externally (0.616 vs 0.622, p = 0.94) and on
-   semantic edge cases, with low domain skew. Its gate never saw evaluation data.
+4. **One model**, best of twelve methods on human-graded degradation (0.794 / 0.829;
+   0.762 in its portable mode, which reads no corpus-supervised signal), level with
+   zero-shot SigLIP2 externally (BDD100K 0.614 vs 0.622; untouched pre-registered
+   holdout 0.400 vs 0.408, p = 0.28) and on semantic edge cases. Its gate never saw
+   evaluation data; the holdout was run once, after every design decision.
 
 **What does not survive:** SceneMiner beating SigLIP2 on BDD100K (an evaluation
-bug, fixed in M23); beating every published paradigm everywhere; learned fusion beating simple SigLIP2 + metadata fusion
-on object × condition conjunctions; SceneMiner finding breakage scenes better
+bug, fixed in M23); beating SigLIP2 on an untouched external holdout (M28: level);
+beating every published paradigm everywhere; learned fusion beating simple SigLIP2 +
+metadata fusion on object × condition conjunctions (that fusion is significantly better,
+p = 0.016); SceneMiner finding breakage scenes better
 than the VLM-margin lookup on val150; a uniform per-attribute lead.
 
 **Before submission, for the authors:** fill in `\paperID`; `cvpr.sty` carries one
