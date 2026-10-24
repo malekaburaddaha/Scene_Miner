@@ -25,6 +25,10 @@ import numpy as np, torch
 import matplotlib; matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
+import matplotlib.patheffects as pe
+from matplotlib.font_manager import FontProperties
+LABEL_FONT = "/usr/share/fonts/dejavu/DejaVuSansCondensed-Bold.ttf"      # narrow bold for query labels
+LABEL = lambda size: FontProperties(fname=LABEL_FONT, size=size)
 from PIL import Image
 sys.path.insert(0, "src"); sys.path.insert(0, "scripts")
 
@@ -58,8 +62,6 @@ WAYMO_RULE = {"ped": lambda t, l, w, h: t == 2,
               "heavy": lambda t, l, w, h: t == 1 and (l >= 6.0 or h >= 2.8)}
 BDD_CLS = {"ped": ("pedestrian", "other person"), "cyc": ("rider", "bicycle", "motorcycle"),
            "heavy": ("truck", "bus")}
-NOUN = {"ped": "pedestrian", "cyc": "two-wheeler", "cons": "cone/barrier", "heavy": "truck/bus",
-        "rare": "rare road user", "emerg": "emergency veh."}
 
 
 # ---------------------------------------------------------------- ranking
@@ -201,46 +203,53 @@ def draw_cell(ax, img, boxes, kind, has_labels, name_col, idx, title=True):
     # display window cropped to 16:9 (Waymo frames are 3:2); boxes stay in pixel coordinates
     Hc = min(H, W / (16 / 9)); y0c = (H - Hc) * 0.6
     ax.imshow(img); ax.set_xlim(0, W); ax.set_ylim(y0c + Hc, y0c); ax.set_xticks([]); ax.set_yticks([])
-    if title: ax.set_title(f"{name} #{idx}", fontsize=6.6, color=col, pad=1.5, fontweight="bold")
-    for sp in ax.spines.values(): sp.set_color(col); sp.set_lw(1.1)
-    lw = 0.9
+    if title: ax.set_title(f"{name} #{idx}", fontsize=8.5, color=col, pad=2.0, fontweight="bold")
+    for sp in ax.spines.values(): sp.set_color(col); sp.set_lw(1.6)
+    halo = [pe.withStroke(linewidth=3.6, foreground="#111111")]          # dark outer stroke for contrast
     for (x0, y0, x1, y1) in boxes:
-        ax.add_patch(Rectangle((x0, y0), x1 - x0, y1 - y0, fill=False, ec=BOX_C, lw=lw))
+        ax.add_patch(Rectangle((x0, y0), x1 - x0, y1 - y0, fill=False, ec=BOX_C, lw=2.0, path_effects=halo))
     if kind is None: return
     if boxes:
         # zoom callout on the smallest annotated object
         x0, y0, x1, y1 = min(boxes, key=lambda b: (b[2] - b[0]) * (b[3] - b[1]))
         if (x1 - x0) * (y1 - y0) < 0.02 * W * H:
-            half = max(x1 - x0, y1 - y0) * 1.6 + 0.02 * W; hv = half * 0.75     # window kept inside the image
+            # inset: 45% of the thumbnail height, 42% of its width; window aspect matched to the inset
+            iw, ih = 0.42, 0.45
+            half = max(x1 - x0, y1 - y0) * 1.6 + 0.02 * W; hv = half * (ih * 9) / (iw * 16)
             cx = float(np.clip((x0 + x1) / 2, half, W - half)); cy = float(np.clip((y0 + y1) / 2, hv, H - hv))
-            ins = ax.inset_axes([0.62, 0.52, 0.37, 0.46])
-            ins.imshow(img); ins.set_xlim(cx - half, cx + half); ins.set_ylim(cy + hv, cy - hv)
-            ins.add_patch(Rectangle((x0, y0), x1 - x0, y1 - y0, fill=False, ec=BOX_C, lw=0.8))
+            ins = ax.inset_axes([1 - iw - 0.01, 1 - ih - 0.015, iw, ih])
+            ins.imshow(img, aspect="auto"); ins.set_xlim(cx - half, cx + half); ins.set_ylim(cy + hv, cy - hv)
+            ins.add_patch(Rectangle((x0, y0), x1 - x0, y1 - y0, fill=False, ec=BOX_C, lw=1.8, path_effects=halo))
             ins.set_xticks([]); ins.set_yticks([])
-            for sp in ins.spines.values(): sp.set_color(BOX_C); sp.set_lw(0.9)
-        ax.text(0.02, 0.04, f"{len(boxes)} annotated", transform=ax.transAxes, fontsize=4.6, color="black",
-                bbox=dict(fc=BOX_C, ec="none", pad=0.6, alpha=0.9))
+            for sp in ins.spines.values(): sp.set_color(BOX_C); sp.set_lw(2.0)
+        ax.text(0.02, 0.04, f"{len(boxes)} annotated", transform=ax.transAxes, fontsize=7.5, color="black",
+                fontweight="bold", bbox=dict(fc=BOX_C, ec="#111111", lw=0.6, pad=1.0, alpha=0.95))
     elif has_labels:       # the dataset labels this class, and this frame has none
-        ax.text(0.02, 0.04, f"no annotated {NOUN[kind]}", transform=ax.transAxes, fontsize=4.4, color="white",
-                bbox=dict(fc="#c0392b", ec="none", pad=0.6, alpha=0.9))
+        ax.text(0.02, 0.04, "0 annotated", transform=ax.transAxes, fontsize=7.5, color="white",
+                fontweight="bold", bbox=dict(fc="#c0392b", ec="none", pad=1.0, alpha=0.95))
 
 
 def render(rows, out, title, R, A, n_per=2, part_breaks=()):
     nr = len(rows) + len(part_breaks)
-    fig = plt.figure(figsize=(7.0, 0.60 * len(rows) + 0.30 * len(part_breaks) + 0.25))
+    # full text width (7 in); a narrow bold label column; thumbnails 16:9 with small gaps
+    LEFT, RIGHT, WS = 0.135, 0.998, 0.015
+    cell_w = 7.0 * (RIGHT - LEFT) / (3 * n_per + (3 * n_per - 1) * WS)
+    row_h = cell_w * 9 / 16
     hr = []; layout = []
     for i, r in enumerate(rows):
         for (bi, lab) in part_breaks:
-            if bi == i: hr.append(0.42); layout.append(("hdr", lab))
+            if bi == i: hr.append(0.34 / row_h); layout.append(("hdr", lab))
         hr.append(1.0); layout.append(("row", r))
-    gs = fig.add_gridspec(len(layout), 3 * n_per, height_ratios=hr, left=0.17, right=0.995, top=0.985, bottom=0.005,
-                          wspace=0.05, hspace=0.10)
+    H = row_h * (len(rows) * 1.0 + 0.34 / row_h * len(part_breaks)) * 1.12 + 0.25
+    fig = plt.figure(figsize=(7.0, H))
+    gs = fig.add_gridspec(len(layout), 3 * n_per, height_ratios=hr, left=LEFT, right=RIGHT, top=0.985, bottom=0.004,
+                          wspace=WS, hspace=0.12)
     log = []; first = True; used = set()
     BB = json.load(open(BROOT/"boxes.json"))
     for li, (typ, r) in enumerate(layout):
         if typ == "hdr":
             ax = fig.add_subplot(gs[li, :]); ax.axis("off")
-            ax.text(-0.215, 0.1, r, transform=ax.transAxes, fontsize=7.2, fontweight="bold", va="bottom")
+            ax.text(-LEFT / (RIGHT - LEFT), 0.40, r, transform=ax.transAxes, fontsize=9.0, fontweight="bold", va="bottom")
             first = True; continue
         q, kind = r
         cells = R.top(q, n_per, used); entry = {"query": q, "cells": []}
@@ -256,11 +265,11 @@ def render(rows, out, title, R, A, n_per=2, part_breaks=()):
             entry["cells"].append({"dataset": src, "id": tok, "rank_in_corpus": rank, "frame_match_r": rr,
                                    "class_labelled": bool(lab), "n_boxes": len(boxes)})
             if c == 0:
-                ax.set_ylabel(textwrap.fill(f"\"{q}\"", 24), fontsize=5.6, rotation=0, ha="right", va="center",
-                              style="italic", labelpad=4, linespacing=1.3)
+                ax.set_ylabel(textwrap.fill(q, 17), fontproperties=LABEL(8.5), rotation=0, ha="right",
+                              va="center", labelpad=3, linespacing=1.05)
         first = False; log.append(entry); print(f"  {q[:50]:<50} " + " ".join(f"{e['dataset'][:2]}:{e['n_boxes']}" for e in entry["cells"]), flush=True)
     if title: fig.suptitle(title, fontsize=7.0, y=0.999)
-    fig.savefig(OUT/out, bbox_inches="tight", dpi=200); plt.close(fig)
+    fig.savefig(OUT/out, bbox_inches="tight", pad_inches=0.02, dpi=200); plt.close(fig)
     cells = [c for e in log for c in e["cells"]]
     ids = [c["id"] for c in cells]
     assert len(ids) == len(set(ids)), "duplicate image in figure"
@@ -306,8 +315,21 @@ def failure_strip(out):
     meths = [("BEV-TSR-style", lambda q: Rk.bev_tsr(C, q["text"]).mean(0)),
              ("Qwen2.5-VL lookup", lambda q: Rk.lookup(C, q["text"], COND_COL[q["condition"]] if q["condition"] else None)),
              ("SceneMiner", lambda q: Rk.sceneminer(C, q["text"], mono=True).mean(0))]
-    fig, axes = plt.subplots(len(pick), 9, figsize=(7.2, 0.50 * len(pick) + 0.40))
-    fig.subplots_adjust(left=0.16, right=0.995, top=0.84, bottom=0.01, wspace=0.05, hspace=0.12)
+    # full width: a header row (legend, method names), then per query a text line and 9 thumbnails
+    WS, GAP, HDR, LAB = 0.03, 0.10, 0.42, 0.22          # GAP: spacer column between method groups
+    wr = [1, 1, 1, GAP, 1, 1, 1, GAP, 1, 1, 1]
+    cell_w = 7.0 / (sum(wr) + 10 * WS); row_h = cell_w * 9 / 16
+    hr = [HDR] + [LAB, row_h] * len(pick)
+    fig = plt.figure(figsize=(7.0, sum(hr)))
+    gs = fig.add_gridspec(len(hr), 11, height_ratios=hr, width_ratios=wr, left=0, right=1, top=1, bottom=0,
+                          wspace=WS, hspace=0)
+    col = [0, 1, 2, 4, 5, 6, 8, 9, 10]
+    axes = np.array([[fig.add_subplot(gs[2 + 2 * r, c]) for c in col] for r in range(len(pick))])
+    hdr = fig.add_subplot(gs[0, :]); hdr.axis("off")
+    hdr.text(0.5, 0.97, "Top-3 on the 258 nuScenes scenes with human semantic labels (✓ relevant, ✗ not); "
+             "† BEV encoder supervised on these scenes.", ha="center", va="top", fontsize=7.5)
+    for mi, mn in enumerate(["BEV-TSR-style †", "Qwen2.5-VL lookup", "SceneMiner"]):
+        hdr.text((mi + 0.5) / 3, 0.02, mn, ha="center", va="bottom", fontsize=9, fontweight="bold")
     rng = np.random.default_rng(0); log = []
     for r, (q, why, margin) in enumerate(pick):
         rel = {t: all(truth(t, k) == v for k, v in q["predicate"].items()) for t in toks}
@@ -319,19 +341,17 @@ def failure_strip(out):
                 ax = axes[r, mi * 3 + k]; t = toks[i]
                 ax.imshow(Image.open(THUMBS/f"{t}.jpg").convert("RGB")); ax.set_xticks([]); ax.set_yticks([])
                 ok = rel[t]; colr = "#1baf7a" if ok else "#c0392b"
-                for sp in ax.spines.values(): sp.set_color(colr); sp.set_lw(1.4)
-                ax.text(0.03, 0.06, "✓" if ok else "✗", transform=ax.transAxes, fontsize=7, color="white",
-                        fontweight="bold", bbox=dict(fc=colr, ec="none", pad=0.4))
+                for sp in ax.spines.values(): sp.set_color(colr); sp.set_lw(2.0)
+                ax.text(0.04, 0.07, "✓" if ok else "✗", transform=ax.transAxes, fontsize=9, color="white",
+                        fontweight="bold", bbox=dict(fc=colr, ec="none", pad=0.6))
                 if const and k == 0:
-                    ax.text(0.97, 0.94, "constant score:\narbitrary order", transform=ax.transAxes, fontsize=4.2,
+                    ax.text(0.97, 0.94, "constant score:\narbitrary order", transform=ax.transAxes, fontsize=7.0,
                             ha="right", va="top", color="white", bbox=dict(fc="#444444", ec="none", pad=0.5))
-                if r == 0 and k == 1: ax.set_title(mn + (" †" if mn.startswith("BEV") else ""), fontsize=7, fontweight="bold")
             log.append({"query": q["text"], "method": mn, "top3_relevant": [bool(rel[toks[i]]) for i in np.argsort(-s)[:3]]})
-        axes[r, 0].set_ylabel(textwrap.fill(f"\"{q['text']}\"", 24) + f"\n[{why}]", fontsize=5.4, rotation=0,
-                              ha="right", va="center", style="italic", labelpad=4, linespacing=1.3)
-    fig.suptitle("Top-3 on the 258 nuScenes scenes with human semantic labels (✓ relevant, ✗ not). "
-                 "† BEV encoder supervised on these scenes.", fontsize=6.6, y=0.985)
-    fig.savefig(OUT/out, bbox_inches="tight", dpi=200); plt.close(fig)
+        lab = fig.add_subplot(gs[1 + 2 * r, :]); lab.axis("off")
+        lab.text(0.0, 0.12, f"“{q['text']}”", fontproperties=LABEL(8.5), va="bottom")
+        lab.text(1.0, 0.12, f"[{why}]", fontsize=7.5, style="italic", ha="right", va="bottom")
+    fig.savefig(OUT/out, bbox_inches="tight", pad_inches=0.02, dpi=200); plt.close(fig)
     return {"rule": failure_strip.__doc__, "rows": [{"query": q["text"], "why": w, "AP_margin": m} for q, w, m in pick],
             "top3": log}
 
@@ -348,7 +368,7 @@ def main():
     if a.only in ("all", "main"):
         log["fig2"] = render(PART_A + PART_B, "fig2_qualitative.pdf", None, R, A,
                              part_breaks=[(0, "(a) Sensor and surface degradations"),
-                                          (3, "(b) Safety-critical road users and objects (yellow: human annotations, inset: smallest)")])
+                                          (3, "(b) Road users and objects (yellow: human annotations; inset: smallest; red: none in frame)")])
     if a.only in ("all", "supp"):
         SQ = [("pedestrians walking near the roadway", "ped"), ("a pedestrian close to the vehicle", "ped"),
               ("a cyclist sharing the road", "cyc"), ("a motorcycle in traffic", "cyc"),

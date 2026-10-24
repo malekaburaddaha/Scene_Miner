@@ -264,6 +264,7 @@ SM_FINAL=v26 scripts/run_m27_evals.sh              # every benchmark, 4 GPUs
 FP64=1 python scripts/verify_fast_index.py && python scripts/time_sceneminer_latency.py
 python scripts/build_bdd_holdout.py && python scripts/holdout_signals.py --part margins && python scripts/holdout_signals.py --part merge
 python scripts/refav_llm_compile.py && python scripts/eval_related_work_baselines.py
+python scripts/explore_object_cap_train.py         # M32: gate cap on conjunctions, training text only (not adopted)
 python scripts/make_main_tables.py && python scripts/make_tab_master.py && python scripts/make_tab_bddq.py
 python scripts/make_fig1_architecture.py && python scripts/make_figures.py && python scripts/make_qualitative_showcase.py
 python scripts/strip_pdf_metadata.py && python scripts/verify_paper_numbers.py && python scripts/check_anonymity.py
@@ -344,7 +345,7 @@ the attributes that define suite relevance):
   0.197 VRU recall (p < 0.001).
 
 `results/cvpr/MASTER_REPORT.md` carries every table, the contamination map, and what does
-not hold. `results/cvpr/MILESTONE27.md`–`MILESTONE31.md` cover the latest work.
+not hold. `results/cvpr/MILESTONE27.md`–`MILESTONE32.md` cover the latest work.
 
 ---
 

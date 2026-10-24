@@ -15,6 +15,8 @@ for p in sorted(Path(sys.argv[1] if len(sys.argv) > 1 else "paper/figures").glob
     r = PdfReader(str(p)); w = PdfWriter()
     for pg in r.pages: w.add_page(pg)
     w.add_metadata({})
+    info = w._info.get_object() if w._info is not None else {}   # pypdf stamps /Producer by default
+    for k in list(info.keys()): del info[k]
     tmp = p.with_suffix(".tmp.pdf")
     with open(tmp, "wb") as f: w.write(f)
     meta = PdfReader(str(tmp)).metadata

@@ -1,0 +1,52 @@
+{
+ "doc": "MILESTONE 32 - should gamma_deg be capped when a degradation query also names\nsomething outside the degradation/context vocabulary? Decided on TRAINING text only.\n\nRule under test: gamma_deg' = min(gamma_deg, 0.5) when detector(q) > theta, so the\nSigLIP2 cosine keeps at least half the influence on \"object x degradation\" queries.\nThe cap value 0.5 is fixed (task specification), not tuned.\n\nTraining-only stand-in for \"something else\": the 12 generic out-of-vocabulary phrases\nof the bank (\"a toll booth\", \"a parking lot\", ...). Synthetic conjunctions join a\ntraining degradation phrasing with one generic phrase; when one is scored, that\ngeneric phrase is removed from the bank (no self-match). No evaluation query, scene or\nscore is read.\n\nDetectors (unprojected, mean-centred SigLIP2 text space, tau = 0.02 class scores):\n  D1  best generic-class score minus best concept-class score (leave-out as above)\n  D2  1 - squared norm of the query's projection onto the span of the 4 concept and\n      7 context class means (the share of the query outside the degradation/context\n      vocabulary)\nPre-declared rule (fixed before running): theta = 99th percentile of the detector over\nthe 156 training degradation phrasings scored leave-group-out (<= 1% wrongly capped);\npick the detector with the higher recall on the synthetic conjunctions; adopt the cap\nonly if that recall is >= 0.80. Also reported: the flag rate on the 240 training\nqueries (the cap is applied at inference to the v2.6 checkpoints, which is consistent\nonly if training queries are essentially never flagged).\n-> results/cvpr/milestone32_object_cap_train.json\n",
+ "detectors": {
+  "D1": {
+   "theta": -0.2620833083572778,
+   "false_flag_degradation": 0.01282051282051282,
+   "recall_synthetic": 0.23333333333333334,
+   "flag_rate_training_queries": 0.30416666666666664,
+   "pos_quantiles": [
+    -0.7298366175661674,
+    -0.5265292310193881,
+    -0.34821631635008193,
+    -0.2620833083572778
+   ],
+   "syn_quantiles": [
+    -0.5763392256997795,
+    -0.47155510786083854,
+    -0.3946289952903232,
+    -0.11345851650898661
+   ]
+  },
+  "D2": {
+   "theta": 0.7093680767014633,
+   "false_flag_degradation": 0.01282051282051282,
+   "recall_synthetic": 0.45,
+   "flag_rate_training_queries": 0.008333333333333333,
+   "pos_quantiles": [
+    0.3469442149568893,
+    0.49853109932730855,
+    0.6795842857231956,
+    0.7093680767014633
+   ],
+   "syn_quantiles": [
+    0.5370249296347106,
+    0.6286260619609061,
+    0.6921641854629934,
+    0.8076641723072766
+   ]
+  }
+ },
+ "selected": "D2",
+ "adopt": false,
+ "synthetic_examples": [
+  "a recording with poor visibility with objects blending in near a parking lot",
+  "dashcam footage showing a few water specks on the lens at a parking lot",
+  "a parking lot with a recording with patchy wet tarmac",
+  "a recording with specular glare washing out the image near a parking lot",
+  "grey scene with little tonal separation at a parking lot",
+  "a parking lot with drizzle marking the lens"
+ ],
+ "n_synthetic": 120
+}

@@ -44,6 +44,7 @@ def registry():
     RG = lambda *p: get("milestone27_regimes.json", list(p))
     RT = lambda *p: get("milestone27_rater_sensitivity.json", list(p))
     LP = lambda *p: get("milestone27_val150_retrieval_v26.json", list(p))
+    OC = lambda *p: get("milestone32_object_cap_train.json", list(p))
     HP = lambda k, sc="all": M("holdout", "modes", "metadata_free", "paired_vs_sceneminer_portable", k, sc)
     T, MT = "paper/main_cvpr.tex", "paper/tab_master.tex"
     f3, p2, p3, s3 = "{:.3f}", "{:.2f}", "{:.3f}", "{:+.3f}"
@@ -94,6 +95,8 @@ def registry():
         (T, lambda: V("C_suite150", "overall", "v2.3_full", "mAP") - get("milestone18_v2_4.json", ["C_suite150", "overall", "v2.4_full", "mAP"]), s3, "design suite gain"),
         (T, lambda: Y("tests", "v2.4_monocular - logit_VLM_lookup", "delta"), s3, "conjunctions vs lookup"),
         (T, lambda: Y("tests", "v2.4_monocular - zeroshot_SigLIP2", "delta"), s3, "conjunctions vs SigLIP2"),
+        (T, lambda: OC("detectors", OC("selected"), "recall_synthetic"), p2, "object cap recall (rejected)"),
+        (T, lambda: 100 * OC("detectors", OC("selected"), "false_flag_degradation"), "{:.1f}", "object cap false-flag %"),
         (MT, lambda: M("methods", "SceneMiner", "human_gt"), f3, "Table 2 full human GT"),
         (MT, lambda: M("methods", "SceneMiner (portable)", "suite"), f3, "Table 2 portable suite"),
     ]

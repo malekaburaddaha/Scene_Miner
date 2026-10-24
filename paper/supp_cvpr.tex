@@ -276,29 +276,6 @@ night / rain & word in the human-written scene description & $84$ / $138$ & $15$
 \input{supp_tables/bh_table.tex}
 
 % =====================================================================
-\section{Ablations and BDD100K summary}
-% =====================================================================
-
-\begin{table}[!ht]\centering\small
-\caption{\textbf{External transfer}, BDD100K: $1000$ images, $12$ queries,
-native human labels, chance $0.262$. In-vocabulary: the $4$ queries naming a
-cached attribute (fixed from wording). BDD100K has no metadata, so
-$s_{\mathrm{abst}}$ is the SigLIP2 cosine. No tuning on BDD100K.}
-\label{tab:bdd}
-\resizebox{0.6\textwidth}{!}{%
-\input{tab_bdd.tex}%
-}
-\end{table}
-
-\begin{table}[!ht]\centering\small
-\caption{\textbf{Ablations of SceneMiner}, one inference switch each.}
-\label{tab:abl}
-\resizebox{0.6\textwidth}{!}{%
-\input{tab_abl.tex}%
-}
-\end{table}
-
-% =====================================================================
 \section{The untouched BDD100K holdout}
 \label{sec:holdout}
 % =====================================================================
@@ -411,6 +388,15 @@ scenes\,($\dagger$).}
 portable signals only. CAM\_FRONT-sector mAP (a) and ghost false-positive rate
 at score $>0.3$ (b) of the scenes each ranker places in each score quartile.}
 \label{fig:quart}
+\end{figure}
+
+\begin{figure}[!ht]\centering
+\includegraphics[width=0.9\textwidth]{figures/fig4_front_sector_degradation_and_semantics.pdf}
+\caption{\textbf{(a)} On uncontaminated val150, the top-scored quartile of the
+$62$ degradation queries has lower CAM\_FRONT mAP and a higher ghost-FP rate for
+every informative ranker; Q2--Q4 sit at the corpus mean. \textbf{(b)} mAP in the
+three human-graded regimes against two no-learning fusion controls.}
+\label{fig:loop}
 \end{figure}
 
 \clearpage

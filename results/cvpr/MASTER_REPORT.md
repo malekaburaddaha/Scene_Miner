@@ -628,6 +628,37 @@ values I had derived from rounded numbers.
 **Layout.** Main text is 8 pages, with references from the top of page 9; the
 supplementary is 19 pages.
 
+## 32. Figure legibility; object×condition gate cap (rejected)
+
+**No reported number changes.**
+
+**Figures.**
+
+* Figure 3 now spans the full text width. Its thumbnails are 25% larger on the page
+  (0.757 → 0.950 in).
+* Its labels are 8.5 pt bold condensed; its boxes are lw 2.0 with a dark stroke.
+* Its insets cover 45% of the thumbnail height with a 2 pt border; its badges are
+  7.5 pt bold.
+* The supplementary strips get the same treatment.
+* Figure 1 is set in mathtext, with a 7.0 pt minimum.
+
+**Reported typos.** None of the three exists in the source or the rendered PDF.
+
+**Capping γ_deg on object×condition queries.** Not adopted.
+
+* Diagnosis: these queries route almost entirely to the degradation margins.
+* The metadata vector is already unit-variance, so normalising it changes nothing.
+* The best training-only detector of an extra object component finds 45% of
+  synthetic conjunctions at a 1.3% false-flag rate. The pre-declared bar was 80%.
+* v2.6 is unchanged, and the conjunction loss to SigLIP2 + metadata stands.
+
+**Layout.**
+
+* Figure 4 moved to the supplementary.
+* The ablation and BDD100K summary tables are back in the main paper.
+* Main text still fills 8 pages, with the references at the top of page 9.
+* The verifier passes 50 claims; the anonymity check passes.
+
 ---
 
 # Where this leaves the paper
