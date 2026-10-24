@@ -18,6 +18,7 @@ was retrieved:
 A cell whose frame has no annotated object of the row's class says so.
 """
 from __future__ import annotations
+import os
 import argparse, glob, json, sys, textwrap
 from pathlib import Path
 import numpy as np, torch
@@ -49,7 +50,14 @@ NUSC_CLS = {"ped": ("human.pedestrian.",), "cyc": ("vehicle.bicycle", "vehicle.m
                      "human.pedestrian.personal_mobility", "human.pedestrian.police_officer",
                      "human.pedestrian.construction_worker", "animal"),
             "emerg": ("vehicle.emergency.",)}
-WAYMO_CLS = {"ped": (2,), "cyc": (4,), "cons": (), "heavy": (), "rare": (), "emerg": ()}      # 1 vehicle, 2 pedestrian, 3 sign, 4 cyclist
+# Waymo types: 1 vehicle, 2 pedestrian, 3 sign, 4 cyclist. Trucks, buses and motorcycles are
+# labelled VEHICLE, so those rows select VEHICLE boxes by their labelled 3D size. Heavy vehicles:
+# length >= 6.0 m or height >= 2.8 m (a 2.3 m height bound admits tall vans, e.g. 5.3 x 2.5 x 2.45 m).
+WAYMO_RULE = {"ped": lambda t, l, w, h: t == 2,
+              "cyc": lambda t, l, w, h: t == 4 or (t == 1 and l < 2.8 and w < 1.2),
+              "heavy": lambda t, l, w, h: t == 1 and (l >= 6.0 or h >= 2.8)}
+BDD_CLS = {"ped": ("pedestrian", "other person"), "cyc": ("rider", "bicycle", "motorcycle"),
+           "heavy": ("truck", "bus")}
 NOUN = {"ped": "pedestrian", "cyc": "two-wheeler", "cons": "cone/barrier", "heavy": "truck/bus",
         "rare": "rare road user", "emerg": "emergency veh."}
 
@@ -65,14 +73,17 @@ class Ranker:
         self.F = (T("emb"), T("tag_logits"), T("risk"),
                   torch.load("work_dirs/unified_filter/V_frozen_cache.pt", map_location=dev).float(),
                   T("siglip_img"), T("vlm_margin_z"), T("prior"))
-        self.M = load_v23(z["risk"].reshape(-1), which="v25")
+        self.M = load_v23(z["risk"].reshape(-1), which=os.environ.get("SM_FINAL", "v26"))
         for m in self.M: m.use_abstain = True
         bz = np.load(BROOT/"signals.npz", allow_pickle=False); self.bn = sorted(json.load(open(BROOT/"labels.json")))
         ASK = ["wet_road", "glare", "droplets", "low_contrast"]; TO = ["droplets", "glare", "wet_road", "low_contrast"]
         BM = bz["margin"][:, [ASK.index(k) for k in TO]]; BM = (BM - BM.mean(0)) / (BM.std(0) + 1e-6)
         self.BS = torch.from_numpy(bz["siglip"]).float().to(dev); self.BM = torch.from_numpy(BM).float().to(dev)
 
-    def top(self, qraw, n_per=2):
+    def top(self, qraw, n_per=2, used=None):
+        """top n_per per corpus; `used` holds driving segments already shown in this
+        figure, which are skipped so no segment appears twice. Returns (dataset, id, rank)."""
+        used = set() if used is None else used
         from eval_semantic_edge_cases import text_embed
         N, nb = len(self.corpus), len(self.bn)
         qv = text_embed([qraw])[0]
@@ -84,17 +95,23 @@ class Ranker:
                           .cpu().numpy() for m in self.M], 0)
         cells = []
         for d in (0, 1):
-            seen, got = set(), []
+            got, rank = [], 0
             for i in np.argsort(-s):
                 t = self.corpus[i]
                 if t not in self.ev or self.dom[i] != d or not (THUMBS/f"{t}.jpg").exists(): continue
+                rank += 1
                 seg = t.split("#c")[0]
-                if seg in seen: continue
-                seen.add(seg); got.append(("nusc" if d == 0 else "waymo", t))
+                if seg in used: continue
+                used.add(seg); got.append(("nusc" if d == 0 else "waymo", t, rank))
                 if len(got) == n_per: break
             cells += got
-        cells += [("bdd", self.bn[i]) for i in np.argsort(-sb)[:n_per]]
-        return cells
+        got = []
+        for rank, i in enumerate(np.argsort(-sb), 1):
+            seg = "bdd:" + self.bn[i].split("-")[0]                      # BDD100K video id
+            if seg in used: continue
+            used.add(seg); got.append(("bdd", self.bn[i], rank))
+            if len(got) == n_per: break
+        return cells + got
 
 
 # ---------------------------------------------------------------- annotations
@@ -150,18 +167,19 @@ def waymo_frame(tok, kind):
         return Image.open(THUMBS/f"{tok}.jpg").convert("RGB"), [], r
     img = Image.open(fd/"cam_FRONT.png").convert("RGB")
     out = []
-    if kind and WAYMO_CLS[kind]:
+    if kind in WAYMO_RULE:
         cal = np.load(fd/"calib.npz", allow_pickle=True); i = list(cal["camera_order"]).index("FRONT")
         K, T = cal["intrinsics"][i], np.linalg.inv(cal["extrinsics_cam2veh"][i])
         b = np.load(fd/"boxes.npz")
         for t, c, d, hd in zip(b["types"], b["centers"], b["dims"], b["headings"]):
-            if int(t) not in WAYMO_CLS[kind]: continue
-            l, w_, h_ = d; xs = np.array([1, 1, -1, -1, 1, 1, -1, -1]) * l / 2
+            l, w_, h_ = d
+            if not WAYMO_RULE[kind](int(t), l, w_, h_): continue
+            xs = np.array([1, 1, -1, -1, 1, 1, -1, -1]) * l / 2
             ys = np.array([1, -1, -1, 1, 1, -1, -1, 1]) * w_ / 2; zs = np.array([1, 1, 1, 1, -1, -1, -1, -1]) * h_ / 2
             R = np.array([[np.cos(hd), -np.sin(hd)], [np.sin(hd), np.cos(hd)]])
             xy = R @ np.stack([xs, ys]); P = np.stack([xy[0] + c[0], xy[1] + c[1], zs + c[2], np.ones(8)])
             Pc = (T @ P)[:3]
-            if (Pc[0] < 1).any() or np.linalg.norm(c[:2]) > 60: continue
+            if (Pc[0] < 1).any() or np.linalg.norm(c[:2]) > 50: continue
             u = K[0, 2] - K[0, 0] * Pc[1] / Pc[0]; v = K[1, 2] - K[1, 1] * Pc[2] / Pc[0]
             bb = _clip(np.stack([u, v]), img.size)
             if bb is not None: out.append(bb)
@@ -169,7 +187,15 @@ def waymo_frame(tok, kind):
 
 
 # ---------------------------------------------------------------- drawing
-def draw_cell(ax, img, boxes, kind, src, name_col, idx, note_missing=True, title=True):
+def bdd_frame(name, kind, BB):
+    img = Image.open(BROOT/"images"/name).convert("RGB"); W, H = img.size; out = []
+    for b in BB.get(name, []) if kind in BDD_CLS else []:
+        if b["label"] in BDD_CLS[kind]:
+            x, y, w, h = b["bbox"]; out.append((x * W, y * H, (x + w) * W, (y + h) * H))
+    return img, out
+
+
+def draw_cell(ax, img, boxes, kind, has_labels, name_col, idx, title=True):
     name, col = name_col
     W, H = img.size
     # display window cropped to 16:9 (Waymo frames are 3:2); boxes stay in pixel coordinates
@@ -194,12 +220,9 @@ def draw_cell(ax, img, boxes, kind, src, name_col, idx, note_missing=True, title
             for sp in ins.spines.values(): sp.set_color(BOX_C); sp.set_lw(0.9)
         ax.text(0.02, 0.04, f"{len(boxes)} annotated", transform=ax.transAxes, fontsize=4.6, color="black",
                 bbox=dict(fc=BOX_C, ec="none", pad=0.6, alpha=0.9))
-    elif note_missing:
-        msg = {"bdd": "no box labels on disk", "waymo_nocls": "class not in Waymo labels",
-               "unmatched": "source frame not matched"}.get(src, f"no annotated {NOUN[kind]}")
-        if src == "waymo" and kind == "cyc": msg = "no labelled cyclist"      # Waymo labels motorcycles as vehicles
-        ax.text(0.02, 0.04, msg, transform=ax.transAxes, fontsize=4.4, color="white",
-                bbox=dict(fc="#444444" if src in ("bdd", "waymo_nocls", "unmatched") else "#c0392b", ec="none", pad=0.6, alpha=0.9))
+    elif has_labels:       # the dataset labels this class, and this frame has none
+        ax.text(0.02, 0.04, f"no annotated {NOUN[kind]}", transform=ax.transAxes, fontsize=4.4, color="white",
+                bbox=dict(fc="#c0392b", ec="none", pad=0.6, alpha=0.9))
 
 
 def render(rows, out, title, R, A, n_per=2, part_breaks=()):
@@ -212,45 +235,57 @@ def render(rows, out, title, R, A, n_per=2, part_breaks=()):
         hr.append(1.0); layout.append(("row", r))
     gs = fig.add_gridspec(len(layout), 3 * n_per, height_ratios=hr, left=0.17, right=0.995, top=0.985, bottom=0.005,
                           wspace=0.05, hspace=0.10)
-    log = []; first = True
+    log = []; first = True; used = set()
+    BB = json.load(open(BROOT/"boxes.json"))
     for li, (typ, r) in enumerate(layout):
         if typ == "hdr":
             ax = fig.add_subplot(gs[li, :]); ax.axis("off")
             ax.text(-0.215, 0.1, r, transform=ax.transAxes, fontsize=7.2, fontweight="bold", va="bottom")
             first = True; continue
         q, kind = r
-        cells = R.top(q, n_per); entry = {"query": q, "cells": []}
-        for c, (src, tok) in enumerate(cells):
+        cells = R.top(q, n_per, used); entry = {"query": q, "cells": []}
+        for c, (src, tok, rank) in enumerate(cells):
             ax = fig.add_subplot(gs[li, c])
             if src == "nusc":
-                img, boxes, rr = A.nusc_frame(tok, kind); s2 = src
+                img, boxes, rr = A.nusc_frame(tok, kind); lab = kind is not None
             elif src == "waymo":
-                img, boxes, rr = waymo_frame(tok, kind)
-                s2 = "unmatched" if rr < 0.95 else ("waymo_nocls" if kind and not WAYMO_CLS[kind] else src)
+                img, boxes, rr = waymo_frame(tok, kind); lab = kind in WAYMO_RULE and rr >= 0.95
             else:
-                img, boxes, rr = Image.open(BROOT/"images"/tok).convert("RGB"), [], None; s2 = "bdd"
-            draw_cell(ax, img, boxes, kind, s2, COLS[c // n_per], c % n_per + 1, title=first)
-            entry["cells"].append({"dataset": src, "id": tok, "frame_match_r": rr, "n_boxes": len(boxes)})
+                (img, boxes), rr = bdd_frame(tok, kind, BB), None; lab = kind in BDD_CLS
+            draw_cell(ax, img, boxes, kind, lab, COLS[c // n_per], c % n_per + 1, title=first)
+            entry["cells"].append({"dataset": src, "id": tok, "rank_in_corpus": rank, "frame_match_r": rr,
+                                   "class_labelled": bool(lab), "n_boxes": len(boxes)})
             if c == 0:
                 ax.set_ylabel(textwrap.fill(f"\"{q}\"", 24), fontsize=5.6, rotation=0, ha="right", va="center",
                               style="italic", labelpad=4, linespacing=1.3)
         first = False; log.append(entry); print(f"  {q[:50]:<50} " + " ".join(f"{e['dataset'][:2]}:{e['n_boxes']}" for e in entry["cells"]), flush=True)
     if title: fig.suptitle(title, fontsize=7.0, y=0.999)
     fig.savefig(OUT/out, bbox_inches="tight", dpi=200); plt.close(fig)
-    return log
+    cells = [c for e in log for c in e["cells"]]
+    ids = [c["id"] for c in cells]
+    assert len(ids) == len(set(ids)), "duplicate image in figure"
+    lab = [c for c in cells if c["class_labelled"]]
+    summary = {"n_cells": len(cells), "unique_images": len(set(ids)),
+               "cells_with_class_labels": len(lab), "cells_with_annotated_object": sum(c["n_boxes"] > 0 for c in lab),
+               "by_dataset": {d: {"labelled": sum(c["dataset"] == d for c in lab),
+                                  "hit": sum(c["dataset"] == d and c["n_boxes"] > 0 for c in lab)}
+                              for d in ("nusc", "waymo", "bdd")},
+               "max_rank_shown": max(c["rank_in_corpus"] for c in cells)}
+    print("  summary:", summary, flush=True)
+    return {"rows": log, "summary": summary}
 
 
 # ---------------------------------------------------------------- supplementary failure strip
 def failure_strip(out):
     """BEV-TSR-style vs Qwen2.5-VL lookup vs SceneMiner top-3 on the 258 nuScenes
-    scenes with human semantic GT. Rows chosen by a FIXED rule from Milestone 23's
+    scenes with human semantic GT. Rows chosen by a FIXED rule from the comparison
     per-query APs: the atomic and the compositional query with the largest
     SceneMiner margin over the better of the two baselines, plus the query with
     the largest margin AGAINST SceneMiner (shown so the strip is not one-sided)."""
     from eval_related_work_baselines import Enc, Rankers, load_corpus
     from eval_human_gt_full import load_human, ATTRS
     from eval_semantic_edge_cases import COND_COL
-    res = json.load(open("results/cvpr/milestone23_related_work_comparison.json"))
+    res = json.load(open(os.environ.get("SM_CMP", "results/cvpr/milestone28_related_work_comparison.json")))
     S5 = json.load(open("benchmark_cvpr/queries_semantic_edge_cases.json"))["queries"]
     PQ = res["per_query"]; pick = []
     for st in ("atomic", "compositional"):
@@ -313,7 +348,7 @@ def main():
     if a.only in ("all", "main"):
         log["fig2"] = render(PART_A + PART_B, "fig2_qualitative.pdf", None, R, A,
                              part_breaks=[(0, "(a) Sensor and surface degradations"),
-                                          (3, "(b) Safety-critical road users and objects (yellow: human 3D annotations, inset: smallest)")])
+                                          (3, "(b) Safety-critical road users and objects (yellow: human annotations, inset: smallest)")])
     if a.only in ("all", "supp"):
         SQ = [("pedestrians walking near the roadway", "ped"), ("a pedestrian close to the vehicle", "ped"),
               ("a cyclist sharing the road", "cyc"), ("a motorcycle in traffic", "cyc"),

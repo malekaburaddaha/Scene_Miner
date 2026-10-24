@@ -1,708 +1,958 @@
 {
  "doc": "MILESTONE 24 - two-part qualitative showcase (main Fig. 2) and the\nsupplementary semantic strips and failure-comparison strip.\n\nEvery row shows SceneMiner's top-2 retrievals from EACH of nuScenes and Waymo\n(602-scene eval split, one image per driving segment) and from BDD100K (1000\nexternal images, portable signals), so no dataset dominates.\n\nBox callouts come only from HUMAN 3D annotations, projected into the image that\nwas retrieved:\n  nuScenes  sample_annotation boxes of the scene's first keyframe (the frame the\n            thumbnail was cut from; verified by pixel correlation), visibility >= 40%.\n  Waymo     the segment's labelled 3D boxes for the matched frame (the thumbnail is\n            matched to its source frame by pixel correlation, r >= 0.95, else no box\n            is drawn). Waymo labels have no truck/bus or cone/barrier classes, so\n            those rows draw no Waymo boxes.\n  BDD100K   no box labels are on disk; no callouts are drawn.\nA cell whose frame has no annotated object of the row's class says so.\n",
- "fig2": [
-  {
-   "query": "water droplets smearing the camera lens",
-   "cells": [
-    {
-     "dataset": "nusc",
-     "id": "6193fac132614eb1a09dcbf3f359460f",
-     "frame_match_r": 0.9966928537499301,
-     "n_boxes": 0
+ "fig2": {
+  "rows": [
+   {
+    "query": "water droplets smearing the camera lens",
+    "cells": [
+     {
+      "dataset": "nusc",
+      "id": "6193fac132614eb1a09dcbf3f359460f",
+      "rank_in_corpus": 1,
+      "frame_match_r": 0.9966928537499301,
+      "class_labelled": false,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "nusc",
+      "id": "98fc76cc0e364efdaa7e86a36b666dda",
+      "rank_in_corpus": 2,
+      "frame_match_r": 0.9960566555038773,
+      "class_labelled": false,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "waymo",
+      "id": "2624187140172428292_73_000_93_000#c3",
+      "rank_in_corpus": 1,
+      "frame_match_r": 0.9999651734503086,
+      "class_labelled": false,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "waymo",
+      "id": "13184115878756336167_1354_000_1374_000#c3",
+      "rank_in_corpus": 3,
+      "frame_match_r": 0.999898868503092,
+      "class_labelled": false,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "bdd",
+      "id": "b6741a2c-5a933eb6.jpg",
+      "rank_in_corpus": 1,
+      "frame_match_r": null,
+      "class_labelled": false,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "bdd",
+      "id": "c0e9b7c4-cd8b7249.jpg",
+      "rank_in_corpus": 2,
+      "frame_match_r": null,
+      "class_labelled": false,
+      "n_boxes": 0
+     }
+    ]
+   },
+   {
+    "query": "blinding headlight bloom from oncoming traffic",
+    "cells": [
+     {
+      "dataset": "nusc",
+      "id": "e5514b8f435e475cac4eba74b44773b5",
+      "rank_in_corpus": 1,
+      "frame_match_r": 0.999578608097942,
+      "class_labelled": false,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "nusc",
+      "id": "7ed1b613f0ee47ceaf6d19ca3947f825",
+      "rank_in_corpus": 2,
+      "frame_match_r": 0.9943550294568919,
+      "class_labelled": false,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "waymo",
+      "id": "12358364923781697038_2232_990_2252_990#c3",
+      "rank_in_corpus": 1,
+      "frame_match_r": 0.9999685904767939,
+      "class_labelled": false,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "waymo",
+      "id": "15948509588157321530_7187_290_7207_290#c2",
+      "rank_in_corpus": 7,
+      "frame_match_r": 0.9998853053507388,
+      "class_labelled": false,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "bdd",
+      "id": "c8618b44-a824d6ae.jpg",
+      "rank_in_corpus": 1,
+      "frame_match_r": null,
+      "class_labelled": false,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "bdd",
+      "id": "c71751ee-b6f43370.jpg",
+      "rank_in_corpus": 2,
+      "frame_match_r": null,
+      "class_labelled": false,
+      "n_boxes": 0
+     }
+    ]
+   },
+   {
+    "query": "a low contrast scene on wet reflective asphalt",
+    "cells": [
+     {
+      "dataset": "nusc",
+      "id": "782f9486adbd4546a492e69b6697ef70",
+      "rank_in_corpus": 2,
+      "frame_match_r": 0.9972623038081715,
+      "class_labelled": false,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "nusc",
+      "id": "40516b7f46e548d19dfee580e9a5afa6",
+      "rank_in_corpus": 3,
+      "frame_match_r": 0.9976807776980479,
+      "class_labelled": false,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "waymo",
+      "id": "15028688279822984888_1560_000_1580_000#c0",
+      "rank_in_corpus": 3,
+      "frame_match_r": 0.9997479241704975,
+      "class_labelled": false,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "waymo",
+      "id": "13415985003725220451_6163_000_6183_000#c0",
+      "rank_in_corpus": 9,
+      "frame_match_r": 0.9998679054421832,
+      "class_labelled": false,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "bdd",
+      "id": "baa0bfdb-0267b9d2.jpg",
+      "rank_in_corpus": 1,
+      "frame_match_r": null,
+      "class_labelled": false,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "bdd",
+      "id": "c2021f20-46a5823b.jpg",
+      "rank_in_corpus": 2,
+      "frame_match_r": null,
+      "class_labelled": false,
+      "n_boxes": 0
+     }
+    ]
+   },
+   {
+    "query": "pedestrians crossing the road at night",
+    "cells": [
+     {
+      "dataset": "nusc",
+      "id": "8d267899e2e843d4905fafd1f12c0a20",
+      "rank_in_corpus": 1,
+      "frame_match_r": 0.9935855859926539,
+      "class_labelled": true,
+      "n_boxes": 4
+     },
+     {
+      "dataset": "nusc",
+      "id": "a1e7cd557b9541dbb00822ea0c56204b",
+      "rank_in_corpus": 2,
+      "frame_match_r": 0.995118337168634,
+      "class_labelled": true,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "waymo",
+      "id": "8679184381783013073_7740_000_7760_000#c1",
+      "rank_in_corpus": 1,
+      "frame_match_r": 0.9998191972488816,
+      "class_labelled": true,
+      "n_boxes": 10
+     },
+     {
+      "dataset": "waymo",
+      "id": "11901761444769610243_556_000_576_000#c2",
+      "rank_in_corpus": 5,
+      "frame_match_r": 0.9998644718137317,
+      "class_labelled": true,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "bdd",
+      "id": "c0dcabad-155ca5ee.jpg",
+      "rank_in_corpus": 1,
+      "frame_match_r": null,
+      "class_labelled": true,
+      "n_boxes": 7
+     },
+     {
+      "dataset": "bdd",
+      "id": "c94d86ee-9835e761.jpg",
+      "rank_in_corpus": 2,
+      "frame_match_r": null,
+      "class_labelled": true,
+      "n_boxes": 2
+     }
+    ]
+   },
+   {
+    "query": "cyclists or motorcyclists on the road",
+    "cells": [
+     {
+      "dataset": "nusc",
+      "id": "dc8302cfccdb4812a0a4a60dde595e18",
+      "rank_in_corpus": 1,
+      "frame_match_r": 0.9967223874129497,
+      "class_labelled": true,
+      "n_boxes": 1
+     },
+     {
+      "dataset": "nusc",
+      "id": "7deb4760e2244f32b57f9d631b535b66",
+      "rank_in_corpus": 2,
+      "frame_match_r": 0.9817460369371629,
+      "class_labelled": true,
+      "n_boxes": 1
+     },
+     {
+      "dataset": "waymo",
+      "id": "14931160836268555821_5778_870_5798_870#c0",
+      "rank_in_corpus": 1,
+      "frame_match_r": 0.9999733912610235,
+      "class_labelled": true,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "waymo",
+      "id": "3077229433993844199_1080_000_1100_000#c1",
+      "rank_in_corpus": 2,
+      "frame_match_r": 0.9999116253985076,
+      "class_labelled": true,
+      "n_boxes": 1
+     },
+     {
+      "dataset": "bdd",
+      "id": "bd338426-a0b4e877.jpg",
+      "rank_in_corpus": 1,
+      "frame_match_r": null,
+      "class_labelled": true,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "bdd",
+      "id": "c9c31e57-3f228293.jpg",
+      "rank_in_corpus": 2,
+      "frame_match_r": null,
+      "class_labelled": true,
+      "n_boxes": 15
+     }
+    ]
+   },
+   {
+    "query": "a construction zone with traffic cones and barriers",
+    "cells": [
+     {
+      "dataset": "nusc",
+      "id": "d1ac8e27ba8944a4a42a488cf2fedd74",
+      "rank_in_corpus": 1,
+      "frame_match_r": 0.9905907883573707,
+      "class_labelled": true,
+      "n_boxes": 12
+     },
+     {
+      "dataset": "nusc",
+      "id": "7bcc4753bdb64d2cb407b55cc4e4527f",
+      "rank_in_corpus": 2,
+      "frame_match_r": 0.9975693283979872,
+      "class_labelled": true,
+      "n_boxes": 18
+     },
+     {
+      "dataset": "waymo",
+      "id": "1024360143612057520_3580_000_3600_000#c1",
+      "rank_in_corpus": 1,
+      "frame_match_r": 0.999870169072575,
+      "class_labelled": false,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "waymo",
+      "id": "10203656353524179475_7625_000_7645_000#c1",
+      "rank_in_corpus": 2,
+      "frame_match_r": 0.999915325477543,
+      "class_labelled": false,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "bdd",
+      "id": "bc4712a2-b5a5966b.jpg",
+      "rank_in_corpus": 1,
+      "frame_match_r": null,
+      "class_labelled": false,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "bdd",
+      "id": "c593756a-4d6ae1d1.jpg",
+      "rank_in_corpus": 2,
+      "frame_match_r": null,
+      "class_labelled": false,
+      "n_boxes": 0
+     }
+    ]
+   },
+   {
+    "query": "a large truck or bus on a wet road",
+    "cells": [
+     {
+      "dataset": "nusc",
+      "id": "3e1f0257a4b8457486651de2d16b61ab",
+      "rank_in_corpus": 1,
+      "frame_match_r": 0.9968751433207496,
+      "class_labelled": true,
+      "n_boxes": 1
+     },
+     {
+      "dataset": "nusc",
+      "id": "d033fb0d79ea42b9a356fa5162172598",
+      "rank_in_corpus": 3,
+      "frame_match_r": 0.997034431547778,
+      "class_labelled": true,
+      "n_boxes": 1
+     },
+     {
+      "dataset": "waymo",
+      "id": "191862526745161106_1400_000_1420_000#c0",
+      "rank_in_corpus": 14,
+      "frame_match_r": 0.9998734949178558,
+      "class_labelled": true,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "waymo",
+      "id": "14107757919671295130_3546_370_3566_370#c3",
+      "rank_in_corpus": 18,
+      "frame_match_r": 0.9997016051062432,
+      "class_labelled": true,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "bdd",
+      "id": "b334b56d-2ce33cd7.jpg",
+      "rank_in_corpus": 1,
+      "frame_match_r": null,
+      "class_labelled": true,
+      "n_boxes": 1
+     },
+     {
+      "dataset": "bdd",
+      "id": "c1b16eee-d45c1777.jpg",
+      "rank_in_corpus": 2,
+      "frame_match_r": null,
+      "class_labelled": true,
+      "n_boxes": 0
+     }
+    ]
+   }
+  ],
+  "summary": {
+   "n_cells": 42,
+   "unique_images": 42,
+   "cells_with_class_labels": 20,
+   "cells_with_annotated_object": 13,
+   "by_dataset": {
+    "nusc": {
+     "labelled": 8,
+     "hit": 7
     },
-    {
-     "dataset": "nusc",
-     "id": "98fc76cc0e364efdaa7e86a36b666dda",
-     "frame_match_r": 0.9960566555038773,
-     "n_boxes": 0
+    "waymo": {
+     "labelled": 6,
+     "hit": 2
     },
-    {
-     "dataset": "waymo",
-     "id": "2624187140172428292_73_000_93_000#c3",
-     "frame_match_r": 0.9999651734503086,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "waymo",
-     "id": "13184115878756336167_1354_000_1374_000#c3",
-     "frame_match_r": 0.999898868503092,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "bdd",
-     "id": "b6741a2c-5a933eb6.jpg",
-     "frame_match_r": null,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "bdd",
-     "id": "c0e9b7c4-cd8b7249.jpg",
-     "frame_match_r": null,
-     "n_boxes": 0
+    "bdd": {
+     "labelled": 6,
+     "hit": 4
     }
-   ]
-  },
-  {
-   "query": "blinding headlight bloom from oncoming traffic",
-   "cells": [
-    {
-     "dataset": "nusc",
-     "id": "e5514b8f435e475cac4eba74b44773b5",
-     "frame_match_r": 0.999578608097942,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "nusc",
-     "id": "7ed1b613f0ee47ceaf6d19ca3947f825",
-     "frame_match_r": 0.9943550294568919,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "waymo",
-     "id": "12358364923781697038_2232_990_2252_990#c3",
-     "frame_match_r": 0.9999685904767939,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "waymo",
-     "id": "13184115878756336167_1354_000_1374_000#c0",
-     "frame_match_r": 0.9997908374849475,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "bdd",
-     "id": "c8618b44-a824d6ae.jpg",
-     "frame_match_r": null,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "bdd",
-     "id": "c71751ee-b6f43370.jpg",
-     "frame_match_r": null,
-     "n_boxes": 0
-    }
-   ]
-  },
-  {
-   "query": "a low contrast scene on wet reflective asphalt",
-   "cells": [
-    {
-     "dataset": "nusc",
-     "id": "7ed1b613f0ee47ceaf6d19ca3947f825",
-     "frame_match_r": 0.9943550294568919,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "nusc",
-     "id": "727214583a2a478094d4f093d20c7060",
-     "frame_match_r": 0.9973083771338898,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "waymo",
-     "id": "15028688279822984888_1560_000_1580_000#c0",
-     "frame_match_r": 0.9997479241704975,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "waymo",
-     "id": "13184115878756336167_1354_000_1374_000#c0",
-     "frame_match_r": 0.9997908374849475,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "bdd",
-     "id": "baa0bfdb-0267b9d2.jpg",
-     "frame_match_r": null,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "bdd",
-     "id": "c2021f20-46a5823b.jpg",
-     "frame_match_r": null,
-     "n_boxes": 0
-    }
-   ]
-  },
-  {
-   "query": "pedestrians crossing the road at night",
-   "cells": [
-    {
-     "dataset": "nusc",
-     "id": "8d267899e2e843d4905fafd1f12c0a20",
-     "frame_match_r": 0.9935855859926539,
-     "n_boxes": 4
-    },
-    {
-     "dataset": "nusc",
-     "id": "a1e7cd557b9541dbb00822ea0c56204b",
-     "frame_match_r": 0.995118337168634,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "waymo",
-     "id": "8679184381783013073_7740_000_7760_000#c1",
-     "frame_match_r": 0.9998191972488816,
-     "n_boxes": 12
-    },
-    {
-     "dataset": "waymo",
-     "id": "14300007604205869133_1160_000_1180_000#c1",
-     "frame_match_r": 0.9997152889882733,
-     "n_boxes": 2
-    },
-    {
-     "dataset": "bdd",
-     "id": "c0dcabad-155ca5ee.jpg",
-     "frame_match_r": null,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "bdd",
-     "id": "c94d86ee-9835e761.jpg",
-     "frame_match_r": null,
-     "n_boxes": 0
-    }
-   ]
-  },
-  {
-   "query": "cyclists or motorcyclists on the road",
-   "cells": [
-    {
-     "dataset": "nusc",
-     "id": "dc8302cfccdb4812a0a4a60dde595e18",
-     "frame_match_r": 0.9967223874129497,
-     "n_boxes": 1
-    },
-    {
-     "dataset": "nusc",
-     "id": "7deb4760e2244f32b57f9d631b535b66",
-     "frame_match_r": 0.9817460369371629,
-     "n_boxes": 1
-    },
-    {
-     "dataset": "waymo",
-     "id": "14931160836268555821_5778_870_5798_870#c0",
-     "frame_match_r": 0.9999733912610235,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "waymo",
-     "id": "3077229433993844199_1080_000_1100_000#c1",
-     "frame_match_r": 0.9999116253985076,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "bdd",
-     "id": "bd338426-a0b4e877.jpg",
-     "frame_match_r": null,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "bdd",
-     "id": "c9c31e57-3f228293.jpg",
-     "frame_match_r": null,
-     "n_boxes": 0
-    }
-   ]
-  },
-  {
-   "query": "a construction zone with traffic cones and barriers",
-   "cells": [
-    {
-     "dataset": "nusc",
-     "id": "d1ac8e27ba8944a4a42a488cf2fedd74",
-     "frame_match_r": 0.9905907883573707,
-     "n_boxes": 12
-    },
-    {
-     "dataset": "nusc",
-     "id": "7bcc4753bdb64d2cb407b55cc4e4527f",
-     "frame_match_r": 0.9975693283979872,
-     "n_boxes": 18
-    },
-    {
-     "dataset": "waymo",
-     "id": "1024360143612057520_3580_000_3600_000#c1",
-     "frame_match_r": 0.999870169072575,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "waymo",
-     "id": "10203656353524179475_7625_000_7645_000#c1",
-     "frame_match_r": 0.999915325477543,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "bdd",
-     "id": "bc4712a2-b5a5966b.jpg",
-     "frame_match_r": null,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "bdd",
-     "id": "c593756a-4d6ae1d1.jpg",
-     "frame_match_r": null,
-     "n_boxes": 0
-    }
-   ]
-  },
-  {
-   "query": "a large truck or bus on a wet road",
-   "cells": [
-    {
-     "dataset": "nusc",
-     "id": "3e1f0257a4b8457486651de2d16b61ab",
-     "frame_match_r": 0.9968751433207496,
-     "n_boxes": 1
-    },
-    {
-     "dataset": "nusc",
-     "id": "6193fac132614eb1a09dcbf3f359460f",
-     "frame_match_r": 0.9966928537499301,
-     "n_boxes": 3
-    },
-    {
-     "dataset": "waymo",
-     "id": "15028688279822984888_1560_000_1580_000#c1",
-     "frame_match_r": 0.9998050277756361,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "waymo",
-     "id": "13184115878756336167_1354_000_1374_000#c0",
-     "frame_match_r": 0.9997908374849475,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "bdd",
-     "id": "b334b56d-2ce33cd7.jpg",
-     "frame_match_r": null,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "bdd",
-     "id": "c1b16eee-d45c1777.jpg",
-     "frame_match_r": null,
-     "n_boxes": 0
-    }
-   ]
+   },
+   "max_rank_shown": 18
   }
- ],
- "supp_semantic": [
-  {
-   "query": "pedestrians walking near the roadway",
-   "cells": [
-    {
-     "dataset": "nusc",
-     "id": "73d9a36f20594e658020ebfc5b0ba74a",
-     "frame_match_r": 0.9933251161489913,
-     "n_boxes": 4
+ },
+ "supp_semantic": {
+  "rows": [
+   {
+    "query": "pedestrians walking near the roadway",
+    "cells": [
+     {
+      "dataset": "nusc",
+      "id": "73d9a36f20594e658020ebfc5b0ba74a",
+      "rank_in_corpus": 1,
+      "frame_match_r": 0.9933251161489913,
+      "class_labelled": true,
+      "n_boxes": 4
+     },
+     {
+      "dataset": "nusc",
+      "id": "d865cb18632040fdb4cb06b6e3331cdb",
+      "rank_in_corpus": 2,
+      "frame_match_r": 0.9944614540371169,
+      "class_labelled": true,
+      "n_boxes": 8
+     },
+     {
+      "dataset": "waymo",
+      "id": "7732779227944176527_2120_000_2140_000#c2",
+      "rank_in_corpus": 1,
+      "frame_match_r": 0.9999617869867596,
+      "class_labelled": true,
+      "n_boxes": 15
+     },
+     {
+      "dataset": "waymo",
+      "id": "30779396576054160_1880_000_1900_000#c1",
+      "rank_in_corpus": 2,
+      "frame_match_r": 0.99984748137252,
+      "class_labelled": true,
+      "n_boxes": 18
+     },
+     {
+      "dataset": "bdd",
+      "id": "b6e683d2-84d2dfbf.jpg",
+      "rank_in_corpus": 1,
+      "frame_match_r": null,
+      "class_labelled": true,
+      "n_boxes": 4
+     },
+     {
+      "dataset": "bdd",
+      "id": "bab97280-a3c6a37c.jpg",
+      "rank_in_corpus": 2,
+      "frame_match_r": null,
+      "class_labelled": true,
+      "n_boxes": 23
+     }
+    ]
+   },
+   {
+    "query": "a pedestrian close to the vehicle",
+    "cells": [
+     {
+      "dataset": "nusc",
+      "id": "555c691be4704ef29559373e031441dd",
+      "rank_in_corpus": 1,
+      "frame_match_r": 0.991617046794497,
+      "class_labelled": true,
+      "n_boxes": 14
+     },
+     {
+      "dataset": "nusc",
+      "id": "de7d80a1f5fb4c3e82ce8a4f213b450a",
+      "rank_in_corpus": 2,
+      "frame_match_r": 0.9959649902940698,
+      "class_labelled": true,
+      "n_boxes": 5
+     },
+     {
+      "dataset": "waymo",
+      "id": "8506432817378693815_4860_000_4880_000#c1",
+      "rank_in_corpus": 1,
+      "frame_match_r": 0.9998666888568746,
+      "class_labelled": true,
+      "n_boxes": 15
+     },
+     {
+      "dataset": "waymo",
+      "id": "13941626351027979229_3363_930_3383_930#c1",
+      "rank_in_corpus": 2,
+      "frame_match_r": 0.999927399421728,
+      "class_labelled": true,
+      "n_boxes": 3
+     },
+     {
+      "dataset": "bdd",
+      "id": "bb4abf02-2651a845.jpg",
+      "rank_in_corpus": 1,
+      "frame_match_r": null,
+      "class_labelled": true,
+      "n_boxes": 6
+     },
+     {
+      "dataset": "bdd",
+      "id": "bdb95837-a9465f1b.jpg",
+      "rank_in_corpus": 2,
+      "frame_match_r": null,
+      "class_labelled": true,
+      "n_boxes": 2
+     }
+    ]
+   },
+   {
+    "query": "a cyclist sharing the road",
+    "cells": [
+     {
+      "dataset": "nusc",
+      "id": "7deb4760e2244f32b57f9d631b535b66",
+      "rank_in_corpus": 1,
+      "frame_match_r": 0.9817460369371629,
+      "class_labelled": true,
+      "n_boxes": 1
+     },
+     {
+      "dataset": "nusc",
+      "id": "dc8302cfccdb4812a0a4a60dde595e18",
+      "rank_in_corpus": 2,
+      "frame_match_r": 0.9967223874129497,
+      "class_labelled": true,
+      "n_boxes": 1
+     },
+     {
+      "dataset": "waymo",
+      "id": "15948509588157321530_7187_290_7207_290#c2",
+      "rank_in_corpus": 2,
+      "frame_match_r": 0.9998853053507388,
+      "class_labelled": true,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "waymo",
+      "id": "15724298772299989727_5386_410_5406_410#c0",
+      "rank_in_corpus": 3,
+      "frame_match_r": 0.9999348643809595,
+      "class_labelled": true,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "bdd",
+      "id": "ba479cb3-1909b5d7.jpg",
+      "rank_in_corpus": 1,
+      "frame_match_r": null,
+      "class_labelled": true,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "bdd",
+      "id": "c86f5924-0ec535db.jpg",
+      "rank_in_corpus": 2,
+      "frame_match_r": null,
+      "class_labelled": true,
+      "n_boxes": 0
+     }
+    ]
+   },
+   {
+    "query": "a motorcycle in traffic",
+    "cells": [
+     {
+      "dataset": "nusc",
+      "id": "221a67d95acf448ba863917ec4d32ed0",
+      "rank_in_corpus": 1,
+      "frame_match_r": 0.9940658326251262,
+      "class_labelled": true,
+      "n_boxes": 1
+     },
+     {
+      "dataset": "nusc",
+      "id": "02e484442a2f411b971edcf96ebbe885",
+      "rank_in_corpus": 2,
+      "frame_match_r": 0.9932907236048149,
+      "class_labelled": true,
+      "n_boxes": 1
+     },
+     {
+      "dataset": "waymo",
+      "id": "6001094526418694294_4609_470_4629_470#c0",
+      "rank_in_corpus": 1,
+      "frame_match_r": 0.9999575168192508,
+      "class_labelled": true,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "waymo",
+      "id": "3077229433993844199_1080_000_1100_000#c1",
+      "rank_in_corpus": 2,
+      "frame_match_r": 0.9999116253985076,
+      "class_labelled": true,
+      "n_boxes": 1
+     },
+     {
+      "dataset": "bdd",
+      "id": "c9c31e57-3f228293.jpg",
+      "rank_in_corpus": 1,
+      "frame_match_r": null,
+      "class_labelled": true,
+      "n_boxes": 15
+     },
+     {
+      "dataset": "bdd",
+      "id": "bd338426-a0b4e877.jpg",
+      "rank_in_corpus": 2,
+      "frame_match_r": null,
+      "class_labelled": true,
+      "n_boxes": 0
+     }
+    ]
+   },
+   {
+    "query": "road works with cones and barriers",
+    "cells": [
+     {
+      "dataset": "nusc",
+      "id": "7bcc4753bdb64d2cb407b55cc4e4527f",
+      "rank_in_corpus": 1,
+      "frame_match_r": 0.9975693283979872,
+      "class_labelled": true,
+      "n_boxes": 18
+     },
+     {
+      "dataset": "nusc",
+      "id": "1d914f73a4a243c3acac50d24f083aac",
+      "rank_in_corpus": 2,
+      "frame_match_r": 0.9931020768178199,
+      "class_labelled": true,
+      "n_boxes": 12
+     },
+     {
+      "dataset": "waymo",
+      "id": "10203656353524179475_7625_000_7645_000#c0",
+      "rank_in_corpus": 1,
+      "frame_match_r": 0.9999210877334032,
+      "class_labelled": false,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "waymo",
+      "id": "2335854536382166371_2709_426_2729_426#c3",
+      "rank_in_corpus": 2,
+      "frame_match_r": 0.9999134780665119,
+      "class_labelled": false,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "bdd",
+      "id": "bc4712a2-b5a5966b.jpg",
+      "rank_in_corpus": 1,
+      "frame_match_r": null,
+      "class_labelled": false,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "bdd",
+      "id": "bd989210-5855f1e4.jpg",
+      "rank_in_corpus": 2,
+      "frame_match_r": null,
+      "class_labelled": false,
+      "n_boxes": 0
+     }
+    ]
+   },
+   {
+    "query": "a bus at a stop",
+    "cells": [
+     {
+      "dataset": "nusc",
+      "id": "2135a00f664d4a3bbfb938e007befa06",
+      "rank_in_corpus": 1,
+      "frame_match_r": 0.9931640495763953,
+      "class_labelled": true,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "nusc",
+      "id": "3be5ff913abf449bac92ce2d2a4cffa0",
+      "rank_in_corpus": 2,
+      "frame_match_r": 0.992622206022128,
+      "class_labelled": true,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "waymo",
+      "id": "5832416115092350434_60_000_80_000#c3",
+      "rank_in_corpus": 1,
+      "frame_match_r": 0.9999526007612414,
+      "class_labelled": true,
+      "n_boxes": 1
+     },
+     {
+      "dataset": "waymo",
+      "id": "15028688279822984888_1560_000_1580_000#c2",
+      "rank_in_corpus": 3,
+      "frame_match_r": 0.9998036182082879,
+      "class_labelled": true,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "bdd",
+      "id": "bc24f222-4fdb5e23.jpg",
+      "rank_in_corpus": 1,
+      "frame_match_r": null,
+      "class_labelled": true,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "bdd",
+      "id": "b62e6504-687ea24f.jpg",
+      "rank_in_corpus": 2,
+      "frame_match_r": null,
+      "class_labelled": true,
+      "n_boxes": 1
+     }
+    ]
+   },
+   {
+    "query": "a child or an unusual road user near the road",
+    "cells": [
+     {
+      "dataset": "nusc",
+      "id": "fb255bba9b6a4f37a8894e336d2136f1",
+      "rank_in_corpus": 1,
+      "frame_match_r": 0.9786808448991638,
+      "class_labelled": true,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "nusc",
+      "id": "1fa63d31aaa7459383b4414715cd12db",
+      "rank_in_corpus": 3,
+      "frame_match_r": 0.9839112265833148,
+      "class_labelled": true,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "waymo",
+      "id": "8907419590259234067_1960_000_1980_000#c3",
+      "rank_in_corpus": 1,
+      "frame_match_r": 0.9999600453761098,
+      "class_labelled": false,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "waymo",
+      "id": "5183174891274719570_3464_030_3484_030#c3",
+      "rank_in_corpus": 2,
+      "frame_match_r": 0.99994621883133,
+      "class_labelled": false,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "bdd",
+      "id": "b26f9b1e-09c56a3c.jpg",
+      "rank_in_corpus": 1,
+      "frame_match_r": null,
+      "class_labelled": false,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "bdd",
+      "id": "bb80de49-c7d12d6a.jpg",
+      "rank_in_corpus": 2,
+      "frame_match_r": null,
+      "class_labelled": false,
+      "n_boxes": 0
+     }
+    ]
+   },
+   {
+    "query": "a police car or an emergency vehicle",
+    "cells": [
+     {
+      "dataset": "nusc",
+      "id": "75548269eb0a4614a6f84ab8d7713196",
+      "rank_in_corpus": 2,
+      "frame_match_r": 0.9914088472027299,
+      "class_labelled": true,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "nusc",
+      "id": "55638ae3a8b34572aef756ee7fbce0df",
+      "rank_in_corpus": 3,
+      "frame_match_r": 0.9907306265583502,
+      "class_labelled": true,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "waymo",
+      "id": "7988627150403732100_1487_540_1507_540#c3",
+      "rank_in_corpus": 1,
+      "frame_match_r": 0.9999165775465343,
+      "class_labelled": false,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "waymo",
+      "id": "14127943473592757944_2068_000_2088_000#c0",
+      "rank_in_corpus": 4,
+      "frame_match_r": 0.9999510238314726,
+      "class_labelled": false,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "bdd",
+      "id": "c21fba09-f4501c68.jpg",
+      "rank_in_corpus": 1,
+      "frame_match_r": null,
+      "class_labelled": false,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "bdd",
+      "id": "bfdb9d69-9beabbd2.jpg",
+      "rank_in_corpus": 2,
+      "frame_match_r": null,
+      "class_labelled": false,
+      "n_boxes": 0
+     }
+    ]
+   },
+   {
+    "query": "pedestrians on a rainy night",
+    "cells": [
+     {
+      "dataset": "nusc",
+      "id": "727214583a2a478094d4f093d20c7060",
+      "rank_in_corpus": 1,
+      "frame_match_r": 0.9973083771338898,
+      "class_labelled": true,
+      "n_boxes": 2
+     },
+     {
+      "dataset": "nusc",
+      "id": "782f9486adbd4546a492e69b6697ef70",
+      "rank_in_corpus": 2,
+      "frame_match_r": 0.9972623038081715,
+      "class_labelled": true,
+      "n_boxes": 5
+     },
+     {
+      "dataset": "waymo",
+      "id": "13415985003725220451_6163_000_6183_000#c1",
+      "rank_in_corpus": 1,
+      "frame_match_r": 0.9999049798571028,
+      "class_labelled": true,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "waymo",
+      "id": "17791493328130181905_1480_000_1500_000#c2",
+      "rank_in_corpus": 5,
+      "frame_match_r": 0.9997346082995946,
+      "class_labelled": true,
+      "n_boxes": 17
+     },
+     {
+      "dataset": "bdd",
+      "id": "baa0bfdb-0267b9d2.jpg",
+      "rank_in_corpus": 1,
+      "frame_match_r": null,
+      "class_labelled": true,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "bdd",
+      "id": "c2021f20-46a5823b.jpg",
+      "rank_in_corpus": 2,
+      "frame_match_r": null,
+      "class_labelled": true,
+      "n_boxes": 10
+     }
+    ]
+   },
+   {
+    "query": "a truck ahead in heavy rain",
+    "cells": [
+     {
+      "dataset": "nusc",
+      "id": "66134aebdaca4aca82aec91ec8c6245e",
+      "rank_in_corpus": 1,
+      "frame_match_r": 0.9893382801230464,
+      "class_labelled": true,
+      "n_boxes": 1
+     },
+     {
+      "dataset": "nusc",
+      "id": "4a4d09496d594c7385a1ec227bdb3a7f",
+      "rank_in_corpus": 2,
+      "frame_match_r": 0.9926561341182706,
+      "class_labelled": true,
+      "n_boxes": 1
+     },
+     {
+      "dataset": "waymo",
+      "id": "12134738431513647889_3118_000_3138_000#c1",
+      "rank_in_corpus": 7,
+      "frame_match_r": 0.9999537612337751,
+      "class_labelled": true,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "waymo",
+      "id": "13184115878756336167_1354_000_1374_000#c3",
+      "rank_in_corpus": 8,
+      "frame_match_r": 0.999898868503092,
+      "class_labelled": true,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "bdd",
+      "id": "c1b16eee-d45c1777.jpg",
+      "rank_in_corpus": 1,
+      "frame_match_r": null,
+      "class_labelled": true,
+      "n_boxes": 0
+     },
+     {
+      "dataset": "bdd",
+      "id": "b6741a2c-5a933eb6.jpg",
+      "rank_in_corpus": 2,
+      "frame_match_r": null,
+      "class_labelled": true,
+      "n_boxes": 0
+     }
+    ]
+   }
+  ],
+  "summary": {
+   "n_cells": 60,
+   "unique_images": 60,
+   "cells_with_class_labels": 48,
+   "cells_with_annotated_object": 28,
+   "by_dataset": {
+    "nusc": {
+     "labelled": 20,
+     "hit": 14
     },
-    {
-     "dataset": "nusc",
-     "id": "d865cb18632040fdb4cb06b6e3331cdb",
-     "frame_match_r": 0.9944614540371169,
-     "n_boxes": 8
+    "waymo": {
+     "labelled": 14,
+     "hit": 7
     },
-    {
-     "dataset": "waymo",
-     "id": "7732779227944176527_2120_000_2140_000#c2",
-     "frame_match_r": 0.9999617869867596,
-     "n_boxes": 23
-    },
-    {
-     "dataset": "waymo",
-     "id": "30779396576054160_1880_000_1900_000#c1",
-     "frame_match_r": 0.99984748137252,
-     "n_boxes": 19
-    },
-    {
-     "dataset": "bdd",
-     "id": "b6e683d2-84d2dfbf.jpg",
-     "frame_match_r": null,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "bdd",
-     "id": "bab97280-a3c6a37c.jpg",
-     "frame_match_r": null,
-     "n_boxes": 0
+    "bdd": {
+     "labelled": 14,
+     "hit": 7
     }
-   ]
-  },
-  {
-   "query": "a pedestrian close to the vehicle",
-   "cells": [
-    {
-     "dataset": "nusc",
-     "id": "555c691be4704ef29559373e031441dd",
-     "frame_match_r": 0.991617046794497,
-     "n_boxes": 14
-    },
-    {
-     "dataset": "nusc",
-     "id": "de7d80a1f5fb4c3e82ce8a4f213b450a",
-     "frame_match_r": 0.9959649902940698,
-     "n_boxes": 5
-    },
-    {
-     "dataset": "waymo",
-     "id": "8506432817378693815_4860_000_4880_000#c1",
-     "frame_match_r": 0.9998666888568746,
-     "n_boxes": 16
-    },
-    {
-     "dataset": "waymo",
-     "id": "13941626351027979229_3363_930_3383_930#c1",
-     "frame_match_r": 0.999927399421728,
-     "n_boxes": 3
-    },
-    {
-     "dataset": "bdd",
-     "id": "bb4abf02-2651a845.jpg",
-     "frame_match_r": null,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "bdd",
-     "id": "bdb95837-a9465f1b.jpg",
-     "frame_match_r": null,
-     "n_boxes": 0
-    }
-   ]
-  },
-  {
-   "query": "a cyclist sharing the road",
-   "cells": [
-    {
-     "dataset": "nusc",
-     "id": "7deb4760e2244f32b57f9d631b535b66",
-     "frame_match_r": 0.9817460369371629,
-     "n_boxes": 1
-    },
-    {
-     "dataset": "nusc",
-     "id": "dc8302cfccdb4812a0a4a60dde595e18",
-     "frame_match_r": 0.9967223874129497,
-     "n_boxes": 1
-    },
-    {
-     "dataset": "waymo",
-     "id": "8506432817378693815_4860_000_4880_000#c1",
-     "frame_match_r": 0.9998666888568746,
-     "n_boxes": 1
-    },
-    {
-     "dataset": "waymo",
-     "id": "15948509588157321530_7187_290_7207_290#c2",
-     "frame_match_r": 0.9998853053507388,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "bdd",
-     "id": "ba479cb3-1909b5d7.jpg",
-     "frame_match_r": null,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "bdd",
-     "id": "c86f5924-0ec535db.jpg",
-     "frame_match_r": null,
-     "n_boxes": 0
-    }
-   ]
-  },
-  {
-   "query": "a motorcycle in traffic",
-   "cells": [
-    {
-     "dataset": "nusc",
-     "id": "221a67d95acf448ba863917ec4d32ed0",
-     "frame_match_r": 0.9940658326251262,
-     "n_boxes": 1
-    },
-    {
-     "dataset": "nusc",
-     "id": "02e484442a2f411b971edcf96ebbe885",
-     "frame_match_r": 0.9932907236048149,
-     "n_boxes": 1
-    },
-    {
-     "dataset": "waymo",
-     "id": "6001094526418694294_4609_470_4629_470#c0",
-     "frame_match_r": 0.9999575168192508,
-     "n_boxes": 1
-    },
-    {
-     "dataset": "waymo",
-     "id": "3077229433993844199_1080_000_1100_000#c1",
-     "frame_match_r": 0.9999116253985076,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "bdd",
-     "id": "c9c31e57-3f228293.jpg",
-     "frame_match_r": null,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "bdd",
-     "id": "bd338426-a0b4e877.jpg",
-     "frame_match_r": null,
-     "n_boxes": 0
-    }
-   ]
-  },
-  {
-   "query": "road works with cones and barriers",
-   "cells": [
-    {
-     "dataset": "nusc",
-     "id": "7bcc4753bdb64d2cb407b55cc4e4527f",
-     "frame_match_r": 0.9975693283979872,
-     "n_boxes": 18
-    },
-    {
-     "dataset": "nusc",
-     "id": "1d914f73a4a243c3acac50d24f083aac",
-     "frame_match_r": 0.9931020768178199,
-     "n_boxes": 12
-    },
-    {
-     "dataset": "waymo",
-     "id": "10203656353524179475_7625_000_7645_000#c0",
-     "frame_match_r": 0.9999210877334032,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "waymo",
-     "id": "2335854536382166371_2709_426_2729_426#c3",
-     "frame_match_r": 0.9999134780665119,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "bdd",
-     "id": "bc4712a2-b5a5966b.jpg",
-     "frame_match_r": null,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "bdd",
-     "id": "bd989210-5855f1e4.jpg",
-     "frame_match_r": null,
-     "n_boxes": 0
-    }
-   ]
-  },
-  {
-   "query": "a bus at a stop",
-   "cells": [
-    {
-     "dataset": "nusc",
-     "id": "2135a00f664d4a3bbfb938e007befa06",
-     "frame_match_r": 0.9931640495763953,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "nusc",
-     "id": "3be5ff913abf449bac92ce2d2a4cffa0",
-     "frame_match_r": 0.992622206022128,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "waymo",
-     "id": "5832416115092350434_60_000_80_000#c3",
-     "frame_match_r": 0.9999526007612414,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "waymo",
-     "id": "15028688279822984888_1560_000_1580_000#c2",
-     "frame_match_r": 0.9998036182082879,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "bdd",
-     "id": "bc24f222-4fdb5e23.jpg",
-     "frame_match_r": null,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "bdd",
-     "id": "b62e6504-687ea24f.jpg",
-     "frame_match_r": null,
-     "n_boxes": 0
-    }
-   ]
-  },
-  {
-   "query": "a child or an unusual road user near the road",
-   "cells": [
-    {
-     "dataset": "nusc",
-     "id": "fb255bba9b6a4f37a8894e336d2136f1",
-     "frame_match_r": 0.9786808448991638,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "nusc",
-     "id": "7deb4760e2244f32b57f9d631b535b66",
-     "frame_match_r": 0.9817460369371629,
-     "n_boxes": 1
-    },
-    {
-     "dataset": "waymo",
-     "id": "8907419590259234067_1960_000_1980_000#c3",
-     "frame_match_r": 0.9999600453761098,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "waymo",
-     "id": "5183174891274719570_3464_030_3484_030#c3",
-     "frame_match_r": 0.99994621883133,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "bdd",
-     "id": "b26f9b1e-09c56a3c.jpg",
-     "frame_match_r": null,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "bdd",
-     "id": "bb80de49-c7d12d6a.jpg",
-     "frame_match_r": null,
-     "n_boxes": 0
-    }
-   ]
-  },
-  {
-   "query": "a police car or an emergency vehicle",
-   "cells": [
-    {
-     "dataset": "nusc",
-     "id": "de7d80a1f5fb4c3e82ce8a4f213b450a",
-     "frame_match_r": 0.9959649902940698,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "nusc",
-     "id": "75548269eb0a4614a6f84ab8d7713196",
-     "frame_match_r": 0.9914088472027299,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "waymo",
-     "id": "7988627150403732100_1487_540_1507_540#c3",
-     "frame_match_r": 0.9999165775465343,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "waymo",
-     "id": "8506432817378693815_4860_000_4880_000#c0",
-     "frame_match_r": 0.9998560059766103,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "bdd",
-     "id": "c21fba09-f4501c68.jpg",
-     "frame_match_r": null,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "bdd",
-     "id": "bfdb9d69-9beabbd2.jpg",
-     "frame_match_r": null,
-     "n_boxes": 0
-    }
-   ]
-  },
-  {
-   "query": "pedestrians on a rainy night",
-   "cells": [
-    {
-     "dataset": "nusc",
-     "id": "727214583a2a478094d4f093d20c7060",
-     "frame_match_r": 0.9973083771338898,
-     "n_boxes": 2
-    },
-    {
-     "dataset": "nusc",
-     "id": "782f9486adbd4546a492e69b6697ef70",
-     "frame_match_r": 0.9972623038081715,
-     "n_boxes": 5
-    },
-    {
-     "dataset": "waymo",
-     "id": "13415985003725220451_6163_000_6183_000#c1",
-     "frame_match_r": 0.9999049798571028,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "waymo",
-     "id": "17791493328130181905_1480_000_1500_000#c2",
-     "frame_match_r": 0.9997346082995946,
-     "n_boxes": 39
-    },
-    {
-     "dataset": "bdd",
-     "id": "baa0bfdb-0267b9d2.jpg",
-     "frame_match_r": null,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "bdd",
-     "id": "c2021f20-46a5823b.jpg",
-     "frame_match_r": null,
-     "n_boxes": 0
-    }
-   ]
-  },
-  {
-   "query": "a truck ahead in heavy rain",
-   "cells": [
-    {
-     "dataset": "nusc",
-     "id": "66134aebdaca4aca82aec91ec8c6245e",
-     "frame_match_r": 0.9893382801230464,
-     "n_boxes": 1
-    },
-    {
-     "dataset": "nusc",
-     "id": "4a4d09496d594c7385a1ec227bdb3a7f",
-     "frame_match_r": 0.9926561341182706,
-     "n_boxes": 1
-    },
-    {
-     "dataset": "waymo",
-     "id": "13415985003725220451_6163_000_6183_000#c1",
-     "frame_match_r": 0.9999049798571028,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "waymo",
-     "id": "15028688279822984888_1560_000_1580_000#c1",
-     "frame_match_r": 0.9998050277756361,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "bdd",
-     "id": "c1b16eee-d45c1777.jpg",
-     "frame_match_r": null,
-     "n_boxes": 0
-    },
-    {
-     "dataset": "bdd",
-     "id": "b6741a2c-5a933eb6.jpg",
-     "frame_match_r": null,
-     "n_boxes": 0
-    }
-   ]
+   },
+   "max_rank_shown": 8
   }
- ],
+ },
  "supp_failure": {
-  "rule": "BEV-TSR-style vs Qwen2.5-VL lookup vs SceneMiner top-3 on the 258 nuScenes\n    scenes with human semantic GT. Rows chosen by a FIXED rule from Milestone 23's\n    per-query APs: the atomic and the compositional query with the largest\n    SceneMiner margin over the better of the two baselines, plus the query with\n    the largest margin AGAINST SceneMiner (shown so the strip is not one-sided).",
+  "rule": "BEV-TSR-style vs Qwen2.5-VL lookup vs SceneMiner top-3 on the 258 nuScenes\n    scenes with human semantic GT. Rows chosen by a FIXED rule from the comparison\n    per-query APs: the atomic and the compositional query with the largest\n    SceneMiner margin over the better of the two baselines, plus the query with\n    the largest margin AGAINST SceneMiner (shown so the strip is not one-sided).",
   "rows": [
    {
     "query": "road construction zone with traffic cones and barriers",
@@ -710,14 +960,14 @@
     "AP_margin": 0.3489482996454446
    },
    {
-    "query": "people crossing the street after dark",
+    "query": "a person on the street seen through a wet, spotted lens",
     "why": "largest SceneMiner margin",
-    "AP_margin": 0.26493035140093957
+    "AP_margin": 0.25962706187079676
    },
    {
-    "query": "a bus or truck seen through rain droplets on the lens",
+    "query": "a large vehicle ahead behind a rain-spattered lens",
     "why": "largest margin against SceneMiner",
-    "AP_margin": -0.1484765243301088
+    "AP_margin": -0.1485030342512527
    }
   ],
   "top3": [
@@ -749,43 +999,43 @@
     ]
    },
    {
-    "query": "people crossing the street after dark",
+    "query": "a person on the street seen through a wet, spotted lens",
     "method": "BEV-TSR-style",
     "top3_relevant": [
      false,
-     false,
+     true,
      false
     ]
    },
    {
-    "query": "people crossing the street after dark",
+    "query": "a person on the street seen through a wet, spotted lens",
     "method": "Qwen2.5-VL lookup",
     "top3_relevant": [
-     true,
+     false,
      false,
      false
     ]
    },
    {
-    "query": "people crossing the street after dark",
+    "query": "a person on the street seen through a wet, spotted lens",
     "method": "SceneMiner",
     "top3_relevant": [
-     true,
      false,
+     true,
      true
     ]
    },
    {
-    "query": "a bus or truck seen through rain droplets on the lens",
+    "query": "a large vehicle ahead behind a rain-spattered lens",
     "method": "BEV-TSR-style",
     "top3_relevant": [
-     true,
      false,
+     true,
      false
     ]
    },
    {
-    "query": "a bus or truck seen through rain droplets on the lens",
+    "query": "a large vehicle ahead behind a rain-spattered lens",
     "method": "Qwen2.5-VL lookup",
     "top3_relevant": [
      false,
@@ -794,12 +1044,12 @@
     ]
    },
    {
-    "query": "a bus or truck seen through rain droplets on the lens",
+    "query": "a large vehicle ahead behind a rain-spattered lens",
     "method": "SceneMiner",
     "top3_relevant": [
      false,
      false,
-     true
+     false
     ]
    }
   ]
