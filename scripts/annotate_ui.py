@@ -164,10 +164,11 @@ def main():
     ap.add_argument("--flags", default="work_dirs/unified_filter/binary_flags_with_logits.json")
     ap.add_argument("--thumbs", default="work_dirs/unified_filter/scene_thumbs")
     ap.add_argument("--outdir", default="results/overnight_oct18/annotations")
+    ap.add_argument("--sample", default=None, help="fixed sample file {'tokens': [...]} (second-rater subset)")
     a = ap.parse_args()
     Path(a.outdir).mkdir(parents=True, exist_ok=True)
     out = Path(a.outdir) / f"{a.rater}.json"
-    sample_file = Path(a.outdir) / "sample_600.json"
+    sample_file = Path(a.sample) if a.sample else Path(a.outdir) / "sample_600.json"
     if sample_file.exists():
         order = json.load(open(sample_file))["tokens"]
     else:
