@@ -12,6 +12,8 @@ Two modes:
 """
 from __future__ import annotations
 import argparse, glob, json, sys
+import os
+SEED_GLOB = os.environ.get("SM_SEED_GLOB", "s*")      # Milestone 34: one seed at a time for +/- sd
 from pathlib import Path
 import numpy as np, torch
 import torch.nn.functional as F
@@ -52,7 +54,7 @@ def main():
 
     from scene_mining.filter.sceneminer_v2 import SceneMinerV21
     models = []
-    for ck in sorted(glob.glob("work_dirs/sceneminer_v21/s*/final.pt")):
+    for ck in sorted(glob.glob("work_dirs/sceneminer_v21/" + SEED_GLOB + "/final.pt")):
         d = torch.load(ck, map_location=dev, weights_only=False)
         m = SceneMinerV21(d_qwen=qwen.shape[1], d_siglip=sig.shape[1],
                           n_margins=mz.shape[1], n_meta=6, d_text=QT.shape[1],

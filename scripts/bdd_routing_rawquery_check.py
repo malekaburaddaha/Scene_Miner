@@ -3,6 +3,8 @@
 query features (their training input) and with the L2-normalised features the
 Milestone 10 evaluation used. -> results/cvpr/milestone23_bdd_rawquery_routing.json"""
 import sys, glob, json, numpy as np, torch, torch.nn.functional as F
+import os
+SEED_GLOB = os.environ.get("SM_SEED_GLOB", "s*")      # Milestone 34: one seed at a time for +/- sd
 sys.path.insert(0, "src"); sys.path.insert(0, "scripts")
 from eval_external_bdd100k import EVAL_Q, QUESTIONS
 from eval_attribute_index import ap_binary
@@ -29,9 +31,9 @@ def load(cls, pat):
 
 
 # the routing-only build has the v2.1 architecture; it is scored with availability masking
-R = {"v21": load(SceneMinerV21, "work_dirs/sceneminer_v21/s*/final.pt"),
-     "v22_routingonly": load(SceneMinerV21, "work_dirs/sceneminer_v22_routingonly/s*/final.pt"),
-     "v22": load(SceneMinerV22, "work_dirs/sceneminer_v22/s*/final.pt")}
+R = {"v21": load(SceneMinerV21, "work_dirs/sceneminer_v21/" + SEED_GLOB + "/final.pt"),
+     "v22_routingonly": load(SceneMinerV21, "work_dirs/sceneminer_v22_routingonly/" + SEED_GLOB + "/final.pt"),
+     "v22": load(SceneMinerV22, "work_dirs/sceneminer_v22/" + SEED_GLOB + "/final.pt")}
 
 
 def score(k, m, qv):
@@ -59,4 +61,4 @@ for qname, Q in [("raw", QR), ("normalised", QN)]:
         print(qname, k, len(Ms), round(np.mean(aps), 4), np.mean(ws, 0).round(3))
 json.dump({"doc": "BDD100K routing-only check, Milestone 23: raw query features (the heads' training input) vs the "
                   "L2-normalised features the Milestone 10 evaluation used", "rows": res},
-          open("results/cvpr/milestone23_bdd_rawquery_routing.json", "w"), indent=1)
+          open(os.environ.get("SM_OUT", "results/cvpr/milestone23_bdd_rawquery_routing.json"), "w"), indent=1)

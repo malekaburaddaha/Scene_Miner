@@ -343,6 +343,156 @@
    "found": true
   },
   {
+   "claim": "reranker BDD100K",
+   "value": "0.640",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "reranker holdout lead",
+   "value": "+0.042",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "reranker holdout p",
+   "value": "0.004",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "reranker S5 atomic lead",
+   "value": "+0.025",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "reranker S5 atomic p",
+   "value": "0.001",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "reranker seconds per query",
+   "value": "8.2",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "reranker cost ratio",
+   "value": "2300",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "SceneMiner lead over reranker, human GT",
+   "value": "+0.159",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "reranker bootstrap CI low",
+   "value": "0.114",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "reranker bootstrap CI high",
+   "value": "0.206",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "reranker low contrast",
+   "value": "0.119",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "SceneMiner low contrast",
+   "value": "0.665",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "low-contrast positives in top 50",
+   "value": "3",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "low-contrast positives",
+   "value": "66",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "SceneMiner human GT seed sd",
+   "value": "0.794}_{\\pm.008",
+   "tex": "paper/tab_design.tex",
+   "found": true
+  },
+  {
+   "claim": "Table 2 SceneMiner seed sd",
+   "value": "0.794}_{\\pm.008",
+   "tex": "paper/tab_master.tex",
+   "found": true
+  },
+  {
+   "claim": "zero-shot B/16 human GT",
+   "value": "0.569",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "zero-shot So400m human GT",
+   "value": "0.543",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "zero-shot B/16 holdout",
+   "value": "0.408",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "zero-shot So400m holdout",
+   "value": "0.474",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "SceneMiner So400m human GT",
+   "value": "0.784",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "SceneMiner So400m holdout",
+   "value": "0.468",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "SceneMiner So400m BDD100K",
+   "value": "0.650",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "best no-learning control (abstract)",
+   "value": "0.737",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "external images (BDD100K + holdout)",
+   "value": "3000",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
    "claim": "Table 2 full human GT",
    "value": "0.794",
    "tex": "paper/tab_master.tex",
@@ -357,7 +507,7 @@
  ],
  "scan": {
   "paper/main_cvpr.tex": {
-   "n_numbers": 191,
+   "n_numbers": 197,
    "n_unsourced": 0,
    "unsourced": []
   },
@@ -387,7 +537,7 @@
    "unsourced": []
   },
   "paper/tab_master.tex": {
-   "n_numbers": 106,
+   "n_numbers": 113,
    "n_unsourced": 0,
    "unsourced": []
   },

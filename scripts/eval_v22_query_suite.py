@@ -18,6 +18,8 @@ set into a validation set). Both are ablated at inference:
 """
 from __future__ import annotations
 import argparse, glob, json, sys
+import os
+SEED_GLOB = os.environ.get("SM_SEED_GLOB", "s*")      # Milestone 34: one seed at a time for +/- sd
 from pathlib import Path
 import numpy as np, torch
 import torch.nn.functional as F
@@ -33,7 +35,7 @@ def main():
     ap.add_argument("--split-file", default="benchmark_cvpr/split_906_602.json")
     ap.add_argument("--features", default="work_dirs/unified_filter/features_v2.npz")
     ap.add_argument("--work", default="work_dirs/unified_filter")
-    ap.add_argument("--ckpts", default="work_dirs/sceneminer_v22/s*/final.pt")
+    ap.add_argument("--ckpts", default="work_dirs/sceneminer_v22/" + SEED_GLOB + "/final.pt")
     ap.add_argument("--out", default="results/cvpr/milestone10_query_suite_150.json")
     a = ap.parse_args()
     dev = torch.device("cuda"); W = Path(a.work)
@@ -89,7 +91,7 @@ def main():
                           risk_stats=(float(rk.mean()), float(rk.std()))).to(dev)
         m.load_state_dict(d["state_dict"]); m.eval(); M22.append(m)
     M21 = []
-    for c in sorted(glob.glob("work_dirs/sceneminer_v21/s*/final.pt")):
+    for c in sorted(glob.glob("work_dirs/sceneminer_v21/" + SEED_GLOB + "/final.pt")):
         d = torch.load(c, map_location=dev, weights_only=False)
         m = SceneMinerV21(d_qwen=qwen.shape[1], d_siglip=sig.shape[1],
                           n_margins=mz.shape[1], n_meta=6, d_text=QT.shape[1],

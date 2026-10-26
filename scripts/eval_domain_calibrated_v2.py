@@ -30,6 +30,8 @@ reported skew an out-of-sample number.
 """
 from __future__ import annotations
 import argparse, glob, json, re, sys
+import os
+SEED_GLOB = os.environ.get("SM_SEED_GLOB", "s*")      # Milestone 34: one seed at a time for +/- sd
 from pathlib import Path
 import numpy as np, torch
 import torch.nn.functional as F
@@ -141,9 +143,9 @@ def main():
                     risk_stats=(float(rk.mean()), float(rk.std()))).to(dev)
             m.load_state_dict(d["state_dict"]); m.eval(); out.append(m)
         return out
-    M21 = load(SceneMinerV21, "work_dirs/sceneminer_v21/s*/final.pt")
-    M22 = load(SceneMinerV22, "work_dirs/sceneminer_v22/s*/final.pt")
-    M23 = load(SceneMinerV23, "work_dirs/sceneminer_v23/s*/final.pt")
+    M21 = load(SceneMinerV21, "work_dirs/sceneminer_v21/" + SEED_GLOB + "/final.pt")
+    M22 = load(SceneMinerV22, "work_dirs/sceneminer_v22/" + SEED_GLOB + "/final.pt")
+    M23 = load(SceneMinerV23, "work_dirs/sceneminer_v23/" + SEED_GLOB + "/final.pt")
     print(f"[cal] {len(M21)} v2.1 seeds, {len(M22)} v2.2 seeds", flush=True)
 
     on = torch.ones(len(corpus), device=dev)

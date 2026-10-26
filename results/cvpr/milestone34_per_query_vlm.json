@@ -1,0 +1,2463 @@
+{
+ "doc": "MILESTONE 34 - per-query VLM reranker baseline: SigLIP2 top-50 -> Qwen2.5-VL-3B.\n\nThe lookup baseline asks the VLM four FIXED degradation questions per image. This\nbaseline asks the query itself: SigLIP2 ViT-B/16 retrieves the top K=50 scenes of\nthe evaluated pool, and Qwen2.5-VL-3B scores each candidate with the yes/no log-odds\nof \"Does this driving scene show {query}? Answer Yes or No.\" (same model, image\nfiles, chat template and Yes/No token sets as the cached margins). The K candidates\nare re-ordered by log-odds above the rest of the pool, which keeps SigLIP2 order.\nTop-K is taken within each evaluated pool (550 human-GT scenes, 1000 BDD100K images,\n258 Stratum-5 scenes, val150, 2000 holdout images, 602 suite scenes), the setting\nmost favourable to the baseline.\n\nBenchmarks and relevance are those of eval_related_work_baselines.py (Table 2). As a\ncheck, the SigLIP2 per-query APs computed here must equal Milestone 28's.\n\n--part plan                       count the (dataset, image, query) jobs\n--part vlm --shard i --nshard n   log-odds for one shard -> work_dirs/vlm_rerank_shard{i}.json\n--part latency                    online cost per query on one A40\n--part eval                       -> results/cvpr/milestone34_per_query_vlm.json\n",
+ "K": 50,
+ "prompt": "Does this driving scene show {q}? Answer Yes or No.",
+ "n_vlm_calls": 13151,
+ "benchmarks": {
+  "human_gt": {
+   "n_queries": 4,
+   "mAP_rerank": 0.6349593144394535,
+   "mAP_siglip2": 0.5687830507009249,
+   "recall_of_positives_in_top50": 0.4354243542435424,
+   "per_query": [
+    {
+     "id": "droplets",
+     "AP_rerank": 0.8926960077706647,
+     "AP_siglip2": 0.9129275459510545,
+     "n_pos": 79,
+     "pos_in_top50": 47,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "glare",
+     "AP_rerank": 0.6620837053969965,
+     "AP_siglip2": 0.4143846277626952,
+     "n_pos": 41,
+     "pos_in_top50": 25,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "wet_road",
+     "AP_rerank": 0.8660401155508397,
+     "AP_siglip2": 0.8433058865036837,
+     "n_pos": 85,
+     "pos_in_top50": 43,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "low_contrast",
+     "AP_rerank": 0.11901742903931344,
+     "AP_siglip2": 0.1045141425862662,
+     "n_pos": 66,
+     "pos_in_top50": 3,
+     "P@5_rerank": 0.4
+    }
+   ],
+   "sceneminer_mAP": 0.7939079235456028,
+   "sceneminer_minus_rerank": {
+    "delta": 0.15894860910614922,
+    "perm_p": 0.3715628437156284,
+    "n": 4
+   },
+   "scene_bootstrap": {
+    "delta_sceneminer_minus_rerank": 0.15894860910614922,
+    "ci95": [
+     0.11353058824730003,
+     0.20636685771535748
+    ],
+    "p_one_sided": 0.000999000999000999,
+    "per_attribute": {
+     "droplets": {
+      "SceneMiner": 0.9429354936381606,
+      "rerank": 0.8926960077706647
+     },
+     "glare": {
+      "SceneMiner": 0.5919099322516288,
+      "rerank": 0.6620837053969965
+     },
+     "wet_road": {
+      "SceneMiner": 0.9762638625593072,
+      "rerank": 0.8660401155508397
+     },
+     "low_contrast": {
+      "SceneMiner": 0.6645224057333146,
+      "rerank": 0.11901742903931344
+     }
+    }
+   }
+  },
+  "bdd": {
+   "n_queries": 12,
+   "mAP_rerank": 0.6401880167730274,
+   "mAP_siglip2": 0.6218381432122236,
+   "recall_of_positives_in_top50": 0.13786531130876747,
+   "per_query": [
+    {
+     "id": "wet reflective asphalt after rainfall",
+     "AP_rerank": 0.48180787567046013,
+     "AP_siglip2": 0.429874598643891,
+     "n_pos": 94,
+     "pos_in_top50": 28,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "driving in rain",
+     "AP_rerank": 0.6163580906864962,
+     "AP_siglip2": 0.5562110547692591,
+     "n_pos": 94,
+     "pos_in_top50": 38,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "water droplets smearing the camera lens",
+     "AP_rerank": 0.5085602340289246,
+     "AP_siglip2": 0.5497060105887079,
+     "n_pos": 94,
+     "pos_in_top50": 36,
+     "P@5_rerank": 0.8
+    },
+    {
+     "id": "snow covering the road",
+     "AP_rerank": 0.6496002988264594,
+     "AP_siglip2": 0.6169579172358145,
+     "n_pos": 82,
+     "pos_in_top50": 36,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "a snowy street scene",
+     "AP_rerank": 0.6906994157346488,
+     "AP_siglip2": 0.6503036354779392,
+     "n_pos": 82,
+     "pos_in_top50": 36,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "driving after dark",
+     "AP_rerank": 0.9531869041596202,
+     "AP_siglip2": 0.9551035727467044,
+     "n_pos": 493,
+     "pos_in_top50": 48,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "a night-time street scene",
+     "AP_rerank": 0.9707588529886592,
+     "AP_siglip2": 0.9707588529886592,
+     "n_pos": 493,
+     "pos_in_top50": 50,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "a low contrast scene where vehicles are barely distinguishable from the background",
+     "AP_rerank": 0.5746363408160248,
+     "AP_siglip2": 0.5499237752906512,
+     "n_pos": 493,
+     "pos_in_top50": 24,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "blinding headlight bloom from oncoming traffic",
+     "AP_rerank": 0.8639800815632066,
+     "AP_siglip2": 0.871105994537172,
+     "n_pos": 493,
+     "pos_in_top50": 47,
+     "P@5_rerank": 0.8
+    },
+    {
+     "id": "bright daytime driving",
+     "AP_rerank": 0.5240306928343101,
+     "AP_siglip2": 0.4950404959952983,
+     "n_pos": 431,
+     "pos_in_top50": 31,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "overcast grey sky",
+     "AP_rerank": 0.28121738121589007,
+     "AP_siglip2": 0.26993905590664136,
+     "n_pos": 123,
+     "pos_in_top50": 20,
+     "P@5_rerank": 0.4
+    },
+    {
+     "id": "adverse weather on the road",
+     "AP_rerank": 0.5674200327516292,
+     "AP_siglip2": 0.5471327543659465,
+     "n_pos": 176,
+     "pos_in_top50": 40,
+     "P@5_rerank": 1.0
+    }
+   ],
+   "sceneminer_mAP": 0.6142387677009594,
+   "sceneminer_minus_rerank": {
+    "delta": -0.025949249072068095,
+    "perm_p": 0.5968403159684031,
+    "n": 12
+   }
+  },
+  "s5_corpus_atomic": {
+   "n_queries": 20,
+   "mAP_rerank": 0.3551878659725247,
+   "mAP_siglip2": 0.33697972637204693,
+   "recall_of_positives_in_top50": 0.32596153846153847,
+   "per_query": [
+    {
+     "id": "pedestrians walking near the roadway",
+     "AP_rerank": 0.5060111632022912,
+     "AP_siglip2": 0.4640904478544717,
+     "n_pos": 77,
+     "pos_in_top50": 23,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "a person crossing the street in front of the car",
+     "AP_rerank": 0.40068532093979137,
+     "AP_siglip2": 0.39305838392538817,
+     "n_pos": 77,
+     "pos_in_top50": 20,
+     "P@5_rerank": 0.6
+    },
+    {
+     "id": "people on foot close to the vehicle",
+     "AP_rerank": 0.45025155969169794,
+     "AP_siglip2": 0.4267585006381329,
+     "n_pos": 77,
+     "pos_in_top50": 21,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "pedestrians at a crosswalk ahead",
+     "AP_rerank": 0.43457505776075717,
+     "AP_siglip2": 0.4061176782343709,
+     "n_pos": 77,
+     "pos_in_top50": 22,
+     "P@5_rerank": 0.8
+    },
+    {
+     "id": "bicyclist or motorcyclist in traffic",
+     "AP_rerank": 0.2430846966215404,
+     "AP_siglip2": 0.29091630467616575,
+     "n_pos": 42,
+     "pos_in_top50": 13,
+     "P@5_rerank": 0.2
+    },
+    {
+     "id": "a cyclist riding on the road ahead",
+     "AP_rerank": 0.22768860021071652,
+     "AP_siglip2": 0.2387873213748984,
+     "n_pos": 42,
+     "pos_in_top50": 10,
+     "P@5_rerank": 0.2
+    },
+    {
+     "id": "a motorcycle rider sharing the lane",
+     "AP_rerank": 0.26579434363502197,
+     "AP_siglip2": 0.2312040034906122,
+     "n_pos": 42,
+     "pos_in_top50": 13,
+     "P@5_rerank": 0.2
+    },
+    {
+     "id": "vulnerable road users close to the car",
+     "AP_rerank": 0.288258881176362,
+     "AP_siglip2": 0.20009788537820267,
+     "n_pos": 42,
+     "pos_in_top50": 9,
+     "P@5_rerank": 0.8
+    },
+    {
+     "id": "road construction zone with traffic cones and barriers",
+     "AP_rerank": 0.5745234464835524,
+     "AP_siglip2": 0.5716809687951228,
+     "n_pos": 53,
+     "pos_in_top50": 29,
+     "P@5_rerank": 0.8
+    },
+    {
+     "id": "traffic cones blocking part of the lane",
+     "AP_rerank": 0.4258810641673989,
+     "AP_siglip2": 0.41854751599436135,
+     "n_pos": 53,
+     "pos_in_top50": 22,
+     "P@5_rerank": 0.8
+    },
+    {
+     "id": "construction workers and equipment on the road",
+     "AP_rerank": 0.585025285917325,
+     "AP_siglip2": 0.6071217565413487,
+     "n_pos": 53,
+     "pos_in_top50": 29,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "a work zone with orange cones",
+     "AP_rerank": 0.5805282963233381,
+     "AP_siglip2": 0.5694398002586957,
+     "n_pos": 53,
+     "pos_in_top50": 28,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "large truck or bus ahead",
+     "AP_rerank": 0.3953537093093208,
+     "AP_siglip2": 0.4052119730349019,
+     "n_pos": 58,
+     "pos_in_top50": 19,
+     "P@5_rerank": 0.8
+    },
+    {
+     "id": "a city bus right in front of the car",
+     "AP_rerank": 0.3272599066327631,
+     "AP_siglip2": 0.2997837895436918,
+     "n_pos": 58,
+     "pos_in_top50": 16,
+     "P@5_rerank": 0.6
+    },
+    {
+     "id": "a heavy truck driving close by",
+     "AP_rerank": 0.3815164482863303,
+     "AP_siglip2": 0.33894596702997576,
+     "n_pos": 58,
+     "pos_in_top50": 18,
+     "P@5_rerank": 0.6
+    },
+    {
+     "id": "a trailer or construction vehicle nearby",
+     "AP_rerank": 0.4282862250866888,
+     "AP_siglip2": 0.34829573238489747,
+     "n_pos": 58,
+     "pos_in_top50": 19,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "a child, stroller or wheelchair user near the road",
+     "AP_rerank": 0.1680089052767353,
+     "AP_siglip2": 0.14438865116294622,
+     "n_pos": 30,
+     "pos_in_top50": 8,
+     "P@5_rerank": 0.2
+    },
+    {
+     "id": "rare or unusual road users near the vehicle",
+     "AP_rerank": 0.11206137362661202,
+     "AP_siglip2": 0.1208502946816621,
+     "n_pos": 30,
+     "pos_in_top50": 6,
+     "P@5_rerank": 0.0
+    },
+    {
+     "id": "a police officer, emergency vehicle or debris on the street",
+     "AP_rerank": 0.14843788652320608,
+     "AP_siglip2": 0.11736584751398546,
+     "n_pos": 30,
+     "pos_in_top50": 5,
+     "P@5_rerank": 0.4
+    },
+    {
+     "id": "unexpected objects or vulnerable people near the lane",
+     "AP_rerank": 0.16052514857904468,
+     "AP_siglip2": 0.1469317049271071,
+     "n_pos": 30,
+     "pos_in_top50": 9,
+     "P@5_rerank": 0.2
+    }
+   ],
+   "sceneminer_mAP": 0.3302389889683567,
+   "sceneminer_minus_rerank": {
+    "delta": -0.024948877004167983,
+    "perm_p": 0.000999900009999,
+    "n": 20
+   }
+  },
+  "s5_val150_atomic": {
+   "n_queries": 20,
+   "mAP_rerank": 0.40652709344043564,
+   "mAP_siglip2": 0.38239120353773365,
+   "recall_of_positives_in_top50": 0.5086206896551724,
+   "per_query": [
+    {
+     "id": "pedestrians walking near the roadway",
+     "AP_rerank": 0.5068769040033488,
+     "AP_siglip2": 0.3682447066756815,
+     "n_pos": 35,
+     "pos_in_top50": 15,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "a person crossing the street in front of the car",
+     "AP_rerank": 0.4420978180633009,
+     "AP_siglip2": 0.3799365730252454,
+     "n_pos": 35,
+     "pos_in_top50": 18,
+     "P@5_rerank": 0.6
+    },
+    {
+     "id": "people on foot close to the vehicle",
+     "AP_rerank": 0.42844926440456843,
+     "AP_siglip2": 0.35886233097008485,
+     "n_pos": 35,
+     "pos_in_top50": 13,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "pedestrians at a crosswalk ahead",
+     "AP_rerank": 0.3562961543623883,
+     "AP_siglip2": 0.34166264995136186,
+     "n_pos": 35,
+     "pos_in_top50": 15,
+     "P@5_rerank": 0.6
+    },
+    {
+     "id": "bicyclist or motorcyclist in traffic",
+     "AP_rerank": 0.19138381079587943,
+     "AP_siglip2": 0.16926584745688736,
+     "n_pos": 26,
+     "pos_in_top50": 8,
+     "P@5_rerank": 0.2
+    },
+    {
+     "id": "a cyclist riding on the road ahead",
+     "AP_rerank": 0.356060686043194,
+     "AP_siglip2": 0.30260259715844146,
+     "n_pos": 26,
+     "pos_in_top50": 16,
+     "P@5_rerank": 0.6
+    },
+    {
+     "id": "a motorcycle rider sharing the lane",
+     "AP_rerank": 0.3352985314973003,
+     "AP_siglip2": 0.26042213115885376,
+     "n_pos": 26,
+     "pos_in_top50": 15,
+     "P@5_rerank": 0.4
+    },
+    {
+     "id": "vulnerable road users close to the car",
+     "AP_rerank": 0.3175337098722965,
+     "AP_siglip2": 0.2748250214894847,
+     "n_pos": 26,
+     "pos_in_top50": 13,
+     "P@5_rerank": 0.4
+    },
+    {
+     "id": "road construction zone with traffic cones and barriers",
+     "AP_rerank": 0.6732761614070678,
+     "AP_siglip2": 0.7287529880743693,
+     "n_pos": 26,
+     "pos_in_top50": 19,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "traffic cones blocking part of the lane",
+     "AP_rerank": 0.5601271504894517,
+     "AP_siglip2": 0.5200112294062352,
+     "n_pos": 26,
+     "pos_in_top50": 17,
+     "P@5_rerank": 0.8
+    },
+    {
+     "id": "construction workers and equipment on the road",
+     "AP_rerank": 0.6243165575300593,
+     "AP_siglip2": 0.6194770990684285,
+     "n_pos": 26,
+     "pos_in_top50": 20,
+     "P@5_rerank": 0.8
+    },
+    {
+     "id": "a work zone with orange cones",
+     "AP_rerank": 0.6079910716132599,
+     "AP_siglip2": 0.7529497903869944,
+     "n_pos": 26,
+     "pos_in_top50": 20,
+     "P@5_rerank": 0.8
+    },
+    {
+     "id": "large truck or bus ahead",
+     "AP_rerank": 0.5752440079649976,
+     "AP_siglip2": 0.467408937295989,
+     "n_pos": 36,
+     "pos_in_top50": 22,
+     "P@5_rerank": 0.8
+    },
+    {
+     "id": "a city bus right in front of the car",
+     "AP_rerank": 0.355141411542632,
+     "AP_siglip2": 0.32792942796912317,
+     "n_pos": 36,
+     "pos_in_top50": 18,
+     "P@5_rerank": 0.6
+    },
+    {
+     "id": "a heavy truck driving close by",
+     "AP_rerank": 0.5975075916362026,
+     "AP_siglip2": 0.5241854590484396,
+     "n_pos": 36,
+     "pos_in_top50": 20,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "a trailer or construction vehicle nearby",
+     "AP_rerank": 0.48080419876865016,
+     "AP_siglip2": 0.5585538519254822,
+     "n_pos": 36,
+     "pos_in_top50": 21,
+     "P@5_rerank": 0.6
+    },
+    {
+     "id": "a child, stroller or wheelchair user near the road",
+     "AP_rerank": 0.16587599887732177,
+     "AP_siglip2": 0.13377590247810145,
+     "n_pos": 22,
+     "pos_in_top50": 3,
+     "P@5_rerank": 0.2
+    },
+    {
+     "id": "rare or unusual road users near the vehicle",
+     "AP_rerank": 0.20590543106605977,
+     "AP_siglip2": 0.18961073677200313,
+     "n_pos": 22,
+     "pos_in_top50": 8,
+     "P@5_rerank": 0.2
+    },
+    {
+     "id": "a police officer, emergency vehicle or debris on the street",
+     "AP_rerank": 0.1358625969286037,
+     "AP_siglip2": 0.12577447320411636,
+     "n_pos": 22,
+     "pos_in_top50": 4,
+     "P@5_rerank": 0.0
+    },
+    {
+     "id": "unexpected objects or vulnerable people near the lane",
+     "AP_rerank": 0.21449281194212996,
+     "AP_siglip2": 0.2435723172393507,
+     "n_pos": 22,
+     "pos_in_top50": 10,
+     "P@5_rerank": 0.2
+    }
+   ],
+   "sceneminer_mAP": 0.389809749638487,
+   "sceneminer_minus_rerank": {
+    "delta": -0.016717343801948614,
+    "perm_p": 0.33056694330566944,
+    "n": 20
+   }
+  },
+  "s5_corpus_compositional": {
+   "n_queries": 20,
+   "mAP_rerank": 0.33607499951563047,
+   "mAP_siglip2": 0.2864614380920319,
+   "recall_of_positives_in_top50": 0.7679558011049724,
+   "per_query": [
+    {
+     "id": "pedestrians walking near the road at night",
+     "AP_rerank": 0.5558862433862434,
+     "AP_siglip2": 0.4319255907491201,
+     "n_pos": 6,
+     "pos_in_top50": 6,
+     "P@5_rerank": 0.6
+    },
+    {
+     "id": "people crossing the street after dark",
+     "AP_rerank": 0.844017094017094,
+     "AP_siglip2": 0.5077972709551656,
+     "n_pos": 6,
+     "pos_in_top50": 6,
+     "P@5_rerank": 0.8
+    },
+    {
+     "id": "pedestrians walking in the rain",
+     "AP_rerank": 0.3266118311731472,
+     "AP_siglip2": 0.494364727786338,
+     "n_pos": 8,
+     "pos_in_top50": 7,
+     "P@5_rerank": 0.2
+    },
+    {
+     "id": "people on foot near the road on a rainy day",
+     "AP_rerank": 0.33882990900943033,
+     "AP_siglip2": 0.35998816158406904,
+     "n_pos": 8,
+     "pos_in_top50": 7,
+     "P@5_rerank": 0.2
+    },
+    {
+     "id": "pedestrians near a wet reflective road",
+     "AP_rerank": 0.3788545721318831,
+     "AP_siglip2": 0.4224206349206349,
+     "n_pos": 7,
+     "pos_in_top50": 7,
+     "P@5_rerank": 0.2
+    },
+    {
+     "id": "pedestrians visible through raindrops on the camera lens",
+     "AP_rerank": 0.3531928228973664,
+     "AP_siglip2": 0.4858913861936527,
+     "n_pos": 8,
+     "pos_in_top50": 7,
+     "P@5_rerank": 0.6
+    },
+    {
+     "id": "a person on the street seen through a wet, spotted lens",
+     "AP_rerank": 0.24521464646464647,
+     "AP_siglip2": 0.4682519757374408,
+     "n_pos": 8,
+     "pos_in_top50": 7,
+     "P@5_rerank": 0.2
+    },
+    {
+     "id": "pedestrians barely visible in a low contrast dark scene",
+     "AP_rerank": 0.23823187838455012,
+     "AP_siglip2": 0.23733055748322923,
+     "n_pos": 5,
+     "pos_in_top50": 4,
+     "P@5_rerank": 0.2
+    },
+    {
+     "id": "construction zone with cones on a rainy day",
+     "AP_rerank": 0.408159325017177,
+     "AP_siglip2": 0.19165999855224516,
+     "n_pos": 10,
+     "pos_in_top50": 7,
+     "P@5_rerank": 0.6
+    },
+    {
+     "id": "road works with traffic cones in the rain",
+     "AP_rerank": 0.410460534898891,
+     "AP_siglip2": 0.18461873292214742,
+     "n_pos": 10,
+     "pos_in_top50": 8,
+     "P@5_rerank": 0.6
+    },
+    {
+     "id": "construction barriers and cones on a wet reflective road",
+     "AP_rerank": 0.2907926193814367,
+     "AP_siglip2": 0.08380629269998806,
+     "n_pos": 10,
+     "pos_in_top50": 4,
+     "P@5_rerank": 0.6
+    },
+    {
+     "id": "traffic cones on wet glistening pavement",
+     "AP_rerank": 0.2614377653074694,
+     "AP_siglip2": 0.10981591656797363,
+     "n_pos": 10,
+     "pos_in_top50": 4,
+     "P@5_rerank": 0.4
+    },
+    {
+     "id": "traffic cones seen through water droplets on the lens",
+     "AP_rerank": 0.3927410920159399,
+     "AP_siglip2": 0.19053850054610705,
+     "n_pos": 10,
+     "pos_in_top50": 7,
+     "P@5_rerank": 0.4
+    },
+    {
+     "id": "a bus or truck ahead in the rain",
+     "AP_rerank": 0.33920909434050867,
+     "AP_siglip2": 0.3049351800681588,
+     "n_pos": 11,
+     "pos_in_top50": 10,
+     "P@5_rerank": 0.4
+    },
+    {
+     "id": "heavy truck driving in rainy weather",
+     "AP_rerank": 0.2179874766473513,
+     "AP_siglip2": 0.20878762994750455,
+     "n_pos": 11,
+     "pos_in_top50": 9,
+     "P@5_rerank": 0.2
+    },
+    {
+     "id": "a large truck on a wet reflective road",
+     "AP_rerank": 0.22688438432169225,
+     "AP_siglip2": 0.18838090429878576,
+     "n_pos": 12,
+     "pos_in_top50": 7,
+     "P@5_rerank": 0.4
+    },
+    {
+     "id": "a bus driving on wet pavement",
+     "AP_rerank": 0.26250171979767967,
+     "AP_siglip2": 0.2555850444772587,
+     "n_pos": 12,
+     "pos_in_top50": 9,
+     "P@5_rerank": 0.4
+    },
+    {
+     "id": "a bus or truck seen through rain droplets on the lens",
+     "AP_rerank": 0.33922293267603143,
+     "AP_siglip2": 0.28083293665349046,
+     "n_pos": 12,
+     "pos_in_top50": 10,
+     "P@5_rerank": 0.4
+    },
+    {
+     "id": "a large vehicle ahead behind a rain-spattered lens",
+     "AP_rerank": 0.23109188344431997,
+     "AP_siglip2": 0.23862987602988503,
+     "n_pos": 12,
+     "pos_in_top50": 10,
+     "P@5_rerank": 0.2
+    },
+    {
+     "id": "unusual road users near a wet road",
+     "AP_rerank": 0.06017216499975121,
+     "AP_siglip2": 0.08366744366744368,
+     "n_pos": 5,
+     "pos_in_top50": 3,
+     "P@5_rerank": 0.0
+    }
+   ],
+   "sceneminer_mAP": 0.28606408280085394,
+   "sceneminer_minus_rerank": {
+    "delta": -0.0500109167147765,
+    "perm_p": 0.15178482151784822,
+    "n": 20
+   }
+  },
+  "s5_val150_compositional": {
+   "n_queries": 4,
+   "mAP_rerank": 0.4361185762378166,
+   "mAP_siglip2": 0.39594664594664597,
+   "recall_of_positives_in_top50": 1.0,
+   "per_query": [
+    {
+     "id": "construction zone with cones on a rainy day",
+     "AP_rerank": 0.18225806451612903,
+     "AP_siglip2": 0.24230769230769234,
+     "n_pos": 3,
+     "pos_in_top50": 3,
+     "P@5_rerank": 0.2
+    },
+    {
+     "id": "road works with traffic cones in the rain",
+     "AP_rerank": 0.25448028673835127,
+     "AP_siglip2": 0.28030303030303033,
+     "n_pos": 3,
+     "pos_in_top50": 3,
+     "P@5_rerank": 0.2
+    },
+    {
+     "id": "a bus or truck ahead in the rain",
+     "AP_rerank": 0.4440995900604223,
+     "AP_siglip2": 0.36980056980056975,
+     "n_pos": 6,
+     "pos_in_top50": 6,
+     "P@5_rerank": 0.2
+    },
+    {
+     "id": "heavy truck driving in rainy weather",
+     "AP_rerank": 0.8636363636363636,
+     "AP_siglip2": 0.6913752913752914,
+     "n_pos": 6,
+     "pos_in_top50": 6,
+     "P@5_rerank": 1.0
+    }
+   ],
+   "sceneminer_mAP": 0.41644750273233244,
+   "sceneminer_minus_rerank": {
+    "delta": -0.01967107350548413,
+    "perm_p": 0.8836116388361164,
+    "n": 4
+   }
+  },
+  "holdout": {
+   "n_queries": 35,
+   "mAP_rerank": 0.4420697235166508,
+   "mAP_siglip2": 0.4082307167893017,
+   "recall_of_positives_in_top50": 0.1110316893018823,
+   "per_query": [
+    {
+     "id": "a1",
+     "AP_rerank": 0.6696730886555246,
+     "AP_siglip2": 0.6596896225972081,
+     "n_pos": 192,
+     "pos_in_top50": 45,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "a2",
+     "AP_rerank": 0.5899380914022225,
+     "AP_siglip2": 0.5769702729482092,
+     "n_pos": 183,
+     "pos_in_top50": 43,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "a4",
+     "AP_rerank": 0.9719575326347003,
+     "AP_siglip2": 0.9696949650576528,
+     "n_pos": 962,
+     "pos_in_top50": 48,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "a5",
+     "AP_rerank": 0.16781975002333413,
+     "AP_siglip2": 0.13895767334499237,
+     "n_pos": 166,
+     "pos_in_top50": 11,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "a6",
+     "AP_rerank": 0.2898628909165894,
+     "AP_siglip2": 0.26916853862978735,
+     "n_pos": 147,
+     "pos_in_top50": 18,
+     "P@5_rerank": 0.6
+    },
+    {
+     "id": "a7",
+     "AP_rerank": 0.31886436356900744,
+     "AP_siglip2": 0.30967473584626276,
+     "n_pos": 257,
+     "pos_in_top50": 20,
+     "P@5_rerank": 0.8
+    },
+    {
+     "id": "a8",
+     "AP_rerank": 0.5371193164413444,
+     "AP_siglip2": 0.5203550049915252,
+     "n_pos": 192,
+     "pos_in_top50": 42,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "a9",
+     "AP_rerank": 0.6300278594786985,
+     "AP_siglip2": 0.6265363888668875,
+     "n_pos": 192,
+     "pos_in_top50": 45,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "a10",
+     "AP_rerank": 0.9599427608766965,
+     "AP_siglip2": 0.9611446519258727,
+     "n_pos": 962,
+     "pos_in_top50": 49,
+     "P@5_rerank": 0.8
+    },
+    {
+     "id": "a11",
+     "AP_rerank": 0.9653320834455187,
+     "AP_siglip2": 0.9653320834455187,
+     "n_pos": 963,
+     "pos_in_top50": 50,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "a12",
+     "AP_rerank": 0.620341139281068,
+     "AP_siglip2": 0.6153685359430745,
+     "n_pos": 378,
+     "pos_in_top50": 47,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "b1",
+     "AP_rerank": 0.4916169578675934,
+     "AP_siglip2": 0.4812033387499865,
+     "n_pos": 333,
+     "pos_in_top50": 43,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "b2",
+     "AP_rerank": 0.37607310464631544,
+     "AP_siglip2": 0.32859954918470025,
+     "n_pos": 104,
+     "pos_in_top50": 24,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "b3",
+     "AP_rerank": 0.44068316629098897,
+     "AP_siglip2": 0.3631287010606577,
+     "n_pos": 82,
+     "pos_in_top50": 27,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "b4",
+     "AP_rerank": 0.31544210024249936,
+     "AP_siglip2": 0.1888941186675615,
+     "n_pos": 34,
+     "pos_in_top50": 11,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "b5",
+     "AP_rerank": 0.1162066556330942,
+     "AP_siglip2": 0.0971187435451821,
+     "n_pos": 50,
+     "pos_in_top50": 6,
+     "P@5_rerank": 0.6
+    },
+    {
+     "id": "b6",
+     "AP_rerank": 0.44744907308082776,
+     "AP_siglip2": 0.3756497348317564,
+     "n_pos": 130,
+     "pos_in_top50": 34,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "b7",
+     "AP_rerank": 0.43567505576658677,
+     "AP_siglip2": 0.43152519237456977,
+     "n_pos": 327,
+     "pos_in_top50": 40,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "b8",
+     "AP_rerank": 0.3313782274931079,
+     "AP_siglip2": 0.3479429439174837,
+     "n_pos": 88,
+     "pos_in_top50": 27,
+     "P@5_rerank": 0.6
+    },
+    {
+     "id": "b9",
+     "AP_rerank": 0.6895828722224941,
+     "AP_siglip2": 0.6895828722224941,
+     "n_pos": 542,
+     "pos_in_top50": 50,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "b10",
+     "AP_rerank": 0.6966001350882657,
+     "AP_siglip2": 0.6970957338967524,
+     "n_pos": 974,
+     "pos_in_top50": 47,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "b11",
+     "AP_rerank": 0.07760097104925119,
+     "AP_siglip2": 0.09045875495966667,
+     "n_pos": 37,
+     "pos_in_top50": 5,
+     "P@5_rerank": 0.2
+    },
+    {
+     "id": "b12",
+     "AP_rerank": 0.07160815935701971,
+     "AP_siglip2": 0.03827482602368638,
+     "n_pos": 5,
+     "pos_in_top50": 1,
+     "P@5_rerank": 0.2
+    },
+    {
+     "id": "c1",
+     "AP_rerank": 0.27792277262628745,
+     "AP_siglip2": 0.25259075076639464,
+     "n_pos": 101,
+     "pos_in_top50": 15,
+     "P@5_rerank": 0.8
+    },
+    {
+     "id": "c2",
+     "AP_rerank": 0.3749710159763954,
+     "AP_siglip2": 0.24751611537356627,
+     "n_pos": 36,
+     "pos_in_top50": 13,
+     "P@5_rerank": 0.8
+    },
+    {
+     "id": "c3",
+     "AP_rerank": 0.07302191329652552,
+     "AP_siglip2": 0.057461207265042,
+     "n_pos": 22,
+     "pos_in_top50": 5,
+     "P@5_rerank": 0.2
+    },
+    {
+     "id": "c4",
+     "AP_rerank": 0.39615070008895187,
+     "AP_siglip2": 0.24015065643242686,
+     "n_pos": 17,
+     "pos_in_top50": 8,
+     "P@5_rerank": 0.8
+    },
+    {
+     "id": "c5",
+     "AP_rerank": 0.23801729175652214,
+     "AP_siglip2": 0.227939897248826,
+     "n_pos": 35,
+     "pos_in_top50": 10,
+     "P@5_rerank": 0.6
+    },
+    {
+     "id": "c6",
+     "AP_rerank": 0.6076013994132197,
+     "AP_siglip2": 0.5985939861493199,
+     "n_pos": 423,
+     "pos_in_top50": 37,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "c7",
+     "AP_rerank": 0.16252607631654073,
+     "AP_siglip2": 0.22124323457958442,
+     "n_pos": 28,
+     "pos_in_top50": 8,
+     "P@5_rerank": 0.0
+    },
+    {
+     "id": "c8",
+     "AP_rerank": 0.1915014977580927,
+     "AP_siglip2": 0.1281765186436399,
+     "n_pos": 33,
+     "pos_in_top50": 6,
+     "P@5_rerank": 0.8
+    },
+    {
+     "id": "c9",
+     "AP_rerank": 0.6339167628714033,
+     "AP_siglip2": 0.6331675966690263,
+     "n_pos": 274,
+     "pos_in_top50": 45,
+     "P@5_rerank": 1.0
+    },
+    {
+     "id": "c10",
+     "AP_rerank": 0.5283138387916226,
+     "AP_siglip2": 0.5661210386021706,
+     "n_pos": 87,
+     "pos_in_top50": 36,
+     "P@5_rerank": 0.6
+    },
+    {
+     "id": "c11",
+     "AP_rerank": 0.30052089095643386,
+     "AP_siglip2": 0.060361050796593735,
+     "n_pos": 11,
+     "pos_in_top50": 3,
+     "P@5_rerank": 0.6
+    },
+    {
+     "id": "c12",
+     "AP_rerank": 0.4771808077680318,
+     "AP_siglip2": 0.31238605206747894,
+     "n_pos": 27,
+     "pos_in_top50": 13,
+     "P@5_rerank": 1.0
+    }
+   ],
+   "P@5_rerank": 0.8000000000000002,
+   "sceneminer_mAP": 0.40008544064523066,
+   "sceneminer_minus_rerank": {
+    "delta": -0.04198428287142013,
+    "perm_p": 0.004299570042995701,
+    "n": 35
+   }
+  },
+  "suite": {
+   "n_queries": 150,
+   "mAP_rerank": 0.5009525879573906,
+   "mAP_siglip2": 0.4445509259879134,
+   "recall_of_positives_in_top50": 0.24007730043109857,
+   "per_query": [
+    {
+     "id": 0,
+     "AP_rerank": 0.8014088082914173,
+     "AP_siglip2": 0.7877939690548749,
+     "n_pos": 119,
+     "pos_in_top50": 47,
+     "P@5_rerank": 1.0,
+     "skew": 0.1865546218487395
+    },
+    {
+     "id": 1,
+     "AP_rerank": 0.815291854146766,
+     "AP_siglip2": 0.7947407214663337,
+     "n_pos": 119,
+     "pos_in_top50": 41,
+     "P@5_rerank": 1.0,
+     "skew": -0.41344537815126053
+    },
+    {
+     "id": 2,
+     "AP_rerank": 0.8880120756366253,
+     "AP_siglip2": 0.8880120756366253,
+     "n_pos": 119,
+     "pos_in_top50": 50,
+     "P@5_rerank": 1.0,
+     "skew": 0.1865546218487395
+    },
+    {
+     "id": 3,
+     "AP_rerank": 0.8856581740094043,
+     "AP_siglip2": 0.8856581740094043,
+     "n_pos": 119,
+     "pos_in_top50": 50,
+     "P@5_rerank": 1.0,
+     "skew": 0.1865546218487395
+    },
+    {
+     "id": 4,
+     "AP_rerank": 0.24826823032187958,
+     "AP_siglip2": 0.2155278528488238,
+     "n_pos": 40,
+     "pos_in_top50": 9,
+     "P@5_rerank": 0.6,
+     "skew": 0.375
+    },
+    {
+     "id": 5,
+     "AP_rerank": 0.5454107602193823,
+     "AP_siglip2": 0.4802603066015078,
+     "n_pos": 40,
+     "pos_in_top50": 21,
+     "P@5_rerank": 1.0,
+     "skew": -0.225
+    },
+    {
+     "id": 6,
+     "AP_rerank": 0.48716497775278056,
+     "AP_siglip2": 0.38144758599074474,
+     "n_pos": 40,
+     "pos_in_top50": 16,
+     "P@5_rerank": 1.0,
+     "skew": -0.024999999999999994
+    },
+    {
+     "id": 7,
+     "AP_rerank": 0.5782499137498955,
+     "AP_siglip2": 0.5274511718651563,
+     "n_pos": 40,
+     "pos_in_top50": 20,
+     "P@5_rerank": 1.0,
+     "skew": 0.17500000000000002
+    },
+    {
+     "id": 8,
+     "AP_rerank": 0.6275906385900221,
+     "AP_siglip2": 0.5602193651896887,
+     "n_pos": 124,
+     "pos_in_top50": 34,
+     "P@5_rerank": 1.0,
+     "skew": 0.05161290322580647
+    },
+    {
+     "id": 9,
+     "AP_rerank": 0.6762645080160952,
+     "AP_siglip2": 0.6153952451864093,
+     "n_pos": 124,
+     "pos_in_top50": 38,
+     "P@5_rerank": 1.0,
+     "skew": 0.25161290322580654
+    },
+    {
+     "id": 10,
+     "AP_rerank": 0.8134652245491256,
+     "AP_siglip2": 0.8099534847915641,
+     "n_pos": 124,
+     "pos_in_top50": 45,
+     "P@5_rerank": 1.0,
+     "skew": 0.4516129032258065
+    },
+    {
+     "id": 11,
+     "AP_rerank": 0.7603752477390668,
+     "AP_siglip2": 0.7473130093504193,
+     "n_pos": 124,
+     "pos_in_top50": 45,
+     "P@5_rerank": 1.0,
+     "skew": 0.05161290322580647
+    },
+    {
+     "id": 12,
+     "AP_rerank": 0.3373876298260844,
+     "AP_siglip2": 0.3880990424650139,
+     "n_pos": 103,
+     "pos_in_top50": 25,
+     "P@5_rerank": 0.2,
+     "skew": -0.24660194174757283
+    },
+    {
+     "id": 13,
+     "AP_rerank": 0.18906747696518492,
+     "AP_siglip2": 0.15991510364254533,
+     "n_pos": 103,
+     "pos_in_top50": 4,
+     "P@5_rerank": 0.6,
+     "skew": 0.15339805825242714
+    },
+    {
+     "id": 14,
+     "AP_rerank": 0.3991798189994906,
+     "AP_siglip2": 0.37222496469944144,
+     "n_pos": 103,
+     "pos_in_top50": 23,
+     "P@5_rerank": 1.0,
+     "skew": -0.24660194174757283
+    },
+    {
+     "id": 15,
+     "AP_rerank": 0.44475087050281026,
+     "AP_siglip2": 0.39862429822330686,
+     "n_pos": 103,
+     "pos_in_top50": 27,
+     "P@5_rerank": 1.0,
+     "skew": -0.24660194174757283
+    },
+    {
+     "id": 16,
+     "AP_rerank": 0.7546650328166392,
+     "AP_siglip2": 0.6551487401895316,
+     "n_pos": 31,
+     "pos_in_top50": 22,
+     "P@5_rerank": 1.0,
+     "skew": -0.05161290322580642
+    },
+    {
+     "id": 17,
+     "AP_rerank": 0.7004801530928793,
+     "AP_siglip2": 0.6529022036032013,
+     "n_pos": 78,
+     "pos_in_top50": 38,
+     "P@5_rerank": 1.0,
+     "skew": 0.04358974358974366
+    },
+    {
+     "id": 18,
+     "AP_rerank": 0.6235040825793086,
+     "AP_siglip2": 0.663769458573462,
+     "n_pos": 55,
+     "pos_in_top50": 33,
+     "P@5_rerank": 0.6,
+     "skew": -0.1272727272727272
+    },
+    {
+     "id": 19,
+     "AP_rerank": 0.5392651072432639,
+     "AP_siglip2": 0.5109092396281524,
+     "n_pos": 82,
+     "pos_in_top50": 30,
+     "P@5_rerank": 0.6,
+     "skew": -0.05853658536585371
+    },
+    {
+     "id": 20,
+     "AP_rerank": 0.08710286493024949,
+     "AP_siglip2": 0.05890872573611029,
+     "n_pos": 10,
+     "pos_in_top50": 3,
+     "P@5_rerank": 0.0,
+     "skew": 0.20000000000000007
+    },
+    {
+     "id": 21,
+     "AP_rerank": 0.8126067398357529,
+     "AP_siglip2": 0.7566979203363962,
+     "n_pos": 31,
+     "pos_in_top50": 27,
+     "P@5_rerank": 1.0,
+     "skew": 0.3483870967741936
+    },
+    {
+     "id": 22,
+     "AP_rerank": 0.6068944916034696,
+     "AP_siglip2": 0.45518473067619625,
+     "n_pos": 78,
+     "pos_in_top50": 27,
+     "P@5_rerank": 1.0,
+     "skew": -0.1564102564102564
+    },
+    {
+     "id": 23,
+     "AP_rerank": 0.5738108397790956,
+     "AP_siglip2": 0.5107400672571021,
+     "n_pos": 55,
+     "pos_in_top50": 28,
+     "P@5_rerank": 0.6,
+     "skew": -0.32727272727272727
+    },
+    {
+     "id": 24,
+     "AP_rerank": 0.4250553292356553,
+     "AP_siglip2": 0.41261816310648186,
+     "n_pos": 82,
+     "pos_in_top50": 25,
+     "P@5_rerank": 0.4,
+     "skew": -0.25853658536585367
+    },
+    {
+     "id": 25,
+     "AP_rerank": 0.24066252877460403,
+     "AP_siglip2": 0.17002437292746989,
+     "n_pos": 10,
+     "pos_in_top50": 6,
+     "P@5_rerank": 0.4,
+     "skew": 0.0
+    },
+    {
+     "id": 26,
+     "AP_rerank": 0.6832025664031857,
+     "AP_siglip2": 0.7244042070208397,
+     "n_pos": 31,
+     "pos_in_top50": 22,
+     "P@5_rerank": 0.8,
+     "skew": -0.25161290322580643
+    },
+    {
+     "id": 27,
+     "AP_rerank": 0.8291372052820375,
+     "AP_siglip2": 0.7879083920769087,
+     "n_pos": 78,
+     "pos_in_top50": 41,
+     "P@5_rerank": 1.0,
+     "skew": 0.04358974358974366
+    },
+    {
+     "id": 28,
+     "AP_rerank": 0.6865904054554304,
+     "AP_siglip2": 0.6866604184417048,
+     "n_pos": 55,
+     "pos_in_top50": 35,
+     "P@5_rerank": 0.6,
+     "skew": -0.1272727272727272
+    },
+    {
+     "id": 29,
+     "AP_rerank": 0.687532783260509,
+     "AP_siglip2": 0.6968239460677924,
+     "n_pos": 82,
+     "pos_in_top50": 38,
+     "P@5_rerank": 1.0,
+     "skew": -0.05853658536585371
+    },
+    {
+     "id": 30,
+     "AP_rerank": 0.06667343750650108,
+     "AP_siglip2": 0.05193659540123792,
+     "n_pos": 10,
+     "pos_in_top50": 1,
+     "P@5_rerank": 0.2,
+     "skew": 0.20000000000000007
+    },
+    {
+     "id": 31,
+     "AP_rerank": 0.3206682482327685,
+     "AP_siglip2": 0.1189214570122931,
+     "n_pos": 9,
+     "pos_in_top50": 4,
+     "P@5_rerank": 0.4,
+     "skew": 0.0444444444444444
+    },
+    {
+     "id": 32,
+     "AP_rerank": 0.24483175835168244,
+     "AP_siglip2": 0.2227546600828781,
+     "n_pos": 25,
+     "pos_in_top50": 12,
+     "P@5_rerank": 0.4,
+     "skew": -0.16
+    },
+    {
+     "id": 33,
+     "AP_rerank": 0.14245228099067136,
+     "AP_siglip2": 0.069580985619376,
+     "n_pos": 5,
+     "pos_in_top50": 3,
+     "P@5_rerank": 0.2,
+     "skew": -0.6000000000000001
+    },
+    {
+     "id": 34,
+     "AP_rerank": 0.11914375616466173,
+     "AP_siglip2": 0.11244411966407754,
+     "n_pos": 19,
+     "pos_in_top50": 7,
+     "P@5_rerank": 0.2,
+     "skew": -0.010526315789473661
+    },
+    {
+     "id": 35,
+     "AP_rerank": 0.3420901041478725,
+     "AP_siglip2": 0.20876869531354583,
+     "n_pos": 7,
+     "pos_in_top50": 5,
+     "P@5_rerank": 0.4,
+     "skew": 0.5142857142857143
+    },
+    {
+     "id": 36,
+     "AP_rerank": 0.5079977942594042,
+     "AP_siglip2": 0.12339978161261102,
+     "n_pos": 9,
+     "pos_in_top50": 5,
+     "P@5_rerank": 0.8,
+     "skew": 0.0444444444444444
+    },
+    {
+     "id": 37,
+     "AP_rerank": 0.7385670469763216,
+     "AP_siglip2": 0.6043841887793009,
+     "n_pos": 25,
+     "pos_in_top50": 19,
+     "P@5_rerank": 1.0,
+     "skew": -0.16
+    },
+    {
+     "id": 38,
+     "AP_rerank": 0.17055437986546745,
+     "AP_siglip2": 0.05355804286913046,
+     "n_pos": 5,
+     "pos_in_top50": 3,
+     "P@5_rerank": 0.2,
+     "skew": -0.4
+    },
+    {
+     "id": 39,
+     "AP_rerank": 0.41685896199440886,
+     "AP_siglip2": 0.23230919562816132,
+     "n_pos": 19,
+     "pos_in_top50": 10,
+     "P@5_rerank": 1.0,
+     "skew": -0.010526315789473661
+    },
+    {
+     "id": 40,
+     "AP_rerank": 0.26336837765409193,
+     "AP_siglip2": 0.3882487604292115,
+     "n_pos": 7,
+     "pos_in_top50": 5,
+     "P@5_rerank": 0.2,
+     "skew": -0.08571428571428569
+    },
+    {
+     "id": 41,
+     "AP_rerank": 0.6135228400012994,
+     "AP_siglip2": 0.15070032915247272,
+     "n_pos": 9,
+     "pos_in_top50": 6,
+     "P@5_rerank": 0.6,
+     "skew": 0.0444444444444444
+    },
+    {
+     "id": 42,
+     "AP_rerank": 0.5991621805019058,
+     "AP_siglip2": 0.45678524386007574,
+     "n_pos": 25,
+     "pos_in_top50": 15,
+     "P@5_rerank": 1.0,
+     "skew": -0.16
+    },
+    {
+     "id": 43,
+     "AP_rerank": 0.4227406025059984,
+     "AP_siglip2": 0.042383459648855544,
+     "n_pos": 5,
+     "pos_in_top50": 2,
+     "P@5_rerank": 0.4,
+     "skew": 0.19999999999999996
+    },
+    {
+     "id": 44,
+     "AP_rerank": 0.2054641668804171,
+     "AP_siglip2": 0.12390857893551029,
+     "n_pos": 19,
+     "pos_in_top50": 7,
+     "P@5_rerank": 0.4,
+     "skew": 0.18947368421052635
+    },
+    {
+     "id": 45,
+     "AP_rerank": 0.590619621342513,
+     "AP_siglip2": 0.4399874492817694,
+     "n_pos": 7,
+     "pos_in_top50": 6,
+     "P@5_rerank": 0.8,
+     "skew": 0.11428571428571432
+    },
+    {
+     "id": 46,
+     "AP_rerank": 0.8325481310456162,
+     "AP_siglip2": 0.47837751389890665,
+     "n_pos": 27,
+     "pos_in_top50": 22,
+     "P@5_rerank": 1.0,
+     "skew": 0.029629629629629672
+    },
+    {
+     "id": 47,
+     "AP_rerank": 0.34887161305872905,
+     "AP_siglip2": 0.31441361749823993,
+     "n_pos": 86,
+     "pos_in_top50": 22,
+     "P@5_rerank": 0.6,
+     "skew": -0.07441860465116279
+    },
+    {
+     "id": 48,
+     "AP_rerank": 0.7363489372515664,
+     "AP_siglip2": 0.6071389911603741,
+     "n_pos": 56,
+     "pos_in_top50": 32,
+     "P@5_rerank": 1.0,
+     "skew": 0.0714285714285714
+    },
+    {
+     "id": 49,
+     "AP_rerank": 0.46504536435783417,
+     "AP_siglip2": 0.4460212445734567,
+     "n_pos": 93,
+     "pos_in_top50": 29,
+     "P@5_rerank": 0.8,
+     "skew": -0.3591397849462365
+    },
+    {
+     "id": 50,
+     "AP_rerank": 0.028782256658730684,
+     "AP_siglip2": 0.02823759434936249,
+     "n_pos": 6,
+     "pos_in_top50": 1,
+     "P@5_rerank": 0.0,
+     "skew": 0.13333333333333341
+    },
+    {
+     "id": 51,
+     "AP_rerank": 0.8086402531850024,
+     "AP_siglip2": 0.472229914731281,
+     "n_pos": 27,
+     "pos_in_top50": 22,
+     "P@5_rerank": 1.0,
+     "skew": -0.17037037037037034
+    },
+    {
+     "id": 52,
+     "AP_rerank": 0.4764011634676923,
+     "AP_siglip2": 0.3834491537914534,
+     "n_pos": 86,
+     "pos_in_top50": 23,
+     "P@5_rerank": 1.0,
+     "skew": 0.12558139534883728
+    },
+    {
+     "id": 53,
+     "AP_rerank": 0.6278135638564436,
+     "AP_siglip2": 0.5243510022764417,
+     "n_pos": 56,
+     "pos_in_top50": 29,
+     "P@5_rerank": 1.0,
+     "skew": 0.0714285714285714
+    },
+    {
+     "id": 54,
+     "AP_rerank": 0.5636170013469114,
+     "AP_siglip2": 0.5939527761310027,
+     "n_pos": 93,
+     "pos_in_top50": 35,
+     "P@5_rerank": 0.4,
+     "skew": -0.3591397849462365
+    },
+    {
+     "id": 55,
+     "AP_rerank": 0.039184379381690386,
+     "AP_siglip2": 0.08938045781306293,
+     "n_pos": 6,
+     "pos_in_top50": 2,
+     "P@5_rerank": 0.0,
+     "skew": 0.13333333333333341
+    },
+    {
+     "id": 56,
+     "AP_rerank": 0.7049785417928414,
+     "AP_siglip2": 0.6220894987897893,
+     "n_pos": 27,
+     "pos_in_top50": 19,
+     "P@5_rerank": 1.0,
+     "skew": -0.17037037037037034
+    },
+    {
+     "id": 57,
+     "AP_rerank": 0.7172252394765293,
+     "AP_siglip2": 0.6559689457675715,
+     "n_pos": 86,
+     "pos_in_top50": 38,
+     "P@5_rerank": 1.0,
+     "skew": 0.32558139534883723
+    },
+    {
+     "id": 58,
+     "AP_rerank": 0.7273407992287286,
+     "AP_siglip2": 0.6226197850441638,
+     "n_pos": 56,
+     "pos_in_top50": 32,
+     "P@5_rerank": 1.0,
+     "skew": 0.0714285714285714
+    },
+    {
+     "id": 59,
+     "AP_rerank": 0.6805272958356237,
+     "AP_siglip2": 0.6792628979835592,
+     "n_pos": 93,
+     "pos_in_top50": 38,
+     "P@5_rerank": 1.0,
+     "skew": 0.24086021505376354
+    },
+    {
+     "id": 60,
+     "AP_rerank": 0.03953008348897189,
+     "AP_siglip2": 0.05526681589237096,
+     "n_pos": 6,
+     "pos_in_top50": 3,
+     "P@5_rerank": 0.0,
+     "skew": 0.13333333333333341
+    },
+    {
+     "id": 61,
+     "AP_rerank": 0.7348791428568012,
+     "AP_siglip2": 0.7988399887949068,
+     "n_pos": 48,
+     "pos_in_top50": 36,
+     "P@5_rerank": 0.6,
+     "skew": -0.07916666666666666
+    },
+    {
+     "id": 62,
+     "AP_rerank": 0.9468995739075571,
+     "AP_siglip2": 0.8685476843812526,
+     "n_pos": 62,
+     "pos_in_top50": 42,
+     "P@5_rerank": 1.0,
+     "skew": 0.18064516129032254
+    },
+    {
+     "id": 63,
+     "AP_rerank": 0.9477116596380951,
+     "AP_siglip2": 0.8696096752913611,
+     "n_pos": 62,
+     "pos_in_top50": 44,
+     "P@5_rerank": 1.0,
+     "skew": -0.019354838709677413
+    },
+    {
+     "id": 64,
+     "AP_rerank": 0.7823751925050625,
+     "AP_siglip2": 0.7443766577618115,
+     "n_pos": 62,
+     "pos_in_top50": 34,
+     "P@5_rerank": 1.0,
+     "skew": 0.18064516129032254
+    },
+    {
+     "id": 65,
+     "AP_rerank": 0.8726044633858712,
+     "AP_siglip2": 0.8712502872909845,
+     "n_pos": 508,
+     "pos_in_top50": 46,
+     "P@5_rerank": 1.0,
+     "skew": -0.49606299212598426
+    },
+    {
+     "id": 66,
+     "AP_rerank": 0.9163629892458378,
+     "AP_siglip2": 0.9145653228486593,
+     "n_pos": 508,
+     "pos_in_top50": 47,
+     "P@5_rerank": 1.0,
+     "skew": -0.49606299212598426
+    },
+    {
+     "id": 67,
+     "AP_rerank": 0.9404686567394674,
+     "AP_siglip2": 0.9393321038121047,
+     "n_pos": 508,
+     "pos_in_top50": 48,
+     "P@5_rerank": 1.0,
+     "skew": -0.49606299212598426
+    },
+    {
+     "id": 68,
+     "AP_rerank": 0.7954587885878289,
+     "AP_siglip2": 0.7116021113923033,
+     "n_pos": 57,
+     "pos_in_top50": 37,
+     "P@5_rerank": 1.0,
+     "skew": 0.07017543859649122
+    },
+    {
+     "id": 69,
+     "AP_rerank": 0.7897277766708182,
+     "AP_siglip2": 0.7124491062547967,
+     "n_pos": 57,
+     "pos_in_top50": 35,
+     "P@5_rerank": 1.0,
+     "skew": 0.07017543859649122
+    },
+    {
+     "id": 70,
+     "AP_rerank": 0.7760054897138954,
+     "AP_siglip2": 0.6768139242489898,
+     "n_pos": 57,
+     "pos_in_top50": 34,
+     "P@5_rerank": 1.0,
+     "skew": 0.07017543859649122
+    },
+    {
+     "id": 71,
+     "AP_rerank": 0.9261872112721539,
+     "AP_siglip2": 0.9261872112721539,
+     "n_pos": 545,
+     "pos_in_top50": 50,
+     "P@5_rerank": 1.0,
+     "skew": -0.41284403669724773
+    },
+    {
+     "id": 72,
+     "AP_rerank": 0.9004829265877048,
+     "AP_siglip2": 0.9004829265877048,
+     "n_pos": 545,
+     "pos_in_top50": 49,
+     "P@5_rerank": 1.0,
+     "skew": -0.41284403669724773
+    },
+    {
+     "id": 73,
+     "AP_rerank": 0.789312008739201,
+     "AP_siglip2": 0.774593290791101,
+     "n_pos": 545,
+     "pos_in_top50": 16,
+     "P@5_rerank": 1.0,
+     "skew": -0.012844036697247707
+    },
+    {
+     "id": 74,
+     "AP_rerank": 0.7466419261590919,
+     "AP_siglip2": 0.744773333311074,
+     "n_pos": 381,
+     "pos_in_top50": 43,
+     "P@5_rerank": 1.0,
+     "skew": -0.44881889763779526
+    },
+    {
+     "id": 75,
+     "AP_rerank": 0.7328885130711077,
+     "AP_siglip2": 0.7351958194786544,
+     "n_pos": 381,
+     "pos_in_top50": 43,
+     "P@5_rerank": 1.0,
+     "skew": -0.44881889763779526
+    },
+    {
+     "id": 76,
+     "AP_rerank": 0.6943878918263798,
+     "AP_siglip2": 0.6983454071750852,
+     "n_pos": 381,
+     "pos_in_top50": 41,
+     "P@5_rerank": 1.0,
+     "skew": -0.44881889763779526
+    },
+    {
+     "id": 77,
+     "AP_rerank": 0.4513535897282149,
+     "AP_siglip2": 0.4504523885259174,
+     "n_pos": 76,
+     "pos_in_top50": 24,
+     "P@5_rerank": 0.8,
+     "skew": -0.42105263157894735
+    },
+    {
+     "id": 78,
+     "AP_rerank": 0.14773615768712411,
+     "AP_siglip2": 0.1289185367995198,
+     "n_pos": 76,
+     "pos_in_top50": 3,
+     "P@5_rerank": 0.4,
+     "skew": -0.021052631578947323
+    },
+    {
+     "id": 79,
+     "AP_rerank": 0.255772202161082,
+     "AP_siglip2": 0.23017307346069266,
+     "n_pos": 76,
+     "pos_in_top50": 13,
+     "P@5_rerank": 0.6,
+     "skew": -0.22105263157894733
+    },
+    {
+     "id": 80,
+     "AP_rerank": 0.26149188207042684,
+     "AP_siglip2": 0.2591545422198446,
+     "n_pos": 145,
+     "pos_in_top50": 12,
+     "P@5_rerank": 0.0,
+     "skew": -0.5172413793103449
+    },
+    {
+     "id": 81,
+     "AP_rerank": 0.21316473871946046,
+     "AP_siglip2": 0.21035907357530673,
+     "n_pos": 145,
+     "pos_in_top50": 8,
+     "P@5_rerank": 0.2,
+     "skew": -0.31724137931034485
+    },
+    {
+     "id": 82,
+     "AP_rerank": 0.2633820638146275,
+     "AP_siglip2": 0.26857639195006877,
+     "n_pos": 145,
+     "pos_in_top50": 10,
+     "P@5_rerank": 0.4,
+     "skew": -0.31724137931034485
+    },
+    {
+     "id": 83,
+     "AP_rerank": 0.0726465678678481,
+     "AP_siglip2": 0.07130177514792899,
+     "n_pos": 5,
+     "pos_in_top50": 3,
+     "P@5_rerank": 0.0,
+     "skew": -0.8
+    },
+    {
+     "id": 84,
+     "AP_rerank": 0.807363612194897,
+     "AP_siglip2": 0.8218970707240562,
+     "n_pos": 57,
+     "pos_in_top50": 41,
+     "P@5_rerank": 0.8,
+     "skew": 0.031578947368421095
+    },
+    {
+     "id": 85,
+     "AP_rerank": 0.6959848519258802,
+     "AP_siglip2": 0.5486375070417868,
+     "n_pos": 35,
+     "pos_in_top50": 26,
+     "P@5_rerank": 1.0,
+     "skew": 0.02857142857142858
+    },
+    {
+     "id": 86,
+     "AP_rerank": 0.4711055340084994,
+     "AP_siglip2": 0.405813951947949,
+     "n_pos": 10,
+     "pos_in_top50": 10,
+     "P@5_rerank": 0.6,
+     "skew": -0.09999999999999998
+    },
+    {
+     "id": 87,
+     "AP_rerank": 0.23212259026583257,
+     "AP_siglip2": 0.44889989421977095,
+     "n_pos": 17,
+     "pos_in_top50": 14,
+     "P@5_rerank": 0.0,
+     "skew": -0.4470588235294118
+    },
+    {
+     "id": 88,
+     "AP_rerank": 0.8772661391059745,
+     "AP_siglip2": 0.78195306984985,
+     "n_pos": 48,
+     "pos_in_top50": 37,
+     "P@5_rerank": 1.0,
+     "skew": 0.0
+    },
+    {
+     "id": 89,
+     "AP_rerank": 0.8656606229432598,
+     "AP_siglip2": 0.8628197573174193,
+     "n_pos": 460,
+     "pos_in_top50": 44,
+     "P@5_rerank": 1.0,
+     "skew": -0.4434782608695652
+    },
+    {
+     "id": 90,
+     "AP_rerank": 0.6140882822305812,
+     "AP_siglip2": 0.6049372642544796,
+     "n_pos": 334,
+     "pos_in_top50": 34,
+     "P@5_rerank": 0.8,
+     "skew": -0.2940119760479042
+    },
+    {
+     "id": 91,
+     "AP_rerank": 0.3140069413927143,
+     "AP_siglip2": 0.3483972538686849,
+     "n_pos": 59,
+     "pos_in_top50": 18,
+     "P@5_rerank": 0.6,
+     "skew": -0.3898305084745763
+    },
+    {
+     "id": 92,
+     "AP_rerank": 0.23156175290580713,
+     "AP_siglip2": 0.23143998156146026,
+     "n_pos": 115,
+     "pos_in_top50": 11,
+     "P@5_rerank": 0.0,
+     "skew": -0.15652173913043477
+    },
+    {
+     "id": 93,
+     "AP_rerank": 0.44924160579552846,
+     "AP_siglip2": 0.4466502615615102,
+     "n_pos": 42,
+     "pos_in_top50": 26,
+     "P@5_rerank": 0.2,
+     "skew": -0.6
+    },
+    {
+     "id": 94,
+     "AP_rerank": 0.015268065268065269,
+     "AP_siglip2": 0.015268065268065269,
+     "n_pos": 2,
+     "pos_in_top50": 0,
+     "P@5_rerank": 0.0,
+     "skew": 0.0
+    },
+    {
+     "id": 95,
+     "AP_rerank": 0.21874280177020938,
+     "AP_siglip2": 0.17107390417826585,
+     "n_pos": 13,
+     "pos_in_top50": 9,
+     "P@5_rerank": 0.2,
+     "skew": -0.09230769230769231
+    },
+    {
+     "id": 96,
+     "AP_rerank": 0.5445433982736007,
+     "AP_siglip2": 0.5337505286013452,
+     "n_pos": 339,
+     "pos_in_top50": 23,
+     "P@5_rerank": 0.8,
+     "skew": -0.1805309734513274
+    },
+    {
+     "id": 97,
+     "AP_rerank": 0.4219321180752699,
+     "AP_siglip2": 0.3991188816666728,
+     "n_pos": 74,
+     "pos_in_top50": 24,
+     "P@5_rerank": 0.6,
+     "skew": -0.40540540540540543
+    },
+    {
+     "id": 98,
+     "AP_rerank": 0.30091799319377177,
+     "AP_siglip2": 0.28003999441433286,
+     "n_pos": 132,
+     "pos_in_top50": 15,
+     "P@5_rerank": 0.4,
+     "skew": -0.5
+    },
+    {
+     "id": 99,
+     "AP_rerank": 0.05287534398273989,
+     "AP_siglip2": 0.02956707330604816,
+     "n_pos": 5,
+     "pos_in_top50": 1,
+     "P@5_rerank": 0.0,
+     "skew": -0.8
+    },
+    {
+     "id": 100,
+     "AP_rerank": 0.054234654234654234,
+     "AP_siglip2": 0.03494968487955865,
+     "n_pos": 5,
+     "pos_in_top50": 2,
+     "P@5_rerank": 0.0,
+     "skew": -0.8
+    },
+    {
+     "id": 101,
+     "AP_rerank": 0.049225765838205676,
+     "AP_siglip2": 0.030108118779382142,
+     "n_pos": 5,
+     "pos_in_top50": 1,
+     "P@5_rerank": 0.0,
+     "skew": -0.8
+    },
+    {
+     "id": 102,
+     "AP_rerank": 0.016979300178180872,
+     "AP_siglip2": 0.016979300178180872,
+     "n_pos": 5,
+     "pos_in_top50": 0,
+     "P@5_rerank": 0.0,
+     "skew": -0.4
+    },
+    {
+     "id": 103,
+     "AP_rerank": 0.07280244807934681,
+     "AP_siglip2": 0.055766288160833954,
+     "n_pos": 5,
+     "pos_in_top50": 3,
+     "P@5_rerank": 0.0,
+     "skew": -0.8
+    },
+    {
+     "id": 104,
+     "AP_rerank": 0.627764951986513,
+     "AP_siglip2": 0.6822819167365135,
+     "n_pos": 31,
+     "pos_in_top50": 20,
+     "P@5_rerank": 0.8,
+     "skew": -0.25161290322580643
+    },
+    {
+     "id": 105,
+     "AP_rerank": 0.26901281210535993,
+     "AP_siglip2": 0.24738558698943766,
+     "n_pos": 15,
+     "pos_in_top50": 9,
+     "P@5_rerank": 0.4,
+     "skew": 0.06666666666666671
+    },
+    {
+     "id": 106,
+     "AP_rerank": 0.6510004502033055,
+     "AP_siglip2": 0.5618579195814,
+     "n_pos": 35,
+     "pos_in_top50": 26,
+     "P@5_rerank": 0.6,
+     "skew": 0.02857142857142858
+    },
+    {
+     "id": 107,
+     "AP_rerank": 0.6439654771307816,
+     "AP_siglip2": 0.3646537651741459,
+     "n_pos": 27,
+     "pos_in_top50": 17,
+     "P@5_rerank": 1.0,
+     "skew": -0.37037037037037035
+    },
+    {
+     "id": 108,
+     "AP_rerank": 0.8463434821927587,
+     "AP_siglip2": 0.8832134650574012,
+     "n_pos": 48,
+     "pos_in_top50": 39,
+     "P@5_rerank": 0.8,
+     "skew": -0.2791666666666667
+    },
+    {
+     "id": 109,
+     "AP_rerank": 0.6495979051389076,
+     "AP_siglip2": 0.5974199259748763,
+     "n_pos": 31,
+     "pos_in_top50": 19,
+     "P@5_rerank": 1.0,
+     "skew": -0.05161290322580642
+    },
+    {
+     "id": 110,
+     "AP_rerank": 0.6485678366687911,
+     "AP_siglip2": 0.6622063979671072,
+     "n_pos": 55,
+     "pos_in_top50": 35,
+     "P@5_rerank": 0.4,
+     "skew": -0.32727272727272727
+    },
+    {
+     "id": 111,
+     "AP_rerank": 0.49828443161776487,
+     "AP_siglip2": 0.24239217572550908,
+     "n_pos": 9,
+     "pos_in_top50": 7,
+     "P@5_rerank": 0.4,
+     "skew": 0.0444444444444444
+    },
+    {
+     "id": 112,
+     "AP_rerank": 0.5347619047619048,
+     "AP_siglip2": 0.18554112554112553,
+     "n_pos": 5,
+     "pos_in_top50": 3,
+     "P@5_rerank": 0.6,
+     "skew": -0.4
+    },
+    {
+     "id": 113,
+     "AP_rerank": 0.7206446224224294,
+     "AP_siglip2": 0.6342622030955242,
+     "n_pos": 27,
+     "pos_in_top50": 19,
+     "P@5_rerank": 1.0,
+     "skew": -0.17037037037037034
+    },
+    {
+     "id": 114,
+     "AP_rerank": 0.7429089588279029,
+     "AP_siglip2": 0.6672254804345735,
+     "n_pos": 56,
+     "pos_in_top50": 33,
+     "P@5_rerank": 1.0,
+     "skew": -0.12857142857142856
+    },
+    {
+     "id": 115,
+     "AP_rerank": 0.482776796095544,
+     "AP_siglip2": 0.35998524242743635,
+     "n_pos": 48,
+     "pos_in_top50": 21,
+     "P@5_rerank": 0.6,
+     "skew": -0.07916666666666666
+    },
+    {
+     "id": 116,
+     "AP_rerank": 0.6220340784060482,
+     "AP_siglip2": 0.40651670373158255,
+     "n_pos": 26,
+     "pos_in_top50": 17,
+     "P@5_rerank": 1.0,
+     "skew": -0.0461538461538461
+    },
+    {
+     "id": 117,
+     "AP_rerank": 0.8639867582673104,
+     "AP_siglip2": 0.7143512656188675,
+     "n_pos": 48,
+     "pos_in_top50": 35,
+     "P@5_rerank": 1.0,
+     "skew": 0.0
+    },
+    {
+     "id": 118,
+     "AP_rerank": 0.8363886406371599,
+     "AP_siglip2": 0.697935704451858,
+     "n_pos": 57,
+     "pos_in_top50": 38,
+     "P@5_rerank": 1.0,
+     "skew": -0.16842105263157892
+    },
+    {
+     "id": 119,
+     "AP_rerank": 0.628319737774852,
+     "AP_siglip2": 0.5047400300117483,
+     "n_pos": 86,
+     "pos_in_top50": 30,
+     "P@5_rerank": 1.0,
+     "skew": 0.32558139534883723
+    },
+    {
+     "id": 120,
+     "AP_rerank": 0.36027155669594946,
+     "AP_siglip2": 0.23556099096042055,
+     "n_pos": 59,
+     "pos_in_top50": 14,
+     "P@5_rerank": 0.8,
+     "skew": 0.2101694915254237
+    },
+    {
+     "id": 121,
+     "AP_rerank": 0.5443295783775824,
+     "AP_siglip2": 0.3826346413347655,
+     "n_pos": 78,
+     "pos_in_top50": 16,
+     "P@5_rerank": 1.0,
+     "skew": 0.2435897435897436
+    },
+    {
+     "id": 122,
+     "AP_rerank": 0.35769243630250147,
+     "AP_siglip2": 0.35930317893126656,
+     "n_pos": 64,
+     "pos_in_top50": 15,
+     "P@5_rerank": 0.6,
+     "skew": 0.25625
+    },
+    {
+     "id": 123,
+     "AP_rerank": 0.3353099653436167,
+     "AP_siglip2": 0.15266836142494783,
+     "n_pos": 25,
+     "pos_in_top50": 7,
+     "P@5_rerank": 0.8,
+     "skew": -0.16
+    },
+    {
+     "id": 124,
+     "AP_rerank": 0.2716373233790898,
+     "AP_siglip2": 0.22331304972735902,
+     "n_pos": 35,
+     "pos_in_top50": 11,
+     "P@5_rerank": 0.8,
+     "skew": 0.45714285714285713
+    },
+    {
+     "id": 125,
+     "AP_rerank": 0.4690302536870803,
+     "AP_siglip2": 0.3360142453543554,
+     "n_pos": 86,
+     "pos_in_top50": 14,
+     "P@5_rerank": 1.0,
+     "skew": 0.32558139534883723
+    },
+    {
+     "id": 126,
+     "AP_rerank": 0.3094898113193028,
+     "AP_siglip2": 0.2585577082069249,
+     "n_pos": 68,
+     "pos_in_top50": 13,
+     "P@5_rerank": 0.6,
+     "skew": 0.36470588235294116
+    },
+    {
+     "id": 127,
+     "AP_rerank": 0.31164557128688847,
+     "AP_siglip2": 0.18571773373994357,
+     "n_pos": 44,
+     "pos_in_top50": 7,
+     "P@5_rerank": 1.0,
+     "skew": -0.12272727272727268
+    },
+    {
+     "id": 128,
+     "AP_rerank": 0.25986157155696754,
+     "AP_siglip2": 0.21344590062983876,
+     "n_pos": 77,
+     "pos_in_top50": 10,
+     "P@5_rerank": 1.0,
+     "skew": 0.08831168831168834
+    },
+    {
+     "id": 129,
+     "AP_rerank": 0.04125837564438483,
+     "AP_siglip2": 0.03107655746256665,
+     "n_pos": 5,
+     "pos_in_top50": 1,
+     "P@5_rerank": 0.0,
+     "skew": -0.6
+    },
+    {
+     "id": 130,
+     "AP_rerank": 0.6405925148400609,
+     "AP_siglip2": 0.5541542481199689,
+     "n_pos": 57,
+     "pos_in_top50": 29,
+     "P@5_rerank": 1.0,
+     "skew": -0.16842105263157892
+    },
+    {
+     "id": 131,
+     "AP_rerank": 0.7320987805884306,
+     "AP_siglip2": 0.7120224998750617,
+     "n_pos": 35,
+     "pos_in_top50": 25,
+     "P@5_rerank": 1.0,
+     "skew": 0.02857142857142858
+    },
+    {
+     "id": 132,
+     "AP_rerank": 0.17586736596162308,
+     "AP_siglip2": 0.14043545884957376,
+     "n_pos": 10,
+     "pos_in_top50": 7,
+     "P@5_rerank": 0.2,
+     "skew": -0.5
+    },
+    {
+     "id": 133,
+     "AP_rerank": 0.24958591826795004,
+     "AP_siglip2": 0.25072872865147167,
+     "n_pos": 17,
+     "pos_in_top50": 12,
+     "P@5_rerank": 0.2,
+     "skew": -0.24705882352941178
+    },
+    {
+     "id": 134,
+     "AP_rerank": 0.5823425914581607,
+     "AP_siglip2": 0.5922229626128376,
+     "n_pos": 48,
+     "pos_in_top50": 31,
+     "P@5_rerank": 0.8,
+     "skew": -0.19999999999999996
+    },
+    {
+     "id": 135,
+     "AP_rerank": 0.9197785845822564,
+     "AP_siglip2": 0.9169926166163637,
+     "n_pos": 460,
+     "pos_in_top50": 46,
+     "P@5_rerank": 1.0,
+     "skew": -0.4434782608695652
+    },
+    {
+     "id": 136,
+     "AP_rerank": 0.7026853225898316,
+     "AP_siglip2": 0.7003493407529254,
+     "n_pos": 334,
+     "pos_in_top50": 40,
+     "P@5_rerank": 0.8,
+     "skew": -0.2940119760479042
+    },
+    {
+     "id": 137,
+     "AP_rerank": 0.13104167870453043,
+     "AP_siglip2": 0.1277148088534128,
+     "n_pos": 59,
+     "pos_in_top50": 7,
+     "P@5_rerank": 0.4,
+     "skew": -0.3898305084745763
+    },
+    {
+     "id": 138,
+     "AP_rerank": 0.2127380497113091,
+     "AP_siglip2": 0.23376539229533802,
+     "n_pos": 115,
+     "pos_in_top50": 13,
+     "P@5_rerank": 0.2,
+     "skew": -0.5565217391304348
+    },
+    {
+     "id": 139,
+     "AP_rerank": 0.6260823425476223,
+     "AP_siglip2": 0.7091074722171404,
+     "n_pos": 42,
+     "pos_in_top50": 32,
+     "P@5_rerank": 0.6,
+     "skew": -0.19999999999999996
+    },
+    {
+     "id": 140,
+     "AP_rerank": 0.003983921265699654,
+     "AP_siglip2": 0.003983921265699654,
+     "n_pos": 2,
+     "pos_in_top50": 0,
+     "P@5_rerank": 0.0,
+     "skew": 0.0
+    },
+    {
+     "id": 141,
+     "AP_rerank": 0.15444082424022865,
+     "AP_siglip2": 0.20096975053504126,
+     "n_pos": 13,
+     "pos_in_top50": 5,
+     "P@5_rerank": 0.2,
+     "skew": 0.3076923076923077
+    },
+    {
+     "id": 142,
+     "AP_rerank": 0.6366480292516683,
+     "AP_siglip2": 0.6378860629803079,
+     "n_pos": 339,
+     "pos_in_top50": 31,
+     "P@5_rerank": 0.8,
+     "skew": -0.3805309734513274
+    },
+    {
+     "id": 143,
+     "AP_rerank": 0.17212121556987986,
+     "AP_siglip2": 0.1806368707936749,
+     "n_pos": 74,
+     "pos_in_top50": 13,
+     "P@5_rerank": 0.2,
+     "skew": -0.40540540540540543
+    },
+    {
+     "id": 144,
+     "AP_rerank": 0.21386276525206638,
+     "AP_siglip2": 0.2110516859317071,
+     "n_pos": 132,
+     "pos_in_top50": 13,
+     "P@5_rerank": 0.0,
+     "skew": -0.5
+    },
+    {
+     "id": 145,
+     "AP_rerank": 0.04526630164260826,
+     "AP_siglip2": 0.04764725402356064,
+     "n_pos": 5,
+     "pos_in_top50": 1,
+     "P@5_rerank": 0.0,
+     "skew": -0.8
+    },
+    {
+     "id": 146,
+     "AP_rerank": 0.6386390516531982,
+     "AP_siglip2": 0.5495101302609814,
+     "n_pos": 57,
+     "pos_in_top50": 28,
+     "P@5_rerank": 1.0,
+     "skew": 0.4315789473684211
+    },
+    {
+     "id": 147,
+     "AP_rerank": 0.2983785500190456,
+     "AP_siglip2": 0.2790292224394024,
+     "n_pos": 35,
+     "pos_in_top50": 16,
+     "P@5_rerank": 0.4,
+     "skew": 0.02857142857142858
+    },
+    {
+     "id": 148,
+     "AP_rerank": 0.4242381303713586,
+     "AP_siglip2": 0.3050543696875979,
+     "n_pos": 10,
+     "pos_in_top50": 7,
+     "P@5_rerank": 0.4,
+     "skew": -0.30000000000000004
+    },
+    {
+     "id": 149,
+     "AP_rerank": 0.4821192122246797,
+     "AP_siglip2": 0.23697763132682184,
+     "n_pos": 17,
+     "pos_in_top50": 14,
+     "P@5_rerank": 0.8,
+     "skew": -0.04705882352941182
+    }
+   ],
+   "skew_pts": -12.328145645393953,
+   "sceneminer_mAP": 0.6944798728861561,
+   "sceneminer_minus_rerank": {
+    "delta": 0.1935272849287656,
+    "perm_p": 9.999000099990002e-05,
+    "n": 150
+   }
+  }
+ },
+ "check_siglip2": {
+  "human_gt": 0.0,
+  "bdd": 0.0,
+  "s5_corpus_atomic": 0.0,
+  "s5_val150_atomic": 0.0,
+  "s5_corpus_compositional": 0.0,
+  "s5_val150_compositional": 0.0,
+  "holdout": 6.689758137695678e-06,
+  "suite": 0.0
+ },
+ "latency": {
+  "K": 50,
+  "queries": [
+   "water droplets smearing the camera lens",
+   "a large truck or bus on a wet road",
+   "pedestrians crossing the road at night",
+   "blinding headlight bloom from oncoming traffic",
+   "a construction zone with traffic cones and barriers"
+  ],
+  "batch1_ms": [
+   13109.41420122981,
+   11862.486485391855,
+   12060.887032188475,
+   11674.591606482863,
+   11819.14687063545
+  ],
+  "batch10_ms": [
+   8170.96284031868,
+   8104.421438649297,
+   8128.453250043094,
+   8214.05784972012,
+   8378.873395733535
+  ],
+  "stage_ms": [
+   10.557164438068867,
+   5.901077762246132,
+   8.907048031687737,
+   6.720580160617828,
+   6.298063322901726
+  ],
+  "stage_ms_median": 6.720580160617828,
+  "batch1_ms_median": 11862.486485391855,
+  "batch10_ms_median": 8170.96284031868,
+  "gpu": "NVIDIA A40"
+ }
+}

@@ -107,6 +107,10 @@ def main():
                     help="optional human-label json to add as calibration queries")
     ap.add_argument("--human-tokens", default=None,
                     help="json list of tokens allowed from --extra-human (fold train)")
+    ap.add_argument("--siglip-repo", default="google/siglip2-base-patch16-224",
+                    help="SigLIP2 checkpoint for the text tower (Milestone 34: larger backbones)")
+    ap.add_argument("--siglip-emb", default=None,
+                    help="npz with 'emb' (normalised image embeddings) and 'names' replacing features' siglip_img")
     a = ap.parse_args()
     random.seed(a.seed); np.random.seed(a.seed); torch.manual_seed(a.seed)
     dev = torch.device("cuda")
@@ -120,6 +124,9 @@ def main():
     vcache = W/"V_frozen_cache.pt"
     if vcache.exists(): qwen = torch.load(vcache, map_location=dev).float()
     sig = torch.from_numpy(z["siglip_img"]).float().to(dev)
+    if a.siglip_emb:
+        ez = np.load(a.siglip_emb); assert [str(x) for x in ez["names"]] == toks
+        sig = torch.from_numpy(ez["emb"]).float().to(dev)
     mz  = torch.from_numpy(z["vlm_margin_z"]).float().to(dev)
     prior = torch.from_numpy(z["prior"]).float().to(dev)
     margins = z["vlm_margin"]; attr_idx = {a_: i for i, a_ in enumerate(list(z["margin_attrs"]))}
@@ -154,7 +161,7 @@ def main():
 
     # SigLIP2 text tower for both the base and the residual query token
     from transformers import AutoModel, GemmaTokenizerFast
-    P = "google/siglip2-base-patch16-224"
+    P = a.siglip_repo
     sm_ = AutoModel.from_pretrained(P, use_safetensors=True).to(dev).eval()
     tk = GemmaTokenizerFast.from_pretrained(P)
     feat = lambda o: (o if torch.is_tensor(o) else o.pooler_output).float()

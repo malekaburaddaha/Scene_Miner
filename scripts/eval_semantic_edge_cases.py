@@ -101,13 +101,13 @@ def load_v23(rk, d_qwen=2048, which="v23"):
         from scene_mining.filter.sceneminer_v2_4 import SceneMinerV24 as SceneMinerV23
     if which == "v25":
         from scene_mining.filter.sceneminer_v2_5 import SceneMinerV25 as SceneMinerV23
-    if which == "v26":
+    if which.startswith("v26"):              # v26, or a v26 variant such as v26_so400m (Milestone 34)
         from scene_mining.filter.sceneminer_v2_6 import SceneMinerV26 as SceneMinerV23
     M = []
     for c in sorted(glob.glob(f"work_dirs/sceneminer_{which}/s*/final.pt")):
-        d = torch.load(c, map_location=dev, weights_only=False)
-        m = SceneMinerV23(d_qwen=d_qwen, d_siglip=768, n_margins=4, n_meta=6, d_text=768,
-                          risk_stats=(float(rk.mean()), float(rk.std()))).to(dev)
+        d = torch.load(c, map_location=dev, weights_only=False); sd = d["state_dict"]
+        m = SceneMinerV23(d_qwen=d_qwen, d_siglip=sd["adapt_siglip.net.1.weight"].shape[1], n_margins=4, n_meta=6,
+                          d_text=sd["W_route.weight"].shape[1], risk_stats=(float(rk.mean()), float(rk.std()))).to(dev)
         m.load_state_dict(d["state_dict"]); m.eval(); M.append(m)
     return M
 

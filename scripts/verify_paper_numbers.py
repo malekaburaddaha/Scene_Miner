@@ -46,6 +46,9 @@ def registry():
     LP = lambda *p: get("milestone27_val150_retrieval_v26.json", list(p))
     OC = lambda *p: get("milestone32_object_cap_train.json", list(p))
     R2 = lambda *p: get("milestone33_rater2_results.json", list(p))
+    VR = lambda *p: get("milestone34_per_query_vlm.json", list(p))
+    BB = lambda *p: get("milestone34_larger_backbone.json", list(p))
+    SDV = lambda *p: get("milestone34_seed_sd.json", ["rows"] + list(p))
     ATTR4 = ("droplets", "glare", "wet_road", "low_contrast")
     HP = lambda k, sc="all": M("holdout", "modes", "metadata_free", "paired_vs_sceneminer_portable", k, sc)
     T, MT = "paper/main_cvpr.tex", "paper/tab_master.tex"
@@ -108,6 +111,31 @@ def registry():
         (T, lambda: R2("paired_bootstrap_rater2", "SigLIP2 ViT-B/16", "delta"), s3, "rater2 lead vs SigLIP2"),
         (T, lambda: R2("paired_bootstrap_rater2", "Late fusion SigLIP2 + lookup", "delta"), s3, "rater2 lead vs fusion"),
         (T, lambda: R2("paired_bootstrap_rater2", "Qwen2.5-VL lookup", "delta"), s3, "rater2 lead vs lookup"),
+        (T, lambda: VR("benchmarks", "bdd", "mAP_rerank"), f3, "reranker BDD100K"),
+        (T, lambda: -VR("benchmarks", "holdout", "sceneminer_minus_rerank", "delta"), s3, "reranker holdout lead"),
+        (T, lambda: VR("benchmarks", "holdout", "sceneminer_minus_rerank", "perm_p"), p3, "reranker holdout p"),
+        (T, lambda: -VR("benchmarks", "s5_corpus_atomic", "sceneminer_minus_rerank", "delta"), s3, "reranker S5 atomic lead"),
+        (T, lambda: max(VR("benchmarks", "s5_corpus_atomic", "sceneminer_minus_rerank", "perm_p"), 0.001), p3, "reranker S5 atomic p"),
+        (T, lambda: VR("latency", "batch10_ms_median") / 1000, "{:.1f}", "reranker seconds per query"),
+        (T, lambda: round(VR("latency", "batch10_ms_median") / L("online", "full_1"), -2), "{:.0f}", "reranker cost ratio"),
+        (T, lambda: VR("benchmarks", "human_gt", "scene_bootstrap", "delta_sceneminer_minus_rerank"), s3, "SceneMiner lead over reranker, human GT"),
+        (T, lambda: VR("benchmarks", "human_gt", "scene_bootstrap", "ci95")[0], f3, "reranker bootstrap CI low"),
+        (T, lambda: VR("benchmarks", "human_gt", "scene_bootstrap", "ci95")[1], f3, "reranker bootstrap CI high"),
+        (T, lambda: VR("benchmarks", "human_gt", "scene_bootstrap", "per_attribute", "low_contrast", "rerank"), f3, "reranker low contrast"),
+        (T, lambda: VR("benchmarks", "human_gt", "scene_bootstrap", "per_attribute", "low_contrast", "SceneMiner"), f3, "SceneMiner low contrast"),
+        (T, lambda: [x for x in VR("benchmarks", "human_gt", "per_query") if x["id"] == "low_contrast"][0]["pos_in_top50"], "{:d}", "low-contrast positives in top 50"),
+        (T, lambda: [x for x in VR("benchmarks", "human_gt", "per_query") if x["id"] == "low_contrast"][0]["n_pos"], "{:d}", "low-contrast positives"),
+        ("paper/tab_design.tex", lambda: f"0.794}}_{{\\pm{SDV('T1|v2.6', 'human_gt', 'sd'):.3f}".replace("pm0.", "pm."), "{}", "SceneMiner human GT seed sd"),
+        ("paper/tab_master.tex", lambda: f"0.794}}_{{\\pm{SDV('T2|SceneMiner', 'human_gt', 'sd'):.3f}".replace("pm0.", "pm."), "{}", "Table 2 SceneMiner seed sd"),
+        (T, lambda: BB("rows", "SigLIP2 ViT-B/16", "human_gt"), f3, "zero-shot B/16 human GT"),
+        (T, lambda: BB("rows", "SigLIP2 So400m/14", "human_gt"), f3, "zero-shot So400m human GT"),
+        (T, lambda: BB("rows", "SigLIP2 ViT-B/16", "holdout"), f3, "zero-shot B/16 holdout"),
+        (T, lambda: BB("rows", "SigLIP2 So400m/14", "holdout"), f3, "zero-shot So400m holdout"),
+        (T, lambda: BB("rows", "SceneMiner, So400m/14", "human_gt"), f3, "SceneMiner So400m human GT"),
+        (T, lambda: BB("rows", "SceneMiner, So400m/14", "holdout"), f3, "SceneMiner So400m holdout"),
+        (T, lambda: BB("rows", "SceneMiner, So400m/14", "bdd"), f3, "SceneMiner So400m BDD100K"),
+        (T, lambda: RG("regimes", "atomic_degradation_550", "late_fusion SigLIP2+lookup"), f3, "best no-learning control (abstract)"),
+        (T, lambda: M("n", "bdd_images") + M("holdout", "modes", "metadata_free", "n_images"), "{:d}", "external images (BDD100K + holdout)"),
         (MT, lambda: M("methods", "SceneMiner", "human_gt"), f3, "Table 2 full human GT"),
         (MT, lambda: M("methods", "SceneMiner (portable)", "suite"), f3, "Table 2 portable suite"),
     ]

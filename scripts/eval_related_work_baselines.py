@@ -143,10 +143,10 @@ class Enc:
         from transformers import AutoModel, CLIPModel, CLIPTokenizerFast, GemmaTokenizerFast, SiglipTokenizer
         self.m = {"clip": CLIPModel.from_pretrained("openai/clip-vit-base-patch32", use_safetensors=True).to(dev).eval(),
                   "sig1": AutoModel.from_pretrained("google/siglip-base-patch16-224", use_safetensors=True).to(dev).eval(),
-                  "sig2": AutoModel.from_pretrained("google/siglip2-base-patch16-224", use_safetensors=True).to(dev).eval()}
+                  "sig2": AutoModel.from_pretrained(SIG2_REPO, use_safetensors=True).to(dev).eval()}
         self.tk = {"clip": (CLIPTokenizerFast.from_pretrained("openai/clip-vit-base-patch32"), dict(padding=True, truncation=True, max_length=77)),
                    "sig1": (SiglipTokenizer.from_pretrained("google/siglip-base-patch16-224"), dict(padding="max_length", truncation=True, max_length=64)),
-                   "sig2": (GemmaTokenizerFast.from_pretrained("google/siglip2-base-patch16-224"), dict(padding="max_length", truncation=True, max_length=64))}
+                   "sig2": (GemmaTokenizerFast.from_pretrained(SIG2_REPO), dict(padding="max_length", truncation=True, max_length=64))}
         self.cache = {k: {} for k in self.m}
 
     def encode(self, kind, texts, use_cache=True):
@@ -169,6 +169,19 @@ class Enc:
 def _t(x): return torch.from_numpy(np.asarray(x)).float().to(dev)
 
 
+# Milestone 34 backbone study: SM_SIG2_REPO swaps the SigLIP2 text tower and SM_SIG2_EMB
+# ("work_dirs/emb_siglip2_so400m_{}.npz") the image embeddings of every dataset; unset,
+# everything is the ViT-B/16 of the paper.
+SIG2_REPO = os.environ.get("SM_SIG2_REPO", "google/siglip2-base-patch16-224")
+SIG2_EMB = os.environ.get("SM_SIG2_EMB")
+
+
+def sig2_override(name, toks_, X):
+    if not SIG2_EMB: return X
+    ez = np.load(SIG2_EMB.format(name)); assert [str(x) for x in ez["names"]] == list(toks_), name
+    return ez["emb"]
+
+
 def load_corpus():
     z = np.load(W/"features_v2.npz", allow_pickle=False)
     toks_ = [str(t) for t in z["scene_tokens"]]
@@ -181,9 +194,9 @@ def load_corpus():
     rk = z["risk"].reshape(len(toks_), -1)
     return {"name": "corpus", "toks": toks_, "dom": z["domain"].astype(int), "n": len(toks_),
             "F": (_t(z["emb"]), _t(z["tag_logits"]), _t(z["risk"]),
-                  torch.load(W/"V_frozen_cache.pt", map_location=dev).float(), _t(z["siglip_img"]),
+                  torch.load(W/"V_frozen_cache.pt", map_location=dev).float(), _t(sig2_override("corpus", toks_, z["siglip_img"])),
                   _t(z["vlm_margin_z"]), _t(z["prior"])),
-            "sig2": F.normalize(_t(z["siglip_img"]), dim=-1), "clip": _t(np.load("work_dirs/emb_clip.npz")["corpus"]),
+            "sig2": F.normalize(_t(sig2_override("corpus", toks_, z["siglip_img"])), dim=-1), "clip": _t(np.load("work_dirs/emb_clip.npz")["corpus"]),
             "sig1": _t(np.load("work_dirs/emb_siglip1.npz")["corpus"]), "flags": flags, "marg": marg, "meta": md,
             "tags": z["tag_logits"], "bev": np.concatenate([z["emb"], (rk - rk.mean()) / rk.std()], 1),
             "prior": _t(z["prior"]), "mz": _t(z["vlm_margin_z"])}
@@ -192,7 +205,7 @@ def load_corpus():
 def _portable_dataset(name, toks_, S, M, PR, meta):
     MZ = (M - M.mean(0)) / (M.std(0) + 1e-6)
     E = {"clip": np.load("work_dirs/emb_clip.npz")[name], "sig1": np.load("work_dirs/emb_siglip1.npz")[name]}
-    return {"name": name, "toks": toks_, "n": len(toks_), "sig2": F.normalize(_t(S), dim=-1),
+    return {"name": name, "toks": toks_, "n": len(toks_), "sig2": F.normalize(_t(sig2_override(name, toks_, S)), dim=-1),
             "clip": _t(E["clip"]), "sig1": _t(E["sig1"]),
             "flags": {a: M[:, i] > 0 for i, a in enumerate(TRAIN_ORDER)}, "marg": {a: M[:, i] for i, a in enumerate(TRAIN_ORDER)},
             "meta": meta, "tags": None, "bev": None, "prior": PR, "mz": _t(MZ)}
@@ -253,7 +266,7 @@ def load_holdout(with_meta=False):
               "weather": np.array(["rain" if w == "rainy" else "dry" if w in ("clear", "partly cloudy", "overcast") else w
                                    for w in wx])}
     MZ = (M - M.mean(0)) / (M.std(0) + 1e-6)
-    D = {"name": "holdout", "toks": names, "n": len(names), "sig2": F.normalize(_t(z["siglip"]), dim=-1),
+    D = {"name": "holdout", "toks": names, "n": len(names), "sig2": F.normalize(_t(sig2_override("holdout", names, z["siglip"])), dim=-1),
          "clip": _t(np.load("work_dirs/emb_clip_holdout.npz")["holdout"]),
          "sig1": _t(np.load("work_dirs/emb_siglip1_holdout.npz")["holdout"]),
          "flags": {a: M[:, i] > 0 for i, a in enumerate(TRAIN_ORDER)}, "marg": {a: M[:, i] for i, a in enumerate(TRAIN_ORDER)},
@@ -305,6 +318,9 @@ class Rankers:
         self.bev = _load(BEV, "work_dirs/baseline_bev/s*/final.pt", d_in=257)
         self.sft = _load(SigFT, "work_dirs/baseline_sigft/s*/final.pt")
         assert len(self.M25) == len(self.M21) == len(self.bev) == len(self.sft) == 5
+        seed = os.environ.get("SM_SEED")       # Milestone 34: score one seed's model alone (for +/- sd)
+        if seed is not None:
+            i = int(seed); self.M25, self.M21, self.bev, self.sft = [self.M25[i]], [self.M21[i]], [self.bev[i]], [self.sft[i]]
         self.tagE = enc.sig2_t(TAG_NAMES)
         self.k = 5          # seeds used by the trained rankers (1 for single-model latency)
         self.cap_ix = {}
@@ -501,7 +517,9 @@ def main():
     out = {"doc": __doc__, "n": {"human_gt_scenes": len(ht), "bdd_images": B["n"], "s5_corpus_scenes": len(s5t),
                                  "val150_scenes": V["n"], "suite_scenes": len(ST)},
            "methods": {}, "per_query": {}}
-    for label, meth, mods in METHODS:
+    only = os.environ.get("SM_METHODS")              # e.g. "siglip2,sceneminer_portable,sceneminer"
+    run = [m for m in METHODS if not only or m[1] in only.split(",")]
+    for label, meth, mods in run:
         t0 = time.time(); r = {"key": meth, "modalities": mods, "reads_bev_or_tags_on_corpus": meth in CONTAM,
                                "offline_per_scene": OFFLINE[meth]}; PQ = {}
         aps = [ap_of(None if (s := call(meth, C, QUERY[at], col=at)) is None else s[..., hidx],
@@ -569,7 +587,7 @@ def main():
         res = {"n_images": H["n"], "queries_kept": [q["id"] for q in keep],
                "queries_excluded_lt5_positives": [q["id"] for q in HQ if q not in keep],
                "n_positives": {q["id"]: int(rels[q["id"]].sum()) for q in HQ}, "methods": {}}
-        for label, meth, mods in METHODS:
+        for label, meth, mods in run:
             per = {}
             for q in keep:
                 ch = HOLD_CHANNEL.get(q["id"])

@@ -1,11 +1,11 @@
-\setlength{\tabcolsep}{3.5pt}
+\setlength{\tabcolsep}{3.3pt}
 \begin{tabular}{llcccccccc}
 \toprule
  & & human GT & \multicolumn{2}{c}{BDD100K} & \multicolumn{2}{c}{Stratum 5} & \multicolumn{2}{c}{150Q suite} & ms\\
 \cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}
 method & modalities & ($550$) & $1000$ & holdout & $258$ & val150 & mAP & skew & ($1508$)\\
 \midrule
-BEV-TSR-style~\cite{tang2025bevtsr} & BEV & 0.577\cont & n/a & n/a & 0.208\cont & n/a & 0.459\cont & $+26.5$ & $0.39$\\
+BEV-TSR-style~\cite{tang2025bevtsr} & BEV & 0.577$_{\pm.033}$\cont & n/a & n/a & 0.208\cont & n/a & 0.459\cont & $+26.5$ & $0.39$\\
 RefAV-style (LLM program)~\cite{davidson2025refav} & VLM flags, tags, meta & 0.717\cont & 0.432 & 0.184 & 0.188\cont & 0.198 & 0.823\cont$^{\ddagger}$ & $+5.1$ & $0.06$\\
 CARIM-style (neutral captions)~\cite{ki2025carim} & VLM captions & 0.274 & 0.440 & 0.293 & 0.227 & 0.320 & 0.268 & $+0.3$ & $1.05$\\
 CARIM-style (listing captions)~\cite{ki2025carim} & VLM captions & 0.377 & 0.463 & n/a & 0.248 & 0.309 & 0.308 & $-5.9$ & $1.53$\\
@@ -14,12 +14,13 @@ ReferGPT-style~\cite{chamiti2025refergpt} & image, tags, meta & 0.469\cont & 0.6
 \midrule
 CLIP ViT-B/32~\cite{radford2021clip} & image & 0.453 & 0.612 & 0.353 & 0.253 & 0.374 & 0.384 & $-11.7$ & $0.17$\\
 SigLIP ViT-B/16~\cite{zhai2023siglip} & image & 0.507 & 0.607 & 0.388 & 0.281 & 0.385 & 0.427 & $-12.9$ & $0.17$\\
-SigLIP2 ViT-B/16~\cite{tschannen2025siglip2} & image & 0.569 & \best{0.622} & \best{0.408} & \best{0.312} & 0.385 & 0.445 & $-16.2$ & $0.17$\\
-SigLIP2 + adapter (906 scenes) & image & 0.666 & 0.539 & 0.239 & 0.222 & 0.226 & 0.479 & $-7.3$ & $0.39$\\
+SigLIP2 ViT-B/16~\cite{tschannen2025siglip2} & image & 0.569 & 0.622 & 0.408 & 0.312 & 0.385 & 0.445 & $-16.2$ & $0.17$\\
+SigLIP2 + adapter (906 scenes) & image & 0.666$_{\pm.005}$ & 0.539 & 0.239 & 0.222 & 0.226 & 0.479 & $-7.3$ & $0.39$\\
 Qwen2.5-VL lookup~\cite{bai2025qwen25vl} & VLM margins & 0.732 & 0.587 & 0.231 & 0.219 & 0.231 & 0.414$^{\ddagger}$ & $-10.1$ & $0.01$\\
+SigLIP2 top-50 $+$ VLM rerank & image, VLM & 0.635 & \best{0.640} & \best{0.442} & \best{0.346} & \best{0.411} & 0.501 & $-12.3$ & $8{,}171$\\
 \midrule
-Naive convex router & all & 0.735\cont & 0.486 & 0.215 & 0.188\cont & 0.212 & 0.531\cont & $+8.7$ & $5.81$\\
-\textbf{SceneMiner} (portable) & image, VLM, meta & 0.762 & 0.614 & 0.400 & 0.311 & \best{0.394} & 0.654 & $-13.9$ & $2.47$\\
-\textbf{SceneMiner} (full) & all & \best{0.794}\cont & 0.614 & 0.400 & 0.308 & \best{0.394} & \best{0.694}\cont & $+2.6$ & $3.51$\\
+Naive convex router & all & 0.735$_{\pm.013}$\cont & 0.486 & 0.215 & 0.188\cont & 0.212 & 0.531\cont & $+8.7$ & $5.81$\\
+\textbf{SceneMiner} (portable) & image, VLM, meta & 0.762$_{\pm.004}$ & 0.614 & 0.400 & 0.311 & 0.394 & 0.654 & $-13.9$ & $2.47$\\
+\textbf{SceneMiner} (full) & all & \best{0.794}$_{\pm.008}$\cont & 0.614 & 0.400 & 0.308 & 0.394 & \best{0.694}\cont & $+2.6$ & $3.51$\\
 \bottomrule
 \end{tabular}

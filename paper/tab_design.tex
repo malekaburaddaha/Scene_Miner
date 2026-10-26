@@ -2,11 +2,11 @@
 \toprule
 design & human GT & BDD100K & suite / skew\\
 \midrule
-naive convex router & $0.735$ / $0.792$ & $0.486$ & $0.531$ / $+8.7$\\
-$+$ anti-collapse routing, \textsc{PartNorm} & $0.706$ / $0.766$ & $0.570$ & $0.518$ / $+1.1$\\
-$+$ \textsc{ResNorm}, single-prompt gate & $0.790$ / $0.828$ & $0.589$ & $0.631$ / $+17.0$\\
-$+$ contrastive gate, abstention & $0.788$ / $0.816$ & \best{0.628} & $0.594$ / \best{$+0.5$}\\
-$+$ factored gate & $0.785$ / $0.826$ & $0.616$ & $0.685$ / $+2.2$\\
-\textbf{SceneMiner} (conditional context removal) & \best{0.794} / \best{0.829} & $0.614$ & \best{0.694} / $+2.6$\\
+naive convex router & $0.735$$_{\pm.013}$ / $0.792$ & $0.486$$_{\pm.007}$ & $0.531$$_{\pm.023}$ / $+8.7$\\
+$+$ anti-collapse routing, \textsc{PartNorm} & $0.706$$_{\pm.022}$ / $0.766$ & $0.570$$_{\pm.004}$ & $0.518$$_{\pm.011}$ / $+1.1$\\
+$+$ \textsc{ResNorm}, single-prompt gate & $0.790$$_{\pm.010}$ / $0.828$ & $0.589$$_{\pm.002}$ & $0.631$$_{\pm.006}$ / $+17.0$\\
+$+$ contrastive gate, abstention & $0.788$$_{\pm.010}$ / $0.816$ & \best{0.628}$_{\pm.001}$ & $0.594$$_{\pm.007}$ / \best{$+0.5$}\\
+$+$ factored gate & $0.785$$_{\pm.016}$ / $0.826$ & $0.616$$_{\pm.001}$ & $0.685$$_{\pm.005}$ / $+2.2$\\
+\textbf{SceneMiner} (conditional context removal) & \best{0.794}$_{\pm.008}$ / \best{0.829} & $0.614$$_{\pm.002}$ & \best{0.694}$_{\pm.007}$ / $+2.6$\\
 \bottomrule
 \end{tabular}

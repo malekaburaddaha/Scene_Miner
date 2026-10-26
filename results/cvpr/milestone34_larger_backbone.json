@@ -1,0 +1,184 @@
+{
+ "doc": "MILESTONE 34 - a larger SigLIP2 backbone: So400m/14 at 384 px instead of ViT-B/16.\n\n--part embed --data {corpus,val150,bdd,holdout}\n    normalised So400m image embeddings of the same image files the ViT-B/16 features\n    were computed from -> work_dirs/emb_siglip2_so400m_{data}.npz (emb, names)\n--part summarize\n    joins the So400m run of eval_related_work_baselines.py (zero-shot SigLIP2 and\n    SceneMiner retrained on So400m features, full and portable, five seeds) with the\n    ViT-B/16 run of Table 2 -> results/cvpr/milestone34_larger_backbone.json\n\nThe So400m SceneMiner is trained with the unchanged v2.6 recipe (scripts/\ntrain_sceneminer_v26.py --siglip-repo/--siglip-emb); its concept bank and gate are\nrebuilt in the So400m text space from the same training phrasings. Nothing is tuned.\n",
+ "backbone_repo": "google/siglip2-so400m-patch14-384",
+ "rows": {
+  "SigLIP2 ViT-B/16": {
+   "human_gt": 0.5687830507009249,
+   "bdd": 0.6218381432122236,
+   "s5_corpus_atomic": 0.33697972637204693,
+   "s5_corpus_compositional": 0.2864614380920319,
+   "s5_val150_atomic": 0.38239120353773365,
+   "s5_val150_compositional": 0.39594664594664597,
+   "suite": 0.4445509259879134,
+   "suite_skew_pts": -16.19481231206062,
+   "human_gt_per_attr": {
+    "droplets": 0.9129275459510545,
+    "glare": 0.4143846277626952,
+    "wet_road": 0.8433058865036837,
+    "low_contrast": 0.1045141425862662
+   },
+   "holdout": 0.4082308711275052
+  },
+  "SigLIP2 So400m/14": {
+   "human_gt": 0.5427391277027401,
+   "bdd": 0.6235171101650304,
+   "s5_corpus_atomic": 0.37346154949051635,
+   "s5_corpus_compositional": 0.3950801497600608,
+   "s5_val150_atomic": 0.40715883908762807,
+   "s5_val150_compositional": 0.3996273814752076,
+   "suite": 0.453912818960073,
+   "suite_skew_pts": -10.061478978727285,
+   "human_gt_per_attr": {
+    "droplets": 0.8292411281298817,
+    "glare": 0.5190634553766269,
+    "wet_road": 0.7453597026060719,
+    "low_contrast": 0.07729222469838024
+   },
+   "holdout": 0.47447362622286665
+  },
+  "SceneMiner (portable), ViT-B/16": {
+   "human_gt": 0.7619962158539066,
+   "bdd": 0.6142387677009594,
+   "s5_corpus_atomic": 0.33054437782568136,
+   "s5_corpus_compositional": 0.2913296764700566,
+   "s5_val150_atomic": 0.389809749638487,
+   "s5_val150_compositional": 0.41644750273233244,
+   "suite": 0.6536618744421558,
+   "suite_skew_pts": -13.928145645393956,
+   "human_gt_per_attr": {
+    "droplets": 0.915507595203259,
+    "glare": 0.6313270641499515,
+    "wet_road": 0.9675248927823572,
+    "low_contrast": 0.533625311280059
+   },
+   "holdout": 0.40008544064523066
+  },
+  "SceneMiner (portable), So400m/14": {
+   "human_gt": 0.7419334566078806,
+   "bdd": 0.650438305690605,
+   "s5_corpus_atomic": 0.3586808351032884,
+   "s5_corpus_compositional": 0.3750339534595882,
+   "s5_val150_atomic": 0.39998803556714035,
+   "s5_val150_compositional": 0.36578751065643644,
+   "suite": 0.6415855926251847,
+   "suite_skew_pts": -11.928145645393954,
+   "human_gt_per_attr": {
+    "droplets": 0.8383936357390459,
+    "glare": 0.6464660944488217,
+    "wet_road": 0.975775609864131,
+    "low_contrast": 0.5070984863795236
+   },
+   "holdout": 0.4675974772263895
+  },
+  "SceneMiner, ViT-B/16": {
+   "human_gt": 0.7939079235456028,
+   "bdd": 0.6142387677009594,
+   "s5_corpus_atomic": 0.3302389889683567,
+   "s5_corpus_compositional": 0.28606408280085394,
+   "s5_val150_atomic": 0.389809749638487,
+   "s5_val150_compositional": 0.41644750273233244,
+   "suite": 0.6944798728861561,
+   "suite_skew_pts": 2.605187687939378,
+   "human_gt_per_attr": {
+    "droplets": 0.9429354936381606,
+    "glare": 0.5919099322516288,
+    "wet_road": 0.9762638625593072,
+    "low_contrast": 0.6645224057333146
+   },
+   "holdout": 0.40008544064523066
+  },
+  "SceneMiner, So400m/14": {
+   "human_gt": 0.78418707849856,
+   "bdd": 0.650438305690605,
+   "s5_corpus_atomic": 0.35199284078817783,
+   "s5_corpus_compositional": 0.34496186158368847,
+   "s5_val150_atomic": 0.39998803556714035,
+   "s5_val150_compositional": 0.36578751065643644,
+   "suite": 0.6954344964325747,
+   "suite_skew_pts": 4.205187687939379,
+   "human_gt_per_attr": {
+    "droplets": 0.8980335068887075,
+    "glare": 0.6217598012627743,
+    "wet_road": 0.9741386762147926,
+    "low_contrast": 0.6428163296279651
+   },
+   "holdout": 0.4675974772263895
+  }
+ },
+ "paired": {
+  "SceneMiner minus SigLIP2, ViT-B/16": {
+   "bdd": {
+    "delta": -0.007599375511264393,
+    "perm_p": 0.9374062593740626,
+    "n_queries": 12
+   },
+   "s5_corpus_atomic": {
+    "delta": -0.006740737403690226,
+    "perm_p": 0.46335366463353667,
+    "n_queries": 20
+   },
+   "s5_corpus_compositional": {
+    "delta": -0.00039735529117796776,
+    "perm_p": 0.9787021297870213,
+    "n_queries": 20
+   },
+   "s5_val150_atomic": {
+    "delta": 0.007418546100753348,
+    "perm_p": 0.3641635836416358,
+    "n_queries": 20
+   },
+   "s5_val150_compositional": {
+    "delta": 0.02050085678568648,
+    "perm_p": 0.7634236576342366,
+    "n_queries": 4
+   },
+   "suite": {
+    "delta": 0.24992894689824274,
+    "perm_p": 9.999000099990002e-05,
+    "n_queries": 150
+   },
+   "holdout": {
+    "delta": -0.008145430482274573,
+    "perm_p": 0.28217178282171784,
+    "n_queries": 35
+   }
+  },
+  "SceneMiner minus SigLIP2, So400m/14": {
+   "bdd": {
+    "delta": 0.02692119552557459,
+    "perm_p": 0.7308269173082692,
+    "n_queries": 12
+   },
+   "s5_corpus_atomic": {
+    "delta": -0.02146870870233853,
+    "perm_p": 0.09679032096790322,
+    "n_queries": 20
+   },
+   "s5_corpus_compositional": {
+    "delta": -0.050118288176372185,
+    "perm_p": 0.0207979202079792,
+    "n_queries": 20
+   },
+   "s5_val150_atomic": {
+    "delta": -0.007170803520487759,
+    "perm_p": 0.698930106989301,
+    "n_queries": 20
+   },
+   "s5_val150_compositional": {
+    "delta": -0.03383987081877107,
+    "perm_p": 0.48835116488351166,
+    "n_queries": 4
+   },
+   "suite": {
+    "delta": 0.2415216774725016,
+    "perm_p": 9.999000099990002e-05,
+    "n_queries": 150
+   },
+   "holdout": {
+    "delta": -0.006876148996476971,
+    "perm_p": 0.6006399360063993,
+    "n_queries": 35
+   }
+  }
+ }
+}

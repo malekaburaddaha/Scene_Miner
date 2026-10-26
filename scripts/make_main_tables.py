@@ -61,7 +61,11 @@ def design():
     bsk = min(abs(r[5]) for r in rows)
     b = lambda x, i: f"\\best{{{x:.3f}}}" if round(x, 3) == round(best[i], 3) else f"${x:.3f}$"
     bs = lambda x: ("\\best{" + sk(x) + "}") if abs(x) == bsk else sk(x)
-    lines = [f"{r[0]} & {b(r[1], 0)} / {b(r[2], 1)} & {b(r[3], 2)} & {b(r[4], 3)} / {bs(r[5])}" + "\\\\" for r in rows]
+    # Milestone 34: sd over five single-seed models (scripts/run_seed_sd.sh, summarize_seed_sd.py)
+    SD = J("milestone34_seed_sd.json")["rows"]
+    pm = lambda v, k: f"$_{{\\pm{SD[f'T1|v2.{v}'][k]['sd']:.3f}}}$".replace("0.", ".", 1)
+    lines = [f"{r[0]} & {b(r[1], 0)}{pm(i + 1, 'human_gt')} / {b(r[2], 1)} & {b(r[3], 2)}{pm(i + 1, 'bdd')} & "
+             f"{b(r[4], 3)}{pm(i + 1, 'suite')} / {bs(r[5])}" + "\\\\" for i, r in enumerate(rows)]
     tex = ["\\begin{tabular}{lccc}", "\\toprule", "design & human GT & BDD100K & suite / skew\\\\", "\\midrule",
            *lines, "\\bottomrule", "\\end{tabular}"]
     (P/"tab_design.tex").write_text("\n".join(tex) + "\n"); return rows
@@ -261,7 +265,62 @@ def rater2():
     (P/"supp_tables"/"rater2_methods_table.tex").write_text("\n".join(T) + "\n")
 
 
+def m34_supp():
+    """paper/supp_tables/vlm_rerank_table.tex (the per-query VLM reranker per benchmark) and
+    seed_sd_table.tex (five single-seed models of every trained row). Milestone 34."""
+    V = J("milestone34_per_query_vlm.json")["benchmarks"]
+    rows = [("human GT ($550$, $4$ queries)", "human_gt"), ("BDD100K ($1000$)", "bdd"), ("holdout ($2000$)", "holdout"),
+            ("Stratum 5 atomic, corpus", "s5_corpus_atomic"), ("Stratum 5 conj., corpus", "s5_corpus_compositional"),
+            ("Stratum 5 atomic, val150", "s5_val150_atomic"), ("Stratum 5 conj., val150", "s5_val150_compositional"),
+            ("150-query suite", "suite")]
+    L = ["\\begin{tabular}{lcccccc}", "\\toprule",
+         "benchmark & SigLIP2 & reranker & SceneMiner & $\\Delta$ ($p$) & pos.\\ in top $50$\\\\", "\\midrule"]
+    for lab, k in rows:
+        v = V[k]; d = v["sceneminer_minus_rerank"]
+        if k == "human_gt":
+            bs = v["scene_bootstrap"]; dp = f"${bs['delta_sceneminer_minus_rerank']:+.3f}$ (${bs['p_one_sided']:.3f}$)"
+        else:
+            pp = d["perm_p"]; dp = f"${d['delta']:+.3f}$ (" + ("$<0.001$" if pp < 0.001 else f"${pp:.3f}$") + ")"
+        L.append(f"{lab} & {v['mAP_siglip2']:.3f} & {v['mAP_rerank']:.3f} & {v['sceneminer_mAP']:.3f} & {dp} & "
+                 f"{100 * v['recall_of_positives_in_top50']:.0f}\\%\\\\")
+    L += ["\\bottomrule", "\\end{tabular}"]
+    (P/"supp_tables"/"vlm_rerank_table.tex").write_text("\n".join(L) + "\n")
+    SD = J("milestone34_seed_sd.json")["rows"]
+    rows = [("BEV-TSR-style", "T2|BEV-TSR-style text-to-BEV"), ("SigLIP2 + adapter", "T2|SigLIP2 + fine-tuned adapter"),
+            ("naive convex router (v2.1)", "T2|Naive uncalibrated fusion"), ("$+$ \\textsc{PartNorm} (v2.2)", "T1|v2.2"),
+            ("$+$ \\textsc{ResNorm} (v2.3)", "T1|v2.3"), ("$+$ contrastive gate (v2.4)", "T1|v2.4"), ("$+$ factored gate (v2.5)", "T1|v2.5"),
+            ("SceneMiner (portable)", "T2|SceneMiner (portable)"), ("SceneMiner", "T2|SceneMiner")]
+    cols = [("human_gt", "human GT"), ("bdd", "BDD100K"), ("holdout", "holdout"), ("s5_corpus_atomic", "S5 atomic"),
+            ("s5_corpus_compositional", "S5 conj."), ("suite", "suite"), ("suite_skew_pts", "skew")]
+    T = ["\\begin{tabular}{l" + "c" * len(cols) + "}", "\\toprule", "row & " + " & ".join(c for _, c in cols) + "\\\\", "\\midrule"]
+    for lab, k in rows:
+        cell = []
+        for c, _ in cols:
+            v = SD[k].get(c)
+            cell.append("--" if v is None else (f"${v['mean']:+.1f}\\pm{v['sd']:.1f}$" if c == "suite_skew_pts" else f"${v['mean']:.3f}\\pm{v['sd']:.3f}$"))
+        T.append(f"{lab} & " + " & ".join(cell) + "\\\\")
+    T += ["\\bottomrule", "\\end{tabular}"]
+    (P/"supp_tables"/"seed_sd_table.tex").write_text("\n".join(T) + "\n")
+
+
+def backbone_supp():
+    """paper/supp_tables/backbone_table.tex: SigLIP2 ViT-B/16 vs So400m/14, zero-shot and as
+    SceneMiner's backbone (milestone34_larger_backbone.json)."""
+    d = J("milestone34_larger_backbone.json"); Rw = d["rows"]
+    cols = [("human_gt", "human GT"), ("bdd", "BDD100K"), ("holdout", "holdout"), ("s5_corpus_atomic", "S5 atomic"),
+            ("s5_corpus_compositional", "S5 conj."), ("s5_val150_atomic", "val150 at."), ("suite", "suite"), ("suite_skew_pts", "skew")]
+    L = ["\\begin{tabular}{ll" + "c" * len(cols) + "}", "\\toprule", "ranker & backbone & " + " & ".join(c for _, c in cols) + "\\\\"]
+    for name, pre in [("SigLIP2 zero-shot", "SigLIP2 "), ("SceneMiner (portable)", "SceneMiner (portable), "), ("SceneMiner", "SceneMiner, ")]:
+        L.append("\\midrule")
+        for bb, key in [("ViT-B/16", "ViT-B/16"), ("So400m/14", "So400m/14")]:
+            r = Rw[pre + key] if name != "SigLIP2 zero-shot" else Rw[f"SigLIP2 {key}"]
+            L.append(f"{name} & {bb} & " + " & ".join("--" if r[c] is None else (f"${r[c]:+.1f}$" if c == "suite_skew_pts" else f"{r[c]:.3f}")
+                                                       for c, _ in cols) + "\\\\")
+    L += ["\\bottomrule", "\\end{tabular}"]
+    (P/"supp_tables"/"backbone_table.tex").write_text("\n".join(L) + "\n")
+
+
 if __name__ == "__main__":
-    for f in (design, ablation, bdd, suite, regimes, loop, holdout_supp, rater_supp, rater2):
+    for f in (design, ablation, bdd, suite, regimes, loop, holdout_supp, rater_supp, rater2, m34_supp, backbone_supp):
         try: f(); print("ok", f.__name__)
         except Exception as e: print("FAILED", f.__name__, repr(e))
