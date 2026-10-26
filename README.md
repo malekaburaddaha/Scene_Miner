@@ -268,7 +268,8 @@ python scripts/explore_object_cap_train.py         # M32: gate cap on conjunctio
 python scripts/make_main_tables.py && python scripts/make_tab_master.py && python scripts/make_tab_bddq.py
 python scripts/make_fig1_architecture.py && python scripts/make_figures.py && python scripts/make_qualitative_showcase.py
 python scripts/strip_pdf_metadata.py && python scripts/verify_paper_numbers.py && python scripts/check_anonymity.py
-scripts/run_rater2_ui.sh <name>   # second rater, 160 scenes; then: python scripts/incorporate_rater2.py --rater <name>
+scripts/run_rater2_ui.sh <name>   # second rater, 160 scenes (done; labels in benchmark_cvpr/human_rater2_160.json)
+SM_FINAL=v26 python scripts/incorporate_rater2.py   # agreement + every method graded by both raters
 
 # ── bibliography (fetched, never typed) ──────────────────────────────────
 SSL_CERT_FILE=/etc/pki/tls/certs/ca-bundle.crt python scripts/verify_bibliography.py
@@ -345,7 +346,7 @@ the attributes that define suite relevance):
   0.197 VRU recall (p < 0.001).
 
 `results/cvpr/MASTER_REPORT.md` carries every table, the contamination map, and what does
-not hold. `results/cvpr/MILESTONE27.md`–`MILESTONE32.md` cover the latest work.
+not hold. `results/cvpr/MILESTONE27.md`–`MILESTONE33.md` cover the latest work.
 
 ---
 

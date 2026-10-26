@@ -45,6 +45,8 @@ def registry():
     RT = lambda *p: get("milestone27_rater_sensitivity.json", list(p))
     LP = lambda *p: get("milestone27_val150_retrieval_v26.json", list(p))
     OC = lambda *p: get("milestone32_object_cap_train.json", list(p))
+    R2 = lambda *p: get("milestone33_rater2_results.json", list(p))
+    ATTR4 = ("droplets", "glare", "wet_road", "low_contrast")
     HP = lambda k, sc="all": M("holdout", "modes", "metadata_free", "paired_vs_sceneminer_portable", k, sc)
     T, MT = "paper/main_cvpr.tex", "paper/tab_master.tex"
     f3, p2, p3, s3 = "{:.3f}", "{:.2f}", "{:.3f}", "{:+.3f}"
@@ -85,8 +87,6 @@ def registry():
         (T, lambda: S("corpus_258", "tests", "v2.4_monocular vs logit_VLM_lookup | semantic_atomic", "delta"), s3, "semantics vs lookup"),
         (T, lambda: Y("tests", "v2.4_monocular - late_fusion SigLIP2+metadata", "delta"), s3, "conjunctions vs SigLIP2+metadata"),
         (T, lambda: Y("tests", "v2.4_monocular - late_fusion SigLIP2+metadata", "perm_p"), p3, "conjunctions p"),
-        (T, lambda: RT("full_550", "SceneMiner_v2.4", "macro") - RT("full_550", "logit_VLM_lookup", "macro"), s3, "rater lead all"),
-        (T, lambda: RT("boundary_excluded", "drop_20pct", "SceneMiner_v2.4", "macro") - RT("boundary_excluded", "drop_20pct", "logit_VLM_lookup", "macro"), s3, "rater lead drop 20%"),
         (T, lambda: -LP("topk", "degradation", "SceneMiner_v2.4", "mAP_front", "delta"), f3, "loop mAP"),
         (T, lambda: -LP("topk", "degradation", "SceneMiner_v2.4", "vru_recall", "delta"), f3, "loop VRU recall"),
         (T, lambda: LP("pairwise", "SceneMiner_v2.4 - zeroshot_SigLIP2 | mAP_front", "delta"), "{:.3f}", "loop vs SigLIP2"),
@@ -97,6 +97,17 @@ def registry():
         (T, lambda: Y("tests", "v2.4_monocular - zeroshot_SigLIP2", "delta"), s3, "conjunctions vs SigLIP2"),
         (T, lambda: OC("detectors", OC("selected"), "recall_synthetic"), p2, "object cap recall (rejected)"),
         (T, lambda: 100 * OC("detectors", OC("selected"), "false_flag_degradation"), "{:.1f}", "object cap false-flag %"),
+        (T, lambda: R2("macro", "human_human", "kappa"), f3, "rater2 kappa"),
+        (T, lambda: R2("macro", "human_human", "kappa"), p2, "rater2 kappa (abstract)"),
+        (T, lambda: min(R2("attributes", a, "human_human", "kappa") for a in ATTR4), f3, "rater2 kappa min attr"),
+        (T, lambda: max(R2("attributes", a, "human_human", "kappa") for a in ATTR4), f3, "rater2 kappa max attr"),
+        (T, lambda: R2("macro", "by_stratum_kappa", "vlm_boundary"), f3, "rater2 kappa boundary"),
+        (T, lambda: R2("macro", "vlm_vs_rater1_kappa"), f3, "VLM-rater1 kappa"),
+        (T, lambda: R2("macro", "vlm_vs_rater2_kappa"), f3, "VLM-rater2 kappa"),
+        (T, lambda: R2("macro", "mAP", "SceneMiner", "rater2"), f3, "SceneMiner graded by rater 2"),
+        (T, lambda: R2("paired_bootstrap_rater2", "SigLIP2 ViT-B/16", "delta"), s3, "rater2 lead vs SigLIP2"),
+        (T, lambda: R2("paired_bootstrap_rater2", "Late fusion SigLIP2 + lookup", "delta"), s3, "rater2 lead vs fusion"),
+        (T, lambda: R2("paired_bootstrap_rater2", "Qwen2.5-VL lookup", "delta"), s3, "rater2 lead vs lookup"),
         (MT, lambda: M("methods", "SceneMiner", "human_gt"), f3, "Table 2 full human GT"),
         (MT, lambda: M("methods", "SceneMiner (portable)", "suite"), f3, "Table 2 portable suite"),
     ]
@@ -126,6 +137,11 @@ def strip_tex(t):
     return t
 
 
+def found(s, txt):
+    """s occurs as a whole number: not preceded by a digit or point, not followed by a digit."""
+    return re.search(r"(?<![\d.])" + re.escape(s) + r"(?!\d)", txt) is not None
+
+
 def main():
     bad = []; rep = {"registry": [], "scan": {}}
     for tex, fn, fmt, note in registry():
@@ -134,7 +150,7 @@ def main():
             bad.append(f"{note}: source missing ({e!r})"); continue
         s = fmt.format(v)
         txt = Path(tex).read_text().replace("$", "").replace("\\,", "")
-        ok = s in txt or s.lstrip("+") in txt or s.replace("-", "") in txt
+        ok = any(found(v_, txt) for v_ in (s, s.lstrip("+"), s.replace("-", "")))
         rep["registry"].append({"claim": note, "value": s, "tex": tex, "found": ok})
         if not ok: bad.append(f"{note}: {s} not found in {tex}")
     vals = all_json_values()

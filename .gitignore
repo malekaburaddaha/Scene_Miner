@@ -52,3 +52,5 @@ __pycache__/
 !results/cvpr/*.json
 !results/cvpr/*.md
 !benchmark_cvpr/*.json
+# raw annotation-tool output; the anonymised copy is in benchmark_cvpr/
+results/rater2/

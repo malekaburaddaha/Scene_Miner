@@ -1,0 +1,1296 @@
+{
+ "doc": "MILESTONE 33 - the second human rater (160 scenes) in the evaluation.\n\nInputs (anonymised; the `rater` field is \"rater1\" / \"rater2\"):\n  benchmark_cvpr/human_rater1_600.json   rater 1, 600 scenes (550 after unsure/skip)\n  benchmark_cvpr/human_rater2_160.json   rater 2, the 160-scene subset\n  benchmark_cvpr/rater2_subset_160.json  how the subset was drawn: per attribute,\n      20 rater-1 positives and 20 VLM-boundary scenes (margin closest to 0). The\n      subset over-samples positives and hard cases on purpose, so agreement on it\n      is a conservative (lower) estimate of agreement on the full sample.\n\nPer attribute and macro-averaged:\n  1. human-human agreement: Cohen's kappa (scene-bootstrap 95% CI), raw agreement,\n     positive / negative specific agreement, prevalence; by stratum (rater-1\n     positive vs VLM boundary, over all 160 scenes and over the 40 drawn for the\n     attribute);\n  2. VLM-human kappa: the Stage-1 VLM's binary flag against each rater on the same\n     scenes;\n  3. mAP of every Table 2 method and the late-fusion control graded against\n     rater 2, against rater 1 on the same 160 scenes, against the two-rater\n     consensus (only scenes where they agree), and against the union / intersection\n     of the two raters' positives. Human-GT protocol: per-seed AP averaged over\n     seeds. mAP on the subset is not comparable with the 550-scene numbers (the\n     subset is enriched for positives); rankers are compared on identical ground.\n  4. paired scene bootstrap of SceneMiner minus each key ranker, macro mAP, rater 2.\n-> results/cvpr/milestone33_rater2_results.json\n",
+ "n_scenes": 160,
+ "strata": {
+  "rater1_positive": 80,
+  "vlm_boundary": 80
+ },
+ "attributes": {
+  "droplets": {
+   "human_human": {
+    "n": 160,
+    "kappa": 0.8283828382838283,
+    "agreement": 0.91875,
+    "positive_agreement": 0.8943089430894309,
+    "negative_agreement": 0.934010152284264,
+    "prevalence_a": 0.39375,
+    "prevalence_b": 0.375,
+    "table": [
+     [
+      55,
+      8
+     ],
+     [
+      5,
+      92
+     ]
+    ],
+    "kappa_ci95": [
+     0.7309079789100494,
+     0.9104142448330684
+    ]
+   },
+   "by_stratum": {
+    "rater1_positive": {
+     "n": 80,
+     "kappa": 0.799624295554164,
+     "agreement": 0.9,
+     "positive_agreement": 0.8947368421052632,
+     "negative_agreement": 0.9047619047619048,
+     "prevalence_a": 0.4875,
+     "prevalence_b": 0.4625,
+     "table": [
+      [
+       34,
+       5
+      ],
+      [
+       3,
+       38
+      ]
+     ]
+    },
+    "vlm_boundary": {
+     "n": 80,
+     "kappa": 0.8493975903614458,
+     "agreement": 0.9375,
+     "positive_agreement": 0.8936170212765957,
+     "negative_agreement": 0.9557522123893806,
+     "prevalence_a": 0.3,
+     "prevalence_b": 0.2875,
+     "table": [
+      [
+       21,
+       3
+      ],
+      [
+       2,
+       54
+      ]
+     ]
+    }
+   },
+   "drawn_for_attribute": {
+    "rater1_positive": {
+     "n": 20,
+     "kappa": null,
+     "agreement": 0.9,
+     "positive_agreement": 0.9473684210526315,
+     "negative_agreement": 0.0,
+     "prevalence_a": 1.0,
+     "prevalence_b": 0.9,
+     "table": [
+      [
+       18,
+       2
+      ],
+      [
+       0,
+       0
+      ]
+     ],
+     "rater2_confirms": 0.9
+    },
+    "vlm_boundary": {
+     "n": 20,
+     "kappa": 1.0,
+     "agreement": 1.0,
+     "positive_agreement": 1.0,
+     "negative_agreement": 1.0,
+     "prevalence_a": 0.05,
+     "prevalence_b": 0.05,
+     "table": [
+      [
+       1,
+       0
+      ],
+      [
+       0,
+       19
+      ]
+     ]
+    }
+   },
+   "vlm_vs_rater1": {
+    "n": 160,
+    "kappa": 0.6318453750575241,
+    "agreement": 0.8125,
+    "positive_agreement": 0.8,
+    "negative_agreement": 0.8235294117647058,
+    "prevalence_a": 0.54375,
+    "prevalence_b": 0.39375,
+    "table": [
+     [
+      60,
+      27
+     ],
+     [
+      3,
+      70
+     ]
+    ],
+    "kappa_ci95": [
+     0.5204231412164454,
+     0.7409006785934609
+    ]
+   },
+   "vlm_vs_rater2": {
+    "n": 160,
+    "kappa": 0.5963302752293578,
+    "agreement": 0.79375,
+    "positive_agreement": 0.7755102040816326,
+    "negative_agreement": 0.8092485549132948,
+    "prevalence_a": 0.54375,
+    "prevalence_b": 0.375,
+    "table": [
+     [
+      57,
+      30
+     ],
+     [
+      3,
+      70
+     ]
+    ],
+    "kappa_ci95": [
+     0.47751729467272014,
+     0.706550757321793
+    ]
+   },
+   "n_consensus": 147,
+   "positives": {
+    "rater2": 60,
+    "rater1": 63,
+    "consensus": 55,
+    "union": 68,
+    "intersection": 55
+   },
+   "mAP": {
+    "BEV-TSR-style text-to-BEV": {
+     "rater2": 0.8155581849657392,
+     "rater1": 0.8238791448145142,
+     "consensus": 0.8732754239037052,
+     "union": 0.8621512076965621,
+     "intersection": 0.7790407946433742
+    },
+    "RefAV-style programmatic filter": {
+     "rater2": 0.8508995140030396,
+     "rater1": 0.823328203655313,
+     "consensus": 0.9049286588401502,
+     "union": 0.9190877794282077,
+     "intersection": 0.7541803680357385
+    },
+    "RefAV-style (rule compiler, M23)": {
+     "rater2": 0.8508995140030396,
+     "rater1": 0.823328203655313,
+     "consensus": 0.9049286588401502,
+     "union": 0.9190877794282077,
+     "intersection": 0.7541803680357385
+    },
+    "CARIM-style caption retrieval": {
+     "rater2": 0.488297183381634,
+     "rater1": 0.46218942011832903,
+     "consensus": 0.4687634006966215,
+     "union": 0.5072373217554142,
+     "intersection": 0.4418971225238178
+    },
+    "CARIM-style (enumerating prompt, M23)": {
+     "rater2": 0.6645414788937622,
+     "rater1": 0.6435121372091734,
+     "consensus": 0.675665305510721,
+     "union": 0.6839748822764297,
+     "intersection": 0.624144644481605
+    },
+    "Tag-map (Talk2BEV/nuPrompt-style)": {
+     "rater2": 0.8018222903798883,
+     "rater1": 0.8533184555365786,
+     "consensus": 0.8727091147660831,
+     "union": 0.88044989925533,
+     "intersection": 0.7776607830395245
+    },
+    "ReferGPT-style state + CLIP": {
+     "rater2": 0.8067616921573232,
+     "rater1": 0.8267982261073581,
+     "consensus": 0.8611450820688126,
+     "union": 0.883508565671664,
+     "intersection": 0.7520409542908133
+    },
+    "CLIP ViT-B/32": {
+     "rater2": 0.856584004030903,
+     "rater1": 0.8788336379936851,
+     "consensus": 0.9153106220481828,
+     "union": 0.9150135564629589,
+     "intersection": 0.8223697906612734
+    },
+    "SigLIP ViT-B/16": {
+     "rater2": 0.8383506294157878,
+     "rater1": 0.8288878280260366,
+     "consensus": 0.9213327793603119,
+     "union": 0.9163591892370677,
+     "intersection": 0.7515172113374728
+    },
+    "SigLIP2 ViT-B/16": {
+     "rater2": 0.9422801112156987,
+     "rater1": 0.9289173559988897,
+     "consensus": 0.9610118670792469,
+     "union": 0.9540929524986562,
+     "intersection": 0.923326493788252
+    },
+    "SigLIP2 + fine-tuned adapter": {
+     "rater2": 0.9311311430841023,
+     "rater1": 0.9023045773792457,
+     "consensus": 0.9421079154308817,
+     "union": 0.9380964348330771,
+     "intersection": 0.9007390140516345
+    },
+    "Qwen2.5-VL lookup": {
+     "rater2": 0.8508995140030396,
+     "rater1": 0.823328203655313,
+     "consensus": 0.9049286588401502,
+     "union": 0.9190877794282077,
+     "intersection": 0.7541803680357385
+    },
+    "Naive uncalibrated fusion": {
+     "rater2": 0.8668153780815903,
+     "rater1": 0.9018866148705549,
+     "consensus": 0.9294911896380855,
+     "union": 0.9331422609334646,
+     "intersection": 0.8380609225703115
+    },
+    "SceneMiner (portable)": {
+     "rater2": 0.9415070822577649,
+     "rater1": 0.9151713753757681,
+     "consensus": 0.960999991981042,
+     "union": 0.9634189740887564,
+     "intersection": 0.8967595583674779
+    },
+    "SceneMiner": {
+     "rater2": 0.943096194622458,
+     "rater1": 0.9384234169096745,
+     "consensus": 0.9683789408960483,
+     "union": 0.9666319517396429,
+     "intersection": 0.9203667712517112
+    },
+    "Late fusion SigLIP2 + lookup": {
+     "rater2": 0.9443129884382265,
+     "rater1": 0.9065683130069063,
+     "consensus": 0.9694235013205796,
+     "union": 0.9704345567412475,
+     "intersection": 0.8815329055000976
+    }
+   }
+  },
+  "glare": {
+   "human_human": {
+    "n": 160,
+    "kappa": 0.7598152424942262,
+    "agreement": 0.91875,
+    "positive_agreement": 0.8115942028985508,
+    "negative_agreement": 0.9482071713147411,
+    "prevalence_a": 0.21875,
+    "prevalence_b": 0.2125,
+    "table": [
+     [
+      28,
+      7
+     ],
+     [
+      6,
+      119
+     ]
+    ],
+    "kappa_ci95": [
+     0.6266022550599392,
+     0.8678668694309687
+    ]
+   },
+   "by_stratum": {
+    "rater1_positive": {
+     "n": 80,
+     "kappa": 0.776536312849162,
+     "agreement": 0.9,
+     "positive_agreement": 0.8518518518518519,
+     "negative_agreement": 0.9245283018867925,
+     "prevalence_a": 0.35,
+     "prevalence_b": 0.325,
+     "table": [
+      [
+       23,
+       5
+      ],
+      [
+       3,
+       49
+      ]
+     ]
+    },
+    "vlm_boundary": {
+     "n": 80,
+     "kappa": 0.6323529411764705,
+     "agreement": 0.9375,
+     "positive_agreement": 0.6666666666666666,
+     "negative_agreement": 0.9655172413793104,
+     "prevalence_a": 0.0875,
+     "prevalence_b": 0.1,
+     "table": [
+      [
+       5,
+       2
+      ],
+      [
+       3,
+       70
+      ]
+     ]
+    }
+   },
+   "drawn_for_attribute": {
+    "rater1_positive": {
+     "n": 20,
+     "kappa": null,
+     "agreement": 0.85,
+     "positive_agreement": 0.918918918918919,
+     "negative_agreement": 0.0,
+     "prevalence_a": 1.0,
+     "prevalence_b": 0.85,
+     "table": [
+      [
+       17,
+       3
+      ],
+      [
+       0,
+       0
+      ]
+     ],
+     "rater2_confirms": 0.85
+    },
+    "vlm_boundary": {
+     "n": 20,
+     "kappa": 0.6428571428571426,
+     "agreement": 0.95,
+     "positive_agreement": 0.6666666666666666,
+     "negative_agreement": 0.972972972972973,
+     "prevalence_a": 0.05,
+     "prevalence_b": 0.1,
+     "table": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       18
+      ]
+     ]
+    }
+   },
+   "vlm_vs_rater1": {
+    "n": 160,
+    "kappa": 0.45591939546599514,
+    "agreement": 0.83125,
+    "positive_agreement": 0.5573770491803278,
+    "negative_agreement": 0.8957528957528957,
+    "prevalence_a": 0.1625,
+    "prevalence_b": 0.21875,
+    "table": [
+     [
+      17,
+      9
+     ],
+     [
+      18,
+      116
+     ]
+    ],
+    "kappa_ci95": [
+     0.2811448232718171,
+     0.6204933586337762
+    ]
+   },
+   "vlm_vs_rater2": {
+    "n": 160,
+    "kappa": 0.3871297242083758,
+    "agreement": 0.8125,
+    "positive_agreement": 0.5,
+    "negative_agreement": 0.8846153846153846,
+    "prevalence_a": 0.1625,
+    "prevalence_b": 0.2125,
+    "table": [
+     [
+      15,
+      11
+     ],
+     [
+      19,
+      115
+     ]
+    ],
+    "kappa_ci95": [
+     0.19510236732742883,
+     0.5564232867149218
+    ]
+   },
+   "n_consensus": 147,
+   "positives": {
+    "rater2": 34,
+    "rater1": 35,
+    "consensus": 28,
+    "union": 41,
+    "intersection": 28
+   },
+   "mAP": {
+    "BEV-TSR-style text-to-BEV": {
+     "rater2": 0.37644154162006965,
+     "rater1": 0.46920966176392,
+     "consensus": 0.4313751944558069,
+     "union": 0.46961687065756924,
+     "intersection": 0.3747943382984652
+    },
+    "RefAV-style programmatic filter": {
+     "rater2": 0.5825222386069895,
+     "rater1": 0.6646152047426485,
+     "consensus": 0.6779858500543918,
+     "union": 0.6506240050000267,
+     "intersection": 0.6067085608899048
+    },
+    "RefAV-style (rule compiler, M23)": {
+     "rater2": 0.5825222386069895,
+     "rater1": 0.6646152047426485,
+     "consensus": 0.6779858500543918,
+     "union": 0.6506240050000267,
+     "intersection": 0.6067085608899048
+    },
+    "CARIM-style caption retrieval": {
+     "rater2": 0.22358324623949202,
+     "rater1": 0.20186251146335657,
+     "consensus": 0.19268445860487282,
+     "union": 0.244732999907133,
+     "intersection": 0.1796336784797842
+    },
+    "CARIM-style (enumerating prompt, M23)": {
+     "rater2": 0.3063074253342194,
+     "rater1": 0.31284169192955097,
+     "consensus": 0.3029844155479068,
+     "union": 0.3345465941148972,
+     "intersection": 0.28888517695250354
+    },
+    "Tag-map (Talk2BEV/nuPrompt-style)": {
+     "rater2": 0.35864124445983653,
+     "rater1": 0.4289753609727722,
+     "consensus": 0.4164841156082891,
+     "union": 0.4445358848185591,
+     "intersection": 0.34030255442581797
+    },
+    "ReferGPT-style state + CLIP": {
+     "rater2": 0.3814811459483534,
+     "rater1": 0.41832284399487923,
+     "consensus": 0.3798783892540198,
+     "union": 0.46642892649053314,
+     "intersection": 0.32952736975955593
+    },
+    "CLIP ViT-B/32": {
+     "rater2": 0.3182837141446681,
+     "rater1": 0.3555485394083667,
+     "consensus": 0.3137029773669257,
+     "union": 0.39013743184801414,
+     "intersection": 0.2808101928836579
+    },
+    "SigLIP ViT-B/16": {
+     "rater2": 0.4025718781303322,
+     "rater1": 0.42643975889050045,
+     "consensus": 0.4097631710629767,
+     "union": 0.46834745095470975,
+     "intersection": 0.3583069938977688
+    },
+    "SigLIP2 ViT-B/16": {
+     "rater2": 0.459615340808582,
+     "rater1": 0.45183664056048567,
+     "consensus": 0.46214988553377384,
+     "union": 0.50005929165333,
+     "intersection": 0.4150934894061985
+    },
+    "SigLIP2 + fine-tuned adapter": {
+     "rater2": 0.5438551995845725,
+     "rater1": 0.5768533878198939,
+     "consensus": 0.5890674333854571,
+     "union": 0.5709087205454988,
+     "intersection": 0.5647152222557407
+    },
+    "Qwen2.5-VL lookup": {
+     "rater2": 0.5825222386069895,
+     "rater1": 0.6646152047426485,
+     "consensus": 0.6779858500543918,
+     "union": 0.6506240050000267,
+     "intersection": 0.6067085608899048
+    },
+    "Naive uncalibrated fusion": {
+     "rater2": 0.5613019892429303,
+     "rater1": 0.6354732780691492,
+     "consensus": 0.6441541994058391,
+     "union": 0.6123553491845377,
+     "intersection": 0.5976451427826067
+    },
+    "SceneMiner (portable)": {
+     "rater2": 0.5861841155331068,
+     "rater1": 0.6718359556344266,
+     "consensus": 0.6892009885562981,
+     "union": 0.6573170718923554,
+     "intersection": 0.6102054560996668
+    },
+    "SceneMiner": {
+     "rater2": 0.557130299431012,
+     "rater1": 0.6599998357374862,
+     "consensus": 0.678252364861909,
+     "union": 0.642652176263312,
+     "intersection": 0.5805363597329938
+    },
+    "Late fusion SigLIP2 + lookup": {
+     "rater2": 0.6299181660510195,
+     "rater1": 0.6875809701315889,
+     "consensus": 0.7102088037045418,
+     "union": 0.682461049217921,
+     "intersection": 0.6477468477741661
+    }
+   }
+  },
+  "wet_road": {
+   "human_human": {
+    "n": 160,
+    "kappa": 0.8826214541897619,
+    "agreement": 0.94375,
+    "positive_agreement": 0.9291338582677166,
+    "negative_agreement": 0.9533678756476683,
+    "prevalence_a": 0.4125,
+    "prevalence_b": 0.38125,
+    "table": [
+     [
+      59,
+      7
+     ],
+     [
+      2,
+      92
+     ]
+    ],
+    "kappa_ci95": [
+     0.8034719947592532,
+     0.9490689161228711
+    ]
+   },
+   "by_stratum": {
+    "rater1_positive": {
+     "n": 80,
+     "kappa": 0.8011187072715973,
+     "agreement": 0.9,
+     "positive_agreement": 0.9,
+     "negative_agreement": 0.9,
+     "prevalence_a": 0.5375,
+     "prevalence_b": 0.4625,
+     "table": [
+      [
+       36,
+       7
+      ],
+      [
+       1,
+       36
+      ]
+     ]
+    },
+    "vlm_boundary": {
+     "n": 80,
+     "kappa": 0.9698795180722892,
+     "agreement": 0.9875,
+     "positive_agreement": 0.9787234042553191,
+     "negative_agreement": 0.9911504424778761,
+     "prevalence_a": 0.2875,
+     "prevalence_b": 0.3,
+     "table": [
+      [
+       23,
+       0
+      ],
+      [
+       1,
+       56
+      ]
+     ]
+    }
+   },
+   "drawn_for_attribute": {
+    "rater1_positive": {
+     "n": 20,
+     "kappa": null,
+     "agreement": 0.75,
+     "positive_agreement": 0.8571428571428571,
+     "negative_agreement": 0.0,
+     "prevalence_a": 1.0,
+     "prevalence_b": 0.75,
+     "table": [
+      [
+       15,
+       5
+      ],
+      [
+       0,
+       0
+      ]
+     ],
+     "rater2_confirms": 0.75
+    },
+    "vlm_boundary": {
+     "n": 20,
+     "kappa": null,
+     "agreement": 1.0,
+     "positive_agreement": NaN,
+     "negative_agreement": 1.0,
+     "prevalence_a": 0.0,
+     "prevalence_b": 0.0,
+     "table": [
+      [
+       0,
+       0
+      ],
+      [
+       0,
+       20
+      ]
+     ]
+    }
+   },
+   "vlm_vs_rater1": {
+    "n": 160,
+    "kappa": 0.6704302715898689,
+    "agreement": 0.83125,
+    "positive_agreement": 0.8280254777070064,
+    "negative_agreement": 0.8343558282208589,
+    "prevalence_a": 0.56875,
+    "prevalence_b": 0.4125,
+    "table": [
+     [
+      65,
+      26
+     ],
+     [
+      1,
+      68
+     ]
+    ],
+    "kappa_ci95": [
+     0.5572672981128843,
+     0.7769551256229354
+    ]
+   },
+   "vlm_vs_rater2": {
+    "n": 160,
+    "kappa": 0.6126494174610381,
+    "agreement": 0.8,
+    "positive_agreement": 0.7894736842105263,
+    "negative_agreement": 0.8095238095238095,
+    "prevalence_a": 0.56875,
+    "prevalence_b": 0.38125,
+    "table": [
+     [
+      60,
+      31
+     ],
+     [
+      1,
+      68
+     ]
+    ],
+    "kappa_ci95": [
+     0.49519142574112135,
+     0.7177914110429447
+    ]
+   },
+   "n_consensus": 151,
+   "positives": {
+    "rater2": 61,
+    "rater1": 66,
+    "consensus": 59,
+    "union": 68,
+    "intersection": 59
+   },
+   "mAP": {
+    "BEV-TSR-style text-to-BEV": {
+     "rater2": 0.8748758473623847,
+     "rater1": 0.8765087406022884,
+     "consensus": 0.9010419459530625,
+     "union": 0.874431521631174,
+     "intersection": 0.8795916979426488
+    },
+    "RefAV-style programmatic filter": {
+     "rater2": 0.9353099106337036,
+     "rater1": 0.967736814956137,
+     "consensus": 0.9783280814580219,
+     "union": 0.9736154603489884,
+     "intersection": 0.9311551002350725
+    },
+    "RefAV-style (rule compiler, M23)": {
+     "rater2": 0.9615045327934634,
+     "rater1": 0.969017989695267,
+     "consensus": 0.9780756585773049,
+     "union": 0.972111148987269,
+     "intersection": 0.9611710391019826
+    },
+    "CARIM-style caption retrieval": {
+     "rater2": 0.6951391573690955,
+     "rater1": 0.6910594226297951,
+     "consensus": 0.7119239176989451,
+     "union": 0.7085616450204191,
+     "intersection": 0.6779791205253436
+    },
+    "CARIM-style (enumerating prompt, M23)": {
+     "rater2": 0.8559838477606947,
+     "rater1": 0.832460435503415,
+     "consensus": 0.8613610764896212,
+     "union": 0.8528462203254277,
+     "intersection": 0.8365230890952617
+    },
+    "Tag-map (Talk2BEV/nuPrompt-style)": {
+     "rater2": 0.8503817115632001,
+     "rater1": 0.8301793981583013,
+     "consensus": 0.8586340731059547,
+     "union": 0.8328588006428483,
+     "intersection": 0.8503163577467364
+    },
+    "ReferGPT-style state + CLIP": {
+     "rater2": 0.6785166249406164,
+     "rater1": 0.6659897186964496,
+     "consensus": 0.6783046197914375,
+     "union": 0.6813039616868743,
+     "intersection": 0.6638952524318914
+    },
+    "CLIP ViT-B/32": {
+     "rater2": 0.7818700242009531,
+     "rater1": 0.8064548298195948,
+     "consensus": 0.8182023451857072,
+     "union": 0.8133892708855761,
+     "intersection": 0.7760550933106994
+    },
+    "SigLIP ViT-B/16": {
+     "rater2": 0.8589173964833947,
+     "rater1": 0.8616784523292232,
+     "consensus": 0.8776599553796582,
+     "union": 0.862826772741202,
+     "intersection": 0.8601575342603466
+    },
+    "SigLIP2 ViT-B/16": {
+     "rater2": 0.8893951239297119,
+     "rater1": 0.8741669621592032,
+     "consensus": 0.902888280901895,
+     "union": 0.8856176773129621,
+     "intersection": 0.8793351031558024
+    },
+    "SigLIP2 + fine-tuned adapter": {
+     "rater2": 0.9505476787937834,
+     "rater1": 0.9526254373371696,
+     "consensus": 0.9823587062470726,
+     "union": 0.9732662796540279,
+     "intersection": 0.9309169983899869
+    },
+    "Qwen2.5-VL lookup": {
+     "rater2": 0.9504818871155765,
+     "rater1": 0.9655044713667219,
+     "consensus": 0.9887511496800305,
+     "union": 0.9860098219064248,
+     "intersection": 0.9306883591936786
+    },
+    "Naive uncalibrated fusion": {
+     "rater2": 0.9759798935577152,
+     "rater1": 0.9709186942193423,
+     "consensus": 0.989742033012514,
+     "union": 0.9853874311614008,
+     "intersection": 0.9633253926767502
+    },
+    "SceneMiner (portable)": {
+     "rater2": 0.9747051065366769,
+     "rater1": 0.9695095624637056,
+     "consensus": 0.990693553370652,
+     "union": 0.9882298910964572,
+     "intersection": 0.9571514697278042
+    },
+    "SceneMiner": {
+     "rater2": 0.9673998454293592,
+     "rater1": 0.9795973525660099,
+     "consensus": 0.9863045285012241,
+     "union": 0.9800551802119853,
+     "intersection": 0.9698232917000581
+    },
+    "Late fusion SigLIP2 + lookup": {
+     "rater2": 0.9714544830371958,
+     "rater1": 0.964053928084555,
+     "consensus": 0.9912897990332353,
+     "union": 0.9814871177946822,
+     "intersection": 0.9551464692105626
+    }
+   }
+  },
+  "low_contrast": {
+   "human_human": {
+    "n": 160,
+    "kappa": 0.733800350262697,
+    "agreement": 0.88125,
+    "positive_agreement": 0.822429906542056,
+    "negative_agreement": 0.9107981220657277,
+    "prevalence_a": 0.35625,
+    "prevalence_b": 0.3125,
+    "table": [
+     [
+      44,
+      13
+     ],
+     [
+      6,
+      97
+     ]
+    ],
+    "kappa_ci95": [
+     0.6190423833084635,
+     0.8425196850393701
+    ]
+   },
+   "by_stratum": {
+    "rater1_positive": {
+     "n": 80,
+     "kappa": 0.6700507614213199,
+     "agreement": 0.8375,
+     "positive_agreement": 0.8115942028985508,
+     "negative_agreement": 0.8571428571428571,
+     "prevalence_a": 0.4625,
+     "prevalence_b": 0.4,
+     "table": [
+      [
+       28,
+       9
+      ],
+      [
+       4,
+       39
+      ]
+     ]
+    },
+    "vlm_boundary": {
+     "n": 80,
+     "kappa": 0.7931034482758621,
+     "agreement": 0.925,
+     "positive_agreement": 0.8421052631578947,
+     "negative_agreement": 0.9508196721311475,
+     "prevalence_a": 0.25,
+     "prevalence_b": 0.225,
+     "table": [
+      [
+       16,
+       4
+      ],
+      [
+       2,
+       58
+      ]
+     ]
+    }
+   },
+   "drawn_for_attribute": {
+    "rater1_positive": {
+     "n": 20,
+     "kappa": null,
+     "agreement": 0.75,
+     "positive_agreement": 0.8571428571428571,
+     "negative_agreement": 0.0,
+     "prevalence_a": 1.0,
+     "prevalence_b": 0.75,
+     "table": [
+      [
+       15,
+       5
+      ],
+      [
+       0,
+       0
+      ]
+     ],
+     "rater2_confirms": 0.75
+    },
+    "vlm_boundary": {
+     "n": 20,
+     "kappa": 0.318181818181818,
+     "agreement": 0.85,
+     "positive_agreement": 0.4,
+     "negative_agreement": 0.9142857142857143,
+     "prevalence_a": 0.15,
+     "prevalence_b": 0.1,
+     "table": [
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       16
+      ]
+     ]
+    }
+   },
+   "vlm_vs_rater1": {
+    "n": 160,
+    "kappa": 0.32256546965657823,
+    "agreement": 0.6625,
+    "positive_agreement": 0.6029411764705882,
+    "negative_agreement": 0.7065217391304348,
+    "prevalence_a": 0.49375,
+    "prevalence_b": 0.35625,
+    "table": [
+     [
+      41,
+      38
+     ],
+     [
+      16,
+      65
+     ]
+    ],
+    "kappa_ci95": [
+     0.17880834965028924,
+     0.4558684473088641
+    ]
+   },
+   "vlm_vs_rater2": {
+    "n": 160,
+    "kappa": 0.40973312401883843,
+    "agreement": 0.70625,
+    "positive_agreement": 0.6356589147286822,
+    "negative_agreement": 0.7539267015706806,
+    "prevalence_a": 0.49375,
+    "prevalence_b": 0.3125,
+    "table": [
+     [
+      41,
+      38
+     ],
+     [
+      9,
+      72
+     ]
+    ],
+    "kappa_ci95": [
+     0.2791480209993684,
+     0.5354713150233086
+    ]
+   },
+   "n_consensus": 141,
+   "positives": {
+    "rater2": 50,
+    "rater1": 57,
+    "consensus": 44,
+    "union": 63,
+    "intersection": 44
+   },
+   "mAP": {
+    "BEV-TSR-style text-to-BEV": {
+     "rater2": 0.4756516589109016,
+     "rater1": 0.5083299742096278,
+     "consensus": 0.5005444534546586,
+     "union": 0.5772142980501687,
+     "intersection": 0.40598369150460867
+    },
+    "RefAV-style programmatic filter": {
+     "rater2": 0.6039146657579624,
+     "rater1": 0.5687577240478859,
+     "consensus": 0.6211365815804141,
+     "union": 0.6264740761745671,
+     "intersection": 0.5489007408644552
+    },
+    "RefAV-style (rule compiler, M23)": {
+     "rater2": 0.687391542080913,
+     "rater1": 0.6226077604151855,
+     "consensus": 0.6943274257001764,
+     "union": 0.6812427005545804,
+     "intersection": 0.6320720259750536
+    },
+    "CARIM-style caption retrieval": {
+     "rater2": 0.3946080729618697,
+     "rater1": 0.39640952751508035,
+     "consensus": 0.3895599972952782,
+     "union": 0.42952567795052726,
+     "intersection": 0.3646640125294034
+    },
+    "CARIM-style (enumerating prompt, M23)": {
+     "rater2": 0.30770459772741904,
+     "rater1": 0.3626615367368156,
+     "consensus": 0.31883294985167543,
+     "union": 0.38483322982686696,
+     "intersection": 0.28639268732416556
+    },
+    "Tag-map (Talk2BEV/nuPrompt-style)": {
+     "rater2": 0.7625714337298203,
+     "rater1": 0.7750147458591782,
+     "consensus": 0.8310609818417948,
+     "union": 0.8086066754418108,
+     "intersection": 0.7375722554166848
+    },
+    "ReferGPT-style state + CLIP": {
+     "rater2": 0.28188589320897967,
+     "rater1": 0.319998177618475,
+     "consensus": 0.2737289012469184,
+     "union": 0.3635286248094184,
+     "intersection": 0.23909189431762093
+    },
+    "CLIP ViT-B/32": {
+     "rater2": 0.20872241164729088,
+     "rater1": 0.2622561153731018,
+     "consensus": 0.20949163015874978,
+     "union": 0.28249540318788335,
+     "intersection": 0.18705152775672723
+    },
+    "SigLIP ViT-B/16": {
+     "rater2": 0.20520734123066822,
+     "rater1": 0.2940800059883966,
+     "consensus": 0.20803876551073783,
+     "union": 0.3097640943882842,
+     "intersection": 0.18488305111220854
+    },
+    "SigLIP2 ViT-B/16": {
+     "rater2": 0.261357142164477,
+     "rater1": 0.34542887941521433,
+     "consensus": 0.27816164648544034,
+     "union": 0.3543220060807993,
+     "intersection": 0.2500983664690397
+    },
+    "SigLIP2 + fine-tuned adapter": {
+     "rater2": 0.4752905957704138,
+     "rater1": 0.40277494624875515,
+     "consensus": 0.4332985928161137,
+     "union": 0.4965947194008037,
+     "intersection": 0.3726697548881853
+    },
+    "Qwen2.5-VL lookup": {
+     "rater2": 0.687391542080913,
+     "rater1": 0.6226077604151855,
+     "consensus": 0.6943274257001764,
+     "union": 0.6812427005545804,
+     "intersection": 0.6320720259750536
+    },
+    "Naive uncalibrated fusion": {
+     "rater2": 0.5985177370020254,
+     "rater1": 0.5548254629825727,
+     "consensus": 0.5994141758029535,
+     "union": 0.637165410004933,
+     "intersection": 0.5129559596072133
+    },
+    "SceneMiner (portable)": {
+     "rater2": 0.6402839394679101,
+     "rater1": 0.6051398877921885,
+     "consensus": 0.6514063120072249,
+     "union": 0.6457442282638721,
+     "intersection": 0.6064981042970731
+    },
+    "SceneMiner": {
+     "rater2": 0.7237343631125791,
+     "rater1": 0.7065517641907797,
+     "consensus": 0.7593984752794001,
+     "union": 0.727281297209835,
+     "intersection": 0.7156303221229109
+    },
+    "Late fusion SigLIP2 + lookup": {
+     "rater2": 0.4794014894235536,
+     "rater1": 0.5232926543564896,
+     "consensus": 0.5098831174017177,
+     "union": 0.5370976599971131,
+     "intersection": 0.4713509896517522
+    }
+   }
+  }
+ },
+ "methods": [
+  "BEV-TSR-style text-to-BEV",
+  "RefAV-style programmatic filter",
+  "RefAV-style (rule compiler, M23)",
+  "CARIM-style caption retrieval",
+  "CARIM-style (enumerating prompt, M23)",
+  "Tag-map (Talk2BEV/nuPrompt-style)",
+  "ReferGPT-style state + CLIP",
+  "CLIP ViT-B/32",
+  "SigLIP ViT-B/16",
+  "SigLIP2 ViT-B/16",
+  "SigLIP2 + fine-tuned adapter",
+  "Qwen2.5-VL lookup",
+  "Naive uncalibrated fusion",
+  "SceneMiner (portable)",
+  "SceneMiner",
+  "Late fusion SigLIP2 + lookup"
+ ],
+ "macro": {
+  "human_human": {
+   "kappa": 0.8011549713076284,
+   "agreement": 0.915625,
+   "positive_agreement": 0.8643667276994386,
+   "negative_agreement": 0.9365958303281003
+  },
+  "vlm_vs_rater1_kappa": 0.5201901279424915,
+  "vlm_vs_rater2_kappa": 0.5014606352294025,
+  "by_stratum_kappa": {
+   "rater1_positive": 0.7618325192740608,
+   "vlm_boundary": 0.8111833744715169
+  },
+  "mAP": {
+   "BEV-TSR-style text-to-BEV": {
+    "rater2": 0.6356318082147737,
+    "rater1": 0.6694818803475876,
+    "consensus": 0.6765592544418082,
+    "union": 0.6958534745088685,
+    "intersection": 0.6098526305972741
+   },
+   "RefAV-style programmatic filter": {
+    "rater2": 0.7431615822504238,
+    "rater1": 0.7561094868504961,
+    "consensus": 0.7955947929832444,
+    "union": 0.7924503302379475,
+    "intersection": 0.7102361925062928
+   },
+   "RefAV-style (rule compiler, M23)": {
+    "rater2": 0.7705794568711013,
+    "rater1": 0.7698922896271034,
+    "consensus": 0.8138293982930058,
+    "union": 0.8057664084925209,
+    "intersection": 0.7385329985006699
+   },
+   "CARIM-style caption retrieval": {
+    "rater2": 0.4504069149880228,
+    "rater1": 0.43788022043164027,
+    "consensus": 0.4407329435739294,
+    "union": 0.4725144111583734,
+    "intersection": 0.41604348351458725
+   },
+   "CARIM-style (enumerating prompt, M23)": {
+    "rater2": 0.5336343374290238,
+    "rater1": 0.5378689503447387,
+    "consensus": 0.5397109368499812,
+    "union": 0.5640502316359054,
+    "intersection": 0.508986399463384
+   },
+   "Tag-map (Talk2BEV/nuPrompt-style)": {
+    "rater2": 0.6933541700331863,
+    "rater1": 0.7218719901317076,
+    "consensus": 0.7447220713305305,
+    "union": 0.741612815039637,
+    "intersection": 0.6764629876571909
+   },
+   "ReferGPT-style state + CLIP": {
+    "rater2": 0.5371613390638181,
+    "rater1": 0.5577772416042904,
+    "consensus": 0.5482642480902971,
+    "union": 0.5986925196646226,
+    "intersection": 0.4961388676999704
+   },
+   "CLIP ViT-B/32": {
+    "rater2": 0.5413650385059537,
+    "rater1": 0.575773280648687,
+    "consensus": 0.5641768936898914,
+    "union": 0.6002589155961081,
+    "intersection": 0.5165716511530895
+   },
+   "SigLIP ViT-B/16": {
+    "rater2": 0.5762618113150457,
+    "rater1": 0.6027715113085392,
+    "consensus": 0.6041986678284211,
+    "union": 0.6393243768303158,
+    "intersection": 0.5387161976519491
+   },
+   "SigLIP2 ViT-B/16": {
+    "rater2": 0.6381619295296174,
+    "rater1": 0.6500874595334483,
+    "consensus": 0.651052920000089,
+    "union": 0.6735229818864369,
+    "intersection": 0.6169633632048233
+   },
+   "SigLIP2 + fine-tuned adapter": {
+    "rater2": 0.725206154308218,
+    "rater1": 0.7086395871962662,
+    "consensus": 0.7367081619698812,
+    "union": 0.7447165386083519,
+    "intersection": 0.6922602473963869
+   },
+   "Qwen2.5-VL lookup": {
+    "rater2": 0.7678237954516296,
+    "rater1": 0.7690139100449672,
+    "consensus": 0.8164982710686872,
+    "union": 0.8092410767223098,
+    "intersection": 0.7309123285235939
+   },
+   "Naive uncalibrated fusion": {
+    "rater2": 0.7506537494710652,
+    "rater1": 0.7657760125354048,
+    "consensus": 0.7907003994648479,
+    "union": 0.7920126128210841,
+    "intersection": 0.7279968544092204
+   },
+   "SceneMiner (portable)": {
+    "rater2": 0.7856700609488647,
+    "rater1": 0.7904141953165222,
+    "consensus": 0.8230752114788042,
+    "union": 0.8136775413353603,
+    "intersection": 0.7676536471230054
+   },
+   "SceneMiner": {
+    "rater2": 0.797840175648852,
+    "rater1": 0.8211430923509876,
+    "consensus": 0.8480835773846453,
+    "union": 0.8291551513561938,
+    "intersection": 0.7965891862019185
+   },
+   "Late fusion SigLIP2 + lookup": {
+    "rater2": 0.7562717817374989,
+    "rater1": 0.770373966394885,
+    "consensus": 0.7952013053650185,
+    "union": 0.7928700959377409,
+    "intersection": 0.7389443030341446
+   }
+  },
+  "pooled_kappa": 0.8101411855188706
+ },
+ "paired_bootstrap_rater2": {
+  "SceneMiner (portable)": {
+   "delta": 0.0121701146999873,
+   "ci95": [
+    -0.015027350542347079,
+    0.04284613656952138
+   ],
+   "p_one_sided": 0.1798201798201798
+  },
+  "SigLIP2 ViT-B/16": {
+   "delta": 0.15967824611923465,
+   "ci95": [
+    0.10723919502152258,
+    0.21663907611052172
+   ],
+   "p_one_sided": 0.000999000999000999
+  },
+  "Qwen2.5-VL lookup": {
+   "delta": 0.030016380197222414,
+   "ci95": [
+    -0.009002180019019425,
+    0.07473131984226011
+   ],
+   "p_one_sided": 0.07092907092907093
+  },
+  "Late fusion SigLIP2 + lookup": {
+   "delta": 0.04156839391135314,
+   "ci95": [
+    0.0027421652367711933,
+    0.07897344513197731
+   ],
+   "p_one_sided": 0.022977022977022976
+  },
+  "Naive uncalibrated fusion": {
+   "delta": 0.04718642617778679,
+   "ci95": [
+    0.018848550249095868,
+    0.07864958204636716
+   ],
+   "p_one_sided": 0.000999000999000999
+  }
+ },
+ "seconds": 28.03257131576538
+}

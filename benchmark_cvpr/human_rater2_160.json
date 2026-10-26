@@ -1,0 +1,1602 @@
+{
+"11901761444769610243_556_000_576_000#c0": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": true,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"14300007604205869133_1160_000_1180_000#c0": {
+"labels": {
+"droplets": false,
+"glare": true,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"13982731384839979987_1680_000_1700_000#c0": {
+"labels": {
+"droplets": false,
+"glare": true,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"14333744981238305769_5658_260_5678_260#c1": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"4772f5283211444eaabd463cd341d360": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"ca6abd081eaf48689f06b5e8fcc9d369": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"270fe8382f884386b3445143fa946200": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"6193fac132614eb1a09dcbf3f359460f": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"8e1f7ff7dc9940da8eeca3c06ae1aa4d": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"de7d80a1f5fb4c3e82ce8a4f213b450a": {
+"labels": {
+"droplets": false,
+"glare": true,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"2175d0e84f224ea69907e5c338bde395": {
+"labels": {
+"droplets": false,
+"glare": true,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"13184115878756336167_1354_000_1374_000#c0": {
+"labels": {
+"droplets": true,
+"glare": true,
+"wet_road": true,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"7ed1b613f0ee47ceaf6d19ca3947f825": {
+"labels": {
+"droplets": true,
+"glare": true,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"d25718445d89453381c659b9c8734939": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"7e2d9f38f8eb409ea57b3864bb4ed098": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"15948509588157321530_7187_290_7207_290#c1": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"0e247ba64b9d4a34a7256b6c173b1b5d": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"12940710315541930162_2660_000_2680_000#c3": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"6183008573786657189_5414_000_5434_000#c1": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"4bcb814456f044919bc052c208dbebc5": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"3126522626440597519_806_440_826_440#c3": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"5fc7c5dfc56b4971b14005bc53f69908": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"13982731384839979987_1680_000_1700_000#c1": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"6183008573786657189_5414_000_5434_000#c3": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"a8bd4c1efe284a5bba46f59454764965": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"17135518413411879545_1480_000_1500_000#c1": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"6074871217133456543_1000_000_1020_000#c0": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"15028688279822984888_1560_000_1580_000#c0": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"e5514b8f435e475cac4eba74b44773b5": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"2624187140172428292_73_000_93_000#c1": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"6001094526418694294_4609_470_4629_470#c0": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"8845277173853189216_3828_530_3848_530#c1": {
+"labels": {
+"droplets": false,
+"glare": true,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"ab40eb69df49448d83628f611b2ca273": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"5c76a3728b8b4d02ae20bd69fb928aa1": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"4a4d09496d594c7385a1ec227bdb3a7f": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"1e9283d1ce98428aaa3b851487eb4f58": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"1464917900451858484_1960_000_1980_000#c3": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"4426410228514970291_1620_000_1640_000#c2": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"11901761444769610243_556_000_576_000#c2": {
+"labels": {
+"droplets": true,
+"glare": true,
+"wet_road": true,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"29dee0b8210b410a9b3421f0cb39019f": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"2624187140172428292_73_000_93_000#c0": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"13184115878756336167_1354_000_1374_000#c2": {
+"labels": {
+"droplets": true,
+"glare": true,
+"wet_road": true,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"13982731384839979987_1680_000_1700_000#c3": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"15028688279822984888_1560_000_1580_000#c1": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"17135518413411879545_1480_000_1500_000#c2": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"0287702725184161af95373198546a59": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"727214583a2a478094d4f093d20c7060": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"797700339b014fb6aa61c1ea3778d587": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"14300007604205869133_1160_000_1180_000#c1": {
+"labels": {
+"droplets": false,
+"glare": true,
+"wet_road": false,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"cf652a711c8e40209132036a95162fed": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"15948509588157321530_7187_290_7207_290#c0": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"6491418762940479413_6520_000_6540_000#c1": {
+"labels": {
+"droplets": true,
+"glare": true,
+"wet_road": true,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"17791493328130181905_1480_000_1500_000#c3": {
+"labels": {
+"droplets": false,
+"glare": true,
+"wet_road": true,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"191862526745161106_1400_000_1420_000#c3": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"e12dee10fe2545e4ab88459ed4268bc6": {
+"labels": {
+"droplets": false,
+"glare": true,
+"wet_road": false,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"6946bd49ebe648b7a8c4555774059bc8": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"c0990deaa8954a54afc86f7710f349a1": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"13184115878756336167_1354_000_1374_000#c1": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"c6d1085c40614693a046dae3168bdb35": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"447576862407975570_4360_000_4380_000#c3": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"6001094526418694294_4609_470_4629_470#c3": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"a1e7cd557b9541dbb00822ea0c56204b": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"40516b7f46e548d19dfee580e9a5afa6": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"17135518413411879545_1480_000_1500_000#c0": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"38b3010304734913bb148d17ebbc352b": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"12866817684252793621_480_000_500_000#c0": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"c610d0ac2e2045a5972bda66ac42ede3": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"f69f7b4cefb7493bb1a8185f6f01d137": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"9771da5dd7bb4657be34365619e39dab": {
+"labels": {
+"droplets": false,
+"glare": true,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"d4c560022dda448dabb0b60fb62dd6ba": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"010fb5bcc7984d0f8f07f99e02366df1": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"6001094526418694294_4609_470_4629_470#c1": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"64eef73c4f564a3db415e965f6460012": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"12940710315541930162_2660_000_2680_000#c1": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"8679184381783013073_7740_000_7760_000#c1": {
+"labels": {
+"droplets": false,
+"glare": true,
+"wet_road": false,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"3126522626440597519_806_440_826_440#c1": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"41e0d46e715a476ab05e4d62e415ea41": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"8d267899e2e843d4905fafd1f12c0a20": {
+"labels": {
+"droplets": false,
+"glare": true,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"f29904c2bcdc4d78bbcac75a2b30fe38": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"17791493328130181905_1480_000_1500_000#c2": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": true,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"15028688279822984888_1560_000_1580_000#c2": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"f0f120e4d4b0441da90ec53b16ee169d": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"4612525129938501780_340_000_360_000#c0": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"c8e6213038884d05907b1edd7e55552e": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"54ec146682e24683becfeab4124e8402": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"48ba943c3d19463a81281bf6a7078eac": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"0ced08ea43754420a23b2fbec667a763": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"9544516643a14926bf750fc71c1b307d": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"6491418762940479413_6520_000_6540_000#c3": {
+"labels": {
+"droplets": false,
+"glare": true,
+"wet_road": false,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"12496433400137459534_120_000_140_000#c0": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"15028688279822984888_1560_000_1580_000#c3": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": true,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"7bcc4753bdb64d2cb407b55cc4e4527f": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"447576862407975570_4360_000_4380_000#c0": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"2335854536382166371_2709_426_2729_426#c3": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"13982731384839979987_1680_000_1700_000#c2": {
+"labels": {
+"droplets": false,
+"glare": true,
+"wet_road": false,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"a6daedc3063b421cb3a05019e545f925": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"16213317953898915772_1597_170_1617_170#c3": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"1464917900451858484_1960_000_1980_000#c1": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"6183008573786657189_5414_000_5434_000#c2": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"8679184381783013073_7740_000_7760_000#c3": {
+"labels": {
+"droplets": false,
+"glare": true,
+"wet_road": false,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"4612525129938501780_340_000_360_000#c1": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"102b894332464704900264216480a8f7": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": true,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"65cfdc10a42e499ea704c617e077afe0": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"3e1f0257a4b8457486651de2d16b61ab": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"98fc76cc0e364efdaa7e86a36b666dda": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"58af378ff68b49c99aabf320dca1ee25": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"16213317953898915772_1597_170_1617_170#c1": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"12358364923781697038_2232_990_2252_990#c1": {
+"labels": {
+"droplets": false,
+"glare": true,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"0b8948ee96ac46faad405bf1ffc70bb1": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"12358364923781697038_2232_990_2252_990#c2": {
+"labels": {
+"droplets": false,
+"glare": true,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"4426410228514970291_1620_000_1640_000#c0": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"4426410228514970291_1620_000_1640_000#c1": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"087c6e521e974c708d49cac1db095691": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"fdf27bbde3e345bd9ac83cbe9a3c813a": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"892ed06c432448fe87ecb5d31756f14a": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"96a410b8fe5e4b57bf69b844bfd4d28c": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"16213317953898915772_1597_170_1617_170#c0": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"e8bda599a2d44d76a7692caeacb1ba6e": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"1464917900451858484_1960_000_1980_000#c0": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"12496433400137459534_120_000_140_000#c3": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"12134738431513647889_3118_000_3138_000#c3": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"13415985003725220451_6163_000_6183_000#c1": {
+"labels": {
+"droplets": false,
+"glare": true,
+"wet_road": true,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"12358364923781697038_2232_990_2252_990#c3": {
+"labels": {
+"droplets": false,
+"glare": true,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"5183174891274719570_3464_030_3484_030#c3": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"14300007604205869133_1160_000_1180_000#c3": {
+"labels": {
+"droplets": false,
+"glare": true,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"9c5dc664216e43a99d5da3f23d373e4d": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"103b54209e584cd4b7ed2890eca2e126": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"1464917900451858484_1960_000_1980_000#c2": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"3126522626440597519_806_440_826_440#c2": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"e54f4a36a8b94aebbe4189186dee8f05": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"a6fae4900f8e46cba689b59b5bc8a2ab": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"17791493328130181905_1480_000_1500_000#c0": {
+"labels": {
+"droplets": false,
+"glare": true,
+"wet_road": true,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"14107757919671295130_3546_370_3566_370#c3": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"491322eec05043c9907c59aa35b046ea": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"1b5ef5ecb2084b89aa0314d65f25d9e1": {
+"labels": {
+"droplets": false,
+"glare": true,
+"wet_road": false,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"d033fb0d79ea42b9a356fa5162172598": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"13415985003725220451_6163_000_6183_000#c0": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": true,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"e083627747d8499a8c4e94c7abf941e2": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"aa54277d163d419b9f952b014112643e": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"1906113358876584689_1359_560_1379_560#c2": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"16213317953898915772_1597_170_1617_170#c2": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"e02aee6f1fec4d13ad77044466da5fb4": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"13184115878756336167_1354_000_1374_000#c3": {
+"labels": {
+"droplets": true,
+"glare": true,
+"wet_road": true,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"13415985003725220451_6163_000_6183_000#c3": {
+"labels": {
+"droplets": false,
+"glare": true,
+"wet_road": true,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"bcb05cffb5814973a6cff4fbdca2b99b": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"4047f251c21a475abb49518e0fa6fa9e": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"2094681306939952000_2972_300_2992_300#c0": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"fee7ac5f5c1e4943877cd20d6e069427": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"191862526745161106_1400_000_1420_000#c1": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"8133434654699693993_1162_020_1182_020#c0": {
+"labels": {
+"droplets": false,
+"glare": true,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"17791493328130181905_1480_000_1500_000#c1": {
+"labels": {
+"droplets": false,
+"glare": true,
+"wet_road": true,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"13415985003725220451_6163_000_6183_000#c2": {
+"labels": {
+"droplets": false,
+"glare": true,
+"wet_road": true,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"a2e3c0a763c04e56a5e26611eb69395b": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"8679184381783013073_7740_000_7760_000#c0": {
+"labels": {
+"droplets": false,
+"glare": true,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"796e7ae080984a0ab2b96ce80f18ca3b": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"14107757919671295130_3546_370_3566_370#c2": {
+"labels": {
+"droplets": false,
+"glare": true,
+"wet_road": false,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"2eb0dd074d8e4a328fd2283184c4412e": {
+"labels": {
+"droplets": true,
+"glare": false,
+"wet_road": true,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"1105338229944737854_1280_000_1300_000#c0": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+},
+"04e5f089805540a5a9e73c1b7c54ee8c": {
+"labels": {
+"droplets": false,
+"glare": true,
+"wet_road": false,
+"low_contrast": true
+},
+"flag": null,
+"rater": "rater2"
+},
+"fb255bba9b6a4f37a8894e336d2136f1": {
+"labels": {
+"droplets": false,
+"glare": false,
+"wet_road": false,
+"low_contrast": false
+},
+"flag": null,
+"rater": "rater2"
+}
+}

@@ -50,7 +50,8 @@ attribute index score $1.000$, a certifying detector trained on the mined scenes
 inflates their mAP by $74\%$, and a learned fusion can lose a modality while task
 mAP moves by $0.004$. Against eleven alternatives, including re-implementations of
 five published driving-retrieval paradigms, SceneMiner reaches $0.794$~mAP on $550$
-human-labelled scenes ($0.829$ calibrated) and $0.762$ in its portable mode, which
+human-labelled scenes ($0.829$ calibrated; $0.798$ against an independent second
+rater, inter-rater $\kappa=0.80$) and $0.762$ in its portable mode, which
 reads no signal supervised on those scenes; the best alternative scores $0.735$.
 Externally it is level with zero-shot SigLIP2, on BDD100K ($0.614$ vs.\ $0.622$) and
 on a pre-registered holdout of $2000$ untouched BDD100K images ($0.400$ vs.\
@@ -92,7 +93,7 @@ the defects are named. Our contributions are:
   explain why each component is needed and give cheap checks for other
   systems.
 \item \textbf{Multi-dataset human evaluation} (\cref{sec:results,sec:regimes,sec:premise}):
-  $550$ human-labelled scenes, BDD100K with native labels, $40$ semantic queries
+  $550$ human-labelled scenes ($160$ double-labelled, $\kappa=0.80$), BDD100K with native labels, $40$ semantic queries
   graded by human 3D annotation, a pre-registered $36$-query holdout of $2000$
   untouched BDD100K images, and $150$ uncontaminated nuScenes validation scenes on
   which we test the premise that degradation breaks 3D detection. Eleven
@@ -189,7 +190,8 @@ $40$ semantic edge-case queries is introduced in \cref{sec:regimes}.
 
 \paragraph{Human ground truth.} One rater labelled $600$ evaluation scenes for
 the four degradation attributes; $550$ remain after removing $50$ scenes the
-rater marked unsure and left unlabelled. Stratum~5 additionally uses nuScenes
+rater marked unsure and left unlabelled. A second rater independently labelled
+$160$ of them (\cref{sec:regimes}). Stratum~5 additionally uses nuScenes
 human 3D annotation and human-written scene descriptions. No human label enters
 training.
 
@@ -415,19 +417,11 @@ above CLIP and the ReferGPT-style ranker ($+0.048$, $p=0.013$), caption matching
 program ($+0.217$, all $p\le0.013$). Externally, learned fusion is level with
 SigLIP2, not above it.
 
-\begin{table}[t]\centering\small
-\caption{\textbf{Ablations of SceneMiner}, one inference switch each (``--'': switch not applicable on BDD100K).}
-\label{tab:abl}
-\resizebox{\columnwidth}{!}{%
-\input{tab_abl.tex}%
-}
-\end{table}
-
 \paragraph{Human ground truth.} SceneMiner scores $0.794$ zero-leakage and $0.829$
 calibrated, against $0.737$ for the strongest no-learning control (late fusion of
 SigLIP2 with the lookup). Per attribute: $0.943$ (droplets), $0.592$ (glare),
 $0.976$ (wet road), $0.665$ (low contrast). All four canonical queries have
-$\gdeg=1.000$, so the gate and abstention change nothing here (\cref{tab:abl});
+$\gdeg=1.000$, so the gate and abstention change nothing here (ablations in the supplementary);
 \textsc{ResNorm} is worth $0.023$, and the BEV and tag inputs add $0.032$ over the
 portable mode.
 
@@ -467,16 +461,7 @@ BDD100K label no cones or barriers.}
 \label{fig:qual}
 \end{figure*}
 
-\begin{table}[t]\centering\small
-\caption{\textbf{150-query suite} by stratum, $602$ evaluation scenes. Relevance
-is cached attributes and metadata (\cref{sec:d1}); the index is a ceiling.}
-\label{tab:suite}
-\resizebox{\columnwidth}{!}{%
-\input{tab_suite.tex}%
-}
-\end{table}
-
-\paragraph{150-query suite.} \cref{tab:suite}. Overall mAP rises to $0.694$ with
+\paragraph{150-query suite.} Per stratum in the supplementary. Overall mAP rises to $0.694$ with
 skew $+2.6$ points (CI $[-2.4,+7.2]$). Two caveats apply. The S2 gain
 ($0.487\rightarrow0.668$) is partly circular: S2 relevance \emph{is} recorded
 metadata, which $s_{\mathrm{abst}}$ now reads. S3 recovers from $0.459$ (single
@@ -520,15 +505,27 @@ ensemble ($0.803$); \cref{tab:design,tab:master} average per-seed mAP ($0.794$).
 }
 \end{table}
 
-\paragraph{A simulated second rater.} Tables in the supplementary. We have one
-rater (a $160$-scene second-rater protocol is released with the code). Removing the
-scenes CLIP finds most ambiguous \emph{widens} SceneMiner's lead over the lookup
-($+0.070\rightarrow+0.102$). A Monte Carlo second rater at $\kappa$ of $0.90$, $0.85$
-and $0.75$ keeps SceneMiner ahead of SigLIP2 in every trial and ahead of the
-lookup in $97$--$100\%$. The lead is not uniform: it rests on low contrast and
-droplets, glare and wet road are near coin flips against the lookup, and glare is
-lost to late fusion in nearly every trial. The macro claim is robust; a
-per-attribute claim would be overstated.
+\begin{table}[t]\centering\small
+\caption{\textbf{A second human rater}, $160$ of the $550$ scenes (per attribute,
+$20$ rater-1 positives and $20$ scenes with the VLM margin closest to zero).
+Cohen's $\kappa$ between the raters and between the Stage-1 VLM's binary flags and
+each rater; mAP graded by rater 2 alone. $^{\ast}$Late fusion of SigLIP2 and the
+lookup. All methods under five gradings: supplementary.}
+\label{tab:rater2}
+\resizebox{\columnwidth}{!}{%
+\input{tab_rater2.tex}%
+}
+\end{table}
+
+\paragraph{A second human rater.} \cref{tab:rater2}. Cohen's $\kappa$ between the
+two raters is $0.801$ ($0.734$--$0.883$ per attribute; $0.811$ on the VLM-boundary
+scenes), against $0.520$ and $0.501$ between the VLM's flags and each rater: people
+agree with each other far more than with the teacher. Graded by rater 2 alone,
+SceneMiner scores $0.798$, above every other method; its leads over SigLIP2
+($+0.160$) and late fusion ($+0.042$) have scene-bootstrap 95\% intervals above
+zero, its lead over the lookup ($+0.030$) does not. The per-attribute pattern
+repeats rater 1's: the lead rests on low contrast, and glare is lost to late
+fusion. A simulated noisier rater gives the same picture (supplementary).
 
 % =====================================================================
 \section{Does the premise hold?}
@@ -609,7 +606,7 @@ no-learning fusion of SigLIP2 with metadata on conjunctions (that fusion is
 significantly better); that it finds breakage scenes better than the lookup; or
 that its in-domain lead is uniform (glare and wet road are near ties).
 
-\paragraph{Limitations.} One human rater; four degradation attributes; one external
+\paragraph{Limitations.} A second rater on only $160$ of the $550$ scenes; four degradation attributes; one external
 dataset (two disjoint BDD100K samples); $5$--$12$ positives per Stratum-5
 conjunction; val150 scored from portable signals only. Text mean-centring,
 \textsc{ResNorm} and the gate factorisation were found while diagnosing evaluation

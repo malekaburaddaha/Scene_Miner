@@ -2,7 +2,7 @@
 """MILESTONE 31 - the main-paper tables, generated from the result files (3 decimals).
 
 Writes paper/tab_design.tex, tab_abl.tex, tab_bdd.tex, tab_suite.tex, tab_regimes.tex,
-tab_loop.tex and paper/supp_tables/holdout_table.tex.
+tab_loop.tex, tab_rater2.tex and paper/supp_tables/{holdout,rater,rater2_methods}_table.tex.
 Sources (all under results/cvpr/):
   design   v2.1 milestone6_sceneminer_v2_1.json (human GT, mode B), milestone10_query_suite_150.json,
                 milestone11_domain_calibration.json (skew), milestone23_bdd_rawquery_routing.json (BDD100K)
@@ -223,7 +223,45 @@ def rater_supp():
     (P/"supp_tables"/"rater_attr_table.tex").write_text("\n".join(A) + "\n")
 
 
+def rater2():
+    """paper/tab_rater2.tex (per attribute: two-rater agreement, VLM-human agreement, mAP
+    graded by rater 2) and paper/supp_tables/rater2_methods_table.tex (every method under
+    each grading of the 160 double-labelled scenes). Source: milestone33_rater2_results.json."""
+    d = J("milestone33_rater2_results.json"); A, M = d["attributes"], d["macro"]
+    cols = [("SceneMiner", "SceneMiner"), ("Qwen2.5-VL lookup", "lookup"),
+            ("Late fusion SigLIP2 + lookup", "fusion$^{\\ast}$"), ("SigLIP2 ViT-B/16", "SigLIP2")]
+    L = ["\\begin{tabular}{lccc|cccc}", "\\toprule",
+         " & \\multicolumn{3}{c|}{Cohen's $\\kappa$} & \\multicolumn{4}{c}{mAP graded by rater 2}\\\\",
+         "attribute & r1--r2 & VLM--r1 & VLM--r2 & " + " & ".join(c for _, c in cols) + "\\\\", "\\midrule"]
+    for at, lab in [("droplets", "droplets"), ("glare", "glare"), ("wet_road", "wet road"), ("low_contrast", "low contrast")]:
+        r = A[at]; best = max(r["mAP"][k]["rater2"] for k, _ in cols)
+        cell = lambda k: (f"\\best{{{r['mAP'][k]['rater2']:.3f}}}" if r["mAP"][k]["rater2"] == best else f"{r['mAP'][k]['rater2']:.3f}")
+        L.append(f"{lab} & {r['human_human']['kappa']:.3f} & {r['vlm_vs_rater1']['kappa']:.3f} & {r['vlm_vs_rater2']['kappa']:.3f} & "
+                 + " & ".join(cell(k) for k, _ in cols) + "\\\\")
+    best = max(M["mAP"][k]["rater2"] for k, _ in cols)
+    L += ["\\midrule", f"macro & {M['human_human']['kappa']:.3f} & {M['vlm_vs_rater1_kappa']:.3f} & {M['vlm_vs_rater2_kappa']:.3f} & "
+          + " & ".join((f"\\best{{{M['mAP'][k]['rater2']:.3f}}}" if M["mAP"][k]["rater2"] == best else f"{M['mAP'][k]['rater2']:.3f}") for k, _ in cols)
+          + "\\\\", "\\bottomrule", "\\end{tabular}"]
+    (P/"tab_rater2.tex").write_text("\n".join(L) + "\n")
+    rows = [("BEV-TSR-style", "BEV-TSR-style text-to-BEV"), ("RefAV-style (LLM)", "RefAV-style programmatic filter"),
+            ("CARIM-style (neutral)", "CARIM-style caption retrieval"), ("CARIM-style (listing)", "CARIM-style (enumerating prompt, M23)"),
+            ("Tag map", "Tag-map (Talk2BEV/nuPrompt-style)"), ("ReferGPT-style", "ReferGPT-style state + CLIP"),
+            ("CLIP ViT-B/32", "CLIP ViT-B/32"), ("SigLIP ViT-B/16", "SigLIP ViT-B/16"), ("SigLIP2 ViT-B/16", "SigLIP2 ViT-B/16"),
+            ("SigLIP2 + adapter", "SigLIP2 + fine-tuned adapter"), ("Qwen2.5-VL lookup", "Qwen2.5-VL lookup"),
+            ("naive convex router", "Naive uncalibrated fusion"), ("late fusion SigLIP2 + lookup", "Late fusion SigLIP2 + lookup"),
+            ("SceneMiner (portable)", "SceneMiner (portable)"), ("SceneMiner", "SceneMiner")]
+    G = ["rater2", "rater1", "consensus", "union", "intersection"]
+    best = {g: max(M["mAP"][k][g] for _, k in rows) for g in G}
+    T = ["\\begin{tabular}{lccccc}", "\\toprule",
+         "method & rater 2 & rater 1 & consensus & union & intersection\\\\", "\\midrule"]
+    for lab, k in rows:
+        v = M["mAP"][k]
+        T.append(f"{lab} & " + " & ".join((f"\\best{{{v[g]:.3f}}}" if v[g] == best[g] else f"{v[g]:.3f}") for g in G) + "\\\\")
+    T += ["\\bottomrule", "\\end{tabular}"]
+    (P/"supp_tables"/"rater2_methods_table.tex").write_text("\n".join(T) + "\n")
+
+
 if __name__ == "__main__":
-    for f in (design, ablation, bdd, suite, regimes, loop, holdout_supp, rater_supp):
+    for f in (design, ablation, bdd, suite, regimes, loop, holdout_supp, rater_supp, rater2):
         try: f(); print("ok", f.__name__)
         except Exception as e: print("FAILED", f.__name__, repr(e))

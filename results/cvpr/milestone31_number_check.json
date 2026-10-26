@@ -217,18 +217,6 @@
    "found": true
   },
   {
-   "claim": "rater lead all",
-   "value": "+0.070",
-   "tex": "paper/main_cvpr.tex",
-   "found": true
-  },
-  {
-   "claim": "rater lead drop 20%",
-   "value": "+0.102",
-   "tex": "paper/main_cvpr.tex",
-   "found": true
-  },
-  {
    "claim": "loop mAP",
    "value": "0.057",
    "tex": "paper/main_cvpr.tex",
@@ -289,6 +277,72 @@
    "found": true
   },
   {
+   "claim": "rater2 kappa",
+   "value": "0.801",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "rater2 kappa (abstract)",
+   "value": "0.80",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "rater2 kappa min attr",
+   "value": "0.734",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "rater2 kappa max attr",
+   "value": "0.883",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "rater2 kappa boundary",
+   "value": "0.811",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "VLM-rater1 kappa",
+   "value": "0.520",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "VLM-rater2 kappa",
+   "value": "0.501",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "SceneMiner graded by rater 2",
+   "value": "0.798",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "rater2 lead vs SigLIP2",
+   "value": "+0.160",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "rater2 lead vs fusion",
+   "value": "+0.042",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "rater2 lead vs lookup",
+   "value": "+0.030",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
    "claim": "Table 2 full human GT",
    "value": "0.794",
    "tex": "paper/tab_master.tex",
@@ -303,7 +357,7 @@
  ],
  "scan": {
   "paper/main_cvpr.tex": {
-   "n_numbers": 183,
+   "n_numbers": 191,
    "n_unsourced": 0,
    "unsourced": []
   },
@@ -334,6 +388,11 @@
   },
   "paper/tab_master.tex": {
    "n_numbers": 106,
+   "n_unsourced": 0,
+   "unsourced": []
+  },
+  "paper/tab_rater2.tex": {
+   "n_numbers": 35,
    "n_unsourced": 0,
    "unsourced": []
   },

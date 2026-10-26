@@ -170,8 +170,8 @@ of the main paper are therefore visible without any label.
 \label{sec:baselines}
 % =====================================================================
 
-The comparison with published paradigms in the main paper (Table~2,
-\texttt{scripts/eval\_related\_work\_baselines.py}) re-implements each paradigm
+The comparison with published paradigms in the main paper (Table~2; script
+\texttt{eval\_related\_work\_baselines.py}) re-implements each paradigm
 on the signals cached for SceneMiner. None is the authors' system: the released
 systems need inputs our corpora lack (object tracks, HD maps, an LLM service),
 and no external API was called. Every method sees the same queries, scenes and
@@ -233,6 +233,18 @@ autosaved. VLM outputs are never shown. Of $600$ scenes, $550$ remain after
 removing unsure scenes and skipped scenes with ambiguous labels (``Mode B'').
 Figure~\ref{fig:ui} shows the interface on a real labelled scene.
 
+\paragraph{Degradation labels (rater 2, 160 scenes).} A second rater, who had not
+seen rater 1's labels or any model output, labelled $160$ of rater 1's $550$ scenes
+with the same tool and instructions. The subset was fixed before labelling
+(seed $0$, released with the code): per attribute, $20$
+scenes rater 1 marked positive and $20$ scenes whose VLM margin for that attribute
+is closest to zero, chosen without rater-1 labels; the $160$ are distinct. No scene
+was marked unsure. Both label files are released with the rater names removed.
+\cref{tab:rater2_methods} grades every method by each rater, by the consensus of
+the two (only the scenes on which they agree; $141$--$151$ per attribute), and by
+the union and intersection of their positives. Rater 2 confirms $75$--$90\%$ of
+the rater-1 positives drawn for each attribute.
+
 \begin{figure}[H]\centering
 \includegraphics[width=0.8\textwidth]{figures/supp_annotation_ui.jpg}
 \caption{\textbf{The annotation interface}, rendered with one real scene and the
@@ -274,6 +286,27 @@ night / rain & word in the human-written scene description & $84$ / $138$ & $15$
 % =====================================================================
 
 \input{supp_tables/bh_table.tex}
+
+% =====================================================================
+\section{Ablations and the 150-query suite}
+% =====================================================================
+
+\begin{table}[!ht]\centering\small
+\caption{\textbf{Ablations of SceneMiner}, one inference switch each (``--'': switch not applicable on BDD100K).}
+\label{tab:abl}
+\resizebox{0.6\textwidth}{!}{%
+\input{tab_abl.tex}%
+}
+\end{table}
+
+\begin{table}[!ht]\centering\small
+\caption{\textbf{150-query suite} by stratum, $602$ evaluation scenes. Relevance
+is cached attributes and metadata (main paper, Sec.~4); the index is a ceiling.}
+\label{tab:suite}
+\resizebox{0.6\textwidth}{!}{%
+\input{tab_suite.tex}%
+}
+\end{table}
 
 % =====================================================================
 \section{The untouched BDD100K holdout}
@@ -320,7 +353,19 @@ when $\gamma_{\mathrm{deg}}\approx0$).}
 \end{table}
 
 \begin{table}[!ht]\centering\small
-\caption{\textbf{Single-rater sensitivity.} Top: macro-mAP on subsets;
+\caption{\textbf{Every method graded by two human raters} on the $160$
+double-labelled scenes, macro-mAP over the four degradation attributes (per-seed
+protocol). The subset is enriched for positives and VLM-boundary cases, so values
+are not comparable with the $550$-scene numbers; methods are compared on identical
+ground.}
+\label{tab:rater2_methods}
+\resizebox{0.75\textwidth}{!}{%
+\input{supp_tables/rater2_methods_table.tex}%
+}
+\end{table}
+
+\begin{table}[!ht]\centering\small
+\caption{\textbf{Simulated-rater sensitivity.} Top: macro-mAP on subsets;
 ambiguity is measured by CLIP ViT-B/32, which no ranker uses. Bottom: share of
 $500$ simulated second raters (prevalence fixed; flips uniform or
 ambiguity-weighted) in which SceneMiner's macro-mAP exceeds the comparator's.}
@@ -442,13 +487,15 @@ python scripts/build_semantic_queries.py
 python scripts/eval_semantic_edge_cases.py --final v26   # Stratum 5
 SM_FINAL=v26 python scripts/eval_compositional_synergy.py
 SM_FINAL=v26 python scripts/eval_rater_sensitivity.py
+SM_FINAL=v26 python scripts/incorporate_rater2.py   # second human rater, 160 scenes
 python scripts/val150_camfront_errors.py     # front-sector degradation study
 python scripts/val150_ped_vru_metrics.py
 python scripts/val150_retrieval_to_3d.py --model v26
 python scripts/build_bdd_holdout.py          # untouched BDD100K holdout
-python scripts/holdout_signals.py --part margins && python scripts/holdout_signals.py --part merge
+python scripts/holdout_signals.py --part margins
+python scripts/holdout_signals.py --part merge
 python scripts/caption_scenes_qwen.py --prompt neutral   # captions for the caption baseline
-python scripts/refav_llm_compile.py          # LLM-compiled programs for the RefAV-style baseline
+python scripts/refav_llm_compile.py   # LLM programs, RefAV-style baseline
 python scripts/eval_related_work_baselines.py
 python scripts/verify_bibliography.py && python scripts/build_bib.py
 python scripts/make_fig1_architecture.py && python scripts/make_figures.py

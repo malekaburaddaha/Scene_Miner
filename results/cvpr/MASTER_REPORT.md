@@ -659,6 +659,38 @@ supplementary is 19 pages.
 * Main text still fills 8 pages, with the references at the top of page 9.
 * The verifier passes 50 claims; the anonymity check passes.
 
+## 33. Second human rater
+
+**Data.** A second rater labelled the fixed 160-scene subset. Both label files are
+anonymised in `benchmark_cvpr/`.
+
+**Agreement.**
+
+* Inter-rater κ is 0.801 (0.734–0.883 per attribute; pooled 0.810).
+* VLM–human κ is 0.520 (rater 1) and 0.501 (rater 2).
+* People agree with each other far more than with the teacher.
+* κ is *higher* on VLM-boundary scenes (0.811) than on rater-1 positives (0.762), so
+  the subset κ is not claimed to be a lower bound.
+
+**Graded by rater 2 alone, SceneMiner is first (0.798).**
+
+| vs. | Δ | 95% CI |
+|---|---|---|
+| SigLIP2 | +0.160 | [+0.107, +0.217] |
+| late fusion SigLIP2 + lookup | +0.042 | [+0.003, +0.079] |
+| naive router | +0.047 | [+0.019, +0.079] |
+| lookup | +0.030 | [−0.009, +0.075], not significant |
+
+SceneMiner is also first under rater-1, consensus, union and intersection grading.
+Per attribute, rater 2 repeats rater 1: the lead rests on low contrast, and glare is
+lost to late fusion.
+
+**Paper.** The simulated-rater paragraph is replaced by the real result (new Table 5).
+The ablation and suite tables moved to the supplementary to keep 8 pages.
+
+**Verifier.** 59 claims, all passing. Matching now requires whole numbers, which
+closes the substring loophole noted in M31.
+
 ---
 
 # Where this leaves the paper
@@ -676,6 +708,7 @@ supplementary is 19 pages.
    parts (30.3×), residual (~10×), and a width-1 LayerNorm that kills a modality
    outright while mAP moves 0.004.
 4. **One model**, best of twelve methods on human-graded degradation (0.794 / 0.829;
+   0.798 against an independent second rater, inter-rater κ = 0.80;
    0.762 in its portable mode, which reads no corpus-supervised signal), level with
    zero-shot SigLIP2 externally (BDD100K 0.614 vs 0.622; untouched pre-registered
    holdout 0.400 vs 0.408, p = 0.28) and on semantic edge cases. Its gate never saw

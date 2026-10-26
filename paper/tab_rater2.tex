@@ -1,0 +1,13 @@
+\begin{tabular}{lccc|cccc}
+\toprule
+ & \multicolumn{3}{c|}{Cohen's $\kappa$} & \multicolumn{4}{c}{mAP graded by rater 2}\\
+attribute & r1--r2 & VLM--r1 & VLM--r2 & SceneMiner & lookup & fusion$^{\ast}$ & SigLIP2\\
+\midrule
+droplets & 0.828 & 0.632 & 0.596 & 0.943 & 0.851 & \best{0.944} & 0.942\\
+glare & 0.760 & 0.456 & 0.387 & 0.557 & 0.583 & \best{0.630} & 0.460\\
+wet road & 0.883 & 0.670 & 0.613 & 0.967 & 0.950 & \best{0.971} & 0.889\\
+low contrast & 0.734 & 0.323 & 0.410 & \best{0.724} & 0.687 & 0.479 & 0.261\\
+\midrule
+macro & 0.801 & 0.520 & 0.501 & \best{0.798} & 0.768 & 0.756 & 0.638\\
+\bottomrule
+\end{tabular}
