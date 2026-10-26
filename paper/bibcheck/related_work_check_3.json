@@ -1,0 +1,682 @@
+{
+ "yogamani2019woodscape": {
+  "title": "WoodScape: A Multi-Task, Multi-Camera Fisheye Dataset for Autonomous Driving",
+  "openalex": [
+   {
+    "id": "https://openalex.org/W2943449463",
+    "doi": "10.1109/iccv.2019.00940",
+    "year": 2019,
+    "authors": [
+     "Senthil Kumar Yogamani",
+     "Ciar\u00e1n Eising",
+     "Jonathan Horgan",
+     "Ganesh Sistu",
+     "Sumanth Chennupati",
+     "Michal U\u0159i\u010d\u00e1\u0159",
+     "Stefan Milz",
+     "Mart\u00edn Sim\u00f3n",
+     "Karl Amende",
+     "Christian Witt",
+     "Hazem Rashed",
+     "Sanjaya Nayak",
+     "Saquib Mansoor",
+     "Padraig Varley",
+     "Xavier Perrotton",
+     "Derek Odea",
+     "Patrick P\u00e9rez"
+    ],
+    "locations": [
+     [
+      "IEEE/CVF International Conference on Computer Vision (ICCV)",
+      "https://doi.org/10.1109/iccv.2019.00940"
+     ],
+     [
+      "arXiv (Cornell University)",
+      "http://arxiv.org/abs/1905.01489"
+     ],
+     [
+      "arXiv (Cornell University)",
+      "http://export.arxiv.org/pdf/1905.01489"
+     ],
+     [
+      "arXiv (Cornell University)",
+      "https://doi.org/10.48550/arxiv.1905.01489"
+     ]
+    ]
+   }
+  ],
+  "arxiv_ids_seen": [
+   "1905.01489"
+  ],
+  "crossref": {
+   "doi": "10.1109/iccv.2019.00940",
+   "title": "WoodScape: A Multi-Task, Multi-Camera Fisheye Dataset for Autonomous Driving",
+   "type": "proceedings-article",
+   "container": "2019 IEEE/CVF International Conference on Computer Vision (ICCV)",
+   "year": 2019,
+   "volume": null,
+   "issue": null,
+   "page": "9307-9317",
+   "publisher": "IEEE",
+   "authors": [
+    "Senthil Yogamani",
+    "Ciaran Hughes",
+    "Jonathan Horgan",
+    "Ganesh Sistu",
+    "Sumanth Chennupati",
+    "Michal Uricar",
+    "Stefan Milz",
+    "Martin Simon",
+    "Karl Amende",
+    "Christian Witt",
+    "Hazem Rashed",
+    "Sanjaya Nayak",
+    "Saquib Mansoor",
+    "Padraig Varley",
+    "Xavier Perrotton",
+    "Derek Odea",
+    "Patrick Perez"
+   ]
+  },
+  "crossref_title_matches": true
+ },
+ "sakaridis2019darkzurich": {
+  "title": "Guided Curriculum Model Adaptation and Uncertainty-Aware Evaluation for Semantic Nighttime Image Segmentation",
+  "openalex": [
+   {
+    "id": "https://openalex.org/W2966493829",
+    "doi": "10.1109/iccv.2019.00747",
+    "year": 2019,
+    "authors": [
+     "Christos Sakaridis",
+     "Dengxin Dai",
+     "Luc Van Gool"
+    ],
+    "locations": [
+     [
+      "IEEE/CVF International Conference on Computer Vision (ICCV)",
+      "https://doi.org/10.1109/iccv.2019.00747"
+     ],
+     [
+      "Repository for Publications and Research Data (ETH Zurich)",
+      "http://hdl.handle.net/20.500.11850/407166"
+     ],
+     [
+      "arXiv (Cornell University)",
+      "http://arxiv.org/abs/1901.05946"
+     ],
+     [
+      "Repository for Publications and Research Data (ETH Zurich)",
+      "http://hdl.handle.net/20.500.11850/388200"
+     ],
+     [
+      "arXiv (Cornell University)",
+      "https://doi.org/10.48550/arxiv.1901.05946"
+     ],
+     [
+      "ETH Z\u00fcrich Research Collection",
+      "https://doi.org/10.3929/ethz-b-000388200"
+     ]
+    ]
+   }
+  ],
+  "arxiv_ids_seen": [
+   "1901.05946"
+  ],
+  "crossref": {
+   "doi": "10.1109/iccv.2019.00747",
+   "title": "Guided Curriculum Model Adaptation and Uncertainty-Aware Evaluation for Semantic Nighttime Image Segmentation",
+   "type": "proceedings-article",
+   "container": "2019 IEEE/CVF International Conference on Computer Vision (ICCV)",
+   "year": 2019,
+   "volume": null,
+   "issue": null,
+   "page": "7373-7382",
+   "publisher": "IEEE",
+   "authors": [
+    "Christos Sakaridis",
+    "Dengxin Dai",
+    "Luc Van Gool"
+   ]
+  },
+  "crossref_title_matches": true
+ },
+ "sakaridis2018foggy": {
+  "title": "Semantic Foggy Scene Understanding with Synthetic Data",
+  "openalex": [
+   {
+    "id": "https://openalex.org/W2748021867",
+    "doi": "10.1007/s11263-018-1072-8",
+    "year": 2018,
+    "authors": [
+     "Christos Sakaridis",
+     "Dengxin Dai",
+     "Luc Van Gool"
+    ],
+    "locations": [
+     [
+      "International Journal of Computer Vision",
+      "https://doi.org/10.1007/s11263-018-1072-8"
+     ],
+     [
+      "Repository for Publications and Research Data (ETH Zurich)",
+      "http://hdl.handle.net/20.500.11850/254367"
+     ],
+     [
+      "arXiv (Cornell University)",
+      "http://arxiv.org/abs/1708.07819"
+     ],
+     [
+      "Lirias",
+      "https://lirias.kuleuven.be/handle/123456789/627236"
+     ],
+     [
+      "arXiv (Cornell University)",
+      "https://doi.org/10.48550/arxiv.1708.07819"
+     ],
+     [
+      "ETH Z\u00fcrich Research Collection",
+      "https://doi.org/10.3929/ethz-b-000254367"
+     ]
+    ]
+   }
+  ],
+  "arxiv_ids_seen": [
+   "1708.07819"
+  ],
+  "crossref": {
+   "doi": "10.1007/s11263-018-1072-8",
+   "title": "Semantic Foggy Scene Understanding with Synthetic Data",
+   "type": "journal-article",
+   "container": "International Journal of Computer Vision",
+   "year": 2018,
+   "volume": "126",
+   "issue": "9",
+   "page": "973-992",
+   "publisher": "Springer Science and Business Media LLC",
+   "authors": [
+    "Christos Sakaridis",
+    "Dengxin Dai",
+    "Luc Van Gool"
+   ]
+  },
+  "crossref_title_matches": true
+ },
+ "li2022coda": {
+  "title": "CODA: A Real-World Road Corner Case Dataset for Object Detection in Autonomous Driving",
+  "openalex": [
+   {
+    "id": "https://openalex.org/W4221143499",
+    "doi": "10.1007/978-3-031-19839-7_24",
+    "year": 2022,
+    "authors": [
+     "Kaican Li",
+     "Kai Chen",
+     "Haoyu Wang",
+     "Lanqing Hong",
+     "Chaoqiang Ye",
+     "Jianhua Han",
+     "Yukuai Chen",
+     "Wei Zhang",
+     "Chunjing Xu",
+     "Dit\u2010Yan Yeung",
+     "Xiaodan Liang",
+     "Zhenguo Li",
+     "Hang Xu"
+    ],
+    "locations": [
+     [
+      "Lecture notes in computer science",
+      "https://doi.org/10.1007/978-3-031-19839-7_24"
+     ],
+     [
+      "arXiv (Cornell University)",
+      "http://arxiv.org/abs/2203.07724"
+     ],
+     [
+      "Rare & Special e-Zone (The Hong Kong University of Science and Technology)",
+      "http://repository.hkust.edu.hk/ir/Record/1783.1-123540"
+     ],
+     [
+      "arXiv (Cornell University)",
+      "https://doi.org/10.48550/arxiv.2203.07724"
+     ]
+    ]
+   }
+  ],
+  "arxiv_ids_seen": [
+   "2203.07724"
+  ],
+  "crossref": {
+   "doi": "10.1007/978-3-031-19839-7_24",
+   "title": "CODA: A Real-World Road Corner Case Dataset for Object Detection in Autonomous Driving",
+   "type": "book-chapter",
+   "container": "Lecture Notes in Computer Science",
+   "year": 2022,
+   "volume": null,
+   "issue": null,
+   "page": "406-423",
+   "publisher": "Springer Nature Switzerland",
+   "authors": [
+    "Kaican Li",
+    "Kai Chen",
+    "Haoyu Wang",
+    "Lanqing Hong",
+    "Chaoqiang Ye",
+    "Jianhua Han",
+    "Yukuai Chen",
+    "Wei Zhang",
+    "Chunjing Xu",
+    "Dit-Yan Yeung",
+    "Xiaodan Liang",
+    "Zhenguo Li",
+    "Hang Xu"
+   ]
+  },
+  "crossref_title_matches": true
+ },
+ "blum2021fishyscapes": {
+  "title": "The Fishyscapes Benchmark: Measuring Blind Spots in Semantic Segmentation",
+  "openalex": [
+   {
+    "id": "https://openalex.org/W2933610837",
+    "doi": "10.1007/s11263-021-01511-6",
+    "year": 2021,
+    "authors": [
+     "Hermann Blum",
+     "Paul-Edouard Sarlin",
+     "Juan I. Nieto",
+     "Roland Siegwart",
+     "C\u00e9sar Cadena"
+    ],
+    "locations": [
+     [
+      "International Journal of Computer Vision",
+      "https://doi.org/10.1007/s11263-021-01511-6"
+     ],
+     [
+      "arXiv (Cornell University)",
+      "http://arxiv.org/abs/1904.03215"
+     ],
+     [
+      "Repository for Publications and Research Data (ETH Zurich)",
+      "http://hdl.handle.net/20.500.11850/511402"
+     ],
+     [
+      "arXiv (Cornell University)",
+      "https://doi.org/10.48550/arxiv.1904.03215"
+     ],
+     [
+      "ETH Z\u00fcrich Research Collection",
+      "https://doi.org/10.3929/ethz-b-000511402"
+     ]
+    ]
+   }
+  ],
+  "arxiv_ids_seen": [
+   "1904.03215"
+  ],
+  "crossref": {
+   "doi": "10.1007/s11263-021-01511-6",
+   "title": "The Fishyscapes Benchmark: Measuring Blind Spots in Semantic Segmentation",
+   "type": "journal-article",
+   "container": "International Journal of Computer Vision",
+   "year": 2021,
+   "volume": "129",
+   "issue": "11",
+   "page": "3119-3135",
+   "publisher": "Springer Science and Business Media LLC",
+   "authors": [
+    "Hermann Blum",
+    "Paul-Edouard Sarlin",
+    "Juan Nieto",
+    "Roland Siegwart",
+    "Cesar Cadena"
+   ]
+  },
+  "crossref_title_matches": true
+ },
+ "sima2024drivelm": {
+  "title": "DriveLM: Driving with Graph Visual Question Answering",
+  "openalex": [
+   {
+    "id": "https://openalex.org/W4404820176",
+    "doi": "10.1007/978-3-031-72943-0_15",
+    "year": 2024,
+    "authors": [
+     "Chonghao Sima",
+     "Katrin Renz",
+     "Kashyap Chitta",
+     "Li Chen",
+     "Hanxue Zhang",
+     "Chengen Xie",
+     "Jens Bei\u00dfwenger",
+     "Ping Luo",
+     "Andreas Geiger",
+     "Hongyang Li"
+    ],
+    "locations": [
+     [
+      "Lecture notes in computer science",
+      "https://doi.org/10.1007/978-3-031-72943-0_15"
+     ],
+     [
+      "arXiv (Cornell University)",
+      "http://arxiv.org/abs/2312.14150"
+     ],
+     [
+      "arXiv (Cornell University)",
+      "https://doi.org/10.48550/arxiv.2312.14150"
+     ]
+    ]
+   }
+  ],
+  "arxiv_ids_seen": [
+   "2312.14150"
+  ],
+  "crossref": {
+   "doi": "10.1007/978-3-031-72943-0_15",
+   "title": "DriveLM: Driving with Graph Visual Question Answering",
+   "type": "book-chapter",
+   "container": "Lecture Notes in Computer Science",
+   "year": 2024,
+   "volume": null,
+   "issue": null,
+   "page": "256-274",
+   "publisher": "Springer Nature Switzerland",
+   "authors": [
+    "Chonghao Sima",
+    "Katrin Renz",
+    "Kashyap Chitta",
+    "Li Chen",
+    "Hanxue Zhang",
+    "Chengen Xie",
+    "Jens Bei\u00dfwenger",
+    "Ping Luo",
+    "Andreas Geiger",
+    "Hongyang Li"
+   ]
+  },
+  "crossref_title_matches": true
+ },
+ "qian2024nuscenesqa": {
+  "title": "NuScenes-QA: A Multi-Modal Visual Question Answering Benchmark for Autonomous Driving Scenario",
+  "openalex": [
+   {
+    "id": "https://openalex.org/W4393148430",
+    "doi": "10.1609/aaai.v38i5.28253",
+    "year": 2024,
+    "authors": [
+     "Tianwen Qian",
+     "Jingjing Chen",
+     "Linhai Zhuo",
+     "Yang Jiao",
+     "Yu\u2013Gang Jiang"
+    ],
+    "locations": [
+     [
+      "Proceedings of the AAAI Conference on Artificial Intelligence",
+      "https://doi.org/10.1609/aaai.v38i5.28253"
+     ],
+     [
+      "arXiv (Cornell University)",
+      "http://arxiv.org/abs/2305.14836"
+     ],
+     [
+      "AAAI Publications (The Association for the Advancement of Artificial Intelligence (AAAI))",
+      "https://ojs.aaai.org/index.php/AAAI/article/view/28253"
+     ],
+     [
+      "arXiv (Cornell University)",
+      "https://doi.org/10.48550/arxiv.2305.14836"
+     ]
+    ]
+   }
+  ],
+  "arxiv_ids_seen": [
+   "2305.14836"
+  ],
+  "crossref": {
+   "doi": "10.1609/aaai.v38i5.28253",
+   "title": "NuScenes-QA: A Multi-Modal Visual Question Answering Benchmark for Autonomous Driving Scenario",
+   "type": "journal-article",
+   "container": "Proceedings of the AAAI Conference on Artificial Intelligence",
+   "year": 2024,
+   "volume": "38",
+   "issue": "5",
+   "page": "4542-4550",
+   "publisher": "Association for the Advancement of Artificial Intelligence (AAAI)",
+   "authors": [
+    "Tianwen Qian",
+    "Jingjing Chen",
+    "Linhai Zhuo",
+    "Yang Jiao",
+    "Yu-Gang Jiang"
+   ]
+  },
+  "crossref_title_matches": true
+ },
+ "deruyttere2019talk2car": {
+  "title": "Talk2Car: Taking Control of Your Self-Driving Car",
+  "openalex": [
+   {
+    "id": "https://openalex.org/W2970603850",
+    "doi": "10.18653/v1/d19-1215",
+    "year": 2019,
+    "authors": [
+     "Thierry Deruyttere",
+     "Simon Vandenhende",
+     "Dusan Grujicic",
+     "Luc Van Gool",
+     "Marie-Francine Moens"
+    ],
+    "locations": [
+     [
+      null,
+      "https://doi.org/10.18653/v1/d19-1215"
+     ],
+     [
+      "arXiv (Cornell University)",
+      "http://arxiv.org/abs/1909.10838"
+     ],
+     [
+      "Lirias (KU Leuven)",
+      "https://lirias.kuleuven.be/handle/123456789/645526"
+     ],
+     [
+      "arXiv (Cornell University)",
+      "https://doi.org/10.48550/arxiv.1909.10838"
+     ]
+    ]
+   }
+  ],
+  "arxiv_ids_seen": [
+   "1909.10838"
+  ],
+  "crossref": {
+   "doi": "10.18653/v1/d19-1215",
+   "title": "Talk2Car: Taking Control of Your Self-Driving Car",
+   "type": "proceedings-article",
+   "container": "Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP)",
+   "year": 2019,
+   "volume": null,
+   "issue": null,
+   "page": "2088-2098",
+   "publisher": "Association for Computational Linguistics",
+   "authors": [
+    "Thierry Deruyttere",
+    "Simon Vandenhende",
+    "Dusan Grujicic",
+    "Luc Van Gool",
+    "Marie-Francine Moens"
+   ]
+  },
+  "crossref_title_matches": true
+ },
+ "marcu2024lingoqa": {
+  "title": "LingoQA: Visual Question Answering for Autonomous Driving",
+  "openalex": [
+   {
+    "id": "https://openalex.org/W4403843558",
+    "doi": "10.1007/978-3-031-72980-5_15",
+    "year": 2024,
+    "authors": [
+     "Ana-Maria Marcu",
+     "Long Chen",
+     "Jan H\u00fcnermann",
+     "Alice Karnsund",
+     "Benoit Hanotte",
+     "Prajwal Chidananda",
+     "Saurabh Nair",
+     "Vijay Badrinarayanan",
+     "Alex Kendall",
+     "Jamie Shotton",
+     "Elahe Arani",
+     "Oleg Sinavski"
+    ],
+    "locations": [
+     [
+      "Lecture notes in computer science",
+      "https://doi.org/10.1007/978-3-031-72980-5_15"
+     ],
+     [
+      "arXiv (Cornell University)",
+      "http://arxiv.org/abs/2312.14115"
+     ],
+     [
+      "arXiv (Cornell University)",
+      "https://doi.org/10.48550/arxiv.2312.14115"
+     ]
+    ]
+   }
+  ],
+  "arxiv_ids_seen": [
+   "2312.14115"
+  ],
+  "crossref": {
+   "doi": "10.1007/978-3-031-72980-5_15",
+   "title": "LingoQA: Visual Question Answering for Autonomous Driving",
+   "type": "book-chapter",
+   "container": "Lecture Notes in Computer Science",
+   "year": 2024,
+   "volume": null,
+   "issue": null,
+   "page": "252-269",
+   "publisher": "Springer Nature Switzerland",
+   "authors": [
+    "Ana-Maria Marcu",
+    "Long Chen",
+    "Jan H\u00fcnermann",
+    "Alice Karnsund",
+    "Benoit Hanotte",
+    "Prajwal Chidananda",
+    "Saurabh Nair",
+    "Vijay Badrinarayanan",
+    "Alex Kendall",
+    "Jamie Shotton",
+    "Elahe Arani",
+    "Oleg Sinavski"
+   ]
+  },
+  "crossref_title_matches": true
+ },
+ "luo2023crb": {
+  "title": "Exploring Active 3D Object Detection from a Generalization Perspective",
+  "openalex": [
+   {
+    "id": "https://openalex.org/W4317940621",
+    "doi": "10.48550/arxiv.2301.09249",
+    "year": 2023,
+    "authors": [
+     "Yadan Luo",
+     "Zhuoxiao Chen",
+     "Zi Helen Huang",
+     "Xin Yu",
+     "Zi Helen Huang",
+     "Mahsa Baktashmotlagh"
+    ],
+    "locations": [
+     [
+      "arXiv (Cornell University)",
+      "http://arxiv.org/abs/2301.09249"
+     ],
+     [
+      "arXiv (Cornell University)",
+      "https://doi.org/10.48550/arxiv.2301.09249"
+     ]
+    ]
+   }
+  ],
+  "arxiv_ids_seen": [
+   "2301.09249"
+  ],
+  "openreview": [
+   {
+    "id": "fBbroWYN3Y",
+    "title": "Exploring Active 3D Object Detection from a Generalization Perspective",
+    "venue": "CoRR 2023",
+    "authors": [
+     "Yadan Luo",
+     "Zhuoxiao Chen",
+     "Zijian Wang",
+     "Xin Yu",
+     "Zi Huang",
+     "Mahsa Baktashmotlagh"
+    ]
+   }
+  ]
+ },
+ "feng2019activelidar": {
+  "title": "Deep Active Learning for Efficient Training of a LiDAR 3D Object Detector",
+  "openalex": [
+   {
+    "id": "https://openalex.org/W2970624554",
+    "doi": "10.1109/ivs.2019.8814236",
+    "year": 2019,
+    "authors": [
+     "Di Feng",
+     "Wei Xiao",
+     "Lars Rosenbaum",
+     "Atsuto Maki",
+     "Klaus Dietmayer"
+    ],
+    "locations": [
+     [
+      "IEEE Intelligent Vehicles Symposium",
+      "https://doi.org/10.1109/ivs.2019.8814236"
+     ],
+     [
+      "arXiv (Cornell University)",
+      "http://arxiv.org/abs/1901.10609"
+     ],
+     [
+      "arXiv (Cornell University)",
+      "https://doi.org/10.48550/arxiv.1901.10609"
+     ]
+    ]
+   }
+  ],
+  "arxiv_ids_seen": [
+   "1901.10609"
+  ],
+  "crossref": {
+   "doi": "10.1109/ivs.2019.8814236",
+   "title": "Deep Active Learning for Efficient Training of a LiDAR 3D Object Detector",
+   "type": "proceedings-article",
+   "container": "2019 IEEE Intelligent Vehicles Symposium (IV)",
+   "year": 2019,
+   "volume": null,
+   "issue": null,
+   "page": "667-674",
+   "publisher": "IEEE",
+   "authors": [
+    "Di Feng",
+    "Xiao Wei",
+    "Lars Rosenbaum",
+    "Atsuto Maki",
+    "Klaus Dietmayer"
+   ]
+  },
+  "crossref_title_matches": true
+ }
+}

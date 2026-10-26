@@ -19,6 +19,12 @@ C.update({"tang2025bevtsr": RW["bevtsr"], "ki2025carim": RW["carim"], "chamiti20
 # Crossref inverts one name ("Fan JingChen"); the arXiv record of the same paper gives "Jingchen Fan"
 C["tang2025bevtsr"] = dict(C["tang2025bevtsr"], authors=["Jingchen Fan" if x == "Fan JingChen" else x
                                                          for x in C["tang2025bevtsr"]["authors"]])
+# Milestone 35: eleven related-work entries, Crossref by the DOI OpenAlex links to the exact
+# title (scripts/fetch_related_work_m35.py); CRB has no DOI, its record is OpenReview's
+RW3 = json.load(open("paper/bibcheck/related_work_check_3.json"))
+for _k, _r in RW3.items():
+    if _r.get("crossref"): C[_k] = _r["crossref"]
+OR = {k: r["openreview"][0] for k, r in RW3.items() if r.get("openreview")}
 _rv = json.load(open("paper/bibcheck/related_work_check_1.json"))["refav"]
 A["davidson2025refav"] = {"arxiv_id": _rv["id"], "arxiv": _rv}
 
@@ -49,6 +55,17 @@ SPEC = {   # key -> (type, venue field, venue, year, source of authors, extra)
  "chamiti2025refergpt": ("inproceedings", "booktitle", "Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition Workshops (CVPRW)", 2025, "crossref", {}),
  "davidson2025refav": ("article", "journal", "arXiv preprint arXiv:2505.20981", 2025, "arxiv", {}),
  "roy2007erank": ("inproceedings", "booktitle", "Proceedings of the European Signal Processing Conference (EUSIPCO)", 2007, "openalex", {}),
+ "yogamani2019woodscape": ("inproceedings", "booktitle", ICCV, 2019, "crossref", {}),
+ "sakaridis2019darkzurich": ("inproceedings", "booktitle", ICCV, 2019, "crossref", {}),
+ "sakaridis2018foggy": ("article", "journal", "International Journal of Computer Vision", 2018, "crossref", {}),
+ "li2022coda": ("inproceedings", "booktitle", "Proceedings of the European Conference on Computer Vision (ECCV)", 2022, "crossref", {}),
+ "blum2021fishyscapes": ("article", "journal", "International Journal of Computer Vision", 2021, "crossref", {}),
+ "sima2024drivelm": ("inproceedings", "booktitle", "Proceedings of the European Conference on Computer Vision (ECCV)", 2024, "crossref", {}),
+ "qian2024nuscenesqa": ("inproceedings", "booktitle", "Proceedings of the AAAI Conference on Artificial Intelligence", 2024, "crossref", {}),
+ "deruyttere2019talk2car": ("inproceedings", "booktitle", "Proceedings of the Conference on Empirical Methods in Natural Language Processing and the International Joint Conference on Natural Language Processing (EMNLP-IJCNLP)", 2019, "crossref", {}),
+ "marcu2024lingoqa": ("inproceedings", "booktitle", "Proceedings of the European Conference on Computer Vision (ECCV)", 2024, "crossref", {}),
+ "luo2023crb": ("article", "journal", "arXiv preprint arXiv:2301.09249", 2023, "openreview", {}),
+ "feng2019activelidar": ("inproceedings", "booktitle", "Proceedings of the IEEE Intelligent Vehicles Symposium (IV)", 2019, "crossref", {}),
 }
 OVERRIDES = {
  # arXiv lists Mu, Bhat, Viswanath; the ICLR 2018 version is Mu and Viswanath
@@ -97,6 +114,7 @@ for key, (typ, vf, venue, year, src, extra) in SPEC.items():
     if src == "crossref": authors, title, pages, doi = c["authors"], c["title"], c.get("page"), c["doi"]
     elif src == "arxiv": authors, title, pages, doi = arx["authors"], arx["title"], None, None
     elif src == "override": authors, title, pages, doi = OVERRIDES[key], arx["title"], None, None
+    elif src == "openreview": authors, title, pages, doi = OR[key]["authors"], OR[key]["title"], None, None
     elif src == "openalex":
         authors = ["Olivier Roy", "Martin Vetterli"]; title = OA["title"]
         pages = f"{OA['biblio']['first_page']}-{OA['biblio']['last_page']}"; doi = OA["doi"].replace("https://doi.org/", "")
