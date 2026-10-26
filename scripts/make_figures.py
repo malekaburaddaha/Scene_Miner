@@ -86,7 +86,12 @@ def fig3():
     fig, (axa, axb) = plt.subplots(1, 2, figsize=(7.0, 2.7))
 
     suite = dict(suite)
-    suite["SceneMiner_v2.4"] = json.load(open("results/cvpr/milestone27_v26.json"))["C_suite150"]["overall"]["v2.3_full"]
+    # the four rankers come from the Table 2 run so the bars match the table (Milestone 37);
+    # the index ceiling is the Milestone 10 suite value
+    t2 = json.load(open("results/cvpr/milestone28_related_work_comparison.json"))["methods"]
+    for k, j in [("SceneMiner_v2.1", "Naive uncalibrated fusion"), ("SceneMiner_v2.4", "SceneMiner"),
+                 ("zeroshot_SigLIP2", "SigLIP2 ViT-B/16"), ("logit_VLM_lookup", "Qwen2.5-VL lookup")]:
+        suite[k] = {"mAP": t2[j]["suite"]}
     order = ["attribute_index(TAUTOLOGY)", "SceneMiner_v2.1", "SceneMiner_v2.4",
              "zeroshot_SigLIP2", "logit_VLM_lookup"]
     lab = ["attribute\nindex", "naive convex\nrouter", "SceneMiner",

@@ -691,6 +691,62 @@ The ablation and suite tables moved to the supplementary to keep 8 pages.
 **Verifier.** 59 claims, all passing. Matching now requires whole numbers, which
 closes the substring loophole noted in M31.
 
+## 34. Per-query VLM reranker, larger backbone, seed sds
+
+**Per-query VLM reranker** (SigLIP2 top-50 per pool, then Qwen2.5-VL yes/no on the
+query itself).
+
+* It is *better* than SceneMiner on:
+  * the holdout: 0.442 vs 0.400 (p = 0.004);
+  * Stratum-5 atomic: +0.025 (p = 0.001);
+  * BDD100K: 0.640 vs 0.614, not significant.
+* SceneMiner is better on human GT (+0.159, CI [0.114, 0.206]) and on the suite.
+* The reranker is bounded by first-stage recall: 3 of 66 low-contrast positives reach
+  SigLIP2's top 50.
+* It costs 8.2 s per query on an A40, about 2300× SceneMiner's 3.5 ms.
+
+**So400m backbone.**
+
+* Zero-shot human GT falls (0.543), but the holdout rises (0.474).
+* SceneMiner retrained on So400m scores 0.784 on human GT, 0.650 on BDD100K and 0.468 on
+  the holdout: level with its backbone externally, and a +0.241 lead in domain.
+* Stratum-5 conjunctions are worse than the backbone (−0.050, p = 0.021).
+
+**Seed sds.** Per-seed means reproduce every human-GT value. SceneMiner scores
+0.794 ± 0.008, and the last four designs are within about one sd on human GT.
+
+## 35. Related work and pre-submission fixes
+
+* **Citations:** 11 new ones, identified on OpenAlex by exact title, with published
+  records from Crossref. The bibliography now has 35 entries. CRB is cited as an arXiv
+  preprint (2301.09249), because no fetched record confirmed ICLR.
+* **Venue:** CVPR 2027.
+* **Abstract:** rewritten.
+* **Numbers:** 0.735 (best Table 2 alternative) and 0.737 (best no-learning control) are
+  stated explicitly; "twelve alternatives" is used everywhere.
+* **Layout:** the main text ends about 10 lines above the bottom of page 8.
+
+## 36. Scrub and code bundle
+
+* **Paths:** `scripts/paths.py` provides environment overrides for the data root and the
+  model checkpoints; the rater-1 file is now the anonymised one.
+* **Removed:** the old rater-1 file that carried a name.
+* **Bundle:** `paper/supplementary_code.zip`, 254 files, about 1.2 MB, scanned member by
+  member. No leaks.
+
+## 37. Final verification
+
+* **Number checks:** 84 registered claims pass.
+* **Anonymity:** the check passes on both PDFs, the figures, the TeX sources and the
+  bundle.
+* **Visual audit:** every main page and the new supplementary pages were inspected.
+* **Fixes from the audit:**
+  * Figure 2(a)'s lookup bar (0.390, an older protocol) now matches Table 2 (0.414); so
+    does the suite table.
+  * Bold math now renders in `\best`.
+  * Fishyscapes is capitalised correctly.
+  * Section S6 floats are pinned.
+
 ---
 
 # Where this leaves the paper
@@ -712,14 +768,19 @@ closes the substring loophole noted in M31.
    0.762 in its portable mode, which reads no corpus-supervised signal), level with
    zero-shot SigLIP2 externally (BDD100K 0.614 vs 0.622; untouched pre-registered
    holdout 0.400 vs 0.408, p = 0.28) and on semantic edge cases. Its gate never saw
-   evaluation data; the holdout was run once, after every design decision.
+   evaluation data; the holdout was run once, after every design decision. A per-query
+   VLM reranker is better externally and on semantic queries, at about 2300× the online
+   cost, and worse on human-graded degradation (−0.159).
 
 **What does not survive:** SceneMiner beating SigLIP2 on BDD100K (an evaluation
 bug, fixed in M23); beating SigLIP2 on an untouched external holdout (M28: level);
-beating every published paradigm everywhere; learned fusion beating simple SigLIP2 +
+beating every published paradigm everywhere; matching a per-query VLM reranker outside
+degradation; learned fusion beating simple SigLIP2 +
 metadata fusion on object × condition conjunctions (that fusion is significantly better,
 p = 0.016); SceneMiner finding breakage scenes better
 than the VLM-margin lookup on val150; a uniform per-attribute lead.
 
-**Before submission, for the authors:** fill in `\paperID`; `cvpr.sty` carries one
-marked TeX Live 2018 compatibility edit that can be reverted on Overleaf.
+**Before submission, for the authors:** fill in `\paperID`; switch to the official CVPR
+2027 author kit when released (`cvpr.sty` here carries one marked TeX Live 2018
+compatibility edit); decide whether CRB should be cited as ICLR 2023 (no fetched record
+confirmed it, so it is cited as arXiv).

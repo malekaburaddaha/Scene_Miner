@@ -16,7 +16,7 @@
 \usepackage{cleveref}
 \captionsetup{font=small,labelfont=bf}
 \renewcommand{\thetable}{S\arabic{table}}
-\newcommand{\best}[1]{\textbf{#1}}
+\newcommand{\best}[1]{\textbf{\boldmath #1}}
 \newcommand{\gdeg}{\gamma_{\mathrm{deg}}}
 \renewcommand{\thefigure}{S\arabic{figure}}
 \renewcommand{\thesection}{S\arabic{section}}
@@ -291,7 +291,10 @@ night / rain & word in the human-written scene description & $84$ / $138$ & $15$
 \section{Ablations, BDD100K summary and the 150-query suite}
 % =====================================================================
 
-\begin{table}[!ht]\centering\small
+Three tables moved here from the main paper for space: the BDD100K summary, the
+inference ablations, and the 150-query suite per stratum.
+
+\begin{table}[H]\centering\small
 \caption{\textbf{External transfer}, BDD100K: $1000$ images, $12$ queries,
 native human labels, chance $0.262$. In-vocabulary: the $4$ queries naming a
 cached attribute (fixed from wording). BDD100K has no metadata, so
@@ -302,7 +305,7 @@ $s_{\mathrm{abst}}$ is the SigLIP2 cosine. No tuning on BDD100K.}
 }
 \end{table}
 
-\begin{table}[!ht]\centering\small
+\begin{table}[H]\centering\small
 \caption{\textbf{Ablations of SceneMiner}, one inference switch each (``--'': switch not applicable on BDD100K).}
 \label{tab:abl}
 \resizebox{0.6\textwidth}{!}{%
@@ -310,7 +313,7 @@ $s_{\mathrm{abst}}$ is the SigLIP2 cosine. No tuning on BDD100K.}
 }
 \end{table}
 
-\begin{table}[!ht]\centering\small
+\begin{table}[H]\centering\small
 \caption{\textbf{150-query suite} by stratum, $602$ evaluation scenes. Relevance
 is cached attributes and metadata (main paper, Sec.~4); the index is a ceiling.}
 \label{tab:suite}

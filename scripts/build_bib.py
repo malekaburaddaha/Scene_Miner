@@ -103,7 +103,7 @@ def protect(t):
         core = w.strip(":,?")
         out.append("{" + w + "}" if any(needs(x) for x in core.split("-")) else w)
     t = " ".join(out)
-    for name in ("Waymo Open Dataset", "Bird's-Eye-View"):   # proper names
+    for name in ("Waymo Open Dataset", "Bird's-Eye-View", "Fishyscapes"):   # proper names
         t = t.replace(name, "{" + name + "}")
     return t
 

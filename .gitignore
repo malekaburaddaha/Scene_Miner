@@ -54,3 +54,5 @@ __pycache__/
 !benchmark_cvpr/*.json
 # raw annotation-tool output; the anonymised copy is in benchmark_cvpr/
 results/rater2/
+# the anonymised supplementary code bundle (Milestone 36) is small and is tracked
+!paper/supplementary_code.zip

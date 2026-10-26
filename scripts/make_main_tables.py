@@ -46,13 +46,13 @@ def design():
     rq = J("milestone23_bdd_rawquery_routing.json")["rows"]
     rows.append(("naive convex router", macro(m6, "SceneMiner_v2.1_zeroleak"), macro(m6, "SceneMiner_v2.1_human_calibrated_5fold"),
                  rq["v21|raw"]["mAP"], s10["SceneMiner_v2.1"]["mAP"], s11["SceneMiner_v2.1"]["raw"]["skew_pts"]))
-    rows.append(("$+$ anti-collapse routing, \\textsc{PartNorm}", macro(m10, "SceneMiner_v2.2_zeroleak"),
+    rows.append(("$+$ routing repair, \\textsc{PartNorm}", macro(m10, "SceneMiner_v2.2_zeroleak"),
                  macro(m10, "SceneMiner_v2.2_human_calibrated_5fold"), rq["v22|raw"]["mAP"], s10["SceneMiner_v2.2"]["mAP"],
                  s11["SceneMiner_v2.2"]["raw"]["skew_pts"]))
     for lab, f, b, tag in [("$+$ \\textsc{ResNorm}, single-prompt gate", "milestone14_v2_3.json", "milestone23_bdd_rawquery_v23.json", "v2.3"),
                            ("$+$ contrastive gate, abstention", "milestone18_v2_4.json", "milestone23_bdd_rawquery_v24.json", "v2.4"),
                            ("$+$ factored gate", "milestone22_factored_gate.json", "milestone23_bdd_rawquery_v25.json", "v2.5"),
-                           ("\\textbf{SceneMiner} (conditional context removal)", "milestone27_v26.json", None, "v2.3")]:
+                           ("\\textbf{SceneMiner} (conditional removal)", "milestone27_v26.json", None, "v2.3")]:
         d = J(f); A = d["A_human_gt"]["macro_mAP"]; C = d["C_suite150"]
         bd = J(b)["B_bdd100k"]["rankers"]["v2.3_full"]["mAP"] if b else d["B_bdd100k"]["rankers"]["v2.3_full"]["mAP"]
         rows.append((lab, A[f"{tag}_full"], A[f"{tag}_human_calibrated_5fold"], bd, C["overall"][f"{tag}_full"]["mAP"],
@@ -105,8 +105,17 @@ def suite():
             ("\\enspace without metadata in $s_{\\mathrm{abst}}$", "v2.3_no_macro_prior", None),
             ("\\enspace without abstention", "v2.3_no_abstain", None), ("zero-shot SigLIP2", "zeroshot_SigLIP2", None),
             ("logit VLM lookup", None, "logit_VLM_lookup")]
+    # Milestone 37: the lookup row is the Table 2 run (per-query APs grouped by stratum via the
+    # kept-query indices of milestone34_per_query_vlm.json), so the two tables agree
+    T2 = J("milestone28_related_work_comparison.json"); SQ = json.load(open("benchmark_cvpr/queries_390.json"))["eval"]
+    ids = [x["id"] for x in J("milestone34_per_query_vlm.json")["benchmarks"]["suite"]["per_query"]]
+    lq = T2["per_query"]["Qwen2.5-VL lookup"]["suite"]; assert len(ids) == len(lq)
+    by = {s: [a for j, a in zip(ids, lq) if SQ[j]["stratum"] == s] for s in st}
     vals = []
     for lab, k, k10 in rows:
+        if k10 == "logit_VLM_lookup":
+            vals.append((lab, [float(np.mean(by[s])) for s in st] + [T2["methods"]["Qwen2.5-VL lookup"]["suite"]],
+                         T2["methods"]["Qwen2.5-VL lookup"]["suite_skew_pts"], False)); continue
         if k is not None:
             v = [C["per_stratum"][s][k] for s in st] + [C["overall"][k]["mAP"]]; s_ = C["skew_pts"][k]["mean"]
         else:
