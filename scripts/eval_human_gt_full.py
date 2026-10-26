@@ -10,6 +10,7 @@ This is the evaluation where the cached-VLM lookup is NOT an oracle: relevance
 comes from human labels, so the lookup inherits the VLM's own error.
 """
 from __future__ import annotations
+from paths import HUMAN_R1, QWEN_VL
 import argparse, json, sys
 from pathlib import Path
 import numpy as np, torch
@@ -75,10 +76,10 @@ def siglip_scores(toks, thumbs, queries, batch=64):
 
 def main():
     ap=argparse.ArgumentParser()
-    ap.add_argument("--human", default="results/day1_gate/malek_repaired.json")
+    ap.add_argument("--human", default=HUMAN_R1)
     ap.add_argument("--work", default="work_dirs/unified_filter")
     ap.add_argument("--thumbs", default="work_dirs/unified_filter/scene_thumbs")
-    ap.add_argument("--qwen", default="/nfs/turbo/umd-srawa/hf_cache/Qwen2.5-VL-3B-Instruct")
+    ap.add_argument("--qwen", default=QWEN_VL)
     ap.add_argument("--out", default="results/day1_gate/human_gt_full.json")
     a=ap.parse_args()
     W=Path(a.work)

@@ -23,6 +23,7 @@ severity (GRADED relevance from continuous veh_50m - the only query family where
 a flat bucket provably cannot express the ground truth).
 """
 from __future__ import annotations
+from paths import QWEN_VL
 import argparse, json, sys, time
 from pathlib import Path
 import numpy as np
@@ -216,7 +217,7 @@ def main():
     ap.add_argument("--work", default="work_dirs/unified_filter")
     ap.add_argument("--thumbs", default="work_dirs/unified_filter/scene_thumbs")
     ap.add_argument("--checkpoint", default="work_dirs/ablation/D_final/final.pt")
-    ap.add_argument("--qwen", default="/nfs/turbo/umd-srawa/hf_cache/Qwen2.5-VL-3B-Instruct")
+    ap.add_argument("--qwen", default=QWEN_VL)
     ap.add_argument("--query-set", choices=["macro8", "degrad", "severity", "all"],
                     default="all")
     ap.add_argument("--perms", type=int, default=1000)

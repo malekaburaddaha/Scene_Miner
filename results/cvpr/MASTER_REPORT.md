@@ -132,7 +132,7 @@ nothing; VICReg + bounded scoring is negative.
 | `lowcontrast_strict.json` | sharpened prompt: prevalence **55.6 % → 17.1 %**, margins 0.61 → 1.12 |
 | `features_v2.npz` | + SigLIP2 image embeddings, + 4 continuous VLM margins |
 | `benchmark_cvpr/queries_390.json` | 233 queries (126 train / 107 eval), 4 strata, disjoint |
-| `human_annotations_rater1_600.json` | 600 scenes, repaired |
+| `benchmark_cvpr/human_rater1_600.json` | 600 scenes, repaired, anonymised (rater 2: `human_rater2_160.json`) |
 | BEVFormer full infos | 34,149 samples, private data root |
 
 ---

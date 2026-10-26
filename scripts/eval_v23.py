@@ -22,6 +22,7 @@ row differs from the full model in exactly one mechanism:
                 interpolate toward standardised SigLIP2 by (1 - gamma)
 """
 from __future__ import annotations
+from paths import EXT, HUMAN_R1
 import argparse, glob, json, re, sys
 from pathlib import Path
 import numpy as np, torch
@@ -279,8 +280,8 @@ def main():
     ap.add_argument("--ckpts", default="work_dirs/sceneminer_v23/s*/final.pt")
     ap.add_argument("--features", default="work_dirs/unified_filter/features_v2.npz")
     ap.add_argument("--work", default="work_dirs/unified_filter")
-    ap.add_argument("--human", default="results/day1_gate/malek_repaired.json")
-    ap.add_argument("--bdd", default="/nfs/turbo/umd-srawa/scene_mining/datasets/external_adverse/bdd100k")
+    ap.add_argument("--human", default=HUMAN_R1)
+    ap.add_argument("--bdd", default=EXT + "/bdd100k")
     ap.add_argument("--suite", default="benchmark_cvpr/queries_390.json")
     ap.add_argument("--split", default="benchmark_cvpr/split_906_602.json")
     ap.add_argument("--out", default="results/cvpr/milestone14_v2_3.json")

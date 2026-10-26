@@ -12,6 +12,7 @@ The five examples are invented phrasings that are not benchmark queries (checked
 below). Output: results/cvpr/refav_llm_programs.json (raw text, parsed program,
 validity), reused by eval_related_work_baselines.py. No external API is called.
 """
+from paths import QWEN_VL
 import json, re, sys
 from pathlib import Path
 import torch
@@ -63,7 +64,7 @@ def main():
     shots = [s for s, _ in SHOTS]
     assert not set(shots) & set(qs), "a few-shot example is a benchmark query"
     from transformers import AutoProcessor, Qwen2_5_VLForConditionalGeneration
-    P = "/nfs/turbo/umd-srawa/hf_cache/Qwen2.5-VL-3B-Instruct"
+    P = QWEN_VL
     proc = AutoProcessor.from_pretrained(P)
     m = Qwen2_5_VLForConditionalGeneration.from_pretrained(P, torch_dtype=torch.bfloat16).to("cuda").eval()
     msgs0 = [{"role": "system", "content": [{"type": "text", "text": SYSTEM}]}]

@@ -19,6 +19,7 @@ Rankers: SceneMiner v2.4 (5-seed mean), logit VLM lookup, zero-shot SigLIP2,
 and the two late-fusion controls z(SigLIP2)+z(lookup), z(SigLIP2)+metadata.
 """
 from __future__ import annotations
+from paths import HUMAN_R1
 import json, sys
 from pathlib import Path
 import numpy as np, torch
@@ -64,8 +65,8 @@ def main():
     W = Path("work_dirs/unified_filter")
     z = np.load(W/"features_v2.npz", allow_pickle=False)
     corpus = [str(t) for t in z["scene_tokens"]]; cidx = {t: i for i, t in enumerate(corpus)}
-    humB = load_human("results/day1_gate/malek_repaired.json", "B")
-    humA = load_human("results/day1_gate/malek_repaired.json", "A")
+    humB = load_human(HUMAN_R1, "B")
+    humA = load_human(HUMAN_R1, "A")
     toks = [t for t in corpus if t in humB]; idx = np.array([cidx[t] for t in toks])
     T = lambda k: torch.from_numpy(z[k]).float().to(dev)
     emb, tlog, risk = T("emb"), T("tag_logits"), T("risk")

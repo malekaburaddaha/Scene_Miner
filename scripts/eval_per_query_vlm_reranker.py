@@ -19,6 +19,7 @@ check, the SigLIP2 per-query APs computed here must equal Milestone 28's.
 --part latency                    online cost per query on one A40
 --part eval                       -> results/cvpr/milestone34_per_query_vlm.json
 """
+from paths import EXT, QWEN_VL
 import argparse, glob, json, sys, time
 from pathlib import Path
 import numpy as np, torch
@@ -32,8 +33,8 @@ from eval_domain_calibrated_v2 import mmr
 
 K = 50
 PROMPT = "Does this driving scene show {q}? Answer Yes or No."
-QWEN = "/nfs/turbo/umd-srawa/hf_cache/Qwen2.5-VL-3B-Instruct"
-BDD_ROOT = Path("/nfs/turbo/umd-srawa/scene_mining/datasets/external_adverse/bdd100k")
+QWEN = QWEN_VL
+BDD_ROOT = Path(EXT + "/bdd100k")
 IMG = {"corpus": lambda t: f"work_dirs/unified_filter/scene_thumbs/{t}.jpg",
        "val150": lambda t: f"work_dirs/val150_thumbs/{t}.jpg",
        "bdd": lambda t: str(BDD_ROOT/"images"/t), "holdout": lambda t: str(HOLD/"images"/t)}

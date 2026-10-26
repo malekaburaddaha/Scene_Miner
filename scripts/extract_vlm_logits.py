@@ -8,6 +8,7 @@ cached-attribute baseline be tested in its STRONGEST form (continuous ranking),
 which binary_flags_{a,b} could not support (pure bools, disjoint shards).
 """
 from __future__ import annotations
+from paths import QWEN_VL
 import argparse, json, sys, time
 from pathlib import Path
 import numpy as np, torch
@@ -33,7 +34,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--features", default="work_dirs/unified_filter/features_overnight.npz")
     ap.add_argument("--thumbs",   default="work_dirs/unified_filter/scene_thumbs")
-    ap.add_argument("--model",    default="/nfs/turbo/umd-srawa/hf_cache/Qwen2.5-VL-3B-Instruct")
+    ap.add_argument("--model",    default=QWEN_VL)
     ap.add_argument("--out",      required=True)
     ap.add_argument("--shard", type=int, default=0)
     ap.add_argument("--nshards", type=int, default=1)

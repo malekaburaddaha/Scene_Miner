@@ -1,11 +1,12 @@
 """Why does a convex blend of two signals score BELOW both of them?"""
+from paths import EXT
 import glob, json, sys
 import numpy as np, torch, torch.nn.functional as F
 sys.path.insert(0, "src"); sys.path.insert(0, "scripts")
 from eval_attribute_index import ap_binary
 from eval_external_bdd100k import EVAL_Q, QUESTIONS, CHANNEL
 
-root = "/nfs/turbo/umd-srawa/scene_mining/datasets/external_adverse/bdd100k"
+root = EXT + "/bdd100k"
 labels = json.load(open(f"{root}/labels.json")); names = sorted(labels)
 z = np.load(f"{root}/signals.npz", allow_pickle=False)
 SIG, MARG = z["siglip"], z["margin"]

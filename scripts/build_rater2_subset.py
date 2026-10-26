@@ -9,12 +9,13 @@ subset over-represents positives and hard cases on purpose, so agreement on it i
 conservative estimate of agreement on the full sample; incorporate_rater2.py reports
 it per stratum.
 """
+from paths import HUMAN_R1
 import json, random, sys
 sys.path.insert(0, "scripts")
 from eval_human_gt_full import load_human, ATTRS
 
 W = "work_dirs/unified_filter"
-hum = load_human("results/day1_gate/malek_repaired.json", "B")
+hum = load_human(HUMAN_R1, "B")
 vlm = json.load(open(f"{W}/binary_flags_with_logits.json")); strict = json.load(open(f"{W}/lowcontrast_strict.json"))
 def marg(t, a):
     src, key = (strict, "low_contrast_strict") if a == "low_contrast" else (vlm, a)

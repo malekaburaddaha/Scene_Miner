@@ -2,6 +2,7 @@
 """MILESTONE 12 - the three paper figures. Every number is read from the result
 JSONs written by Milestones 1-11; nothing here is hard-coded by hand."""
 from __future__ import annotations
+from paths import EXT
 import os
 import argparse, glob, json, sys
 from pathlib import Path
@@ -224,7 +225,7 @@ def balanced_strips(queries, out, title, n_per=2, row_h=0.70):
     M = load_v23(risk.reshape(-1).cpu().numpy(), which=os.environ.get("SM_FINAL", "v26"))
     for m in M: m.use_abstain = True
     QT = text_embed([q for q, _ in queries])
-    broot = Path("/nfs/turbo/umd-srawa/scene_mining/datasets/external_adverse/bdd100k")
+    broot = Path(EXT + "/bdd100k")
     bz = np.load(broot/"signals.npz", allow_pickle=False); bn = sorted(json.load(open(broot/"labels.json")))
     ASK = ["wet_road", "glare", "droplets", "low_contrast"]; TO = ["droplets", "glare", "wet_road", "low_contrast"]
     BM = bz["margin"][:, [ASK.index(k) for k in TO]]; BM = (BM - BM.mean(0)) / (BM.std(0) + 1e-6)

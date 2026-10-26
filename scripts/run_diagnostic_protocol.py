@@ -13,6 +13,7 @@ Reports, for any fused representation:
 Applies unchanged to (a) our filter head and (b) a BLIP-2 Q-Former index.
 """
 from __future__ import annotations
+from paths import QWEN_VL
 import argparse, json, sys
 from pathlib import Path
 import numpy as np, torch
@@ -115,7 +116,7 @@ def main():
     ap.add_argument("--freeze-visual", action="store_true")
     ap.add_argument("--tau", type=float, default=0.30)
     ap.add_argument("--lora-r", type=int, default=1)
-    ap.add_argument("--qwen", default="/nfs/turbo/umd-srawa/hf_cache/Qwen2.5-VL-3B-Instruct")
+    ap.add_argument("--qwen", default=QWEN_VL)
     ap.add_argument("--img-side", type=int, default=336)
     ap.add_argument("--batch", type=int, default=16)
     ap.add_argument("--label", default="model")

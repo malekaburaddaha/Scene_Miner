@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """MILESTONE 2 - SceneMiner v2 vs all baselines against human ground truth."""
 from __future__ import annotations
+from paths import HUMAN_R1
 import argparse, glob, json, sys
 from pathlib import Path
 import numpy as np, torch
@@ -11,7 +12,7 @@ from eval_human_gt_full import load_human, ATTRS, QUERY, META, prf, kappa
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--human", default="results/day1_gate/malek_repaired.json")
+    ap.add_argument("--human", default=HUMAN_R1)
     ap.add_argument("--features", default="work_dirs/unified_filter/features_v2.npz")
     ap.add_argument("--work", default="work_dirs/unified_filter")
     ap.add_argument("--out", default="results/cvpr/milestone2_sceneminer_v2.json")

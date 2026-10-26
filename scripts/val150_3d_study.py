@@ -12,6 +12,7 @@ for val scenes without re-running the whole extraction, so the full head is not
 evaluated here; the portable base is.
 """
 from __future__ import annotations
+from paths import QWEN_VL
 import argparse, json, sys
 from pathlib import Path
 import numpy as np, torch
@@ -35,7 +36,7 @@ def main():
     ap.add_argument("--per-scene", default="results/cvpr/bevformer_val_per_scene_official.json")
     ap.add_argument("--dataroot", default="data/nuscenes")
     ap.add_argument("--thumbs", default="work_dirs/val150_thumbs")
-    ap.add_argument("--qwen", default="/nfs/turbo/umd-srawa/hf_cache/Qwen2.5-VL-3B-Instruct")
+    ap.add_argument("--qwen", default=QWEN_VL)
     ap.add_argument("--topk", type=int, default=30)
     ap.add_argument("--out", default="results/cvpr/milestone8_val150_3d.json")
     a = ap.parse_args()

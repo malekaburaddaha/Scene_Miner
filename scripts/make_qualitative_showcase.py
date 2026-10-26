@@ -18,6 +18,7 @@ was retrieved:
 A cell whose frame has no annotated object of the row's class says so.
 """
 from __future__ import annotations
+from paths import EXT, HUMAN_R1
 import os
 import argparse, glob, json, sys, textwrap
 from pathlib import Path
@@ -36,7 +37,7 @@ dev = torch.device("cuda")
 OUT = Path("paper/figures")
 NUSC = Path("data/nuscenes")
 THUMBS = Path("work_dirs/unified_filter/scene_thumbs")
-BROOT = Path("/nfs/turbo/umd-srawa/scene_mining/datasets/external_adverse/bdd100k")
+BROOT = Path(EXT + "/bdd100k")
 COLS = [("nuScenes", "#2a78d6"), ("Waymo", "#1baf7a"), ("BDD100K", "#eb6834")]
 BOX_C = "#ffd400"
 
@@ -307,7 +308,7 @@ def failure_strip(out):
     enc = Enc(); z = np.load("work_dirs/unified_filter/features_v2.npz", allow_pickle=False)
     Rk = Rankers(enc, {}, z["risk"].reshape(-1)); C = load_corpus()
     G = json.load(open("work_dirs/unified_filter/human_semantic_gt.json"))["scenes"]
-    hum = load_human("results/day1_gate/malek_repaired.json", "B")
+    hum = load_human(HUMAN_R1, "B")
     ev = set(json.load(open("benchmark_cvpr/split_906_602.json"))["eval"])
     toks = [t for t in C["toks"] if t in ev and t in G and t in hum]; cid = {t: i for i, t in enumerate(C["toks"])}
     idx = np.array([cid[t] for t in toks])

@@ -10,7 +10,7 @@ from __future__ import annotations
 import json, os, subprocess, sys, time
 from pathlib import Path
 
-PY = "/nfs/turbo/umd-srawa/conda_envs/envs/scene_mining/bin/python"
+PY = os.environ.get("PY", sys.executable)
 SPLIT = "benchmark_cvpr/split_906_602.json"
 LOGS = Path("results/overnight_oct18/logs"); LOGS.mkdir(parents=True, exist_ok=True)
 COMMON = ["--steps", "3000", "--img-side", "336", "--ckpt-every-steps", "3000",

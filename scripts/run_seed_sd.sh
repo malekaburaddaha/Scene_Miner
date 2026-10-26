@@ -5,7 +5,7 @@
 set -u
 cd "$(dirname "$0")/.."
 S=$1; export CUDA_VISIBLE_DEVICES=$2 PYTHONPATH="src:${PYTHONPATH:-}"
-PY=${PY:-/nfs/turbo/umd-srawa/conda_envs/envs/scene_mining/bin/python}
+PY=${PY:-python}
 O=work_dirs/seed_sd; mkdir -p $O
 # Table 2 trained rows (BEV-TSR-style, adapter, naive router = Table 1 row 1, SceneMiner and its portable mode = row 6)
 SM_FINAL=v26 SM_SEED=$S SM_METHODS=bev_tsr,siglip2_ft,naive,sceneminer_portable,sceneminer SM_OUT=$O/t2_s$S.json \

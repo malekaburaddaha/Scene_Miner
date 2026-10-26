@@ -2,6 +2,7 @@
 """MILESTONE 14 - decompose v2.2 into base and gated residual on the 550 human
 scenes, and inspect the 20 VLM-missed glare scenes. This is the diagnostic that
 located the residual-dominance problem ResNorm fixes."""
+from paths import HUMAN_R1
 import glob, json, sys, numpy as np, torch
 sys.path.insert(0,"src"); sys.path.insert(0,"scripts")
 from eval_human_gt_full import load_human, ATTRS, QUERY
@@ -21,7 +22,7 @@ M=[]
 for c in sorted(glob.glob("work_dirs/sceneminer_v22/s*/final.pt")):
     d=torch.load(c,map_location=dev,weights_only=False)
     m=SceneMinerV22(d_siglip=768,n_margins=4,n_meta=6,d_text=768).to(dev); m.load_state_dict(d["state_dict"],strict=False); m.eval(); M.append(m)
-hum=load_human("results/day1_gate/malek_repaired.json","B")
+hum=load_human(HUMAN_R1,"B")
 vlm=json.load(open(f"{W}/binary_flags_with_logits.json"))
 toks=[t for t in corpus if t in hum]; idx=np.array([cidx[t] for t in toks]); N=len(corpus)
 av=torch.ones(N,3,device=dev)

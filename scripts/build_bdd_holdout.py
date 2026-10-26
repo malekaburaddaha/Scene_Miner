@@ -7,11 +7,12 @@ Milestone 8 are excluded; from the remaining 9,000 we draw 2,000 with a fixed se
 oversampling adverse conditions as in Milestone 8 so rare classes are testable.
 Also writes the box labels of the original 1,000 images (for figure callouts).
 """
+from paths import EXT
 import argparse, json, random
 from collections import Counter, defaultdict
 from pathlib import Path
 
-ROOT = Path("/nfs/turbo/umd-srawa/scene_mining/datasets/external_adverse")
+ROOT = Path(EXT)
 
 
 def lab(r, k):

@@ -30,6 +30,7 @@ query routing over them - can cross to this corpus. That portability gap is
 itself a result.
 """
 from __future__ import annotations
+from paths import EXT, QWEN_VL
 import argparse, glob, json, sys
 from pathlib import Path
 import numpy as np, torch
@@ -83,8 +84,8 @@ CHANNEL = {
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--root", default="/nfs/turbo/umd-srawa/scene_mining/datasets/external_adverse/bdd100k")
-    ap.add_argument("--qwen", default="/nfs/turbo/umd-srawa/hf_cache/Qwen2.5-VL-3B-Instruct")
+    ap.add_argument("--root", default=EXT + "/bdd100k")
+    ap.add_argument("--qwen", default=QWEN_VL)
     ap.add_argument("--cache", default=None)
     ap.add_argument("--out", default="results/cvpr/milestone10_external_bdd100k_fixed.json")
     a = ap.parse_args()

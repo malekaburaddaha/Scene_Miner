@@ -14,6 +14,7 @@ Offline (Stage 1, once per scene):
   monocular path     SigLIP2 ViT-B/16 image embedding; four Qwen2.5-VL yes/no margins
 -> results/cvpr/milestone27_latency.json
 """
+from paths import QWEN_VL
 import json, os, sys, time
 from types import SimpleNamespace
 import numpy as np, torch
@@ -79,7 +80,7 @@ def offline():
     with torch.no_grad():
         res["siglip2_image_ms"] = timeit(lambda: m.get_image_features(**ip(images=[img], return_tensors="pt").to(dev)), 20)
     del m; torch.cuda.empty_cache()
-    Q = "/nfs/turbo/umd-srawa/hf_cache/Qwen2.5-VL-3B-Instruct"
+    Q = QWEN_VL
     proc = AutoProcessor.from_pretrained(Q); qm = Qwen2_5_VLForConditionalGeneration.from_pretrained(Q, torch_dtype=torch.bfloat16).to(dev).eval()
     def margins():
         for _, q in QUESTIONS:

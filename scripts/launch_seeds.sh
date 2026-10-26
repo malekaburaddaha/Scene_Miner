@@ -7,7 +7,7 @@ cd "$(dirname "$0")/.."
 TR=$1; ROOT=$2; LOG=$3; shift 3
 EXTRA=("$@")
 export PYTHONPATH="src:${PYTHONPATH:-}"
-PY=${PY:-/nfs/turbo/umd-srawa/conda_envs/envs/scene_mining/bin/python}
+PY=${PY:-python}
 mkdir -p "$ROOT" results/day1_gate/logs
 run () { CUDA_VISIBLE_DEVICES=$1 $PY "$TR" --work-dir "$ROOT/s$2" --seed $2 --steps 3000 "${EXTRA[@]}" \
            > "results/day1_gate/logs/${LOG}_s$2.log" 2>&1; }

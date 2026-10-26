@@ -10,6 +10,7 @@ thresholds and kept only if every AP is unchanged. Latency: median of 50 timed
 calls, one model and the 5-seed ensemble, query embedding cached, A40.
 -> results/cvpr/milestone27_fast_index.json
 """
+from paths import EXT, HUMAN_R1
 import json, os, sys, time
 import numpy as np, torch
 import torch.nn.functional as F
@@ -43,7 +44,7 @@ def main():
         M = [m.double() for m in M]; Fe = tuple(x.double() for x in Fe)
     N = len(toks)
     # benchmarks on the corpus: (name, query text, relevance over idx, idx, has_3d)
-    hum = load_human("results/day1_gate/malek_repaired.json", "B")
+    hum = load_human(HUMAN_R1, "B")
     ht = [t for t in toks if t in hum]; hidx = np.array([cidx[t] for t in ht])
     bench = [("human", QUERY[a], np.array([hum[t][a] for t in ht]), hidx, 1.0) for a in ATTRS]
     ev = set(json.load(open("benchmark_cvpr/split_906_602.json"))["eval"])
@@ -92,7 +93,7 @@ def main():
             st["max_abs_ap_diff"] = max(st["max_abs_ap_diff"], abs(ap(fk.mean(0)[ix], rel) - a_s))
             st["queries_skipped"] += int(g < thr)
     # portable path: BDD100K
-    root = "/nfs/turbo/umd-srawa/scene_mining/datasets/external_adverse/bdd100k"
+    root = EXT + "/bdd100k"
     labels = json.load(open(f"{root}/labels.json")); names = sorted(labels); bz = np.load(f"{root}/signals.npz")
     ASK = [k for k, _ in QUESTIONS]; BM = bz["margin"][:, [ASK.index(k) for k in TRAIN_ORDER]]
     BM = torch.from_numpy((BM - BM.mean(0)) / (BM.std(0) + 1e-6)).float().to(dev)

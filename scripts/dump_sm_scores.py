@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Dump SceneMiner (D_final) scores over the full corpus for every TASK-1 query."""
+from paths import QWEN_VL
 import argparse, json, sys
 from pathlib import Path
 import numpy as np
@@ -10,7 +11,7 @@ ap = argparse.ArgumentParser()
 ap.add_argument("--work", default="work_dirs/unified_filter")
 ap.add_argument("--thumbs", default="work_dirs/unified_filter/scene_thumbs")
 ap.add_argument("--checkpoint", default="work_dirs/ablation/D_final/final.pt")
-ap.add_argument("--qwen", default="/nfs/turbo/umd-srawa/hf_cache/Qwen2.5-VL-3B-Instruct")
+ap.add_argument("--qwen", default=QWEN_VL)
 ap.add_argument("--tau", type=float, default=0.30)
 ap.add_argument("--lora-r", type=int, default=64)
 ap.add_argument("--img-side", type=int, default=336)

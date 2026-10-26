@@ -2,6 +2,7 @@
 """MILESTONE 23 - BDD100K check of the v2.1, routing-only and v2.2 heads with raw
 query features (their training input) and with the L2-normalised features the
 Milestone 10 evaluation used. -> results/cvpr/milestone23_bdd_rawquery_routing.json"""
+from paths import EXT
 import sys, glob, json, numpy as np, torch, torch.nn.functional as F
 import os
 SEED_GLOB = os.environ.get("SM_SEED_GLOB", "s*")      # Milestone 34: one seed at a time for +/- sd
@@ -12,7 +13,7 @@ from eval_semantic_edge_cases import text_embed
 from scene_mining.filter.sceneminer_v2_2 import SceneMinerV22
 from scene_mining.filter.sceneminer_v2 import SceneMinerV21
 
-dev = torch.device("cuda"); root = "/nfs/turbo/umd-srawa/scene_mining/datasets/external_adverse/bdd100k"
+dev = torch.device("cuda"); root = EXT + "/bdd100k"
 labels = json.load(open(root + "/labels.json")); names = sorted(labels); z = np.load(root + "/signals.npz")
 TO = ["droplets", "glare", "wet_road", "low_contrast"]; ASK = [k for k, _ in QUESTIONS]
 M = z["margin"][:, [ASK.index(k) for k in TO]]; MZ = (M - M.mean(0)) / (M.std(0) + 1e-6)

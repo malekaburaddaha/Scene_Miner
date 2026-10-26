@@ -7,6 +7,7 @@
     -> <holdout>/signals.npz (same layout as the 1,000-image BDD100K cache) and
     work_dirs/emb_{clip,siglip1}_holdout.npz. No query is scored here.
 """
+from paths import EXT, QWEN_VL
 import argparse, glob, json, sys
 from pathlib import Path
 import numpy as np, torch
@@ -14,7 +15,7 @@ import torch.nn.functional as F
 sys.path.insert(0, "scripts")
 from eval_external_bdd100k import QUESTIONS
 
-H = Path("/nfs/turbo/umd-srawa/scene_mining/datasets/external_adverse/bdd100k_holdout")
+H = Path(EXT + "/bdd100k_holdout")
 dev = torch.device("cuda")
 
 
@@ -73,6 +74,6 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--part", choices=["margins", "merge"], required=True)
     ap.add_argument("--shard", type=int, default=0); ap.add_argument("--nshard", type=int, default=1)
-    ap.add_argument("--qwen", default="/nfs/turbo/umd-srawa/hf_cache/Qwen2.5-VL-3B-Instruct")
+    ap.add_argument("--qwen", default=QWEN_VL)
     a = ap.parse_args()
     margins(a.shard, a.nshard, a.qwen) if a.part == "margins" else merge()

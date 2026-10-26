@@ -8,6 +8,6 @@
 set -eu
 cd "$(dirname "$0")/.."
 NAME=${1:?usage: run_rater2_ui.sh <rater_name> [port]}; PORT=${2:-8802}
-PY=${PY:-/nfs/turbo/umd-srawa/conda_envs/envs/scene_mining/bin/python}
+PY=${PY:-python}
 exec $PY scripts/annotate_ui.py --rater "$NAME" --port "$PORT" \
      --sample benchmark_cvpr/rater2_subset_160.json --outdir results/rater2

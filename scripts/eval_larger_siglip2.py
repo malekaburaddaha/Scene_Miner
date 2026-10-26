@@ -13,13 +13,14 @@ The So400m SceneMiner is trained with the unchanged v2.6 recipe (scripts/
 train_sceneminer_v26.py --siglip-repo/--siglip-emb); its concept bank and gate are
 rebuilt in the So400m text space from the same training phrasings. Nothing is tuned.
 """
+from paths import EXT, SIGLIP2_SO400M
 import argparse, json
 from pathlib import Path
 import numpy as np, torch
 
-REPO = "/nfs/turbo/umd-srawa/hf_cache/hub/models--google--siglip2-so400m-patch14-384/snapshots/e8e487298228002f3d8a82e0cd5c8ea9c567f57f"
-BDD = Path("/nfs/turbo/umd-srawa/scene_mining/datasets/external_adverse/bdd100k")
-HOLD = Path("/nfs/turbo/umd-srawa/scene_mining/datasets/external_adverse/bdd100k_holdout")
+REPO = SIGLIP2_SO400M
+BDD = Path(EXT + "/bdd100k")
+HOLD = Path(EXT + "/bdd100k_holdout")
 BASE = "results/cvpr/milestone28_related_work_comparison.json"
 BIG = "results/cvpr/milestone34_so400m_comparison.json"
 

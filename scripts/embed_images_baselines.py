@@ -2,6 +2,7 @@
 """MILESTONE 23 - image embeddings for the CLIP and SigLIP (v1) baselines.
 Same images and order as everywhere else: corpus (features_v2 scene order),
 BDD100K (sorted names), val150 (sorted CAM_FRONT thumbnails)."""
+from paths import EXT
 import json, sys
 from pathlib import Path
 import numpy as np, torch
@@ -14,7 +15,7 @@ from transformers import AutoModel, AutoImageProcessor as AutoProcessor
 dev = torch.device("cuda")
 z = np.load("work_dirs/unified_filter/features_v2.npz", allow_pickle=False)
 th = Path("work_dirs/unified_filter/scene_thumbs")
-broot = Path("/nfs/turbo/umd-srawa/scene_mining/datasets/external_adverse/bdd100k")
+broot = Path(EXT + "/bdd100k")
 SETS = {"corpus": [find_thumb(th, str(t)) for t in z["scene_tokens"]],
         "bdd": [broot/"images"/n for n in sorted(json.load(open(broot/"labels.json")))],
         "val150": sorted(Path("work_dirs/val150_thumbs").glob("*.jpg"))}

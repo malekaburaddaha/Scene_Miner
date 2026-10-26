@@ -5,10 +5,12 @@ For every PDF: the document-info dictionary, the XMP packet, the extracted text 
 every page, and every decompressed content/object stream are searched for
 identifying tokens as whole words (raw `strings` on compressed PDFs yields random
 byte matches such as "eumd"). JPEG/PNG figure files are checked with their EXIF/XMP
-metadata. LaTeX sources and generated tables are searched as text.
+metadata. LaTeX sources and generated tables are searched as text. Milestone 36: the
+supplementary code bundle (paper/supplementary_code.zip, or --zip <path>) is scanned
+member by member, names and contents, plus the archive comment.
 Exit status 1 if anything matches.
 """
-import re, subprocess, sys, zlib
+import re, subprocess, sys, zipfile, zlib
 from pathlib import Path
 from pypdf import PdfReader
 
@@ -39,9 +41,29 @@ def check_pdf(p):
     return meta, found
 
 
+def check_zip(z):
+    found = {}
+    with zipfile.ZipFile(z) as zf:
+        if h := hits(zf.comment.decode("latin-1")): found["<comment>"] = h
+        for info in zf.infolist():
+            h = hits(info.filename) + hits(zf.read(info).decode("latin-1"))
+            if h: found[info.filename] = sorted(set(h))
+        n = len(zf.infolist())
+    return n, found
+
+
 def main():
-    root = Path(sys.argv[1] if len(sys.argv) > 1 else "paper")
+    args = sys.argv[1:]; zpath = None
+    if "--zip" in args:
+        i = args.index("--zip"); zpath = Path(args[i + 1]); del args[i:i + 2]
+    root = Path(args[0] if args else "paper")
+    zpath = zpath or (root/"supplementary_code.zip")
     bad = False
+    if zpath.exists():
+        n, f = check_zip(zpath)
+        for k, v in f.items(): print(f"LEAK  {zpath}:{k} {v}")
+        print(f"{'LEAK ' if f else 'ok   '} {zpath} ({n} members scanned)")
+        bad |= bool(f)
     for p in [root/"main_cvpr.pdf", root/"supp_cvpr.pdf", *sorted((root/"figures").glob("*.pdf"))]:
         meta, f = check_pdf(p)
         print(f"{'LEAK ' if f else 'ok   '} {p}  info={ {k: v for k, v in meta.items() if v} }  {f if f else ''}")

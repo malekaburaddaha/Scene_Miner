@@ -8,6 +8,7 @@ attribute and must fall back to its best remaining proxy predicate, exactly as
 SceneMiner must. Otherwise the lookup trivially wins by reading the cached flag.
 """
 from __future__ import annotations
+from paths import QWEN_VL
 import argparse, json, re, sys
 from pathlib import Path
 import numpy as np, torch
@@ -94,7 +95,7 @@ def main():
     ap_ = argparse.ArgumentParser()
     ap_.add_argument("--work", default="work_dirs/unified_filter")
     ap_.add_argument("--thumbs", default="work_dirs/unified_filter/scene_thumbs")
-    ap_.add_argument("--qwen", default="/nfs/turbo/umd-srawa/hf_cache/Qwen2.5-VL-3B-Instruct")
+    ap_.add_argument("--qwen", default=QWEN_VL)
     ap_.add_argument("--split", default="benchmark_cvpr/split_906_602.json")
     ap_.add_argument("--mode", choices=["ablation", "loao"], required=True)
     ap_.add_argument("--out", required=True)

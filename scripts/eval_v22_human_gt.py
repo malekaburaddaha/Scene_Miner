@@ -16,6 +16,7 @@ Two modes:
                  "which modality should this query trust".
 """
 from __future__ import annotations
+from paths import HUMAN_R1
 import argparse, glob, json, sys
 import os
 SEED_GLOB = os.environ.get("SM_SEED_GLOB", "s*")      # Milestone 34: one seed at a time for +/- sd
@@ -28,7 +29,7 @@ from eval_human_gt_full import load_human, ATTRS, QUERY
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--human", default="results/day1_gate/malek_repaired.json")
+    ap.add_argument("--human", default=HUMAN_R1)
     ap.add_argument("--features", default="work_dirs/unified_filter/features_v2.npz")
     ap.add_argument("--work", default="work_dirs/unified_filter")
     ap.add_argument("--folds", type=int, default=5)

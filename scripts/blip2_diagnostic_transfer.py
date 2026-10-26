@@ -12,6 +12,7 @@ to find: if it reports a degeneracy here that BLIP-2's own retrieval scores do
 not reveal, the protocol generalises.
 """
 from __future__ import annotations
+from paths import BLIP2
 import argparse, json, sys
 from pathlib import Path
 import numpy as np, torch
@@ -24,7 +25,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--work", default="work_dirs/unified_filter")
     ap.add_argument("--thumbs", default="work_dirs/unified_filter/scene_thumbs")
-    ap.add_argument("--blip2", default="/nfs/turbo/umd-srawa/hf_cache/blip2-opt-2.7b")
+    ap.add_argument("--blip2", default=BLIP2)
     ap.add_argument("--batch", type=int, default=8)
     ap.add_argument("--out", default="results/day1_gate/blip2_diagnostic_transfer.json")
     a = ap.parse_args()

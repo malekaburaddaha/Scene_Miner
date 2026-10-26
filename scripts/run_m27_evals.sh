@@ -4,7 +4,7 @@
 set -u
 cd "$(dirname "$0")/.."
 export PYTHONPATH="src:${PYTHONPATH:-}" SM_FINAL=v26
-PY=/nfs/turbo/umd-srawa/conda_envs/envs/scene_mining/bin/python
+PY=${PY:-python}
 L=results/m28_logs; mkdir -p $L
 lane0 () { CUDA_VISIBLE_DEVICES=0 $PY scripts/eval_v23.py --model v26 --ckpts "work_dirs/sceneminer_v26/s*/final.pt" --bench all --out results/cvpr/milestone27_v26.json > $L/e_v23.log 2>&1
            CUDA_VISIBLE_DEVICES=0 $PY scripts/eval_semantic_edge_cases.py --final v26 --out results/cvpr/milestone27_semantic_edge_cases.json > $L/e_sem.log 2>&1; }

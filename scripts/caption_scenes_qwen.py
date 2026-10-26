@@ -9,6 +9,7 @@ the same Qwen2.5-VL-3B used in Stage 1, greedy decoding, fixed prompt.
 Images: the 1508 corpus thumbnails, the 1000 BDD100K images, the 150 val150
 CAM_FRONT keyframes. Sharded: --shard i --nshard n.
 """
+from paths import EXT, QWEN_VL
 import argparse, json, sys
 from pathlib import Path
 import numpy as np, torch
@@ -28,7 +29,7 @@ def images():
     z = np.load("work_dirs/unified_filter/features_v2.npz", allow_pickle=False)
     th = Path("work_dirs/unified_filter/scene_thumbs")
     out = [("corpus", str(t), str(find_thumb(th, str(t)))) for t in z["scene_tokens"]]
-    broot = Path("/nfs/turbo/umd-srawa/scene_mining/datasets/external_adverse/bdd100k")
+    broot = Path(EXT + "/bdd100k")
     out += [("bdd", n, str(broot/"images"/n)) for n in sorted(json.load(open(broot/"labels.json")))]
     out += [("val150", p.stem, str(p)) for p in sorted(Path("work_dirs/val150_thumbs").glob("*.jpg"))]
     return out
@@ -37,7 +38,7 @@ def images():
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--shard", type=int, required=True); ap.add_argument("--nshard", type=int, required=True)
-    ap.add_argument("--qwen", default="/nfs/turbo/umd-srawa/hf_cache/Qwen2.5-VL-3B-Instruct")
+    ap.add_argument("--qwen", default=QWEN_VL)
     ap.add_argument("--prompt", default="enumerating", choices=["enumerating", "neutral"],
                     help="neutral (Milestone 28): affirmative prompt that does not list the degradations")
     ap.add_argument("--items", default=None, help="optional JSON list of [src, key, path] to caption instead")

@@ -150,6 +150,14 @@ conda activate /nfs/turbo/umd-srawa/conda_envs/envs/bevformer      # torch 1.10,
 export PYTHONPATH=src:$PYTHONPATH
 ```
 
+Machine-specific locations come from `scripts/paths.py` (Milestone 36), each with an
+environment override: `SCENEMINER_DATA_ROOT` (default `data`, holding
+`external_adverse/{bdd100k,bdd100k_holdout}`), `QWEN_VL`, `BLIP2`, `SIGLIP2_SO400M`
+(Hugging Face ids by default) and `PY` for the shell scripts. On this cluster, set
+`QWEN_VL=<hf_cache>/Qwen2.5-VL-3B-Instruct`; `data/external_adverse` is a local symlink.
+The anonymised supplementary code bundle is built by `python scripts/build_supplementary_code.py`
+(-> `paper/supplementary_code.zip`) and scanned by `python scripts/check_anonymity.py`.
+
 > GPUs on this cluster are **`Exclusive_Process`: one job per GPU.** Launching
 > more than 4 concurrent jobs kills the extras with "CUDA-capable device(s)
 > is/are busy". Use `scripts/orchestrate_overnight.py`, which holds one job per
@@ -346,7 +354,7 @@ the attributes that define suite relevance):
   0.197 VRU recall (p < 0.001).
 
 `results/cvpr/MASTER_REPORT.md` carries every table, the contamination map, and what does
-not hold. `results/cvpr/MILESTONE27.md`–`MILESTONE33.md` cover the latest work.
+not hold. `results/cvpr/MILESTONE27.md`–`MILESTONE37.md` cover the latest work.
 
 ---
 

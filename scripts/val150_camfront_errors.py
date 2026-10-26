@@ -29,6 +29,7 @@ These 150 scenes are nuScenes val: bevformer_base never trained on them
 nothing in this analysis is contaminated.
 """
 from __future__ import annotations
+from paths import QWEN_VL
 import argparse, json, sys
 from collections import defaultdict
 from pathlib import Path
@@ -96,7 +97,7 @@ def main():
     ap.add_argument("--dataroot", default="data/nuscenes")
     ap.add_argument("--version", default="v1.0-trainval")
     ap.add_argument("--thumbs", default="work_dirs/val150_thumbs")
-    ap.add_argument("--qwen", default="/nfs/turbo/umd-srawa/hf_cache/Qwen2.5-VL-3B-Instruct")
+    ap.add_argument("--qwen", default=QWEN_VL)
     ap.add_argument("--cache", default="work_dirs/val150_camfront_signals.npz")
     ap.add_argument("--score-thr", type=float, default=0.3)
     ap.add_argument("--far", type=float, default=30.0)

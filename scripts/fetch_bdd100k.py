@@ -8,6 +8,7 @@ the HuggingFace Hub is ungated. We oversample the adverse conditions so the
 rare classes are testable.
 """
 from __future__ import annotations
+from paths import EXT
 import argparse, json, random
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -15,7 +16,7 @@ from pathlib import Path
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--repo", default="dgural/bdd100k")
-    ap.add_argument("--out", default="/nfs/turbo/umd-srawa/scene_mining/datasets/external_adverse/bdd100k")
+    ap.add_argument("--out", default=EXT + "/bdd100k")
     ap.add_argument("--n", type=int, default=1000)
     ap.add_argument("--seed", type=int, default=0)
     a = ap.parse_args()

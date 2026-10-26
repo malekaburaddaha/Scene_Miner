@@ -32,6 +32,7 @@ Atomic writes + latest.pt. Resume with --resume.
 """
 from __future__ import annotations
 
+from paths import QWEN_VL
 import argparse
 import json
 import os
@@ -235,7 +236,7 @@ def main():
         "work_dirs/unified_filter/binary_flags_a.json",
         "work_dirs/unified_filter/binary_flags_b.json"])
     ap.add_argument("--thumbs", default="work_dirs/unified_filter/scene_thumbs")
-    ap.add_argument("--model", default="/nfs/turbo/umd-srawa/hf_cache/Qwen2.5-VL-3B-Instruct")
+    ap.add_argument("--model", default=QWEN_VL)
     ap.add_argument("--work-dir", required=True)
     ap.add_argument("--steps", type=int, default=20000)
     ap.add_argument("--queries-per-step", type=int, default=4)

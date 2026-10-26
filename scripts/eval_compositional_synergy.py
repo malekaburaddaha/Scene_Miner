@@ -21,6 +21,7 @@ and the lookup". So late fusion z(SigLIP2) + z(lookup) is a ranker here, as is
 z(SigLIP2) + metadata.
 """
 from __future__ import annotations
+from paths import HUMAN_R1
 import json, sys
 from pathlib import Path
 import numpy as np, torch
@@ -46,7 +47,7 @@ def main():
     G = json.load(open("work_dirs/unified_filter/human_semantic_gt.json"))["scenes"]
     z = np.load(W/"features_v2.npz", allow_pickle=False)
     corpus = [str(t) for t in z["scene_tokens"]]; cidx = {t: i for i, t in enumerate(corpus)}
-    hum = load_human("results/day1_gate/malek_repaired.json", "B")
+    hum = load_human(HUMAN_R1, "B")
     ev = set(json.load(open("benchmark_cvpr/split_906_602.json"))["eval"])
     toks = [t for t in corpus if t in ev and t in G and t in hum]; idx = np.array([cidx[t] for t in toks])
     truth = lambda t, k: G[t][k] if k in ("night", "rain") or k in SEM else hum[t][k]

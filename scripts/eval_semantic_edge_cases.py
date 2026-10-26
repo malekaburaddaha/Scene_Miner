@@ -27,6 +27,7 @@ the metadata ranker uses recorded lighting/weather - which, for night and rain,
 is the same human scene description the ground truth uses.
 """
 from __future__ import annotations
+from paths import HUMAN_R1
 import argparse, glob, json, sys
 from pathlib import Path
 import numpy as np, torch
@@ -170,7 +171,7 @@ def main():
     ap.add_argument("--gt", default="work_dirs/unified_filter/human_semantic_gt.json")
     ap.add_argument("--features", default="work_dirs/unified_filter/features_v2.npz")
     ap.add_argument("--work", default="work_dirs/unified_filter")
-    ap.add_argument("--human", default="results/day1_gate/malek_repaired.json")
+    ap.add_argument("--human", default=HUMAN_R1)
     ap.add_argument("--split", default="benchmark_cvpr/split_906_602.json")
     ap.add_argument("--val-margins", default="work_dirs/val150_camfront_signals.npz")
     ap.add_argument("--val-siglip", default="work_dirs/val150_siglip.npz")

@@ -34,6 +34,7 @@ reading the BEV embedding or the tags is flagged contaminated (those encoders we
 supervised on these scenes); SceneMiner is reported there in monocular mode.
 """
 from __future__ import annotations
+from paths import EXT, HUMAN_R1
 import os
 import glob, json, math, re, sys, time
 from collections import Counter
@@ -212,7 +213,7 @@ def _portable_dataset(name, toks_, S, M, PR, meta):
 
 
 def load_bdd():
-    root = Path("/nfs/turbo/umd-srawa/scene_mining/datasets/external_adverse/bdd100k")
+    root = Path(EXT + "/bdd100k")
     labels = json.load(open(root/"labels.json")); names = sorted(labels)
     z = np.load(root/"signals.npz", allow_pickle=False)
     ASK = [k for k, _ in QUESTIONS]; M = z["margin"][:, [ASK.index(k) for k in TRAIN_ORDER]]
@@ -245,7 +246,7 @@ def load_captions(kind="neutral"):
     return cap
 
 
-HOLD = Path("/nfs/turbo/umd-srawa/scene_mining/datasets/external_adverse/bdd100k_holdout")
+HOLD = Path(EXT + "/bdd100k_holdout")
 
 
 def load_holdout(with_meta=False):
@@ -496,7 +497,7 @@ def main():
         if meth == "sceneminer": return f(D, q, mono=mono)
         return f(D, q)
 
-    hum = load_human("results/day1_gate/malek_repaired.json", "B")
+    hum = load_human(HUMAN_R1, "B")
     ht = [t for t in C["toks"] if t in hum]; hidx = np.array([cidx[t] for t in ht])
     ev = set(json.load(open("benchmark_cvpr/split_906_602.json"))["eval"])
     s5t = [t for t in C["toks"] if t in ev and t in G and t in hum]; s5i = np.array([cidx[t] for t in s5t])
