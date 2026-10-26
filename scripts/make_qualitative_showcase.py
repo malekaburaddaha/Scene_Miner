@@ -26,7 +26,6 @@ import numpy as np, torch
 import matplotlib; matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
-import matplotlib.patheffects as pe
 from matplotlib.font_manager import FontProperties
 LABEL_FONT = "/usr/share/fonts/dejavu/DejaVuSansCondensed-Bold.ttf"      # narrow bold for query labels
 LABEL = lambda size: FontProperties(fname=LABEL_FONT, size=size)
@@ -206,9 +205,8 @@ def draw_cell(ax, img, boxes, kind, has_labels, name_col, idx, title=True):
     ax.imshow(img); ax.set_xlim(0, W); ax.set_ylim(y0c + Hc, y0c); ax.set_xticks([]); ax.set_yticks([])
     if title: ax.set_title(f"{name} #{idx}", fontsize=8.5, color=col, pad=2.0, fontweight="bold")
     for sp in ax.spines.values(): sp.set_color(col); sp.set_lw(1.6)
-    halo = [pe.withStroke(linewidth=3.6, foreground="#111111")]          # dark outer stroke for contrast
     for (x0, y0, x1, y1) in boxes:
-        ax.add_patch(Rectangle((x0, y0), x1 - x0, y1 - y0, fill=False, ec=BOX_C, lw=2.0, path_effects=halo))
+        ax.add_patch(Rectangle((x0, y0), x1 - x0, y1 - y0, fill=False, ec=BOX_C, lw=0.5))          # hairline, so the object stays visible
     if kind is None: return
     if boxes:
         # zoom callout on the smallest annotated object
@@ -220,9 +218,9 @@ def draw_cell(ax, img, boxes, kind, has_labels, name_col, idx, title=True):
             cx = float(np.clip((x0 + x1) / 2, half, W - half)); cy = float(np.clip((y0 + y1) / 2, hv, H - hv))
             ins = ax.inset_axes([1 - iw - 0.01, 1 - ih - 0.015, iw, ih])
             ins.imshow(img, aspect="auto"); ins.set_xlim(cx - half, cx + half); ins.set_ylim(cy + hv, cy - hv)
-            ins.add_patch(Rectangle((x0, y0), x1 - x0, y1 - y0, fill=False, ec=BOX_C, lw=1.8, path_effects=halo))
+            ins.add_patch(Rectangle((x0, y0), x1 - x0, y1 - y0, fill=False, ec=BOX_C, lw=0.5))
             ins.set_xticks([]); ins.set_yticks([])
-            for sp in ins.spines.values(): sp.set_color(BOX_C); sp.set_lw(2.0)
+            for sp in ins.spines.values(): sp.set_color(BOX_C); sp.set_lw(1.0)
         ax.text(0.02, 0.04, f"{len(boxes)} annotated", transform=ax.transAxes, fontsize=7.5, color="black",
                 fontweight="bold", bbox=dict(fc=BOX_C, ec="#111111", lw=0.6, pad=1.0, alpha=0.95))
     elif has_labels:       # the dataset labels this class, and this frame has none
