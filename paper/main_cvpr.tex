@@ -387,15 +387,15 @@ query on $1508$ cached scenes (A40). ``-style'' rows re-implement the paradigm o
 cached signals (supplementary). --: the method needs BEV or tags, which monocular
 images lack. \cont~reads BEV or tags supervised on corpus scenes. Subscripts: sd over
 five seeds. SceneMiner has the best degradation score and the best mean; the per-query
-VLM reranker leads externally at $2300\times$ the cost. All columns:
-supplementary.}
+VLM reranker leads externally at $2300\times$ the cost. All columns, SigLIP
+ViT-B/16 and a second CARIM variant: supplementary.}
 \label{tab:master}
 \input{tab_master.tex}
 \end{table*}
 
 \paragraph{Baselines and protocol.} We compare against twelve alternatives on
 identical splits, queries and metrics (\cref{tab:master}): re-implementations of
-five published driving-retrieval paradigms; CLIP and SigLIP2; a SigLIP2 adapter
+five published driving-retrieval paradigms; CLIP, SigLIP and SigLIP2; a SigLIP2 adapter
 trained on the same $906$ scenes; the Qwen2.5-VL attribute lookup; the naive convex
 router; and a per-query VLM reranker that asks Qwen2.5-VL-3B the query itself on
 SigLIP2's top $50$. SceneMiner runs in two modes: \emph{full} (all Stage-1 signals)
