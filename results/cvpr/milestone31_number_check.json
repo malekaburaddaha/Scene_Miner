@@ -165,13 +165,13 @@
   {
    "claim": "suite skew",
    "value": "+2.6",
-   "tex": "paper/main_cvpr.tex",
+   "tex": "paper/tab_abl.tex",
    "found": true
   },
   {
    "claim": "S2",
    "value": "0.668",
-   "tex": "paper/main_cvpr.tex",
+   "tex": "paper/tab_suite.tex",
    "found": true
   },
   {
@@ -183,7 +183,7 @@
   {
    "claim": "S3 un-gated",
    "value": "0.703",
-   "tex": "paper/main_cvpr.tex",
+   "tex": "paper/tab_suite.tex",
    "found": true
   },
   {
@@ -235,12 +235,6 @@
    "found": true
   },
   {
-   "claim": "BDD gap to SigLIP2",
-   "value": "0.008",
-   "tex": "paper/main_cvpr.tex",
-   "found": true
-  },
-  {
    "claim": "design BDD trade",
    "value": "0.014",
    "tex": "paper/main_cvpr.tex",
@@ -267,13 +261,13 @@
   {
    "claim": "object cap recall (rejected)",
    "value": "0.45",
-   "tex": "paper/main_cvpr.tex",
+   "tex": "paper/supp_cvpr.tex",
    "found": true
   },
   {
    "claim": "object cap false-flag %",
    "value": "1.3",
-   "tex": "paper/main_cvpr.tex",
+   "tex": "paper/supp_cvpr.tex",
    "found": true
   },
   {
@@ -441,7 +435,7 @@
   {
    "claim": "zero-shot B/16 human GT",
    "value": "0.569",
-   "tex": "paper/main_cvpr.tex",
+   "tex": "paper/tab_master.tex",
    "found": true
   },
   {
@@ -459,7 +453,7 @@
   {
    "claim": "zero-shot So400m holdout",
    "value": "0.474",
-   "tex": "paper/main_cvpr.tex",
+   "tex": "paper/supp_tables/backbone_table.tex",
    "found": true
   },
   {
@@ -501,13 +495,49 @@
   {
    "claim": "Table 2 portable suite",
    "value": "0.654",
+   "tex": "paper/tab_master_full.tex",
+   "found": true
+  },
+  {
+   "claim": "Table 2 mean SceneMiner",
+   "value": "0.529",
    "tex": "paper/tab_master.tex",
+   "found": true
+  },
+  {
+   "claim": "Table 2 mean reranker",
+   "value": "0.516",
+   "tex": "paper/tab_master.tex",
+   "found": true
+  },
+  {
+   "claim": "text mean SceneMiner",
+   "value": "0.529",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "text mean SigLIP2",
+   "value": "0.478",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "gate example slick pavement",
+   "value": "0.985",
+   "tex": "paper/main_cvpr.tex",
+   "found": true
+  },
+  {
+   "claim": "gate example snow",
+   "value": "0.726",
+   "tex": "paper/tab_gate.tex",
    "found": true
   }
  ],
  "scan": {
   "paper/main_cvpr.tex": {
-   "n_numbers": 197,
+   "n_numbers": 174,
    "n_unsourced": 0,
    "unsourced": []
   },
@@ -527,7 +557,12 @@
    "unsourced": []
   },
   "paper/tab_design.tex": {
-   "n_numbers": 30,
+   "n_numbers": 18,
+   "n_unsourced": 0,
+   "unsourced": []
+  },
+  "paper/tab_gate.tex": {
+   "n_numbers": 9,
    "n_unsourced": 0,
    "unsourced": []
   },
@@ -537,6 +572,11 @@
    "unsourced": []
   },
   "paper/tab_master.tex": {
+   "n_numbers": 71,
+   "n_unsourced": 0,
+   "unsourced": []
+  },
+  "paper/tab_master_full.tex": {
    "n_numbers": 113,
    "n_unsourced": 0,
    "unsourced": []

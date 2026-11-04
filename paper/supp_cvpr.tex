@@ -18,6 +18,7 @@
 \renewcommand{\thetable}{S\arabic{table}}
 \newcommand{\best}[1]{\textbf{\boldmath #1}}
 \newcommand{\gdeg}{\gamma_{\mathrm{deg}}}
+\newcommand{\cont}{$^{\dagger}$}
 \renewcommand{\thefigure}{S\arabic{figure}}
 \renewcommand{\thesection}{S\arabic{section}}
 \setlength{\LTcapwidth}{\textwidth}
@@ -160,6 +161,13 @@ cul-de-sac'', ``a toll booth'', ``a railway crossing'', ``a school zone sign'',
 buildings''. It was fixed before any evaluation query was written and contains
 no weather words and none of the Stratum-5 categories.
 
+\paragraph{Why object$\times$degradation queries are not capped.} A query such as
+``a pedestrian behind a rain-smeared lens'' names an object the margins cannot
+see, so capping $\gamma_{\mathrm{deg}}$ when an object is named would be natural.
+We rejected it on training text: no training-only detector finds the object
+component reliably (best: recall $0.45$ at a $1.3\%$ false-flag rate on degradation
+phrasings; \texttt{results/cvpr/milestone32\_object\_cap\_train.json}).
+
 \paragraph{Label-free scale evidence.} During training the running standard
 deviations of the three base parts converge to $0.031$ (cosine), $0.566$
 (margin) and $0.159$ (prior), and that of the raw residual to $6.31$. Both incommensurabilities
@@ -170,9 +178,9 @@ of the main paper are therefore visible without any label.
 \label{sec:baselines}
 % =====================================================================
 
-The comparison with published paradigms in the main paper (Table~2; script
-\texttt{eval\_related\_work\_baselines.py}) re-implements each paradigm
-on the signals cached for SceneMiner. None is the authors' system: the released
+The main paper's comparison (Table~2; every column in Table~\ref{tab:master-full})
+re-implements each paradigm on the signals cached for SceneMiner, with
+\texttt{scripts/eval\_related\_work\_baselines.py}. None is the authors' system: the released
 systems need inputs our corpora lack (object tracks, HD maps, an LLM service),
 and no external API was called. Every method sees the same queries, scenes and
 metrics; trained methods use the same $906$ training scenes and $72$ training
@@ -202,8 +210,21 @@ queries as SceneMiner and five seeds.
   SigLIP2 image embedding, trained like BEV-TSR-style.
 \item \textbf{CLIP, SigLIP, SigLIP2}: zero-shot image--text cosine; \textbf{lookup}:
   the a-priori VLM margin column; \textbf{naive convex router}: the first design
-  of Table~1.
+  of the main paper's Table~5.
 \end{itemize}
+
+\begin{table}[H]\centering\small
+\caption{\textbf{All columns of the main comparison} (main paper, Table~2). Stratum~5:
+$40$ semantic queries graded by human 3D annotation on $258$ corpus scenes, and the
+subset with $\ge3$ positives on the uncontaminated val150. 150Q suite: mAP and top-5
+domain skew (points). ms: online cost per query on $1508$ cached scenes, one model,
+A40, excluding text encoding. Portable: SigLIP2, VLM margins and metadata only.
+n/a: the method needs a signal the corpus lacks. $^{\dagger}$reads the BEV
+embedding or tags, which were supervised on corpus scenes. $^{\ddagger}$reads the
+very attributes that define suite relevance. Subscripts: sd over five seeds.}
+\label{tab:master-full}
+\resizebox{\textwidth}{!}{\input{supp_tables/master_full_table.tex}}
+\end{table}
 
 % =====================================================================
 \section{Why the 150-query suite is circular}
@@ -215,8 +236,8 @@ lighting and weather from the nuScenes/Waymo metadata, density from 3D boxes, an
 the four degradation flags from the Stage-1 VLM. An index reading the same
 attributes therefore scores $1.000$~mAP. Per-query results on this suite
 (Table~\ref{tab:pq-suite}) measure agreement with the VLM, and gains there
-partly reflect sharper alignment with the correct VLM column. Human-graded evidence is in the main paper's Tables~2, 4, 6, 7
-and~8.
+partly reflect sharper alignment with the correct VLM column. Human-graded evidence is in the main paper's Tables~2--4, 6
+and~7.
 
 % =====================================================================
 \section{Human annotation protocols}
@@ -315,7 +336,7 @@ $s_{\mathrm{abst}}$ is the SigLIP2 cosine. No tuning on BDD100K.}
 
 \begin{table}[H]\centering\small
 \caption{\textbf{150-query suite} by stratum, $602$ evaluation scenes. Relevance
-is cached attributes and metadata (main paper, Sec.~4); the index is a ceiling.}
+is cached attributes and metadata (main paper, Sec.~3.1); the index is a ceiling.}
 \label{tab:suite}
 \resizebox{0.6\textwidth}{!}{%
 \input{tab_suite.tex}%
@@ -364,7 +385,7 @@ $p=0.021$).}
 }
 \end{table}
 
-\paragraph{Seed variance.} Every trained row of Tables~1 and~2 was re-scored one
+\paragraph{Seed variance.} Every trained row of the main paper's Tables~2 and~5 was re-scored one
 seed at a time by the scripts that produced the tables
 (\texttt{run\_seed\_sd.sh}). Human GT is the per-seed mean in the paper, and the
 five-seed means reproduce it exactly; the other columns of the paper score the

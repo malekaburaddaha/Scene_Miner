@@ -46,13 +46,13 @@ def design():
     rq = J("milestone23_bdd_rawquery_routing.json")["rows"]
     rows.append(("naive convex router", macro(m6, "SceneMiner_v2.1_zeroleak"), macro(m6, "SceneMiner_v2.1_human_calibrated_5fold"),
                  rq["v21|raw"]["mAP"], s10["SceneMiner_v2.1"]["mAP"], s11["SceneMiner_v2.1"]["raw"]["skew_pts"]))
-    rows.append(("$+$ routing repair, \\textsc{PartNorm}", macro(m10, "SceneMiner_v2.2_zeroleak"),
+    rows.append(("$+$ routing fix, \\textsc{PartNorm}", macro(m10, "SceneMiner_v2.2_zeroleak"),
                  macro(m10, "SceneMiner_v2.2_human_calibrated_5fold"), rq["v22|raw"]["mAP"], s10["SceneMiner_v2.2"]["mAP"],
                  s11["SceneMiner_v2.2"]["raw"]["skew_pts"]))
-    for lab, f, b, tag in [("$+$ \\textsc{ResNorm}, single-prompt gate", "milestone14_v2_3.json", "milestone23_bdd_rawquery_v23.json", "v2.3"),
-                           ("$+$ contrastive gate, abstention", "milestone18_v2_4.json", "milestone23_bdd_rawquery_v24.json", "v2.4"),
+    for lab, f, b, tag in [("$+$ \\textsc{ResNorm}, 1-prompt gate", "milestone14_v2_3.json", "milestone23_bdd_rawquery_v23.json", "v2.3"),
+                           ("$+$ contrastive gate", "milestone18_v2_4.json", "milestone23_bdd_rawquery_v24.json", "v2.4"),
                            ("$+$ factored gate", "milestone22_factored_gate.json", "milestone23_bdd_rawquery_v25.json", "v2.5"),
-                           ("\\textbf{SceneMiner} (conditional removal)", "milestone27_v26.json", None, "v2.3")]:
+                           ("$+$ cond.\\ removal (\\textbf{ours})", "milestone27_v26.json", None, "v2.3")]:
         d = J(f); A = d["A_human_gt"]["macro_mAP"]; C = d["C_suite150"]
         bd = J(b)["B_bdd100k"]["rankers"]["v2.3_full"]["mAP"] if b else d["B_bdd100k"]["rankers"]["v2.3_full"]["mAP"]
         rows.append((lab, A[f"{tag}_full"], A[f"{tag}_human_calibrated_5fold"], bd, C["overall"][f"{tag}_full"]["mAP"],
@@ -64,9 +64,11 @@ def design():
     # Milestone 34: sd over five single-seed models (scripts/run_seed_sd.sh, summarize_seed_sd.py)
     SD = J("milestone34_seed_sd.json")["rows"]
     pm = lambda v, k: f"$_{{\\pm{SD[f'T1|v2.{v}'][k]['sd']:.3f}}}$".replace("0.", ".", 1)
-    lines = [f"{r[0]} & {b(r[1], 0)}{pm(i + 1, 'human_gt')} / {b(r[2], 1)} & {b(r[3], 2)}{pm(i + 1, 'bdd')} & "
-             f"{b(r[4], 3)}{pm(i + 1, 'suite')} / {bs(r[5])}" + "\\\\" for i, r in enumerate(rows)]
-    tex = ["\\begin{tabular}{lccc}", "\\toprule", "design & human GT & BDD100K & suite / skew\\\\", "\\midrule",
+    # Milestone 39: one number per cell (zero-leakage human GT, BDD100K, suite); the calibrated
+    # human GT and the suite skew are reported in the text and the supplementary
+    lines = [f"{r[0]} & {b(r[1], 0)}{pm(i + 1, 'human_gt')} & {b(r[3], 2)}{pm(i + 1, 'bdd')} & "
+             f"{b(r[4], 3)}{pm(i + 1, 'suite')}" + "\\\\" for i, r in enumerate(rows)]
+    tex = ["\\begin{tabular}{lccc}", "\\toprule", "design step & degradation & BDD100K & suite\\\\", "\\midrule",
            *lines, "\\bottomrule", "\\end{tabular}"]
     (P/"tab_design.tex").write_text("\n".join(tex) + "\n"); return rows
 
@@ -241,20 +243,26 @@ def rater2():
     graded by rater 2) and paper/supp_tables/rater2_methods_table.tex (every method under
     each grading of the 160 double-labelled scenes). Source: milestone33_rater2_results.json."""
     d = J("milestone33_rater2_results.json"); A, M = d["attributes"], d["macro"]
-    cols = [("SceneMiner", "SceneMiner"), ("Qwen2.5-VL lookup", "lookup"),
+    cols = [("SceneMiner", "SceneMiner"), ("Qwen2.5-VL lookup", "VLM lookup"),
             ("Late fusion SigLIP2 + lookup", "fusion$^{\\ast}$"), ("SigLIP2 ViT-B/16", "SigLIP2")]
-    L = ["\\begin{tabular}{lccc|cccc}", "\\toprule",
-         " & \\multicolumn{3}{c|}{Cohen's $\\kappa$} & \\multicolumn{4}{c}{mAP graded by rater 2}\\\\",
-         "attribute & r1--r2 & VLM--r1 & VLM--r2 & " + " & ".join(c for _, c in cols) + "\\\\", "\\midrule"]
-    for at, lab in [("droplets", "droplets"), ("glare", "glare"), ("wet_road", "wet road"), ("low_contrast", "low contrast")]:
-        r = A[at]; best = max(r["mAP"][k]["rater2"] for k, _ in cols)
-        cell = lambda k: (f"\\best{{{r['mAP'][k]['rater2']:.3f}}}" if r["mAP"][k]["rater2"] == best else f"{r['mAP'][k]['rater2']:.3f}")
-        L.append(f"{lab} & {r['human_human']['kappa']:.3f} & {r['vlm_vs_rater1']['kappa']:.3f} & {r['vlm_vs_rater2']['kappa']:.3f} & "
-                 + " & ".join(cell(k) for k, _ in cols) + "\\\\")
-    best = max(M["mAP"][k]["rater2"] for k, _ in cols)
-    L += ["\\midrule", f"macro & {M['human_human']['kappa']:.3f} & {M['vlm_vs_rater1_kappa']:.3f} & {M['vlm_vs_rater2_kappa']:.3f} & "
-          + " & ".join((f"\\best{{{M['mAP'][k]['rater2']:.3f}}}" if M["mAP"][k]["rater2"] == best else f"{M['mAP'][k]['rater2']:.3f}") for k, _ in cols)
-          + "\\\\", "\\bottomrule", "\\end{tabular}"]
+    # Milestone 39: attributes as columns, so the table stays readable at column width
+    AT = [("droplets", "droplets"), ("glare", "glare"), ("wet_road", "wet road"), ("low_contrast", "low contr.")]
+    L = ["\\begin{tabular}{lccccc}", "\\toprule", " & " + " & ".join(l for _, l in AT) + " & macro\\\\", "\\midrule",
+         "\\multicolumn{6}{l}{\\emph{Cohen's $\\kappa$}}\\\\"]
+    for key, lab, mk in [("human_human", "rater 1 vs.\\ rater 2", None), ("vlm_vs_rater1", "VLM vs.\\ rater 1", "vlm_vs_rater1_kappa"),
+                         ("vlm_vs_rater2", "VLM vs.\\ rater 2", "vlm_vs_rater2_kappa")]:
+        mv = M["human_human"]["kappa"] if mk is None else M[mk]
+        L.append(f"{lab} & " + " & ".join(f"{A[a]['vlm_vs_rater1' if key == 'vlm_vs_rater1' else key]['kappa']:.3f}" for a, _ in AT) + f" & {mv:.3f}\\\\")
+    L += ["\\midrule", "\\multicolumn{6}{l}{\\emph{mAP graded by rater 2}}\\\\"]
+    for k, lab in cols:
+        cells = []
+        for a, _ in AT:
+            v = A[a]["mAP"][k]["rater2"]; bst = max(A[a]["mAP"][kk]["rater2"] for kk, _ in cols)
+            cells.append(f"\\best{{{v:.3f}}}" if v == bst else f"{v:.3f}")
+        v = M["mAP"][k]["rater2"]; bst = max(M["mAP"][kk]["rater2"] for kk, _ in cols)
+        cells.append(f"\\best{{{v:.3f}}}" if v == bst else f"{v:.3f}")
+        L.append(("\\textbf{SceneMiner}" if k == "SceneMiner" else lab) + " & " + " & ".join(cells) + "\\\\")
+    L += ["\\bottomrule", "\\end{tabular}"]
     (P/"tab_rater2.tex").write_text("\n".join(L) + "\n")
     rows = [("BEV-TSR-style", "BEV-TSR-style text-to-BEV"), ("RefAV-style (LLM)", "RefAV-style programmatic filter"),
             ("CARIM-style (neutral)", "CARIM-style caption retrieval"), ("CARIM-style (listing)", "CARIM-style (enumerating prompt, M23)"),

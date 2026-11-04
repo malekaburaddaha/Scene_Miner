@@ -10,7 +10,7 @@ supplementary code bundle (paper/supplementary_code.zip, or --zip <path>) is sca
 member by member, names and contents, plus the archive comment.
 Exit status 1 if anything matches.
 """
-import re, subprocess, sys, zipfile, zlib
+import re, subprocess, sys, tempfile, zipfile, zlib
 from pathlib import Path
 from pypdf import PdfReader
 
@@ -46,7 +46,18 @@ def check_zip(z):
     with zipfile.ZipFile(z) as zf:
         if h := hits(zf.comment.decode("latin-1")): found["<comment>"] = h
         for info in zf.infolist():
-            h = hits(info.filename) + hits(zf.read(info).decode("latin-1"))
+            h = hits(info.filename); data = zf.read(info); ext = Path(info.filename).suffix.lower()
+            if ext in (".pdf", ".jpg", ".jpeg", ".png"):
+                # binary members are parsed like the paper's own PDFs and images: a raw-byte scan
+                # finds three-letter tokens by chance inside compressed image data (Milestone 39)
+                with tempfile.NamedTemporaryFile(suffix=ext) as t:
+                    t.write(data); t.flush()
+                    if ext == ".pdf":
+                        h += sorted({x for v in check_pdf(Path(t.name))[1].values() for x in v})
+                    else:
+                        h += hits(subprocess.run(["exiftool", t.name], capture_output=True, text=True).stdout.replace(t.name, ""))
+            else:
+                h += hits(data.decode("latin-1"))
             if h: found[info.filename] = sorted(set(h))
         n = len(zf.infolist())
     return n, found

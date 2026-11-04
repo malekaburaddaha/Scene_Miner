@@ -1,0 +1,108 @@
+{
+ "doc": "MILESTONE 39 - what the concept gate decides for example queries (main-paper table).\n\nFor each query: gamma_deg, the dominant class of the unprojected bank posterior, the\ncontext classes it activates and the margin column it selects, from the final v2.6\ncheckpoints (the gate is identical across seeds: same training bank, same tau; the\nscript checks this). Queries are taken verbatim from the evaluation suite, the\nBDD100K queries, Stratum 5 and the main text.\n-> results/cvpr/milestone39_gate_examples.json and paper/tab_gate.tex\n",
+ "rows": [
+  {
+   "query": "water droplets on the lens at night",
+   "kind": "degradation + context",
+   "gamma_deg": 1.0,
+   "top_class": "droplets",
+   "top_class_p": 0.9999995231628418,
+   "active_context": [],
+   "margin_column": "droplets",
+   "margin_weight": 0.9819687008857727
+  },
+  {
+   "query": "slick pavement in the dark",
+   "kind": "degradation + context",
+   "gamma_deg": 0.9854775667190552,
+   "top_class": "macro:lighting=night",
+   "top_class_p": 0.9990253448486328,
+   "active_context": [
+    "night"
+   ],
+   "margin_column": "wet road",
+   "margin_weight": 0.6773039102554321
+  },
+  {
+   "query": "blinding headlight bloom from oncoming traffic",
+   "kind": "degradation",
+   "gamma_deg": 1.0,
+   "top_class": "glare",
+   "top_class_p": 1.0,
+   "active_context": [],
+   "margin_column": "glare",
+   "margin_weight": 0.9979288578033447
+  },
+  {
+   "query": "snow covering the road",
+   "kind": "out of vocabulary",
+   "gamma_deg": 0.7257188558578491,
+   "top_class": "wet_road",
+   "top_class_p": 0.48505276441574097,
+   "active_context": [
+    "rain",
+    "dry"
+   ],
+   "margin_column": "wet road",
+   "margin_weight": 0.6981680393218994
+  },
+  {
+   "query": "driving after dark",
+   "kind": "context",
+   "gamma_deg": 2.0691635072012105e-08,
+   "top_class": "macro:lighting=night",
+   "top_class_p": 0.9999823570251465,
+   "active_context": [
+    "night"
+   ],
+   "margin_column": "glare",
+   "margin_weight": 0.43919381499290466
+  },
+  {
+   "query": "bright daytime driving",
+   "kind": "context",
+   "gamma_deg": 4.591212814375467e-07,
+   "top_class": "macro:lighting=day",
+   "top_class_p": 1.0,
+   "active_context": [
+    "day"
+   ],
+   "margin_column": "glare",
+   "margin_weight": 0.6906828284263611
+  },
+  {
+   "query": "a vehicle at night",
+   "kind": "object + context",
+   "gamma_deg": 2.071564449579455e-05,
+   "top_class": "macro:lighting=night",
+   "top_class_p": 0.999998927116394,
+   "active_context": [
+    "night"
+   ],
+   "margin_column": "droplets",
+   "margin_weight": 0.3811885714530945
+  },
+  {
+   "query": "pedestrians crossing the road at night",
+   "kind": "object + context",
+   "gamma_deg": 0.08274692296981812,
+   "top_class": "macro:lighting=night",
+   "top_class_p": 0.9999985694885254,
+   "active_context": [
+    "night"
+   ],
+   "margin_column": "wet road",
+   "margin_weight": 0.6401665806770325
+  },
+  {
+   "query": "a bus at a stop",
+   "kind": "object",
+   "gamma_deg": 1.2443401864459247e-08,
+   "top_class": "oov:a gas station",
+   "top_class_p": 0.6835393905639648,
+   "active_context": [],
+   "margin_column": "low contrast",
+   "margin_weight": 0.4317942261695862
+  }
+ ]
+}

@@ -51,7 +51,7 @@ def registry():
     SDV = lambda *p: get("milestone34_seed_sd.json", ["rows"] + list(p))
     ATTR4 = ("droplets", "glare", "wet_road", "low_contrast")
     HP = lambda k, sc="all": M("holdout", "modes", "metadata_free", "paired_vs_sceneminer_portable", k, sc)
-    T, MT = "paper/main_cvpr.tex", "paper/tab_master.tex"
+    T, MT, SP = "paper/main_cvpr.tex", "paper/tab_master.tex", "paper/supp_cvpr.tex"
     f3, p2, p3, s3 = "{:.3f}", "{:.2f}", "{:.3f}", "{:+.3f}"
     reg = [
         (T, lambda: V("A_human_gt", "macro_mAP", "v2.3_full"), f3, "human GT zero-leakage"),
@@ -81,10 +81,10 @@ def registry():
         (T, lambda: V("A_human_gt", "macro_mAP", "v2.3_full") - V("A_human_gt", "macro_mAP", "v2.3_no_resnorm"), f3, "ResNorm worth"),
         (T, lambda: V("A_human_gt", "macro_mAP", "v2.3_full") - M("methods", "SceneMiner (portable)", "human_gt"), f3, "BEV/tags over portable"),
         (T, lambda: V("C_suite150", "overall", "v2.3_full", "mAP"), f3, "suite"),
-        (T, lambda: V("C_suite150", "skew_pts", "v2.3_full", "mean"), "{:+.1f}", "suite skew"),
-        (T, lambda: V("C_suite150", "per_stratum", "macro_environmental", "v2.3_full"), f3, "S2"),
+        ("paper/tab_abl.tex", lambda: V("C_suite150", "skew_pts", "v2.3_full", "mean"), "{:+.1f}", "suite skew"),
+        ("paper/tab_suite.tex", lambda: V("C_suite150", "per_stratum", "macro_environmental", "v2.3_full"), f3, "S2"),
         (T, lambda: V("C_suite150", "per_stratum", "compositional_heldout", "v2.3_full"), f3, "S3"),
-        (T, lambda: V("C_suite150", "per_stratum", "compositional_heldout", "v2.3_no_abstain"), f3, "S3 un-gated"),
+        ("paper/tab_suite.tex", lambda: V("C_suite150", "per_stratum", "compositional_heldout", "v2.3_no_abstain"), f3, "S3 un-gated"),
         (T, lambda: RG("regimes", "atomic_degradation_550", "SceneMiner") - RG("regimes", "atomic_degradation_550", "late_fusion SigLIP2+lookup"), s3, "regime degradation lead"),
         (T, lambda: S("corpus_258", "tests", "v2.4_monocular vs zeroshot_SigLIP2 | semantic_atomic", "delta"), s3, "semantics vs SigLIP2"),
         (T, lambda: S("corpus_258", "tests", "v2.4_monocular vs logit_VLM_lookup | semantic_atomic", "delta"), s3, "semantics vs lookup"),
@@ -93,13 +93,12 @@ def registry():
         (T, lambda: -LP("topk", "degradation", "SceneMiner_v2.4", "mAP_front", "delta"), f3, "loop mAP"),
         (T, lambda: -LP("topk", "degradation", "SceneMiner_v2.4", "vru_recall", "delta"), f3, "loop VRU recall"),
         (T, lambda: LP("pairwise", "SceneMiner_v2.4 - zeroshot_SigLIP2 | mAP_front", "delta"), "{:.3f}", "loop vs SigLIP2"),
-        (T, lambda: V("B_bdd100k", "rankers", "zeroshot_SigLIP2", "mAP") - V("B_bdd100k", "rankers", "v2.3_full", "mAP"), f3, "BDD gap to SigLIP2"),
         (T, lambda: get("milestone23_bdd_rawquery_v24.json", ["B_bdd100k", "rankers", "v2.3_full", "mAP"]) - V("B_bdd100k", "rankers", "v2.3_full", "mAP"), f3, "design BDD trade"),
         (T, lambda: V("C_suite150", "overall", "v2.3_full", "mAP") - get("milestone18_v2_4.json", ["C_suite150", "overall", "v2.4_full", "mAP"]), s3, "design suite gain"),
         (T, lambda: Y("tests", "v2.4_monocular - logit_VLM_lookup", "delta"), s3, "conjunctions vs lookup"),
         (T, lambda: Y("tests", "v2.4_monocular - zeroshot_SigLIP2", "delta"), s3, "conjunctions vs SigLIP2"),
-        (T, lambda: OC("detectors", OC("selected"), "recall_synthetic"), p2, "object cap recall (rejected)"),
-        (T, lambda: 100 * OC("detectors", OC("selected"), "false_flag_degradation"), "{:.1f}", "object cap false-flag %"),
+        (SP, lambda: OC("detectors", OC("selected"), "recall_synthetic"), p2, "object cap recall (rejected)"),
+        (SP, lambda: 100 * OC("detectors", OC("selected"), "false_flag_degradation"), "{:.1f}", "object cap false-flag %"),
         (T, lambda: R2("macro", "human_human", "kappa"), f3, "rater2 kappa"),
         (T, lambda: R2("macro", "human_human", "kappa"), p2, "rater2 kappa (abstract)"),
         (T, lambda: min(R2("attributes", a, "human_human", "kappa") for a in ATTR4), f3, "rater2 kappa min attr"),
@@ -127,17 +126,24 @@ def registry():
         (T, lambda: [x for x in VR("benchmarks", "human_gt", "per_query") if x["id"] == "low_contrast"][0]["n_pos"], "{:d}", "low-contrast positives"),
         ("paper/tab_design.tex", lambda: f"0.794}}_{{\\pm{SDV('T1|v2.6', 'human_gt', 'sd'):.3f}".replace("pm0.", "pm."), "{}", "SceneMiner human GT seed sd"),
         ("paper/tab_master.tex", lambda: f"0.794}}_{{\\pm{SDV('T2|SceneMiner', 'human_gt', 'sd'):.3f}".replace("pm0.", "pm."), "{}", "Table 2 SceneMiner seed sd"),
-        (T, lambda: BB("rows", "SigLIP2 ViT-B/16", "human_gt"), f3, "zero-shot B/16 human GT"),
+        (MT, lambda: BB("rows", "SigLIP2 ViT-B/16", "human_gt"), f3, "zero-shot B/16 human GT"),
         (T, lambda: BB("rows", "SigLIP2 So400m/14", "human_gt"), f3, "zero-shot So400m human GT"),
         (T, lambda: BB("rows", "SigLIP2 ViT-B/16", "holdout"), f3, "zero-shot B/16 holdout"),
-        (T, lambda: BB("rows", "SigLIP2 So400m/14", "holdout"), f3, "zero-shot So400m holdout"),
+        ("paper/supp_tables/backbone_table.tex", lambda: BB("rows", "SigLIP2 So400m/14", "holdout"), f3, "zero-shot So400m holdout"),
         (T, lambda: BB("rows", "SceneMiner, So400m/14", "human_gt"), f3, "SceneMiner So400m human GT"),
         (T, lambda: BB("rows", "SceneMiner, So400m/14", "holdout"), f3, "SceneMiner So400m holdout"),
         (T, lambda: BB("rows", "SceneMiner, So400m/14", "bdd"), f3, "SceneMiner So400m BDD100K"),
         (T, lambda: RG("regimes", "atomic_degradation_550", "late_fusion SigLIP2+lookup"), f3, "best no-learning control (abstract)"),
         (T, lambda: M("n", "bdd_images") + M("holdout", "modes", "metadata_free", "n_images"), "{:d}", "external images (BDD100K + holdout)"),
         (MT, lambda: M("methods", "SceneMiner", "human_gt"), f3, "Table 2 full human GT"),
-        (MT, lambda: M("methods", "SceneMiner (portable)", "suite"), f3, "Table 2 portable suite"),
+        ("paper/tab_master_full.tex", lambda: M("methods", "SceneMiner (portable)", "suite"), f3, "Table 2 portable suite"),
+        # Milestone 39: main-table means and concept-gate examples
+        (MT, lambda: get("milestone39_main_table.json", ["mean", "SceneMiner"]), f3, "Table 2 mean SceneMiner"),
+        (MT, lambda: get("milestone39_main_table.json", ["mean", "VLM_RERANK"]), f3, "Table 2 mean reranker"),
+        (T, lambda: get("milestone39_main_table.json", ["mean", "SceneMiner"]), f3, "text mean SceneMiner"),
+        (T, lambda: get("milestone39_main_table.json", ["mean", "SigLIP2 ViT-B/16"]), f3, "text mean SigLIP2"),
+        (T, lambda: [r for r in get("milestone39_gate_examples.json", ["rows"]) if r["query"] == "slick pavement in the dark"][0]["gamma_deg"], f3, "gate example slick pavement"),
+        ("paper/tab_gate.tex", lambda: [r for r in get("milestone39_gate_examples.json", ["rows"]) if r["query"] == "snow covering the road"][0]["gamma_deg"], f3, "gate example snow"),
     ]
     return reg
 

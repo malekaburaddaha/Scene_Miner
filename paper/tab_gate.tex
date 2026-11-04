@@ -1,0 +1,16 @@
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}lccl@{}}
+\toprule
+query & context & $\gdeg$ & ranked by\\
+\midrule
+``water droplets on the lens at night'' & -- & 1.000 & head: droplets\\
+``slick pavement in the dark'' & night & 0.985 & head: wet road\\
+``blinding headlight bloom from oncoming traffic'' & -- & 1.000 & head: glare\\
+``snow covering the road'' & rain, dry & 0.726 & head: wet road\\
+``driving after dark'' & night & 0.000 & SigLIP2 $+$ meta\\
+``bright daytime driving'' & day & 0.000 & SigLIP2 $+$ meta\\
+``a vehicle at night'' & night & 0.000 & SigLIP2 $+$ meta\\
+``pedestrians crossing the road at night'' & night & 0.083 & SigLIP2 $+$ meta\\
+``a bus at a stop'' & -- & 0.000 & SigLIP2\\
+\bottomrule
+\end{tabular}
