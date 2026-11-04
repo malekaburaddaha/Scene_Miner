@@ -26,7 +26,7 @@ Every entry was generated from metadata fetched in Milestone 20 (arXiv API, Cros
 | `tang2025bevtsr` | - | crossref | Proceedings of the AAAI Conference on Artificial Intelligence | 2025 | 14 | 10.1609/aaai.v39i7.32782 |
 | `ki2025carim` | - | crossref | Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) | 2025 | 5 | 10.1109/iccv51701.2025.02046 |
 | `chamiti2025refergpt` | - | crossref | Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition Workshops (CVPRW) | 2025 | 4 | 10.1109/cvprw67362.2025.00370 |
-| `davidson2025refav` | 2505.20981 | arxiv | arXiv preprint arXiv:2505.20981 | 2025 | 3 | - |
+| `davidson2026refav` | 2505.20981 | arxiv | Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) | 2026 | 3 | - |
 | `roy2007erank` | - | openalex | Proceedings of the European Signal Processing Conference (EUSIPCO) | 2007 | 2 | 10.5281/zenodo.40328 |
 | `yogamani2019woodscape` | - | crossref | Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) | 2019 | 17 | 10.1109/iccv.2019.00940 |
 | `sakaridis2019darkzurich` | - | crossref | Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) | 2019 | 3 | 10.1109/iccv.2019.00747 |
@@ -37,5 +37,5 @@ Every entry was generated from metadata fetched in Milestone 20 (arXiv API, Cros
 | `qian2024nuscenesqa` | - | crossref | Proceedings of the AAAI Conference on Artificial Intelligence | 2024 | 5 | 10.1609/aaai.v38i5.28253 |
 | `deruyttere2019talk2car` | - | crossref | Proceedings of the Conference on Empirical Methods in Natural Language Processing and the International Joint Conference on Natural Language Processing (EMNLP-IJCNLP) | 2019 | 5 | 10.18653/v1/d19-1215 |
 | `marcu2024lingoqa` | - | crossref | Proceedings of the European Conference on Computer Vision (ECCV) | 2024 | 12 | 10.1007/978-3-031-72980-5_15 |
-| `luo2023crb` | - | openreview | arXiv preprint arXiv:2301.09249 | 2023 | 6 | - |
+| `luo2023crb` | - | openreview | International Conference on Learning Representations (ICLR) | 2023 | 6 | - |
 | `feng2019activelidar` | - | crossref | Proceedings of the IEEE Intelligent Vehicles Symposium (IV) | 2019 | 5 | 10.1109/ivs.2019.8814236 |

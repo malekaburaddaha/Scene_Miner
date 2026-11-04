@@ -26,7 +26,10 @@ for _k, _r in RW3.items():
     if _r.get("crossref"): C[_k] = _r["crossref"]
 OR = {k: r["openreview"][0] for k, r in RW3.items() if r.get("openreview")}
 _rv = json.load(open("paper/bibcheck/related_work_check_1.json"))["refav"]
-A["davidson2025refav"] = {"arxiv_id": _rv["id"], "arxiv": _rv}
+A["davidson2026refav"] = {"arxiv_id": _rv["id"], "arxiv": _rv}
+# Milestone 40: venue records for entries without a Crossref DOI (PMLR, CVF, ICLR pages)
+V40 = json.load(open("paper/bibcheck/m40_venue_checks.json"))
+PMLR = lambda k: {"series": "Proceedings of Machine Learning Research", "volume": V40[k]["pmlr_volume"], "pages": V40[k]["pages"].replace("-", "--")}
 
 CVPR = "Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)"
 ICCV = "Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)"
@@ -43,9 +46,9 @@ SPEC = {   # key -> (type, venue field, venue, year, source of authors, extra)
  "carbonell1998mmr": ("inproceedings", "booktitle", "Proceedings of the 21st Annual International ACM SIGIR Conference on Research and Development in Information Retrieval", 1998, "crossref", {}),
  "geirhos2020shortcut": ("article", "journal", "Nature Machine Intelligence", 2020, "crossref", {}),
  "benjamini1995fdr": ("article", "journal", "Journal of the Royal Statistical Society: Series B (Methodological)", 1995, "crossref", {}),
- "radford2021clip": ("inproceedings", "booktitle", "Proceedings of the International Conference on Machine Learning (ICML)", 2021, "arxiv", {}),
- "li2023blip2": ("inproceedings", "booktitle", "Proceedings of the International Conference on Machine Learning (ICML)", 2023, "arxiv", {}),
- "ioffe2015bn": ("inproceedings", "booktitle", "Proceedings of the International Conference on Machine Learning (ICML)", 2015, "arxiv", {}),
+ "radford2021clip": ("inproceedings", "booktitle", "Proceedings of the International Conference on Machine Learning (ICML)", 2021, "arxiv", PMLR("radford2021clip")),
+ "li2023blip2": ("inproceedings", "booktitle", "Proceedings of the International Conference on Machine Learning (ICML)", 2023, "arxiv", PMLR("li2023blip2")),
+ "ioffe2015bn": ("inproceedings", "booktitle", "Proceedings of the International Conference on Machine Learning (ICML)", 2015, "arxiv", PMLR("ioffe2015bn")),
  "shazeer2017moe": ("inproceedings", "booktitle", "International Conference on Learning Representations (ICLR)", 2017, "arxiv", {}),
  "mu2018allbutthetop": ("inproceedings", "booktitle", "International Conference on Learning Representations (ICLR)", 2018, "override", {}),
  "bai2025qwen25vl": ("article", "journal", "arXiv preprint arXiv:2502.13923", 2025, "arxiv", {}),
@@ -53,7 +56,7 @@ SPEC = {   # key -> (type, venue field, venue, year, source of authors, extra)
  "tang2025bevtsr": ("inproceedings", "booktitle", "Proceedings of the AAAI Conference on Artificial Intelligence", 2025, "crossref", {}),
  "ki2025carim": ("inproceedings", "booktitle", ICCV, 2025, "crossref", {}),
  "chamiti2025refergpt": ("inproceedings", "booktitle", "Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition Workshops (CVPRW)", 2025, "crossref", {}),
- "davidson2025refav": ("article", "journal", "arXiv preprint arXiv:2505.20981", 2025, "arxiv", {}),
+ "davidson2026refav": ("inproceedings", "booktitle", CVPR, 2026, "arxiv", {"pages": V40["davidson2026refav"]["pages"].replace("-", "--")}),
  "roy2007erank": ("inproceedings", "booktitle", "Proceedings of the European Signal Processing Conference (EUSIPCO)", 2007, "openalex", {}),
  "yogamani2019woodscape": ("inproceedings", "booktitle", ICCV, 2019, "crossref", {}),
  "sakaridis2019darkzurich": ("inproceedings", "booktitle", ICCV, 2019, "crossref", {}),
@@ -64,7 +67,7 @@ SPEC = {   # key -> (type, venue field, venue, year, source of authors, extra)
  "qian2024nuscenesqa": ("inproceedings", "booktitle", "Proceedings of the AAAI Conference on Artificial Intelligence", 2024, "crossref", {}),
  "deruyttere2019talk2car": ("inproceedings", "booktitle", "Proceedings of the Conference on Empirical Methods in Natural Language Processing and the International Joint Conference on Natural Language Processing (EMNLP-IJCNLP)", 2019, "crossref", {}),
  "marcu2024lingoqa": ("inproceedings", "booktitle", "Proceedings of the European Conference on Computer Vision (ECCV)", 2024, "crossref", {}),
- "luo2023crb": ("article", "journal", "arXiv preprint arXiv:2301.09249", 2023, "openreview", {}),
+ "luo2023crb": ("inproceedings", "booktitle", "International Conference on Learning Representations (ICLR)", 2023, "openreview", {"note": "arXiv:2301.09249"}),
  "feng2019activelidar": ("inproceedings", "booktitle", "Proceedings of the IEEE Intelligent Vehicles Symposium (IV)", 2019, "crossref", {}),
 }
 OVERRIDES = {
@@ -82,6 +85,24 @@ def bibname(n):
     if len(parts) >= 3 and parts[-2].lower() in ("van", "von", "de", "der", "da", "di"):
         return f"{' '.join(parts[-2:])}, {' '.join(parts[:-2])}"
     return f"{parts[-1]}, {' '.join(parts[:-1])}"
+
+
+ACCENT = {"\u0308": '"', "\u0301": "'", "\u0300": "`", "\u0302": "^", "\u0303": "~", "\u0327": "c ", "\u030c": "v ", "\u0306": "u "}
+SPECIAL = {"ß": r"{\ss}", "ø": r"{\o}", "Ø": r"{\O}", "ł": r"{\l}", "Ł": r"{\L}", "æ": r"{\ae}", "å": r"{\aa}"}
+
+
+def texify(s):
+    """Non-ASCII letters as LaTeX accent commands (Milestone 40): raw UTF-8 in the .bib was
+    dropped from the typeset references (Jörn-Henrik -> Jrn-Henrik)."""
+    import unicodedata
+    out = []
+    for ch in s:
+        if ord(ch) < 128: out.append(ch); continue
+        if ch in SPECIAL: out.append(SPECIAL[ch]); continue
+        d = unicodedata.normalize("NFD", ch)
+        if len(d) == 2 and d[1] in ACCENT: out.append("{\\" + ACCENT[d[1]] + d[0] + "}"); continue
+        raise ValueError(f"no LaTeX form for {ch!r} in {s!r}")
+    return "".join(out)
 
 
 def esc(s):
@@ -118,7 +139,7 @@ for key, (typ, vf, venue, year, src, extra) in SPEC.items():
     elif src == "openalex":
         authors = ["Olivier Roy", "Martin Vetterli"]; title = OA["title"]
         pages = f"{OA['biblio']['first_page']}-{OA['biblio']['last_page']}"; doi = OA["doi"].replace("https://doi.org/", "")
-    f = {"author": " and ".join(bibname(x) for x in authors), "title": protect(esc(title)),
+    f = {"author": texify(" and ".join(bibname(x) for x in authors)), "title": texify(protect(esc(title))),
          vf: esc(venue), "year": str(year)}
     if pages: f["pages"] = pages.replace("-", "--")
     if src == "crossref" and c.get("volume"): f["volume"] = c["volume"]
@@ -126,6 +147,7 @@ for key, (typ, vf, venue, year, src, extra) in SPEC.items():
     if doi and not doi.startswith("10.48550"): f["doi"] = doi
     if a.get("arxiv_id") and typ != "article" or (a.get("arxiv_id") and "arXiv" not in venue):
         f["note"] = f"arXiv:{a['arxiv_id']}"
+    f.update(extra)
     body = ",\n".join(f"  {k} = {{{v}}}" for k, v in f.items())
     entries.append(f"@{typ}{{{key},\n{body}\n}}")
     rows.append((key, a.get("arxiv_id") or "-", arx.get("title", "") == "" or True, src, venue, year,

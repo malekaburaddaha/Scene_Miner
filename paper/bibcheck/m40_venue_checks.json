@@ -1,0 +1,22 @@
+{
+ "doc": "Milestone 40: venue records fetched on 2026-11-04 for entries without a Crossref DOI. Each value was read from the page named in 'source'.",
+ "radford2021clip": {"source": "https://proceedings.mlr.press/v139/radford21a.html", "venue": "ICML 2021", "pmlr_volume": "139", "pages": "8748-8763",
+   "authors": ["Alec Radford", "Jong Wook Kim", "Chris Hallacy", "Aditya Ramesh", "Gabriel Goh", "Sandhini Agarwal", "Girish Sastry", "Amanda Askell", "Pamela Mishkin", "Jack Clark", "Gretchen Krueger", "Ilya Sutskever"]},
+ "li2023blip2": {"source": "https://proceedings.mlr.press/v202/li23q.html", "venue": "ICML 2023", "pmlr_volume": "202", "pages": "19730-19742",
+   "authors": ["Junnan Li", "Dongxu Li", "Silvio Savarese", "Steven Hoi"]},
+ "ioffe2015bn": {"source": "https://proceedings.mlr.press/v37/ioffe15.html", "venue": "ICML 2015", "pmlr_volume": "37", "pages": "448-456",
+   "authors": ["Sergey Ioffe", "Christian Szegedy"]},
+ "shazeer2017moe": {"source": "https://web.archive.org/web/20231118001207/http://iclr.cc/archive/www/doku.php%3Fid=iclr2017:conference_posters.html (poster C13); https://web.archive.org/web/20190917002858/https://openreview.net/forum?id=B1ckMDqlg (ICLR 2017 conference submission, 7 authors)", "venue": "ICLR 2017 (conference poster)"},
+ "mu2018allbutthetop": {"source": "https://iclr.cc/virtual/2018/poster/298", "venue": "ICLR 2018 (poster)", "authors": ["Jiaqi Mu", "Pramod Viswanath"],
+   "note": "arXiv 1702.01417 lists Jiaqi Mu, Suma Bhat, Pramod Viswanath; the ICLR 2018 version lists two authors"},
+ "luo2023crb": {"source": "https://iclr.cc/virtual/2023/papers.html (accepted list); arXiv 2301.09249 comment 'To appear in ICLR 2023'", "venue": "ICLR 2023",
+   "authors": ["Yadan Luo", "Zhuoxiao Chen", "Zijian Wang", "Xin Yu", "Zi Huang", "Mahsa Baktashmotlagh"]},
+ "davidson2026refav": {"source": "https://openaccess.thecvf.com/content/CVPR2026/html/Davidson_RefAV_Towards_Planning-Centric_Scenario_Mining_CVPR_2026_paper.html", "venue": "CVPR 2026",
+   "pages": "21537-21548", "authors": ["Cainan Davidson", "Deva Ramanan", "Neehar Peri"], "title": "RefAV: Towards Planning-Centric Scenario Mining"},
+ "chamiti2025refergpt": {"source": "https://openaccess.thecvf.com/content/CVPR2025W/WDFM-AD/html/Chamiti_ReferGPT_Towards_Zero-Shot_Referring_Multi-Object_Tracking_CVPRW_2025_paper.html",
+   "cvf_pages": "3888-3897", "note": "the IEEE Xplore record of the DOI (10.1109/cvprw67362.2025.00370) gives 3849-3858; main.bib uses the DOI's pagination, as for every DOI entry"},
+ "ki2025carim": {"source": "https://openaccess.thecvf.com/content/ICCV2025/html/Ki_CARIM_Caption-Based_Autonomous_Driving_Scene_Retrieval_via_Inclusive_Text_Matching_ICCV_2025_paper.html",
+   "pages": "22036-22045", "authors": ["Minjoo Ki", "Daejung Kim", "Kisung Kim", "Seon Joo Kim", "Jinhan Lee"]},
+ "bai2025qwen25vl": {"source": "arXiv API 2502.13923 (no journal_ref or venue comment)", "venue": "arXiv preprint only"},
+ "tschannen2025siglip2": {"source": "arXiv API 2502.14786 (no journal_ref or venue comment)", "venue": "arXiv preprint only"}
+}

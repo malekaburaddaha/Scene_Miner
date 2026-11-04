@@ -20,7 +20,7 @@ SD = json.load(open("results/cvpr/milestone34_seed_sd.json"))["rows"]    # Miles
 M, PQ = R["methods"], R["per_query"]
 ROWS = [  # (label in JSON, label in paper, citation, modality string)
     ("BEV-TSR-style text-to-BEV", "BEV-TSR-style", "tang2025bevtsr", "BEV"),
-    ("RefAV-style programmatic filter", "RefAV-style (LLM program)", "davidson2025refav", "VLM flags, tags, meta"),
+    ("RefAV-style programmatic filter", "RefAV-style (LLM program)", "davidson2026refav", "VLM flags, tags, meta"),
     ("CARIM-style caption retrieval", "CARIM-style (neutral captions)", "ki2025carim", "VLM captions"),
     ("CARIM-style (enumerating prompt, M23)", "CARIM-style (listing captions)", "ki2025carim", "VLM captions"),
     ("Tag-map (Talk2BEV/nuPrompt-style)", "Tag map", "choudhary2024talk2bev,wu2023nuprompt", "BEV tags"),

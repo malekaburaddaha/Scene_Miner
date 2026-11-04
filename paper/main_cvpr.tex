@@ -88,7 +88,7 @@ on. Finding those scenes in a large corpus from a natural-language description i
 the scene-mining problem. Driving-specific retrievers now address it with
 text-to-BEV alignment~\cite{tang2025bevtsr}, caption
 matching~\cite{ki2025carim} or programs over perception
-outputs~\cite{davidson2025refav}, but each reads a single family of signals.
+outputs~\cite{davidson2026refav}, but each reads a single family of signals.
 Hard scenes are hard for different reasons, so a miner should combine several
 signals, and combining them is where systems silently go wrong.
 
@@ -137,16 +137,17 @@ Cityscapes~\cite{sakaridis2018foggy}, Dark Zurich~\cite{sakaridis2019darkzurich}
 label lens soiling (WoodScape~\cite{yogamani2019woodscape}) or collect corner cases
 and anomalies (CODA~\cite{li2022coda}, Fishyscapes~\cite{blum2021fishyscapes}).
 These are labelled sets to train and test on; we retrieve such scenes from an
-unlabelled corpus by language. Driving VQA (Talk2Car~\cite{deruyttere2019talk2car},
-nuScenes-QA~\cite{qian2024nuscenesqa}, DriveLM~\cite{sima2024drivelm},
-LingoQA~\cite{marcu2024lingoqa}) answers questions about a given scene; retrieval
-inverts the task. Active learning selects scenes a 3D detector is uncertain
-about~\cite{feng2019activelidar,luo2023crb}; mining selects by a described
-condition, which an uncertainty score cannot express.
+unlabelled corpus by language. Driving language benchmarks ground commands
+(Talk2Car~\cite{deruyttere2019talk2car}) or answer questions
+(nuScenes-QA~\cite{qian2024nuscenesqa}, DriveLM~\cite{sima2024drivelm},
+LingoQA~\cite{marcu2024lingoqa}) about a given scene; retrieval inverts the task. Active learning chooses which scenes to label for a 3D
+detector, by its uncertainty~\cite{feng2019activelidar} or by label, feature and
+geometric criteria~\cite{luo2023crb}; mining selects by a described condition,
+which such scores cannot express.
 
 \paragraph{Driving scene retrieval.} BEV-TSR~\cite{tang2025bevtsr} aligns text
 with multi-camera BEV features. CARIM~\cite{ki2025carim} captions scenes with a VLM
-and retrieves by inclusive text matching. RefAV~\cite{davidson2025refav} has an LLM
+and retrieves by inclusive text matching. RefAV~\cite{davidson2026refav} has an LLM
 compile the query into a program over tracked 3D objects, and
 ReferGPT~\cite{chamiti2025refergpt} matches text descriptions of tracked objects'
 3D state with CLIP. Talk2BEV~\cite{choudhary2024talk2bev} and
@@ -159,17 +160,20 @@ our corpora lack (tracks, HD maps, an LLM service), so we re-implement each
 \paragraph{Vision--language retrieval.} Contrastive image--text models,
 CLIP~\cite{radford2021clip} and the sigmoid-loss
 SigLIP~\cite{zhai2023siglip,tschannen2025siglip2}, give zero-shot retrieval;
-BLIP-2~\cite{li2023blip2} and Qwen2.5-VL~\cite{bai2025qwen25vl} answer attribute
-questions whose yes/no log-odds we use as margins.
+BLIP-2~\cite{li2023blip2} and Qwen2.5-VL~\cite{bai2025qwen25vl} couple an image
+encoder with a language model; we use a BLIP-2 Q-Former for tags and Qwen2.5-VL's
+yes/no log-odds as margins.
 
 \paragraph{Shortcuts, routing and normalisation.} Models that lean on the
 easiest predictive signal are a known failure mode~\cite{geirhos2020shortcut}, and
 gated mixtures collapse onto few experts without balancing
 pressure~\cite{shazeer2017moe}. We show that balancing the router is not enough when
 the routed quantities are on different scales; the remedy is the running
-standardisation familiar from batch normalisation~\cite{ioffe2015bn}. Contrastive
-text embeddings are anisotropic, and mean removal restores discriminative
-similarity~\cite{mu2018allbutthetop,ethayarajh2019anisotropy}. For evaluation we use
+standardisation familiar from batch normalisation~\cite{ioffe2015bn}. Learned text
+representations are anisotropic~\cite{ethayarajh2019anisotropy}, and removing
+their common mean direction makes similarities more
+discriminative~\cite{mu2018allbutthetop}; we find the same for SigLIP2's text
+embeddings. For evaluation we use
 Benjamini--Hochberg~\cite{benjamini1995fdr}, effective rank~\cite{roy2007erank} and
 MMR~\cite{carbonell1998mmr}.
 
