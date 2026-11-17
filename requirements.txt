@@ -1,0 +1,10 @@
+# Main environment (retrieval, training, evaluation). Versions for torch and transformers
+# are the ones the experiments were run with; the others are unpinned.
+torch==2.4.1
+transformers==5.2
+peft
+numpy
+matplotlib
+pillow
+nuscenes-devkit
+mmengine
