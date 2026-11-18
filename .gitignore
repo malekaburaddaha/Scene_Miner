@@ -56,3 +56,9 @@ __pycache__/
 results/rater2/
 # the anonymised supplementary code bundle (Milestone 36) is small and is tracked
 !paper/supplementary_code.zip
+
+# local-only: paper sources/build files and internal development notes (not part of the code release)
+/paper/
+/docs/development_log.md
+/results/cvpr/MILESTONE*.md
+!/results/cvpr/MILESTONE41_tables.md

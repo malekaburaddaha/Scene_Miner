@@ -24,8 +24,7 @@ Stage 1 (once per scene, cached)                    Stage 2 (3.5 ms per query ov
 | `src/scene_mining/filter/` | `sceneminer_v2_6.py` (final model) and its predecessors v2.1–v2.5 (Table 5), `fast_index.py` (cached index), `sceneminer_tf.py` (E2 training-free control), `sceneminer_poststd.py` (E5) |
 | `scripts/` | every Stage-1 extraction, training, evaluation, baseline, table and figure script |
 | `benchmark_cvpr/` | splits, queries, human labels and external benchmark definitions (below) |
-| `results/cvpr/` | every result file behind the paper; `scripts/verify_paper_numbers.py` maps each claim to one |
-| `docs/development_log.md` | the milestone-by-milestone development record |
+| `results/cvpr/` | every result file behind the paper (JSON) and the ready-to-paste Milestone 41 tables (`MILESTONE41_tables.{tex,md}`) |
 
 ## Setup
 
@@ -98,9 +97,8 @@ VLM pseudo-labels (no human label is used for training). The model is
 | E3 night/rain-controlled detection study | `e3_val150_stratified.py` | `milestone41_e3_val150_stratified.json` |
 | E4 val150 degradation flags | `e4_val150_degradation_flags.py` | `milestone41_e4_val150_flags.json` |
 | E5 scale of s_head / s_abst | `e5_scale.py`, then Table 2 script with `SM_FINAL=v26ps` | `milestone41_e5_*.json` |
-| all LaTeX tables / figures | `make_main_tables.py`, `make_tab_master.py`, `make_supp_tables.py`, `make_figures.py` | `paper/` |
+| all LaTeX tables / figures | `make_main_tables.py`, `make_tab_master.py`, `make_supp_tables.py`, `make_figures.py`, `make_m41_tables.py` | `paper/` (generated), `MILESTONE41_tables.{tex,md}` |
 
-Every number in the paper is checked against these files by `scripts/verify_paper_numbers.py`.
 All Milestone 41 numbers were computed on CPU (`SM_DEVICE=cpu`).
 
 ## Benchmarks and annotations (`benchmark_cvpr/`)

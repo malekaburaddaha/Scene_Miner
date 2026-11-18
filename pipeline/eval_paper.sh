@@ -60,5 +60,5 @@ $PY scripts/e3_val150_stratified.py                      # E3: night/rain-contro
 
 # --- 7. tables and figures from the result files (no data or GPU needed) -------------------
 $PY scripts/make_main_tables.py && $PY scripts/make_tab_master.py && $PY scripts/make_supp_tables.py
-$PY scripts/make_figures.py && $PY scripts/verify_paper_numbers.py
+$PY scripts/make_figures.py && $PY scripts/make_m41_tables.py
 echo "evaluation done"
