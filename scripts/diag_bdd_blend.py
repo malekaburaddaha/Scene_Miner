@@ -1,4 +1,5 @@
 """Why does a convex blend of two signals score BELOW both of them?"""
+from paths import DEVICE
 from paths import EXT
 import glob, json, sys
 import numpy as np, torch, torch.nn.functional as F
@@ -12,7 +13,7 @@ z = np.load(f"{root}/signals.npz", allow_pickle=False)
 SIG, MARG = z["siglip"], z["margin"]
 MZ = (MARG - MARG.mean(0, keepdims=True)) / (MARG.std(0, keepdims=True) + 1e-6)
 ATT = [k for k, _ in QUESTIONS]
-dev = torch.device("cuda")
+dev = torch.device(DEVICE)
 
 from transformers import AutoModel, GemmaTokenizerFast
 P = "google/siglip2-base-patch16-224"

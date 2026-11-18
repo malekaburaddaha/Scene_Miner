@@ -1,0 +1,404 @@
+{
+ "doc": "MILESTONE 41 - E4: the val150 degraded/clean split and its front-sector table.\n\nRe-derives, from the cached files only:\n  * the flag rule: a val150 scene is \"degraded\" when ANY of the four zero-shot\n    Qwen2.5-VL-3B yes/no log-odds on its CAM_FRONT keyframe (wet road, glare,\n    droplets, low contrast; questions in scripts/val150_camfront_errors.py) is > 0\n    (work_dirs/val150_camfront_signals.npz);\n  * the count per attribute and the any-degradation split;\n  * every front-sector metric mean from the stored per-scene table\n    (results/cvpr/milestone11_camfront_errors.json), the two-sided permutation p of\n    each degraded-vs-clean difference (10,000 relabellings) for all 5 partitions x 6\n    metrics = 30 tests, and Benjamini-Hochberg q over those 30;\n  * the published p-values (Milestone 11, 1000 relabellings) with their BH q, for comparison.\n-> results/cvpr/milestone41_e4_val150_flags.json\n",
+ "n_scenes": 150,
+ "n_tests": 30,
+ "rule": "degraded = any of the 4 zero-shot Qwen2.5-VL-3B CAM_FRONT yes/no log-odds > 0",
+ "per_attribute_positive": {
+  "wet_road": 34,
+  "glare": 6,
+  "droplets": 34,
+  "low_contrast": 24
+ },
+ "partitions": {
+  "wet_road": {
+   "n_degraded": 34,
+   "n_clean": 116,
+   "metrics": {
+    "mAP_front": {
+     "degraded": 0.39099648951997756,
+     "clean": 0.4729980089471604,
+     "delta": -0.08200151942718281,
+     "n_degraded_valid": 33,
+     "n_clean_valid": 115,
+     "perm_p": 0.0026997300269973002,
+     "published_perm_p": 0.005994005994005994,
+     "published_delta": -0.08200151942718281,
+     "q_BH": 0.026997300269973004,
+     "published_q_BH": 0.04495504495504495
+    },
+    "fp_rate": {
+     "degraded": 0.3468989791602713,
+     "clean": 0.28351617357430225,
+     "delta": 0.06338280558596904,
+     "n_degraded_valid": 34,
+     "n_clean_valid": 116,
+     "perm_p": 0.025297470252974703,
+     "published_perm_p": 0.02197802197802198,
+     "published_delta": 0.06338280558596904,
+     "q_BH": 0.07589241075892411,
+     "published_q_BH": 0.07992007992007992
+    },
+    "mATE_front": {
+     "degraded": 0.8232905618436663,
+     "clean": 0.7627777831594834,
+     "delta": 0.06051277868418292,
+     "n_degraded_valid": 33,
+     "n_clean_valid": 115,
+     "perm_p": 0.0837916208379162,
+     "published_perm_p": 0.08891108891108891,
+     "published_delta": 0.06051277868418292,
+     "q_BH": 0.1675832416758324,
+     "published_q_BH": 0.17782217782217782
+    },
+    "recall_far": {
+     "degraded": 0.5421316298594767,
+     "clean": 0.6006517315935517,
+     "delta": -0.05852010173407496,
+     "n_degraded_valid": 33,
+     "n_clean_valid": 113,
+     "perm_p": 0.10588941105889411,
+     "published_perm_p": 0.1068931068931069,
+     "published_delta": -0.05852010173407496,
+     "q_BH": 0.188098837175106,
+     "published_q_BH": 0.18863489451724746
+    },
+    "mAOE_front": {
+     "degraded": 0.49138401602459647,
+     "clean": 0.4377438114418529,
+     "delta": 0.053640204582743545,
+     "n_degraded_valid": 33,
+     "n_clean_valid": 115,
+     "perm_p": 0.40515948405159485,
+     "published_perm_p": 0.4015984015984016,
+     "published_delta": 0.053640204582743545,
+     "q_BH": 0.5284688922412107,
+     "published_q_BH": 0.5238240020848717
+    },
+    "recall_near": {
+     "degraded": 0.7758751472067156,
+     "clean": 0.8211987450987397,
+     "delta": -0.045323597892024114,
+     "n_degraded_valid": 33,
+     "n_clean_valid": 115,
+     "perm_p": 0.07729227077292271,
+     "published_perm_p": 0.08891108891108891,
+     "published_delta": -0.045323597892024114,
+     "q_BH": 0.1656262945134058,
+     "published_q_BH": 0.17782217782217782
+    }
+   }
+  },
+  "glare": {
+   "n_degraded": 6,
+   "n_clean": 144,
+   "metrics": {
+    "mAP_front": {
+     "degraded": 0.3802888993661695,
+     "clean": 0.4578586041329978,
+     "delta": -0.07756970476682828,
+     "n_degraded_valid": 6,
+     "n_clean_valid": 142,
+     "perm_p": 0.1586841315868413,
+     "published_perm_p": 0.16183816183816183,
+     "published_delta": -0.07756970476682828,
+     "q_BH": 0.2505538919792231,
+     "published_q_BH": 0.25553393974446603
+    },
+    "fp_rate": {
+     "degraded": 0.3146923842687009,
+     "clean": 0.29718254944761163,
+     "delta": 0.017509834821089254,
+     "n_degraded_valid": 6,
+     "n_clean_valid": 144,
+     "perm_p": 0.7599240075992401,
+     "published_perm_p": 0.7622377622377622,
+     "published_delta": 0.017509834821089254,
+     "q_BH": 0.7861282837233518,
+     "published_q_BH": 0.7885218230045816
+    },
+    "mATE_front": {
+     "degraded": 0.7532580179474432,
+     "clean": 0.7772428556091333,
+     "delta": -0.023984837661690128,
+     "n_degraded_valid": 6,
+     "n_clean_valid": 142,
+     "perm_p": 0.744025597440256,
+     "published_perm_p": 0.7332667332667333,
+     "published_delta": -0.023984837661690128,
+     "q_BH": 0.7861282837233518,
+     "published_q_BH": 0.7856429285000714
+    },
+    "recall_far": {
+     "degraded": 0.5362293578164942,
+     "clean": 0.5896186664895363,
+     "delta": -0.053389308673042146,
+     "n_degraded_valid": 6,
+     "n_clean_valid": 140,
+     "perm_p": 0.48875112488751127,
+     "published_perm_p": 0.47952047952047955,
+     "published_delta": -0.053389308673042146,
+     "q_BH": 0.6109389061093891,
+     "published_q_BH": 0.5994005994005994
+    },
+    "mAOE_front": {
+     "degraded": 0.6166914435943688,
+     "clean": 0.4426483252328067,
+     "delta": 0.17404311836156205,
+     "n_degraded_valid": 6,
+     "n_clean_valid": 142,
+     "perm_p": 0.19288071192880712,
+     "published_perm_p": 0.18281718281718282,
+     "published_delta": 0.17404311836156205,
+     "q_BH": 0.27554387418401016,
+     "published_q_BH": 0.2654488368774083
+    },
+    "recall_near": {
+     "degraded": 0.8228450072079867,
+     "clean": 0.8105962359220334,
+     "delta": 0.012248771285953253,
+     "n_degraded_valid": 6,
+     "n_clean_valid": 142,
+     "perm_p": 0.8233176682331766,
+     "published_perm_p": 0.8161838161838162,
+     "published_delta": 0.012248771285953253,
+     "q_BH": 0.8233176682331766,
+     "published_q_BH": 0.8161838161838162
+    }
+   }
+  },
+  "droplets": {
+   "n_degraded": 34,
+   "n_clean": 116,
+   "metrics": {
+    "mAP_front": {
+     "degraded": 0.37908526960771155,
+     "clean": 0.47726978961772376,
+     "delta": -0.09818452001001221,
+     "n_degraded_valid": 34,
+     "n_clean_valid": 114,
+     "perm_p": 9.999000099990002e-05,
+     "published_perm_p": 0.000999000999000999,
+     "published_delta": -0.09818452001001221,
+     "q_BH": 0.0029997000299970007,
+     "published_q_BH": 0.014985014985014984
+    },
+    "fp_rate": {
+     "degraded": 0.32744000719120203,
+     "clean": 0.2892196653583399,
+     "delta": 0.03822034183286216,
+     "n_degraded_valid": 34,
+     "n_clean_valid": 116,
+     "perm_p": 0.18748125187481252,
+     "published_perm_p": 0.18581418581418582,
+     "published_delta": 0.03822034183286216,
+     "q_BH": 0.27554387418401016,
+     "published_q_BH": 0.2654488368774083
+    },
+    "mATE_front": {
+     "degraded": 0.8320137637665942,
+     "clean": 0.7596453125975209,
+     "delta": 0.07236845116907331,
+     "n_degraded_valid": 34,
+     "n_clean_valid": 114,
+     "perm_p": 0.033096690330966905,
+     "published_perm_p": 0.03496503496503497,
+     "published_delta": 0.07236845116907331,
+     "q_BH": 0.09026370090263701,
+     "published_q_BH": 0.08741258741258741
+    },
+    "recall_far": {
+     "degraded": 0.5361360415042458,
+     "clean": 0.6029943218240151,
+     "delta": -0.06685828031976937,
+     "n_degraded_valid": 34,
+     "n_clean_valid": 112,
+     "perm_p": 0.060193980601939805,
+     "published_perm_p": 0.055944055944055944,
+     "published_delta": -0.06685828031976937,
+     "q_BH": 0.13890918600447646,
+     "published_q_BH": 0.129101667563206
+    },
+    "mAOE_front": {
+     "degraded": 0.5218794136374683,
+     "clean": 0.42817816474518283,
+     "delta": 0.09370124889228543,
+     "n_degraded_valid": 34,
+     "n_clean_valid": 114,
+     "perm_p": 0.14088591140885912,
+     "published_perm_p": 0.14285714285714285,
+     "published_delta": 0.09370124889228543,
+     "q_BH": 0.23480985234809854,
+     "published_q_BH": 0.23809523809523808
+    },
+    "recall_near": {
+     "degraded": 0.7649970894833154,
+     "clean": 0.8248406535240698,
+     "delta": -0.059843564040754416,
+     "n_degraded_valid": 34,
+     "n_clean_valid": 114,
+     "perm_p": 0.017598240175982403,
+     "published_perm_p": 0.01998001998001998,
+     "published_delta": -0.059843564040754416,
+     "q_BH": 0.07542102932563888,
+     "published_q_BH": 0.07992007992007992
+    }
+   }
+  },
+  "low_contrast": {
+   "n_degraded": 24,
+   "n_clean": 126,
+   "metrics": {
+    "mAP_front": {
+     "degraded": 0.41226406529598325,
+     "clean": 0.46212575989342125,
+     "delta": -0.049861694597438,
+     "n_degraded_valid": 22,
+     "n_clean_valid": 126,
+     "perm_p": 0.1065893410658934,
+     "published_perm_p": 0.1008991008991009,
+     "published_delta": -0.049861694597438,
+     "q_BH": 0.188098837175106,
+     "published_q_BH": 0.18863489451724746
+    },
+    "fp_rate": {
+     "degraded": 0.3529077559156531,
+     "clean": 0.2874020260642271,
+     "delta": 0.065505729851426,
+     "n_degraded_valid": 24,
+     "n_clean_valid": 126,
+     "perm_p": 0.043695630436956304,
+     "published_perm_p": 0.029970029970029972,
+     "published_delta": 0.065505729851426,
+     "q_BH": 0.10923907609239075,
+     "published_q_BH": 0.08718554173099627
+    },
+    "mATE_front": {
+     "degraded": 0.7943323559450708,
+     "clean": 0.7731168394713492,
+     "delta": 0.021215516473721552,
+     "n_degraded_valid": 22,
+     "n_clean_valid": 126,
+     "perm_p": 0.6111388861113889,
+     "published_perm_p": 0.6123876123876124,
+     "published_delta": 0.021215516473721552,
+     "q_BH": 0.7051602532054487,
+     "published_q_BH": 0.705960705960706
+    },
+    "recall_far": {
+     "degraded": 0.504155761183146,
+     "clean": 0.6014137477647038,
+     "delta": -0.09725798658155782,
+     "n_degraded_valid": 21,
+     "n_clean_valid": 125,
+     "perm_p": 0.023697630236976304,
+     "published_perm_p": 0.03196803196803197,
+     "published_delta": -0.09725798658155782,
+     "q_BH": 0.07589241075892411,
+     "published_q_BH": 0.08718554173099627
+    },
+    "mAOE_front": {
+     "degraded": 0.42029699554477634,
+     "clean": 0.4548387058939658,
+     "delta": -0.03454171034918946,
+     "n_degraded_valid": 22,
+     "n_clean_valid": 126,
+     "perm_p": 0.6448355164483551,
+     "published_perm_p": 0.6353646353646354,
+     "published_delta": -0.03454171034918946,
+     "q_BH": 0.716483907164839,
+     "published_q_BH": 0.705960705960706
+    },
+    "recall_near": {
+     "degraded": 0.7960916177088463,
+     "clean": 0.8137120631316037,
+     "delta": -0.017620445422757425,
+     "n_degraded_valid": 22,
+     "n_clean_valid": 126,
+     "perm_p": 0.5534446555344466,
+     "published_perm_p": 0.5664335664335665,
+     "published_delta": -0.017620445422757425,
+     "q_BH": 0.6641335866413358,
+     "published_q_BH": 0.6797202797202797
+    }
+   }
+  },
+  "any_degradation": {
+   "n_degraded": 42,
+   "n_clean": 108,
+   "metrics": {
+    "mAP_front": {
+     "degraded": 0.3886137019293094,
+     "clean": 0.4791954361658363,
+     "delta": -0.09058173423652693,
+     "n_degraded_valid": 40,
+     "n_clean_valid": 108,
+     "perm_p": 0.00029997000299970003,
+     "published_perm_p": 0.000999000999000999,
+     "published_delta": -0.09058173423652693,
+     "q_BH": 0.0044995500449955,
+     "published_q_BH": 0.014985014985014984
+    },
+    "fp_rate": {
+     "degraded": 0.3503410818495344,
+     "clean": 0.2774825554480355,
+     "delta": 0.07285852640149887,
+     "n_degraded_valid": 42,
+     "n_clean_valid": 108,
+     "perm_p": 0.005699430056994301,
+     "published_perm_p": 0.005994005994005994,
+     "published_delta": 0.07285852640149887,
+     "q_BH": 0.042745725427457255,
+     "published_q_BH": 0.04495504495504495
+    },
+    "mATE_front": {
+     "degraded": 0.8329832552622142,
+     "clean": 0.7552657721638241,
+     "delta": 0.0777174830983901,
+     "n_degraded_valid": 40,
+     "n_clean_valid": 108,
+     "perm_p": 0.014798520147985201,
+     "published_perm_p": 0.02197802197802198,
+     "published_delta": 0.0777174830983901,
+     "q_BH": 0.07542102932563888,
+     "published_q_BH": 0.07992007992007992
+    },
+    "recall_far": {
+     "degraded": 0.5312249861950584,
+     "clean": 0.6079085513441754,
+     "delta": -0.076683565149117,
+     "n_degraded_valid": 39,
+     "n_clean_valid": 107,
+     "perm_p": 0.0244975502449755,
+     "published_perm_p": 0.023976023976023976,
+     "published_delta": -0.076683565149117,
+     "q_BH": 0.07589241075892411,
+     "published_q_BH": 0.07992007992007992
+    },
+    "mAOE_front": {
+     "degraded": 0.5008222417655799,
+     "clean": 0.4307714923518664,
+     "delta": 0.07005074941371348,
+     "n_degraded_valid": 40,
+     "n_clean_valid": 108,
+     "perm_p": 0.24757524247575244,
+     "published_perm_p": 0.23276723276723277,
+     "published_delta": 0.07005074941371348,
+     "q_BH": 0.33760260337602604,
+     "published_q_BH": 0.3174098628644083
+    },
+    "recall_near": {
+     "degraded": 0.7703228670921606,
+     "clean": 0.8261927857452803,
+     "delta": -0.05586991865311974,
+     "n_degraded_valid": 40,
+     "n_clean_valid": 108,
+     "perm_p": 0.0165983401659834,
+     "published_perm_p": 0.01898101898101898,
+     "published_delta": -0.05586991865311974,
+     "q_BH": 0.07542102932563888,
+     "published_q_BH": 0.07992007992007992
+    }
+   }
+  }
+ }
+}

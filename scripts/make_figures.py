@@ -2,6 +2,7 @@
 """MILESTONE 12 - the three paper figures. Every number is read from the result
 JSONs written by Milestones 1-11; nothing here is hard-coded by hand."""
 from __future__ import annotations
+from paths import DEVICE
 from paths import EXT
 import os
 import argparse, glob, json, sys
@@ -219,7 +220,7 @@ def balanced_strips(queries, out, title, n_per=2, row_h=0.70):
     import textwrap, torch
     from PIL import Image
     from eval_semantic_edge_cases import text_embed, load_v23
-    dev = torch.device("cuda")
+    dev = torch.device(DEVICE)
     z = np.load("work_dirs/unified_filter/features_v2.npz", allow_pickle=False)
     corpus = [str(t) for t in z["scene_tokens"]]; dom = z["domain"].astype(int)
     evset = set(json.load(open("benchmark_cvpr/split_906_602.json"))["eval"])

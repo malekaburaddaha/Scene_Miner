@@ -9,6 +9,7 @@
   bh_table.tex            all 30 front-sector tests of Milestone 11 with BH q
 """
 from __future__ import annotations
+from paths import DEVICE
 import os
 import json, sys
 from pathlib import Path
@@ -19,7 +20,7 @@ from eval_attribute_index import ap_binary, load_attributes, predicate_mask
 from eval_semantic_edge_cases import text_embed, load_v23
 
 OUT = Path("paper/supp_tables"); OUT.mkdir(parents=True, exist_ok=True)
-dev = torch.device("cuda")
+dev = torch.device(DEVICE)
 ESC = str.maketrans({"&": r"\&", "%": r"\%", "_": r"\_", "#": r"\#", "$": r"\$"})
 tex = lambda s: str(s).translate(ESC)
 SHORT = {"sensor_degradation": "S1", "macro_environmental": "S2", "compositional_heldout": "S3",

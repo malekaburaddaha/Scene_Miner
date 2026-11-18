@@ -76,7 +76,7 @@ At 8,171 ms against SceneMiner's 3.51 ms, SceneMiner is about **2,300×** cheape
 
 ### Setup
 
-* **Backbone:** `google/siglip2-so400m-patch14-384` (4.6 GB, in the turbo HF cache).
+* **Backbone:** `google/siglip2-so400m-patch14-384` (4.6 GB, in the local HF cache).
 * **Image embeddings** (1152-d) were extracted from the same image files for all four
   corpora.
 * **Retraining:** SceneMiner was retrained for 5 seeds with the unchanged v2.6 recipe,

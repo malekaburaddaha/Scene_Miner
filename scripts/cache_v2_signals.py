@@ -9,6 +9,7 @@ two things it did not have access to:
 Both are cheap and cacheable. This script writes them into a v2 feature store.
 """
 from __future__ import annotations
+from paths import DEVICE
 import argparse, json
 from pathlib import Path
 import numpy as np, torch
@@ -28,7 +29,7 @@ def main():
     from PIL import Image
     import torch.nn.functional as F
     P = "google/siglip2-base-patch16-224"
-    dev = torch.device("cuda")
+    dev = torch.device(DEVICE)
     m = AutoModel.from_pretrained(P, use_safetensors=True).to(dev).eval()
     ip = AutoImageProcessor.from_pretrained(P)
     feat = lambda o: (o if torch.is_tensor(o) else o.pooler_output).float()

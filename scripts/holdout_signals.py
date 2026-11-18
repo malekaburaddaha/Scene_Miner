@@ -7,6 +7,7 @@
     -> <holdout>/signals.npz (same layout as the 1,000-image BDD100K cache) and
     work_dirs/emb_{clip,siglip1}_holdout.npz. No query is scored here.
 """
+from paths import DEVICE
 from paths import EXT, QWEN_VL
 import argparse, glob, json, sys
 from pathlib import Path
@@ -16,7 +17,7 @@ sys.path.insert(0, "scripts")
 from eval_external_bdd100k import QUESTIONS
 
 H = Path(EXT + "/bdd100k_holdout")
-dev = torch.device("cuda")
+dev = torch.device(DEVICE)
 
 
 def margins(shard, nshard, qwen):

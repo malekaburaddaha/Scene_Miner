@@ -71,5 +71,5 @@ Every page of both PDFs was rasterised and read.
   LLM-backend selector in code; it is not attribution.
 * No file over 5 MB.
 * No checkpoints, datasets or caption dumps are tracked.
-* Every commit is by `malekaburaddaha`.
+* Every commit is by the repository owner.
 * The tree is clean after the push.

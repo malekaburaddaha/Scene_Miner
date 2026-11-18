@@ -1,0 +1,26 @@
+# Stage 1 (single-camera path), Stage 2, every evaluation (the `scene_mining` environment).
+# Exact versions used for the paper; Python 3.11. Install PyTorch for your CUDA (or CPU) first:
+#   pip install torch==2.4.1 torchvision==0.19.1 --index-url https://download.pytorch.org/whl/cu121
+torch==2.4.1
+torchvision==0.19.1
+transformers==5.2.0
+tokenizers==0.22.2
+huggingface_hub==1.4.1
+accelerate==1.12.0
+peft==0.18.1
+safetensors==0.7.0
+sentencepiece==0.2.2
+numpy==1.26.4
+scipy==1.17.1
+scikit-learn==1.8.0
+pandas==3.0.1
+pillow==12.0.0
+opencv-python-headless==4.11.0.86
+matplotlib==3.10.8
+einops==0.8.2
+pyquaternion==0.9.9
+shapely==2.0.7
+nuscenes-devkit==1.2.0
+mmengine==0.10.7
+mmcv==2.2.0
+pypdf==6.14.2

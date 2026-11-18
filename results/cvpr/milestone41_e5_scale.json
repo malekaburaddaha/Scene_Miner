@@ -1,0 +1,88 @@
+{
+ "doc": "MILESTONE 41 - E5: scale of s_head and s_abst before the Eq. (1) mixture.\n\n1. Decomposition check: g * s_head + (1 - g) * s_abst reproduces the v2.6 forward\n   pass to float precision (src/scene_mining/filter/sceneminer_poststd.py).\n2. Empirical mean and sd of s_head and s_abst over the 906 training scenes, for\n     (a) the 72 Stage-2 training queries x 906 training scenes (pooled, and the mean\n         within-query sd), full mode, five seeds;\n     (b) the 4 human-GT degradation queries and the 150 suite queries x 906 scenes.\n   gamma_deg per query is reported with them.\n3. Writes the post-standardised family work_dirs/sceneminer_v26ps/ (the trained v2.6\n   checkpoints flagged post_std); evaluate it with\n     SM_FINAL=v26ps SM_METHODS=sceneminer_portable,sceneminer scripts/eval_related_work_baselines.py\n-> results/cvpr/milestone41_e5_scale.json\n",
+ "n_training_scenes": 906,
+ "sets": {
+  "stage2_training_queries": {
+   "n_queries": 72,
+   "n_pairs_per_seed": 65232,
+   "s_head": {
+    "mean": -0.9713490009307861,
+    "sd_pooled": 1.077399730682373,
+    "sd_within_query_mean": 1.0282840728759766,
+    "sd_within_query_range": [
+     0.5801113843917847,
+     1.3079782724380493
+    ]
+   },
+   "s_abst": {
+    "mean": -0.4548649489879608,
+    "sd_pooled": 1.1069209575653076,
+    "sd_within_query_mean": 0.7071027159690857,
+    "sd_within_query_range": [
+     0.38304173946380615,
+     1.3278305530548096
+    ]
+   },
+   "gamma_deg": {
+    "mean": 0.9984002891514037,
+    "share_gt_0.9": 1.0,
+    "share_lt_0.1": 0.0
+   }
+  },
+  "human_gt_queries": {
+   "n_queries": 4,
+   "n_pairs_per_seed": 3624,
+   "s_head": {
+    "mean": -0.9087535738945007,
+    "sd_pooled": 1.0758558511734009,
+    "sd_within_query_mean": 1.0070836544036865,
+    "sd_within_query_range": [
+     0.5932840704917908,
+     1.288035273551941
+    ]
+   },
+   "s_abst": {
+    "mean": -0.5690087080001831,
+    "sd_pooled": 1.370869517326355,
+    "sd_within_query_mean": 0.5897061228752136,
+    "sd_within_query_range": [
+     0.4224609136581421,
+     0.7210302352905273
+    ]
+   },
+   "gamma_deg": {
+    "mean": 0.9999999701976776,
+    "share_gt_0.9": 1.0,
+    "share_lt_0.1": 0.0
+   }
+  },
+  "suite_eval_queries": {
+   "n_queries": 150,
+   "n_pairs_per_seed": 135900,
+   "s_head": {
+    "mean": -0.9405791759490967,
+    "sd_pooled": 1.0119755268096924,
+    "sd_within_query_mean": 0.9056403040885925,
+    "sd_within_query_range": [
+     0.3892139494419098,
+     1.3433873653411865
+    ]
+   },
+   "s_abst": {
+    "mean": -0.49492552876472473,
+    "sd_pooled": 1.0943467617034912,
+    "sd_within_query_mean": 0.7958055138587952,
+    "sd_within_query_range": [
+     0.31266435980796814,
+     1.3028864860534668
+    ]
+   },
+   "gamma_deg": {
+    "mean": 0.5499964880932405,
+    "share_gt_0.9": 0.5333333333333333,
+    "share_lt_0.1": 0.44
+   }
+  }
+ },
+ "decomposition_max_abs_error": 0.0
+}

@@ -8,6 +8,7 @@ attribute and must fall back to its best remaining proxy predicate, exactly as
 SceneMiner must. Otherwise the lookup trivially wins by reading the cached flag.
 """
 from __future__ import annotations
+from paths import DEVICE
 from paths import QWEN_VL
 import argparse, json, re, sys
 from pathlib import Path
@@ -34,7 +35,7 @@ def score_model(ckpt, toks, W, args, queries, legacy_scoring=False,
     from transformers import CLIPTextModelWithProjection, CLIPTokenizerFast
     import torch.nn.functional as F
     from PIL import Image
-    dev = torch.device("cuda")
+    dev = torch.device(DEVICE)
     z = np.load(W/"features_overnight.npz", allow_pickle=False)
     all_toks = [str(t) for t in z["scene_tokens"]]
     keep = np.array([t in set(toks) for t in all_toks])

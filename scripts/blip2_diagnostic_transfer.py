@@ -12,6 +12,7 @@ to find: if it reports a degeneracy here that BLIP-2's own retrieval scores do
 not reveal, the protocol generalises.
 """
 from __future__ import annotations
+from paths import DEVICE
 from paths import BLIP2
 import argparse, json, sys
 from pathlib import Path
@@ -29,7 +30,7 @@ def main():
     ap.add_argument("--batch", type=int, default=8)
     ap.add_argument("--out", default="results/day1_gate/blip2_diagnostic_transfer.json")
     a = ap.parse_args()
-    dev = torch.device("cuda")
+    dev = torch.device(DEVICE)
     W = Path(a.work)
     z = np.load(W/"features_overnight.npz", allow_pickle=False)
     toks = [str(t) for t in z["scene_tokens"]]

@@ -50,7 +50,7 @@ I did not time a human labeller. Rater 1's pace suggests roughly 10–15 minutes
 * `main_cvpr.tex`, `supp_cvpr.tex`, all `tab_*.tex` and `supp_tables/*.tex` contain no
   cluster path, username, host or institution.
 * The supplementary reproduction commands use relative `python scripts/...` paths only. They
-  never contained a `/nfs/...` path; they were rewritten for v2.6 anyway.
+  never contained a cluster path; they were rewritten for v2.6 anyway.
 
 ### Screenshot
 
@@ -76,10 +76,9 @@ compressed bytes. So the checker searches decoded content instead:
 * the extracted text of every page;
 * every inflated stream.
 
-It matches whole words: `umd`, `umich`, `srawa`, `malek`, `abdmalek`, `aburaddaha`,
-`greatlakes`, `turbo`, `arc-ts`, `maryland`, `michigan`, `/nfs/`,
-`/home/` and `gl<digits>` hostnames (the e-mail address is caught by `aburaddaha`, so it is not
-written into the script). It also checks EXIF on image files and the LaTeX
+It matches whole words from a list of author, affiliation, cluster-path and host identifiers (kept in
+`scripts/check_anonymity.py`, which is excluded from the anonymous bundle; the e-mail address is caught by the surname token and is
+not written into the script). It also checks EXIF on image files and the LaTeX
 sources. It passed on the Milestone 26 PDFs and is re-run on the final PDFs in Milestone 31.
 
 ## 3. Dataset licences

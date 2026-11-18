@@ -15,7 +15,7 @@ from records fetched over HTTPS. None is typed from memory.
 Raw responses: `paper/bibcheck/api_responses.json`, `crossref_by_doi.json`,
 `openalex_roy2007.json`; per-entry provenance: `paper/bibcheck/VERIFICATION.md`.
 DBLP was not queried directly, because it serves automated clients a bot
-challenge page. The turbo-wide search for existing `.bib` files timed out after
+challenge page. The cluster-wide search for existing `.bib` files timed out after
 10 minutes (exit 124), so it was inconclusive. The WACV `main.tex` uses an inline
 bibliography that is itself unverified, so it was not used as ground truth.
 

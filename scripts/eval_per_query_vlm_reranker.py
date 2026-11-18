@@ -19,6 +19,7 @@ check, the SigLIP2 per-query APs computed here must equal Milestone 28's.
 --part latency                    online cost per query on one A40
 --part eval                       -> results/cvpr/milestone34_per_query_vlm.json
 """
+from paths import DEVICE
 from paths import EXT, QWEN_VL
 import argparse, glob, json, sys, time
 from pathlib import Path
@@ -39,7 +40,7 @@ IMG = {"corpus": lambda t: f"work_dirs/unified_filter/scene_thumbs/{t}.jpg",
        "val150": lambda t: f"work_dirs/val150_thumbs/{t}.jpg",
        "bdd": lambda t: str(BDD_ROOT/"images"/t), "holdout": lambda t: str(HOLD/"images"/t)}
 REF = "results/cvpr/milestone28_related_work_comparison.json"
-dev = torch.device("cuda")
+dev = torch.device(DEVICE)
 
 
 def prompt(q):

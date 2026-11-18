@@ -11,8 +11,8 @@
 *.zip
 
 # ── data & experiment trees ─────────────────────────────────────────
-datasets/
-data/
+/datasets/
+/data/
 work_dirs/
 conda_envs/
 hf_cache/

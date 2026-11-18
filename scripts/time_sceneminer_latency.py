@@ -14,6 +14,7 @@ Offline (Stage 1, once per scene):
   monocular path     SigLIP2 ViT-B/16 image embedding; four Qwen2.5-VL yes/no margins
 -> results/cvpr/milestone27_latency.json
 """
+from paths import DEVICE
 from paths import QWEN_VL
 import json, os, sys, time
 from types import SimpleNamespace
@@ -22,7 +23,7 @@ sys.path.insert(0, "src"); sys.path.insert(0, "scripts")
 from eval_semantic_edge_cases import load_v23, text_embed
 from scene_mining.filter.fast_index import precompute_scene_index, prepare_query, rank, GraphRanker, fast_base_score, portable_index
 
-dev = torch.device("cuda"); W = "work_dirs/unified_filter"
+dev = torch.device(DEVICE); W = "work_dirs/unified_filter"
 
 
 def timeit(fn, n=30, warm=3):

@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """MILESTONE 36 - the anonymised supplementary code bundle, paper/supplementary_code.zip.
 
-Run from the repository root. Packs the tracked src/, scripts/, benchmark_cvpr/ and
-results/cvpr/*.json with an ANONYMOUS_README.md. Excluded: scripts/check_anonymity.py
+Run from the repository root. Packs the tracked src/, scripts/, configs/, pipeline/,
+benchmark_cvpr/, results/cvpr/*.json and the environment files, with the repository README as
+ANONYMOUS_README.md (Milestone 41; the README constant below is the Milestone 36 text, kept for
+reference). Excluded: scripts/check_anonymity.py
 (its token list names the affiliation it searches for) and this builder. Member
 timestamps are fixed, so the archive depends only on the files. Then
 `python scripts/check_anonymity.py --zip paper/supplementary_code.zip` scans every member.
@@ -62,7 +64,8 @@ without data or GPUs.
 
 
 def main():
-    files = subprocess.run(["git", "ls-files", "src", "scripts", "benchmark_cvpr", "results/cvpr"],
+    files = subprocess.run(["git", "ls-files", "src", "scripts", "benchmark_cvpr", "results/cvpr", "configs", "pipeline",
+                            "requirements.txt", "environment.yml", "environment_bevformer.yml"],
                            capture_output=True, text=True, check=True).stdout.split()
     keep = [f for f in files if f not in EXCLUDE and (not f.startswith("results/cvpr/") or f.endswith(".json"))
             and "/logs/" not in f]
@@ -71,7 +74,7 @@ def main():
         for f in ["ANONYMOUS_README.md"] + keep:
             zi = zipfile.ZipInfo(f"sceneminer/{f}", date_time=(2026, 1, 1, 0, 0, 0))
             zi.compress_type = zipfile.ZIP_DEFLATED; zi.external_attr = 0o644 << 16
-            z.writestr(zi, README if f == "ANONYMOUS_README.md" else Path(f).read_bytes())
+            z.writestr(zi, Path("README.md").read_text() if f == "ANONYMOUS_README.md" else Path(f).read_bytes())
     print(f"{OUT}: {len(keep) + 1} files, {OUT.stat().st_size / 1e6:.2f} MB")
 
 

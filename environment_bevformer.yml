@@ -1,0 +1,18 @@
+# Detector environment: inference of the public BEVFormer-base checkpoint (official BEVFormer
+# repository) for the train-test overlap diagnostic and the val150 detection-error study.
+name: bevformer
+channels: [conda-forge]
+dependencies:
+  - python=3.8
+  - pip
+  - pip:
+      - --extra-index-url https://download.pytorch.org/whl/cu113
+      - torch==1.10.0
+      - mmcv-full==1.4.0
+      - mmdet==2.14.0
+      - mmsegmentation==0.14.1
+      - mmdet3d==0.17.1
+      - nuscenes-devkit==1.2.0
+      - numpy==1.19.5
+# Waymo frames are dumped in a third, TensorFlow environment:
+#   pip install tensorflow==2.12.0 waymo-open-dataset-tf-2-12-0==1.6.5   (scripts/waymo_extract_perception.py)

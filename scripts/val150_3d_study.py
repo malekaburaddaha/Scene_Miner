@@ -12,6 +12,7 @@ for val scenes without re-running the whole extraction, so the full head is not
 evaluated here; the portable base is.
 """
 from __future__ import annotations
+from paths import DEVICE
 from paths import QWEN_VL
 import argparse, json, sys
 from pathlib import Path
@@ -40,7 +41,7 @@ def main():
     ap.add_argument("--topk", type=int, default=30)
     ap.add_argument("--out", default="results/cvpr/milestone8_val150_3d.json")
     a = ap.parse_args()
-    dev = torch.device("cuda")
+    dev = torch.device(DEVICE)
     diff = json.load(open(a.per_scene))
     from nuscenes.nuscenes import NuScenes
     nusc = NuScenes(version="v1.0-trainval", dataroot=a.dataroot, verbose=False)

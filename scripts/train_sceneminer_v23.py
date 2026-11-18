@@ -10,6 +10,7 @@ in-vocabulary training phrasings and a fixed out-of-vocabulary bank - and no
 evaluation query or label is touched.
 """
 from __future__ import annotations
+from paths import DEVICE
 import argparse, json, random, time
 from pathlib import Path
 import numpy as np, torch
@@ -104,7 +105,7 @@ def main():
                     help="json list of tokens allowed from --extra-human (fold train)")
     a = ap.parse_args()
     random.seed(a.seed); np.random.seed(a.seed); torch.manual_seed(a.seed)
-    dev = torch.device("cuda")
+    dev = torch.device(DEVICE)
     W = Path(a.work)
     z = np.load(a.features, allow_pickle=False)
     toks = [str(t) for t in z["scene_tokens"]]; dom = z["domain"].astype(int)

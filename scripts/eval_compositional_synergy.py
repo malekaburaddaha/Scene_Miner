@@ -21,6 +21,7 @@ and the lookup". So late fusion z(SigLIP2) + z(lookup) is a ranker here, as is
 z(SigLIP2) + metadata.
 """
 from __future__ import annotations
+from paths import DEVICE
 from paths import HUMAN_R1
 import json, sys
 from pathlib import Path
@@ -31,7 +32,7 @@ from eval_semantic_edge_cases import (text_embed, load_v23, portable, metrics, p
                                       TRAIN_ORDER, COND_COL, META_OF, zs)
 from eval_human_gt_full import load_human, ATTRS
 
-dev = torch.device("cuda")
+dev = torch.device(DEVICE)
 import os
 FINAL = os.environ.get("SM_FINAL", "v24")
 SEM = {"pedestrian_close": "pedestrians near the road", "vru": "a cyclist or motorcyclist",

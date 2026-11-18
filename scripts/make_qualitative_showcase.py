@@ -18,6 +18,7 @@ was retrieved:
 A cell whose frame has no annotated object of the row's class says so.
 """
 from __future__ import annotations
+from paths import DEVICE
 from paths import EXT, HUMAN_R1
 import os
 import argparse, glob, json, sys, textwrap
@@ -32,7 +33,7 @@ LABEL = lambda size: FontProperties(fname=LABEL_FONT, size=size)
 from PIL import Image
 sys.path.insert(0, "src"); sys.path.insert(0, "scripts")
 
-dev = torch.device("cuda")
+dev = torch.device(DEVICE)
 OUT = Path("paper/figures")
 NUSC = Path("data/nuscenes")
 THUMBS = Path("work_dirs/unified_filter/scene_thumbs")

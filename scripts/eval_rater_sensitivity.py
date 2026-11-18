@@ -19,6 +19,7 @@ Rankers: SceneMiner v2.4 (5-seed mean), logit VLM lookup, zero-shot SigLIP2,
 and the two late-fusion controls z(SigLIP2)+z(lookup), z(SigLIP2)+metadata.
 """
 from __future__ import annotations
+from paths import DEVICE
 from paths import HUMAN_R1
 import json, sys
 from pathlib import Path
@@ -30,7 +31,7 @@ from eval_human_gt_full import load_human, ATTRS, QUERY, META
 from eval_semantic_edge_cases import text_embed, load_v23, zs
 from annotate_ui import find_thumb
 
-dev = torch.device("cuda")
+dev = torch.device(DEVICE)
 import os
 FINAL = os.environ.get("SM_FINAL", "v24")
 CLIP_PROMPT = {"droplets": "a photo taken through a camera lens with water droplets on it",

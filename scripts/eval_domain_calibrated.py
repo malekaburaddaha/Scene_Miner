@@ -10,6 +10,7 @@ Reports every ranker on all four strata, with and without calibration, plus the
 nuScenes share of the top-k against the relevant base rate.
 """
 from __future__ import annotations
+from paths import DEVICE
 import argparse, json, re, sys
 from pathlib import Path
 import numpy as np, torch
@@ -50,7 +51,7 @@ def main():
     ap.add_argument("--topk", type=int, default=5)
     ap.add_argument("--out", default="results/cvpr/milestone7_tables2_3.json")
     a = ap.parse_args()
-    dev = torch.device("cuda"); W = Path(a.work)
+    dev = torch.device(DEVICE); W = Path(a.work)
     z = np.load(a.features, allow_pickle=False)
     corpus = [str(t) for t in z["scene_tokens"]]; cidx = {t: i for i, t in enumerate(corpus)}
     evset = set(json.load(open(a.split))["eval"])

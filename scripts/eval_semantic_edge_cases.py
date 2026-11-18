@@ -27,6 +27,7 @@ the metadata ranker uses recorded lighting/weather - which, for night and rain,
 is the same human scene description the ground truth uses.
 """
 from __future__ import annotations
+from paths import DEVICE
 from paths import HUMAN_R1
 import argparse, glob, json, sys
 from pathlib import Path
@@ -36,7 +37,7 @@ sys.path.insert(0, "src"); sys.path.insert(0, "scripts")
 from eval_attribute_index import ap_binary, p_at, ndcg_at
 from eval_human_gt_full import load_human, ATTRS
 
-dev = torch.device("cuda")
+dev = torch.device(DEVICE)
 TRAIN_ORDER = ["droplets", "glare", "wet_road", "low_contrast"]
 COND_COL = {"night": "low_contrast", "rain": "wet_road", "glare": "glare",
             "wet_road": "wet_road", "droplets": "droplets", "low_contrast": "low_contrast"}
@@ -107,10 +108,36 @@ def load_v23(rk, d_qwen=2048, which="v23"):
     M = []
     for c in sorted(glob.glob(f"work_dirs/sceneminer_{which}/s*/final.pt")):
         d = torch.load(c, map_location=dev, weights_only=False); sd = d["state_dict"]
-        m = SceneMinerV23(d_qwen=d_qwen, d_siglip=sd["adapt_siglip.net.1.weight"].shape[1], n_margins=4, n_meta=6,
-                          d_text=sd["W_route.weight"].shape[1], risk_stats=(float(rk.mean()), float(rk.std()))).to(dev)
+        cls, kw = SceneMinerV23, {}
+        if d.get("training_free"):              # Milestone 41 E2: the training-free control
+            from scene_mining.filter.sceneminer_tf import SceneMinerTrainingFree as cls
+            kw = {"prior_select": d["training_free"]}
+        if d.get("post_std"):                   # Milestone 41 E5: s_head, s_abst standardised before mixing
+            from scene_mining.filter.sceneminer_poststd import SceneMinerPostStd as cls
+        m = cls(d_qwen=d_qwen, d_siglip=sd["adapt_siglip.net.1.weight"].shape[1], n_margins=4, n_meta=6,
+                d_text=sd["W_route.weight"].shape[1], risk_stats=(float(rk.mean()), float(rk.std())), **kw).to(dev)
         m.load_state_dict(d["state_dict"]); m.eval(); M.append(m)
+        if d.get("post_std"): m.set_reference(*training_reference())
     return M
+
+
+_REF = {}
+
+
+def training_reference():
+    """Stage-1 signals of the 906 training scenes (full mode) and their portable prior
+    (tag columns zeroed); the reference set of the E5 post-standardisation."""
+    if "ref" not in _REF:
+        W = Path("work_dirs/unified_filter"); z = np.load(W/"features_v2.npz", allow_pickle=False)
+        toks = [str(t) for t in z["scene_tokens"]]
+        tr = set(json.load(open("benchmark_cvpr/split_906_602.json"))["train"])
+        ix = torch.tensor([i for i, t in enumerate(toks) if t in tr], device=dev)
+        T = lambda k: torch.from_numpy(z[k]).float().to(dev)[ix]
+        v = torch.load(W/"V_frozen_cache.pt", map_location=dev).float()[ix]
+        full = (T("emb"), T("tag_logits"), T("risk"), v, T("siglip_img"), T("vlm_margin_z"), T("prior"))
+        pp = full[6].clone(); pp[:, :20] = 0
+        _REF["ref"] = (full, pp)
+    return _REF["ref"]
 
 
 def portable(M, qv, S, MZt, abstain=False, PR=None):

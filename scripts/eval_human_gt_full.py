@@ -10,6 +10,7 @@ This is the evaluation where the cached-VLM lookup is NOT an oracle: relevance
 comes from human labels, so the lookup inherits the VLM's own error.
 """
 from __future__ import annotations
+from paths import DEVICE
 from paths import HUMAN_R1, QWEN_VL
 import argparse, json, sys
 from pathlib import Path
@@ -60,7 +61,7 @@ def siglip_scores(toks, thumbs, queries, batch=64):
     from transformers import AutoImageProcessor, AutoModel, GemmaTokenizerFast
     from PIL import Image
     import torch.nn.functional as F
-    P="google/siglip2-base-patch16-224"; dev=torch.device("cuda")
+    P="google/siglip2-base-patch16-224"; dev=torch.device(DEVICE)
     m=AutoModel.from_pretrained(P, use_safetensors=True).to(dev).eval()
     ip=AutoImageProcessor.from_pretrained(P); tk=GemmaTokenizerFast.from_pretrained(P)
     feat=lambda o: (o if torch.is_tensor(o) else o.pooler_output).float()

@@ -22,6 +22,7 @@ anti-conservative. Instead the per-scene metric vector is permuted across the
 the aggregate over queries recomputed. One-sided p in the "worse" direction.
 """
 from __future__ import annotations
+from paths import DEVICE
 import argparse, glob, json, sys
 from pathlib import Path
 import numpy as np, torch
@@ -29,7 +30,7 @@ import torch.nn.functional as F
 sys.path.insert(0, "src"); sys.path.insert(0, "scripts")
 from eval_semantic_edge_cases import text_embed, load_v23, portable, TRAIN_ORDER
 
-dev = torch.device("cuda")
+dev = torch.device(DEVICE)
 METRICS = {"mAP_front": -1, "fp_rate": +1, "recall_far": -1, "mATE_front": +1,
            "vru_recall": -1, "vru_ATE": +1}          # sign: +1 means higher = worse
 META_OF = {"droplets": "rain", "wet_road": "rain", "glare": "night", "low_contrast": "night"}

@@ -1,0 +1,10 @@
+# Main environment (Stage 1 multi-camera model and single-camera signals, Stage 2, evaluation).
+#   conda env create -f environment.yml && conda activate scene_mining
+name: scene_mining
+channels: [conda-forge]
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+      - --extra-index-url https://download.pytorch.org/whl/cu121
+      - -r requirements.txt

@@ -22,6 +22,7 @@ row differs from the full model in exactly one mechanism:
                 interpolate toward standardised SigLIP2 by (1 - gamma)
 """
 from __future__ import annotations
+from paths import DEVICE
 from paths import EXT, HUMAN_R1
 import argparse, glob, json, re, sys
 from pathlib import Path
@@ -31,7 +32,7 @@ sys.path.insert(0, "src"); sys.path.insert(0, "scripts")
 from eval_attribute_index import ap_binary, p_at, ndcg_at, load_attributes, predicate_mask
 from eval_human_gt_full import load_human, ATTRS, QUERY
 
-dev = torch.device("cuda")
+dev = torch.device(DEVICE)
 SEG = re.compile(r"#c\d+$")
 ABL = ["full", "abstain", "no_gate", "no_rescue", "no_resnorm", "base_only"]
 DEFAULT_ABSTAIN = False          # v2.4: abstention is part of the model (set in main)

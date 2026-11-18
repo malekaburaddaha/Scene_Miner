@@ -34,6 +34,6 @@ score saturation is reproducible *in kind* but not *in degree*, and the 213.7
 figure should either be re-derived from the original run or dropped.
 
 ## Final repository state
-`/nfs/turbo/umd-srawa/scene_mining/Scene_Miner`, remote
-`git@github.com:malekaburaddaha/Scene_Miner.git`, all commits under
-`malekaburaddaha <am.aburaddaha@gmail.com>` with no AI attribution anywhere.
+the repository root, remote
+the private remote, all commits under
+the repository owner with no AI attribution anywhere.

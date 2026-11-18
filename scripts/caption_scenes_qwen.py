@@ -9,6 +9,7 @@ the same Qwen2.5-VL-3B used in Stage 1, greedy decoding, fixed prompt.
 Images: the 1508 corpus thumbnails, the 1000 BDD100K images, the 150 val150
 CAM_FRONT keyframes. Sharded: --shard i --nshard n.
 """
+from paths import DEVICE
 from paths import EXT, QWEN_VL
 import argparse, json, sys
 from pathlib import Path
@@ -47,7 +48,7 @@ def main():
     tag = "" if a.prompt == "enumerating" else "_neutral"
     from PIL import Image
     from transformers import AutoProcessor, Qwen2_5_VLForConditionalGeneration
-    dev = torch.device("cuda")
+    dev = torch.device(DEVICE)
     proc = AutoProcessor.from_pretrained(a.qwen)
     m = Qwen2_5_VLForConditionalGeneration.from_pretrained(a.qwen, torch_dtype=torch.bfloat16).to(dev).eval()
     items = (json.load(open(a.items)) if a.items else images())[a.shard::a.nshard]

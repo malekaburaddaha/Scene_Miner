@@ -1,0 +1,439 @@
+{
+ "doc": "MILESTONE 41 - E1: paired scene-bootstrap CIs on human-labelled degradation.\n\nSceneMiner (full) and SceneMiner (portable) against training-free late fusion\nz(SigLIP2) + z(lookup) and the Qwen2.5-VL attribute lookup, per attribute and\nmacro-averaged, graded by\n  rater 1 on all 550 scenes (Mode B labels, as Table 2), and\n  rater 2 on the 160 double-labelled scenes (as Table 3).\nProtocol: trained methods score AP per seed and average the five seeds (the human-GT\nprotocol behind 0.794 / 0.762); each bootstrap resample draws scenes with\nreplacement and re-scores every method on the same resample (paired). Late fusion is\nz-scored over the scenes of the published number it reproduces (the 550 scenes for\nrater 1, the full corpus for rater 2); the other choice is reported as a check.\np: two-sided bootstrap p = 2 min(P*(d <= 0), P*(d >= 0)), floored at 1/(B+1).\n-> results/cvpr/milestone41_e1_bootstrap.json\n",
+ "n_boot": 2000,
+ "sets": {
+  "rater1_550": {
+   "n_scenes": 550,
+   "positives": {
+    "droplets": 79,
+    "glare": 41,
+    "wet_road": 85,
+    "low_contrast": 66
+   },
+   "mAP": {
+    "SceneMiner (full)": {
+     "droplets": 0.9429354936381606,
+     "glare": 0.5919099322516288,
+     "wet_road": 0.9762638625593072,
+     "low_contrast": 0.6645224057333146,
+     "macro": 0.7939079235456028
+    },
+    "SceneMiner (portable)": {
+     "droplets": 0.915507595203259,
+     "glare": 0.6313270641499515,
+     "wet_road": 0.9675248927823572,
+     "low_contrast": 0.533625311280059,
+     "macro": 0.7619962158539066
+    },
+    "Late fusion (SigLIP2 + lookup)": {
+     "droplets": 0.9120232153395623,
+     "glare": 0.6668280427733118,
+     "wet_road": 0.9599083786131657,
+     "low_contrast": 0.4099228006677306,
+     "macro": 0.7371706093484426
+    },
+    "Late fusion, other z-scoring set": {
+     "droplets": 0.9134639245788828,
+     "glare": 0.6661078800877125,
+     "wet_road": 0.9598113701127958,
+     "low_contrast": 0.42075728866879075,
+     "macro": 0.7400351158620454
+    },
+    "Qwen2.5-VL attribute lookup": {
+     "droplets": 0.8238017685557508,
+     "glare": 0.5886638446257638,
+     "wet_road": 0.9652501059933786,
+     "low_contrast": 0.5521388576613958,
+     "macro": 0.7324636442090723
+    }
+   },
+   "paired": {
+    "SceneMiner (full) - Late fusion (SigLIP2 + lookup)": {
+     "droplets": {
+      "delta": 0.030912278298598328,
+      "ci95": [
+       -0.0012628225667551977,
+       0.07727082734351844
+      ],
+      "p_two_sided": 0.065
+     },
+     "glare": {
+      "delta": -0.07491811052168296,
+      "ci95": [
+       -0.12972734246090578,
+       -0.024012074662151838
+      ],
+      "p_two_sided": 0.004
+     },
+     "wet_road": {
+      "delta": 0.016355483946141502,
+      "ci95": [
+       -0.008487299856537789,
+       0.056098457442964725
+      ],
+      "p_two_sided": 0.338
+     },
+     "low_contrast": {
+      "delta": 0.25459960506558393,
+      "ci95": [
+       0.14056801476988723,
+       0.3515515505103364
+      ],
+      "p_two_sided": 0.0004997501249375312
+     },
+     "macro": {
+      "delta": 0.056737314197160216,
+      "ci95": [
+       0.025864884193584424,
+       0.08479479164814407
+      ],
+      "p_two_sided": 0.001
+     }
+    },
+    "SceneMiner (full) - Qwen2.5-VL attribute lookup": {
+     "droplets": {
+      "delta": 0.11913372508240982,
+      "ci95": [
+       0.058644796572492254,
+       0.18890417265478796
+      ],
+      "p_two_sided": 0.0004997501249375312
+     },
+     "glare": {
+      "delta": 0.0032460876258649796,
+      "ci95": [
+       -0.04016346974123495,
+       0.05044890746924748
+      ],
+      "p_two_sided": 0.913
+     },
+     "wet_road": {
+      "delta": 0.011013756565928623,
+      "ci95": [
+       -0.013653972652802104,
+       0.05005983759760663
+      ],
+      "p_two_sided": 0.587
+     },
+     "low_contrast": {
+      "delta": 0.11238354807191875,
+      "ci95": [
+       0.03137705461149829,
+       0.1854461874575876
+      ],
+      "p_two_sided": 0.01
+     },
+     "macro": {
+      "delta": 0.061444279336530516,
+      "ci95": [
+       0.037835260272477064,
+       0.08280847615195622
+      ],
+      "p_two_sided": 0.0004997501249375312
+     }
+    },
+    "SceneMiner (portable) - Late fusion (SigLIP2 + lookup)": {
+     "droplets": {
+      "delta": 0.0034843798636966516,
+      "ci95": [
+       -0.01571611083054935,
+       0.02783944100059299
+      ],
+      "p_two_sided": 0.866
+     },
+     "glare": {
+      "delta": -0.03550097862336021,
+      "ci95": [
+       -0.06735001444891676,
+       -0.006598456023527472
+      ],
+      "p_two_sided": 0.016
+     },
+     "wet_road": {
+      "delta": 0.007616514169191513,
+      "ci95": [
+       -0.0018535050969491068,
+       0.019050101928178124
+      ],
+      "p_two_sided": 0.135
+     },
+     "low_contrast": {
+      "delta": 0.12370251061232834,
+      "ci95": [
+       0.046148013562916305,
+       0.19488346551110772
+      ],
+      "p_two_sided": 0.001
+     },
+     "macro": {
+      "delta": 0.02482560650546406,
+      "ci95": [
+       0.0028287711386836946,
+       0.04554651774880272
+      ],
+      "p_two_sided": 0.029
+     }
+    },
+    "SceneMiner (portable) - Qwen2.5-VL attribute lookup": {
+     "droplets": {
+      "delta": 0.09170582664750815,
+      "ci95": [
+       0.040412842741140924,
+       0.15167579719359064
+      ],
+      "p_two_sided": 0.0004997501249375312
+     },
+     "glare": {
+      "delta": 0.04266321952418772,
+      "ci95": [
+       0.010551704633450232,
+       0.0813222822176657
+      ],
+      "p_two_sided": 0.007
+     },
+     "wet_road": {
+      "delta": 0.0022747867889786333,
+      "ci95": [
+       -0.0072974318834873484,
+       0.012848634018102307
+      ],
+      "p_two_sided": 0.562
+     },
+     "low_contrast": {
+      "delta": -0.018513546381336843,
+      "ci95": [
+       -0.06738966314170533,
+       0.018757438036398386
+      ],
+      "p_two_sided": 0.318
+     },
+     "macro": {
+      "delta": 0.02953257164483436,
+      "ci95": [
+       0.009353674531765863,
+       0.04722112350096199
+      ],
+      "p_two_sided": 0.002
+     }
+    }
+   }
+  },
+  "rater2_160": {
+   "n_scenes": 160,
+   "positives": {
+    "droplets": 60,
+    "glare": 34,
+    "wet_road": 61,
+    "low_contrast": 50
+   },
+   "mAP": {
+    "SceneMiner (full)": {
+     "droplets": 0.943096194622458,
+     "glare": 0.557130299431012,
+     "wet_road": 0.9673998454293592,
+     "low_contrast": 0.7237343631125791,
+     "macro": 0.797840175648852
+    },
+    "SceneMiner (portable)": {
+     "droplets": 0.9415070822577649,
+     "glare": 0.5861841155331068,
+     "wet_road": 0.9747051065366769,
+     "low_contrast": 0.6402839394679101,
+     "macro": 0.7856700609488647
+    },
+    "Late fusion (SigLIP2 + lookup)": {
+     "droplets": 0.9443129884382265,
+     "glare": 0.6299181660510195,
+     "wet_road": 0.9714544830371958,
+     "low_contrast": 0.4794014894235536,
+     "macro": 0.7562717817374989
+    },
+    "Late fusion, other z-scoring set": {
+     "droplets": 0.9446053619825282,
+     "glare": 0.6329957889425182,
+     "wet_road": 0.9722057239462787,
+     "low_contrast": 0.4460182988385181,
+     "macro": 0.7489562934274607
+    },
+    "Qwen2.5-VL attribute lookup": {
+     "droplets": 0.8508995140030396,
+     "glare": 0.5825222386069895,
+     "wet_road": 0.9504818871155765,
+     "low_contrast": 0.687391542080913,
+     "macro": 0.7678237954516296
+    }
+   },
+   "paired": {
+    "SceneMiner (full) - Late fusion (SigLIP2 + lookup)": {
+     "droplets": {
+      "delta": -0.0012167938157685576,
+      "ci95": [
+       -0.0254326696512084,
+       0.02841271542069764
+      ],
+      "p_two_sided": 0.888
+     },
+     "glare": {
+      "delta": -0.07278786662000747,
+      "ci95": [
+       -0.12790767281088222,
+       -0.0015069823451724104
+      ],
+      "p_two_sided": 0.045
+     },
+     "wet_road": {
+      "delta": -0.004054637607836642,
+      "ci95": [
+       -0.02795502364322601,
+       0.024364420373139142
+      ],
+      "p_two_sided": 0.714
+     },
+     "low_contrast": {
+      "delta": 0.2443328736890255,
+      "ci95": [
+       0.11833454882075897,
+       0.3563354221534759
+      ],
+      "p_two_sided": 0.0004997501249375312
+     },
+     "macro": {
+      "delta": 0.04156839391135314,
+      "ci95": [
+       0.005594537675166694,
+       0.07932115218402559
+      ],
+      "p_two_sided": 0.02
+     }
+    },
+    "SceneMiner (full) - Qwen2.5-VL attribute lookup": {
+     "droplets": {
+      "delta": 0.09219668061941833,
+      "ci95": [
+       0.02386464903634812,
+       0.1848204321221725
+      ],
+      "p_two_sided": 0.001
+     },
+     "glare": {
+      "delta": -0.025391939175977485,
+      "ci95": [
+       -0.091046054711639,
+       0.059721884975193575
+      ],
+      "p_two_sided": 0.656
+     },
+     "wet_road": {
+      "delta": 0.016917958313782733,
+      "ci95": [
+       -0.0234509215959797,
+       0.082159350428669
+      ],
+      "p_two_sided": 0.689
+     },
+     "low_contrast": {
+      "delta": 0.036342821031666084,
+      "ci95": [
+       -0.0517023652688342,
+       0.13307209019534366
+      ],
+      "p_two_sided": 0.444
+     },
+     "macro": {
+      "delta": 0.030016380197222414,
+      "ci95": [
+       -0.008535949864477454,
+       0.07737614073489175
+      ],
+      "p_two_sided": 0.14
+     }
+    },
+    "SceneMiner (portable) - Late fusion (SigLIP2 + lookup)": {
+     "droplets": {
+      "delta": -0.0028059061804616148,
+      "ci95": [
+       -0.018186452390940088,
+       0.016892438433082094
+      ],
+      "p_two_sided": 0.722
+     },
+     "glare": {
+      "delta": -0.04373405051791268,
+      "ci95": [
+       -0.08197482417307457,
+       -0.006289383500172322
+      ],
+      "p_two_sided": 0.019
+     },
+     "wet_road": {
+      "delta": 0.00325062349948102,
+      "ci95": [
+       -0.00543447682470391,
+       0.013885367142218535
+      ],
+      "p_two_sided": 0.486
+     },
+     "low_contrast": {
+      "delta": 0.16088245004435647,
+      "ci95": [
+       0.07031453402217418,
+       0.25093135028129665
+      ],
+      "p_two_sided": 0.0004997501249375312
+     },
+     "macro": {
+      "delta": 0.02939827921136584,
+      "ci95": [
+       0.005136696423553495,
+       0.052453263820637974
+      ],
+      "p_two_sided": 0.018
+     }
+    },
+    "SceneMiner (portable) - Qwen2.5-VL attribute lookup": {
+     "droplets": {
+      "delta": 0.09060756825472527,
+      "ci95": [
+       0.02770202043564175,
+       0.17751553060907563
+      ],
+      "p_two_sided": 0.0004997501249375312
+     },
+     "glare": {
+      "delta": 0.0036618769261173023,
+      "ci95": [
+       -0.04587870877866556,
+       0.06055089894436819
+      ],
+      "p_two_sided": 0.863
+     },
+     "wet_road": {
+      "delta": 0.024223219421100395,
+      "ci95": [
+       0.0006922482754400272,
+       0.070691500349195
+      ],
+      "p_two_sided": 0.023
+     },
+     "low_contrast": {
+      "delta": -0.04710760261300295,
+      "ci95": [
+       -0.1041995756138871,
+       0.006107103746110047
+      ],
+      "p_two_sided": 0.088
+     },
+     "macro": {
+      "delta": 0.017846265497235114,
+      "ci95": [
+       -0.009499807975788041,
+       0.0507882191391169
+      ],
+      "p_two_sided": 0.223
+     }
+    }
+   }
+  }
+ },
+ "seconds": 31.36691403388977
+}

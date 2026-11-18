@@ -30,6 +30,7 @@ query routing over them - can cross to this corpus. That portability gap is
 itself a result.
 """
 from __future__ import annotations
+from paths import DEVICE
 from paths import EXT, QWEN_VL
 import argparse, glob, json, sys
 from pathlib import Path
@@ -89,7 +90,7 @@ def main():
     ap.add_argument("--cache", default=None)
     ap.add_argument("--out", default="results/cvpr/milestone10_external_bdd100k_fixed.json")
     a = ap.parse_args()
-    root = Path(a.root); dev = torch.device("cuda")
+    root = Path(a.root); dev = torch.device(DEVICE)
     labels = json.load(open(root/"labels.json"))
     names = sorted(labels)
     imgs = [root/"images"/n for n in names]

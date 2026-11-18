@@ -12,6 +12,7 @@ Both use the 72 training queries, the 906 training scenes and the VLM-derived
 pseudo-labels that SceneMiner trains on, listwise InfoNCE with the same
 margin-confidence weights, 3000 steps, AdamW 1e-4, 5 seeds.
 """
+from paths import DEVICE
 import argparse, json, sys
 from pathlib import Path
 import numpy as np, torch
@@ -41,7 +42,7 @@ def main():
     ap.add_argument("--kind", choices=["bev", "sigft"], required=True)
     ap.add_argument("--seed", type=int, default=0); ap.add_argument("--steps", type=int, default=3000)
     a = ap.parse_args()
-    torch.manual_seed(a.seed); rng = np.random.default_rng(a.seed); dev = torch.device("cuda")
+    torch.manual_seed(a.seed); rng = np.random.default_rng(a.seed); dev = torch.device(DEVICE)
     W = Path("work_dirs/unified_filter")
     z = np.load(W/"features_v2.npz", allow_pickle=False)
     toks = [str(t) for t in z["scene_tokens"]]; dom = z["domain"].astype(int)

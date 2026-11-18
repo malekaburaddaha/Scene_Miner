@@ -10,6 +10,7 @@ thresholds and kept only if every AP is unchanged. Latency: median of 50 timed
 calls, one model and the 5-seed ensemble, query embedding cached, A40.
 -> results/cvpr/milestone27_fast_index.json
 """
+from paths import DEVICE
 from paths import EXT, HUMAN_R1
 import json, os, sys, time
 import numpy as np, torch
@@ -21,7 +22,7 @@ from eval_semantic_edge_cases import load_v23, text_embed, TRAIN_ORDER
 from eval_external_bdd100k import EVAL_Q, QUESTIONS
 from scene_mining.filter.fast_index import precompute_scene_index, fast_score, fast_base_score, prepare_query, rank, GraphRanker
 
-dev = torch.device("cuda"); W = "work_dirs/unified_filter"
+dev = torch.device(DEVICE); W = "work_dirs/unified_filter"
 FINAL = os.environ.get("SM_FINAL", "v26")
 
 

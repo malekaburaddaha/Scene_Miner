@@ -1,0 +1,98 @@
+{
+ "doc": "MILESTONE 41 - Table 4 conjunction-column check.\n\nScores every Table 4 ranker on the 258 nuScenes evaluation scenes over two query sets:\n  s5_20      the 20 Stratum-5 conjunction queries (the set behind Table 2's semantic\n             column; 8 night/rain, 12 degradation)\n  synergy_30 the set behind the published Table 4 column (milestone27_compositional_synergy):\n             11 generated object x condition conjunctions with >= 5 positives plus the 19\n             Stratum-5 conjunction phrasings whose object flag is one of the four generated\n             ones (the \"rare category\" phrasing is excluded)\nSceneMiner (monocular, as in Tables 2 and 4) as five-seed ensemble and as per-seed mean.\nLate fusions z-score over the 258 scenes. Paired tests: SceneMiner ensemble minus each\nranker, sign-flip permutation (10,000) over queries, and over predicates for synergy_30.\n-> results/cvpr/milestone41_table4_check.json\n",
+ "n_scenes": 258,
+ "sets": {
+  "s5_20": {
+   "n_queries": 20,
+   "mAP": {
+    "SceneMiner (5-seed ensemble)": 0.28606408280085394,
+    "SceneMiner (per-seed mean)": 0.2848238553567511,
+    "zero-shot SigLIP2": 0.2864614380920319,
+    "logit VLM lookup": 0.2200874267346554,
+    "fusion SigLIP2 + lookup": 0.2746761150547041,
+    "fusion SigLIP2 + metadata": 0.31662760536157636
+   },
+   "tests_by_query": {
+    "zero-shot SigLIP2": {
+     "delta": -0.00039735529117796776,
+     "perm_p": 0.9787021297870213,
+     "wins": 12
+    },
+    "logit VLM lookup": {
+     "delta": 0.0659766560661986,
+     "perm_p": 0.0112988701129887,
+     "wins": 15
+    },
+    "fusion SigLIP2 + lookup": {
+     "delta": 0.01138796774614989,
+     "perm_p": 0.557944205579442,
+     "wins": 12
+    },
+    "fusion SigLIP2 + metadata": {
+     "delta": -0.030563522560722384,
+     "perm_p": 0.09719028097190281,
+     "wins": 9
+    }
+   }
+  },
+  "synergy_30": {
+   "n_queries": 30,
+   "mAP": {
+    "SceneMiner (5-seed ensemble)": 0.2965438105583307,
+    "SceneMiner (per-seed mean)": 0.29690948206372697,
+    "zero-shot SigLIP2": 0.2926646274698897,
+    "logit VLM lookup": 0.2271950093869281,
+    "fusion SigLIP2 + lookup": 0.28426557506405314,
+    "fusion SigLIP2 + metadata": 0.32708054911724443
+   },
+   "tests_by_query": {
+    "zero-shot SigLIP2": {
+     "delta": 0.003879183088441097,
+     "perm_p": 0.752024797520248,
+     "wins": 17
+    },
+    "logit VLM lookup": {
+     "delta": 0.06934880117140262,
+     "perm_p": 0.0011998800119988001,
+     "wins": 23
+    },
+    "fusion SigLIP2 + lookup": {
+     "delta": 0.012278235494277517,
+     "perm_p": 0.37516248375162486,
+     "wins": 18
+    },
+    "fusion SigLIP2 + metadata": {
+     "delta": -0.0305367385589137,
+     "perm_p": 0.0025997400259974,
+     "wins": 12
+    }
+   },
+   "tests_by_predicate": {
+    "zero-shot SigLIP2": {
+     "delta": 0.0016169850470882077,
+     "perm_p": 0.9188081191880811,
+     "wins": 5,
+     "n_predicates": 11
+    },
+    "logit VLM lookup": {
+     "delta": 0.06585056609801328,
+     "perm_p": 0.05679432056794321,
+     "wins": 9,
+     "n_predicates": 11
+    },
+    "fusion SigLIP2 + lookup": {
+     "delta": 0.010684940391844554,
+     "perm_p": 0.6647335266473353,
+     "wins": 5,
+     "n_predicates": 11
+    },
+    "fusion SigLIP2 + metadata": {
+     "delta": -0.031150358169445357,
+     "perm_p": 0.015198480151984802,
+     "wins": 3,
+     "n_predicates": 11
+    }
+   }
+  }
+ }
+}

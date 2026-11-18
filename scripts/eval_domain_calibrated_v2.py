@@ -29,6 +29,7 @@ train queries rather than on the reported eval queries is what keeps the
 reported skew an out-of-sample number.
 """
 from __future__ import annotations
+from paths import DEVICE
 import argparse, glob, json, re, sys
 import os
 SEED_GLOB = os.environ.get("SM_SEED_GLOB", "s*")      # Milestone 34: one seed at a time for +/- sd
@@ -87,7 +88,7 @@ def main():
     ap.add_argument("--out", default="results/cvpr/milestone11_domain_calibration.json")
     ap.add_argument("--rankers", default="SceneMiner_v2.2,SceneMiner_v2.1,zeroshot_SigLIP2,logit_VLM_lookup")
     a = ap.parse_args()
-    dev = torch.device("cuda"); W = Path(a.work)
+    dev = torch.device(DEVICE); W = Path(a.work)
 
     z = np.load(a.features, allow_pickle=False)
     corpus = [str(t) for t in z["scene_tokens"]]; cidx = {t: i for i, t in enumerate(corpus)}

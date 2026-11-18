@@ -2,12 +2,13 @@
 """MILESTONE 14 - decompose v2.2 into base and gated residual on the 550 human
 scenes, and inspect the 20 VLM-missed glare scenes. This is the diagnostic that
 located the residual-dominance problem ResNorm fixes."""
+from paths import DEVICE
 from paths import HUMAN_R1
 import glob, json, sys, numpy as np, torch
 sys.path.insert(0,"src"); sys.path.insert(0,"scripts")
 from eval_human_gt_full import load_human, ATTRS, QUERY
 from scene_mining.filter.sceneminer_v2_2 import SceneMinerV22
-dev=torch.device("cuda"); W="work_dirs/unified_filter"
+dev=torch.device(DEVICE); W="work_dirs/unified_filter"
 z=np.load(f"{W}/features_v2.npz",allow_pickle=False)
 corpus=[str(t) for t in z["scene_tokens"]]; cidx={t:i for i,t in enumerate(corpus)}
 T=lambda k: torch.from_numpy(z[k]).float().to(dev)

@@ -1,0 +1,77 @@
+{
+ "family_9": {
+  "RefAV-style programmatic filter": 0.0008999100089991002,
+  "SigLIP2 + fine-tuned adapter": 0.0008999100089991002,
+  "Qwen2.5-VL lookup": 0.0008999100089991002,
+  "Naive uncalibrated fusion": 0.0008999100089991002,
+  "CARIM-style caption retrieval": 0.007499250074992501,
+  "ReferGPT-style state + CLIP": 0.050794920507949204,
+  "CLIP ViT-B/32": 0.050794920507949204,
+  "SigLIP2 ViT-B/16": 0.5643435656434357,
+  "SigLIP ViT-B/16": 0.5643435656434357
+ },
+ "family_10_with_late_fusion": {
+  "RefAV-style programmatic filter": 0.000999900009999,
+  "SigLIP2 + fine-tuned adapter": 0.000999900009999,
+  "Qwen2.5-VL lookup": 0.000999900009999,
+  "Naive uncalibrated fusion": 0.000999900009999,
+  "CARIM-style caption retrieval": 0.008999100089991,
+  "ReferGPT-style state + CLIP": 0.0634936506349365,
+  "CLIP ViT-B/32": 0.0634936506349365,
+  "Late fusion (SigLIP2 + lookup)": 0.14998500149985,
+  "SigLIP2 ViT-B/16": 0.5643435656434357,
+  "SigLIP ViT-B/16": 0.5643435656434357
+ },
+ "raw": {
+  "RefAV-style programmatic filter": {
+   "delta": 0.21654033497216316,
+   "perm_p": 9.999000099990002e-05,
+   "n_queries": 35
+  },
+  "CARIM-style caption retrieval": {
+   "delta": 0.10699644281498033,
+   "perm_p": 0.0014998500149985001,
+   "n_queries": 35
+  },
+  "ReferGPT-style state + CLIP": {
+   "delta": 0.047583446714409096,
+   "perm_p": 0.012698730126987301,
+   "n_queries": 35
+  },
+  "CLIP ViT-B/32": {
+   "delta": 0.047583446714409096,
+   "perm_p": 0.012698730126987301,
+   "n_queries": 35
+  },
+  "SigLIP ViT-B/16": {
+   "delta": 0.011597753613311982,
+   "perm_p": 0.41545845415458454,
+   "n_queries": 35
+  },
+  "SigLIP2 ViT-B/16": {
+   "delta": -0.008145430482274573,
+   "perm_p": 0.28217178282171784,
+   "n_queries": 35
+  },
+  "SigLIP2 + fine-tuned adapter": {
+   "delta": 0.16063803801961515,
+   "perm_p": 9.999000099990002e-05,
+   "n_queries": 35
+  },
+  "Qwen2.5-VL lookup": {
+   "delta": 0.16880400072907978,
+   "perm_p": 9.999000099990002e-05,
+   "n_queries": 35
+  },
+  "Naive uncalibrated fusion": {
+   "delta": 0.18511095360907756,
+   "perm_p": 9.999000099990002e-05,
+   "n_queries": 35
+  },
+  "Late fusion (SigLIP2 + lookup)": {
+   "delta": 0.0318733541789744,
+   "perm_p": 0.04999500049995,
+   "n_queries": 35
+  }
+ }
+}

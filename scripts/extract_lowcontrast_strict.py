@@ -8,6 +8,7 @@ cached-attribute baseline be tested in its STRONGEST form (continuous ranking),
 which binary_flags_{a,b} could not support (pure bools, disjoint shards).
 """
 from __future__ import annotations
+from paths import DEVICE
 from paths import QWEN_VL
 import argparse, json, sys, time
 from pathlib import Path
@@ -45,7 +46,7 @@ def main():
 
     from transformers import AutoProcessor, Qwen2_5_VLForConditionalGeneration
     from PIL import Image
-    dev = torch.device("cuda")
+    dev = torch.device(DEVICE)
     proc = AutoProcessor.from_pretrained(args.model)
     model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
         args.model, torch_dtype=torch.bfloat16).to(dev).eval()

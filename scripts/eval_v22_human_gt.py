@@ -16,6 +16,7 @@ Two modes:
                  "which modality should this query trust".
 """
 from __future__ import annotations
+from paths import DEVICE
 from paths import HUMAN_R1
 import argparse, glob, json, sys
 import os
@@ -35,7 +36,7 @@ def main():
     ap.add_argument("--folds", type=int, default=5)
     ap.add_argument("--out", default="results/cvpr/milestone10_sceneminer_v2_2.json")
     a = ap.parse_args()
-    dev = torch.device("cuda"); W = Path(a.work)
+    dev = torch.device(DEVICE); W = Path(a.work)
     z = np.load(a.features, allow_pickle=False)
     corpus = [str(t) for t in z["scene_tokens"]]; cidx = {t:i for i,t in enumerate(corpus)}
     T = lambda k: torch.from_numpy(z[k]).float().to(dev)

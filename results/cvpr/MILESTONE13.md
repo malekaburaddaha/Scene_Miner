@@ -4,7 +4,7 @@
 
 | check | result |
 |---|---|
-| commit authorship | **single author**: `malekaburaddaha <am.aburaddaha@gmail.com>` |
+| commit authorship | **single author**: the repository owner (single author) |
 | AI attribution in commit messages | **none** |
 | AI attribution in tracked files | **none** |
 | forbidden binaries (`.pth .pt .npz .ckpt .safetensors .bin .pkl .h5`) | **none tracked** |
@@ -66,7 +66,7 @@ be completed from the compute node: SSH ports 22 and 443 are firewalled and
 HTTPS has no stored credentials. From a login node:
 
 ```bash
-cd /nfs/turbo/umd-srawa/scene_mining/Scene_Miner
+cd <repository root>
 git push -u origin main
 ```
 

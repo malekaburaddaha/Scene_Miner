@@ -31,6 +31,7 @@ the shortcut unprofitable rather than merely discouraged:
      frozen Stage-1 signals, so the 550 human scenes stay a clean test set.
 """
 from __future__ import annotations
+from paths import DEVICE
 import argparse, json, random, time
 from pathlib import Path
 import numpy as np, torch
@@ -125,7 +126,7 @@ def main():
                     help="json list of tokens allowed from --extra-human (fold train)")
     a = ap.parse_args()
     random.seed(a.seed); np.random.seed(a.seed); torch.manual_seed(a.seed)
-    dev = torch.device("cuda")
+    dev = torch.device(DEVICE)
     W = Path(a.work)
     z = np.load(a.features, allow_pickle=False)
     toks = [str(t) for t in z["scene_tokens"]]; dom = z["domain"].astype(int)

@@ -13,6 +13,7 @@ The So400m SceneMiner is trained with the unchanged v2.6 recipe (scripts/
 train_sceneminer_v26.py --siglip-repo/--siglip-emb); its concept bank and gate are
 rebuilt in the So400m text space from the same training phrasings. Nothing is tuned.
 """
+from paths import DEVICE
 from paths import EXT, SIGLIP2_SO400M
 import argparse, json
 from pathlib import Path
@@ -42,7 +43,7 @@ def embed(data, batch=32):
     from PIL import Image
     from transformers import AutoImageProcessor, AutoModel
     import torch.nn.functional as F
-    dev = torch.device("cuda")
+    dev = torch.device(DEVICE)
     m = AutoModel.from_pretrained(REPO, use_safetensors=True, torch_dtype=torch.float32).to(dev).eval()
     ip = AutoImageProcessor.from_pretrained(REPO)
     names, paths = sources(data); X = []

@@ -34,7 +34,8 @@ reading the BEV embedding or the tags is flagged contaminated (those encoders we
 supervised on these scenes); SceneMiner is reported there in monocular mode.
 """
 from __future__ import annotations
-from paths import EXT, HUMAN_R1
+from paths import DEVICE
+from paths import EXT, HUMAN_R1, sync
 import os
 import glob, json, math, re, sys, time
 from collections import Counter
@@ -49,7 +50,7 @@ from eval_external_bdd100k import EVAL_Q, QUESTIONS, CHANNEL
 from eval_domain_calibrated_v2 import mmr
 from train_projection_baselines import BEV, SigFT
 
-dev = torch.device("cuda")
+dev = torch.device(DEVICE)
 W = Path("work_dirs/unified_filter")
 TAG_NAMES = ["a dark scene", "a rainy scene", "a construction zone", "an intersection", "a parking lot",
              "a highway", "a school zone", "a residential street", "a pedestrian", "a bicycle",
@@ -419,6 +420,15 @@ class Rankers:
     def lookup(self, D, q, col=None, sign=1):
         return np.zeros(D["n"]) if col is None else sign * D["marg"][col]
 
+    def late_fusion(self, D, q, col=None, sign=1, idx=None):
+        """Milestone 41: training-free late fusion, z(SigLIP2 cosine) + z(lookup margin),
+        each z-scored over the scenes being ranked (idx: the evaluated subset of the corpus,
+        as for the 0.737 / 0.284 controls). With no a-priori VLM column the lookup is
+        constant, so this equals SigLIP2 (as for object queries in Tab. 4)."""
+        a, b = self.siglip2(D, q), self.lookup(D, q, col, sign)
+        if idx is None: return zs(a) + zs(b)
+        out = np.full(D["n"], np.nan); out[idx] = zs(a[idx]) + zs(b[idx]); return out
+
     def naive(self, D, q):
         qv = self.enc.sig2_raw([q])[0].unsqueeze(0).expand(D["n"], -1)
         with torch.no_grad():
@@ -446,6 +456,7 @@ METHODS = [("BEV-TSR-style text-to-BEV", "bev_tsr", ["BEV"]),
            ("CLIP ViT-B/32", "clip", ["image"]), ("SigLIP ViT-B/16", "siglip1", ["image"]),
            ("SigLIP2 ViT-B/16", "siglip2", ["image"]), ("SigLIP2 + fine-tuned adapter", "siglip2_ft", ["image"]),
            ("Qwen2.5-VL lookup", "lookup", ["VLM margins"]),
+           ("Late fusion (SigLIP2 + lookup)", "late_fusion", ["image", "VLM margins"]),
            ("Naive uncalibrated fusion", "naive", ["image", "VLM", "metadata", "BEV", "tags"]),
            ("SceneMiner (portable)", "sceneminer_portable", ["image", "VLM", "metadata"]),
            ("SceneMiner", "sceneminer", ["image", "VLM", "metadata", "BEV", "tags"])]
@@ -457,7 +468,8 @@ OFFLINE = {"carim": "one Qwen2.5-VL caption per image (timed below)", "carim_enu
            "naive": "same Stage-1 cache as SceneMiner", "refav": "VLM flags + tags + metadata (cached)",
            "bev_tsr": "BEVFormer per scene", "tag_map": "BEVFormer + tag head per scene",
            "refergpt": "CLIP image embedding + tags", "clip": "CLIP image embedding", "siglip1": "SigLIP image embedding",
-           "siglip2": "SigLIP2 image embedding", "siglip2_ft": "SigLIP2 image embedding"}
+           "siglip2": "SigLIP2 image embedding", "siglip2_ft": "SigLIP2 image embedding",
+           "late_fusion": "SigLIP2 image embedding + 4 Qwen2.5-VL yes/no passes per image"}
 
 
 def ens(s):
@@ -491,8 +503,9 @@ def main():
     C, B, V = load_corpus(), load_bdd(), load_val150(G)
     cidx = {t: i for i, t in enumerate(C["toks"])}
 
-    def call(meth, D, q, col=None, sign=1, mono=False):
+    def call(meth, D, q, col=None, sign=1, mono=False, idx=None):
         f = getattr(R, meth)
+        if meth == "late_fusion": return f(D, q, col, sign, idx)
         if meth == "lookup": return f(D, q, col, sign)
         if meth == "sceneminer": return f(D, q, mono=mono)
         return f(D, q)
@@ -523,7 +536,7 @@ def main():
     for label, meth, mods in run:
         t0 = time.time(); r = {"key": meth, "modalities": mods, "reads_bev_or_tags_on_corpus": meth in CONTAM,
                                "offline_per_scene": OFFLINE[meth]}; PQ = {}
-        aps = [ap_of(None if (s := call(meth, C, QUERY[at], col=at)) is None else s[..., hidx],
+        aps = [ap_of(None if (s := call(meth, C, QUERY[at], col=at, idx=hidx)) is None else s[..., hidx],
                      np.array([hum[t][at] for t in ht]), per_seed=True) for at in ATTRS]
         r["human_gt"] = None if None in aps else float(np.mean(aps)); r["human_gt_per_attr"] = dict(zip(ATTRS, aps))
         bq = []
@@ -539,7 +552,7 @@ def main():
             tag = st.split("_")[1]; v, vv = [], []
             for q in [q for q in S5 if q["stratum"] == st]:
                 rel = np.array([all(truth(t, k) == x for k, x in q["predicate"].items()) for t in s5t])
-                s = call(meth, C, q["text"], col=COND_COL[q["condition"]] if q["condition"] else None, mono=True)
+                s = call(meth, C, q["text"], col=COND_COL[q["condition"]] if q["condition"] else None, mono=True, idx=s5i)
                 v.append(ap_of(None if s is None else ens(s)[s5i], rel))
             for q in [q for q in S5 if q["stratum"] == st and q["condition"] in (None, "night", "rain")]:
                 rel = np.array([all(G[t][k] == x for k, x in q["predicate"].items()) for t in V["toks"]])
@@ -552,7 +565,7 @@ def main():
         for q in SQ:
             rel = predicate_mask(attrs, ST, q["predicate"])
             if rel.sum() in (0, len(rel)): continue
-            s = ens(call(meth, C, q["text"], col=next((k for k in ATTRS if k in q["predicate"]), None)))
+            s = ens(call(meth, C, q["text"], col=next((k for k in ATTRS if k in q["predicate"]), None), idx=sidx))
             if s is None: sm = None; break
             s = s[sidx]; sm.append(ap_of(s, rel))
             o = np.argsort(-s) if np.ptp(s) > 0 else np.random.default_rng(len(sm)).permutation(len(s))
@@ -560,15 +573,15 @@ def main():
         r["suite"] = None if sm is None else float(np.mean(sm))
         r["suite_skew_pts"] = None if sm is None else float(np.mean(sk) * 100)
         PQ["suite"] = sm
-        q = "water droplets smearing the camera lens"; call(meth, C, q, col="droplets"); torch.cuda.synchronize(); ts = []
+        q = "water droplets smearing the camera lens"; call(meth, C, q, col="droplets"); sync(); ts = []
         for _ in range(20):
-            a = time.perf_counter(); call(meth, C, q, col="droplets"); torch.cuda.synchronize()
+            a = time.perf_counter(); call(meth, C, q, col="droplets"); sync()
             ts.append(1000 * (time.perf_counter() - a))
         r["rank_latency_ms_1508"] = float(np.median(ts))
         if meth in ("bev_tsr", "siglip2_ft", "naive", "sceneminer"):     # 5-seed ensemble above; one model here
             R.k = 1; ts = []
             for _ in range(20):
-                a = time.perf_counter(); call(meth, C, q, col="droplets"); torch.cuda.synchronize()
+                a = time.perf_counter(); call(meth, C, q, col="droplets"); sync()
                 ts.append(1000 * (time.perf_counter() - a))
             R.k = 5; r["rank_latency_ms_1508_single_model"] = float(np.median(ts))
         out["methods"][label] = r; out["per_query"][label] = PQ
@@ -629,9 +642,9 @@ def main():
     # text-encoder latency (one query, uncached)
     out["text_encoder_ms"] = {}
     for kind in ("clip", "sig1", "sig2"):
-        enc.encode(kind, ["warm up"], use_cache=False); torch.cuda.synchronize(); ts = []
+        enc.encode(kind, ["warm up"], use_cache=False); sync(); ts = []
         for i in range(20):
-            a = time.perf_counter(); enc.encode(kind, [f"a query {i}"], use_cache=False); torch.cuda.synchronize()
+            a = time.perf_counter(); enc.encode(kind, [f"a query {i}"], use_cache=False); sync()
             ts.append(1000 * (time.perf_counter() - a))
         out["text_encoder_ms"][kind] = float(np.median(ts))
     cal = Path(os.environ.get("SM_CAL", "results/cvpr/milestone27_v26.json"))

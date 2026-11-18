@@ -8,9 +8,9 @@ New module: `scripts/paths.py`. Every path in it has an environment override.
 
 | was | now |
 |---|---|
-| `/nfs/turbo/…/datasets/external_adverse[/…]` (17 uses) | `EXT` = `$SCENEMINER_DATA_ROOT/external_adverse` (default `data`) |
-| `/nfs/turbo/…/hf_cache/Qwen2.5-VL-3B-Instruct` (17) | `QWEN_VL` (default `Qwen/Qwen2.5-VL-3B-Instruct`) |
-| `/nfs/turbo/…/hf_cache/blip2-opt-2.7b` | `BLIP2` (default `Salesforce/blip2-opt-2.7b`) |
+| `<cluster path>/datasets/external_adverse[/…]` (17 uses) | `EXT` = `$SCENEMINER_DATA_ROOT/external_adverse` (default `data`) |
+| `<cluster path>/hf_cache/Qwen2.5-VL-3B-Instruct` (17) | `QWEN_VL` (default `Qwen/Qwen2.5-VL-3B-Instruct`) |
+| `<cluster path>/hf_cache/blip2-opt-2.7b` | `BLIP2` (default `Salesforce/blip2-opt-2.7b`) |
 | the So400m snapshot path | `SIGLIP2_SO400M` (default `google/siglip2-so400m-patch14-384`) |
 | `results/day1_gate/malek_repaired.json` (15 scripts) | `HUMAN_R1` = `benchmark_cvpr/human_rater1_600.json` |
 | conda interpreter in `launch_seeds.sh`, `run_m27_evals.sh`, `run_rater2_ui.sh`, `run_seed_sd.sh` | `${PY:-python}` |
@@ -19,12 +19,11 @@ New module: `scripts/paths.py`. Every path in it has an environment override.
 **Scope.** 44 tracked files changed. All compile, and all shell scripts parse
 (`bash -n`).
 
-**Grep result.** No tracked file under `scripts/` or `src/` now contains `/nfs/`,
-`/home/`, `umd`, `srawa`, `umich`, `greatlakes`, `arc-ts`, `malek`, `abdmalek` or
-`aburaddaha`. The one exception is `check_anonymity.py`, whose token list names them.
+**Grep result.** No tracked file under `scripts/` or `src/` now contains cluster path prefixes,
+home directories, or any author, affiliation or cluster identifier. The one exception is `check_anonymity.py`, whose token list names them.
 
 **Removed from the repo:** `benchmark_cvpr/human_annotations_rater1_600.json`. It was
-tracked since Milestone 1 and carried `"rater": "malek"` in all 600 entries. Its labels
+tracked since Milestone 1 and carried the annotator's name in the `rater` field of all 600 entries. Its labels
 and flags are identical to the anonymised `benchmark_cvpr/human_rater1_600.json`
 (checked).
 
@@ -75,10 +74,10 @@ it.
 **Result:**
 
 * **254 members: no leak.** ANONYMITY CHECK PASSED.
-* **The detector works:** a planted test archive with `/nfs/turbo/x` and the surname is
+* **The detector works:** a planted test archive with a cluster path and the surname is
   flagged.
 * **Extra greps**, for identifiers outside the token list (another cluster user name,
-  `gmail`, `github`): no hits.
+  e-mail domains, `github`): no hits.
 * **One functional mention of an LLM vendor remains:** `src/scene_mining/refprog/synthesizer.py`
   is an older RefAV-style synthesizer with a selectable LLM backend. It is code, not
   authorship attribution. The paper's RefAV-style row uses the local Qwen compiler.

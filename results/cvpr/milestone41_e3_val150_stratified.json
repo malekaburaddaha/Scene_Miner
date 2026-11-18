@@ -1,0 +1,669 @@
+{
+ "doc": "MILESTONE 41 - E3: retrieval-to-detection-error on val150, controlled for night/rain.\n\nSame rankers, queries and per-scene front-sector metrics as Table 6\n(scripts/val150_retrieval_to_3d.py --model v26): the 62 degradation queries of the\n150-query suite; SceneMiner v2.6 portable with recorded night/rain metadata, the VLM\nmargin lookup, night/rain metadata, zero-shot SigLIP2 and random; each ranker's top 25.\nStrata from the human scene description: day-dry (neither night nor rain) and\nnight-or-rain.\n\n  A. Table 6 as published: top-25 mean minus the val150 mean, one-sided p under the\n     scene permutation null (all 150 scenes exchangeable).\n  B. Stratum-preserving null: the same top-25 sets, but per-scene metrics are permuted\n     only within each stratum, so the null keeps each set's night/rain composition.\n     Reported: the excess over the stratum-matched expectation and its one-sided p.\n  C. Within-stratum retrieval: each ranker ranks only the scenes of one stratum and\n     keeps the same share of it as top-25 does of 150 (day-dry: 18 of 111;\n     night-or-rain: 7 of 39); delta to that stratum's mean, permutation within it.\n  D. Paired tests, SceneMiner minus {night/rain metadata, SigLIP2, lookup}: both\n     rankers' sets fixed, metrics permuted (globally, and within strata), two-sided.\nAlso the night/rain share of every ranker's top 25.\n-> results/cvpr/milestone41_e3_val150_stratified.json\n",
+ "n_scenes": 150,
+ "n_queries": 62,
+ "n_perm": 5000,
+ "strata": {
+  "day-dry": 111,
+  "night-or-rain": 39
+ },
+ "degraded_flags_by_stratum": {
+  "day-dry": 4,
+  "night-or-rain": 38
+ },
+ "top25_night_or_rain_share": {
+  "SceneMiner": 0.9025806451612902,
+  "VLM margin lookup": 0.8896774193548387,
+  "night/rain metadata": 0.8748387096774193,
+  "zero-shot SigLIP2": 0.7354838709677418,
+  "random": 0.2754838709677419
+ },
+ "random_50_draw_delta": {
+  "mAP_front": -0.005493820467984523,
+  "fp_rate": 0.0029647666498244796,
+  "recall_far": -0.003200384437865633,
+  "vru_recall": -0.0023728164141927355
+ },
+ "A_global_null": {
+  "SceneMiner": {
+   "mAP_front": {
+    "delta": -0.0569236796936759,
+    "p_worse": 0.0015996800639872025
+   },
+   "fp_rate": {
+    "delta": 0.02462225834641707,
+    "p_worse": 0.124375124975005
+   },
+   "recall_far": {
+    "delta": -0.04075623796003092,
+    "p_worse": 0.0669866026794641
+   },
+   "vru_recall": {
+    "delta": -0.19668243336011593,
+    "p_worse": 0.0001999600079984003
+   }
+  },
+  "VLM margin lookup": {
+   "mAP_front": {
+    "delta": -0.0536681282705157,
+    "p_worse": 0.0027994401119776045
+   },
+   "fp_rate": {
+    "delta": 0.025708051938374055,
+    "p_worse": 0.1267746450709858
+   },
+   "recall_far": {
+    "delta": -0.04104551648202537,
+    "p_worse": 0.0661867626474705
+   },
+   "vru_recall": {
+    "delta": -0.19101063912208383,
+    "p_worse": 0.0001999600079984003
+   }
+  },
+  "night/rain metadata": {
+   "mAP_front": {
+    "delta": -0.06580852906067458,
+    "p_worse": 0.0001999600079984003
+   },
+   "fp_rate": {
+    "delta": 0.05205054016395294,
+    "p_worse": 0.003799240151969606
+   },
+   "recall_far": {
+    "delta": -0.0550871909874312,
+    "p_worse": 0.007998400319936013
+   },
+   "vru_recall": {
+    "delta": -0.1668121837856142,
+    "p_worse": 0.0001999600079984003
+   }
+  },
+  "zero-shot SigLIP2": {
+   "mAP_front": {
+    "delta": -0.03166736855993596,
+    "p_worse": 0.011197760447910418
+   },
+   "fp_rate": {
+    "delta": 0.018801391796301414,
+    "p_worse": 0.1191761647670466
+   },
+   "recall_far": {
+    "delta": -0.026817911752410883,
+    "p_worse": 0.08578284343131373
+   },
+   "vru_recall": {
+    "delta": -0.09786045584534186,
+    "p_worse": 0.0005998800239952009
+   }
+  },
+  "random": {
+   "mAP_front": {
+    "delta": 0.002300893620903466,
+    "p_worse": 0.7742451509698061
+   },
+   "fp_rate": {
+    "delta": -0.003396620056733468,
+    "p_worse": 0.8564287142571486
+   },
+   "recall_far": {
+    "delta": 0.008512736887682282,
+    "p_worse": 0.9798040391921615
+   },
+   "vru_recall": {
+    "delta": -0.0017881678055733374,
+    "p_worse": 0.3693261347730454
+   }
+  }
+ },
+ "B_stratum_null": {
+  "SceneMiner": {
+   "mAP_front": {
+    "delta_vs_mean": -0.0569236796936759,
+    "stratum_matched_expectation_delta": -0.06211643915301224,
+    "excess": 0.005192759459336338,
+    "p_worse": 0.6610677864427115
+   },
+   "fp_rate": {
+    "delta_vs_mean": 0.02462225834641707,
+    "stratum_matched_expectation_delta": 0.04017883970308572,
+    "excess": -0.015556581356668653,
+    "p_worse": 0.827634473105379
+   },
+   "recall_far": {
+    "delta_vs_mean": -0.04075623796003092,
+    "stratum_matched_expectation_delta": -0.059284817197839956,
+    "excess": 0.01852857923780904,
+    "p_worse": 0.8654269146170765
+   },
+   "vru_recall": {
+    "delta_vs_mean": -0.19668243336011593,
+    "stratum_matched_expectation_delta": -0.16398837274575762,
+    "excess": -0.03269406061435831,
+    "p_worse": 0.10837832433513298
+   }
+  },
+  "VLM margin lookup": {
+   "mAP_front": {
+    "delta_vs_mean": -0.0536681282705157,
+    "stratum_matched_expectation_delta": -0.06128169451216159,
+    "excess": 0.007613566241645886,
+    "p_worse": 0.7136572685462907
+   },
+   "fp_rate": {
+    "delta_vs_mean": 0.025708051938374055,
+    "stratum_matched_expectation_delta": 0.03949217631977192,
+    "excess": -0.013784124381397866,
+    "p_worse": 0.7860427914417116
+   },
+   "recall_far": {
+    "delta_vs_mean": -0.04104551648202537,
+    "stratum_matched_expectation_delta": -0.0578715690852758,
+    "excess": 0.01682605260325043,
+    "p_worse": 0.8270345930813837
+   },
+   "vru_recall": {
+    "delta_vs_mean": -0.19101063912208383,
+    "stratum_matched_expectation_delta": -0.1596974643397917,
+    "excess": -0.03131317478229212,
+    "p_worse": 0.1269746050789842
+   }
+  },
+  "night/rain metadata": {
+   "mAP_front": {
+    "delta_vs_mean": -0.06580852906067458,
+    "stratum_matched_expectation_delta": -0.05956752549216432,
+    "excess": -0.006241003568510262,
+    "p_worse": 0.15416916616676665
+   },
+   "fp_rate": {
+    "delta_vs_mean": 0.05205054016395294,
+    "stratum_matched_expectation_delta": 0.038765180232162244,
+    "excess": 0.013285359931790697,
+    "p_worse": 0.054789042191561686
+   },
+   "recall_far": {
+    "delta_vs_mean": -0.0550871909874312,
+    "stratum_matched_expectation_delta": -0.05653530120742878,
+    "excess": 0.0014481102199975782,
+    "p_worse": 0.5570885822835433
+   },
+   "vru_recall": {
+    "delta_vs_mean": -0.1668121837856142,
+    "stratum_matched_expectation_delta": -0.15452067951678322,
+    "excess": -0.012291504268830966,
+    "p_worse": 0.20615876824635074
+   }
+  },
+  "zero-shot SigLIP2": {
+   "mAP_front": {
+    "delta_vs_mean": -0.03166736855993596,
+    "stratum_matched_expectation_delta": -0.04600142258318901,
+    "excess": 0.014334054023253051,
+    "p_worse": 0.947010597880424
+   },
+   "fp_rate": {
+    "delta_vs_mean": 0.018801391796301414,
+    "stratum_matched_expectation_delta": 0.02990342742031793,
+    "excess": -0.011102035624016515,
+    "p_worse": 0.8418316336732653
+   },
+   "recall_far": {
+    "delta_vs_mean": -0.026817911752410883,
+    "stratum_matched_expectation_delta": -0.04348051244164275,
+    "excess": 0.016662600689231866,
+    "p_worse": 0.9122175564887023
+   },
+   "vru_recall": {
+    "delta_vs_mean": -0.09786045584534186,
+    "stratum_matched_expectation_delta": -0.11575567610809001,
+    "excess": 0.017895220262748146,
+    "p_worse": 0.831633673265347
+   }
+  },
+  "random": {
+   "mAP_front": {
+    "delta_vs_mean": 0.002300893620903466,
+    "stratum_matched_expectation_delta": -0.0014417426762784458,
+    "excess": 0.0037426362971819116,
+    "p_worse": 0.906618676264747
+   },
+   "fp_rate": {
+    "delta_vs_mean": -0.003396620056733468,
+    "stratum_matched_expectation_delta": 0.0009847737013272684,
+    "excess": -0.0043813937580607365,
+    "p_worse": 0.9180163967206558
+   },
+   "recall_far": {
+    "delta_vs_mean": 0.008512736887682282,
+    "stratum_matched_expectation_delta": -0.0014173182041239407,
+    "excess": 0.009930055091806222,
+    "p_worse": 0.9932013597280543
+   },
+   "vru_recall": {
+    "delta_vs_mean": -0.0017881678055733374,
+    "stratum_matched_expectation_delta": -0.0028129052802515764,
+    "excess": 0.001024737474678239,
+    "p_worse": 0.5756848630273945
+   }
+  }
+ },
+ "C_within_stratum": {
+  "day-dry": {
+   "k": 18,
+   "n": 111,
+   "rankers": {
+    "SceneMiner": {
+     "mAP_front": {
+      "delta": -0.015626435923623783,
+      "p_worse": 0.1249750049990002
+     },
+     "fp_rate": {
+      "delta": 0.011190969228921044,
+      "p_worse": 0.20175964807038593
+     },
+     "recall_far": {
+      "delta": -0.027246306813434096,
+      "p_worse": 0.09118176364727054
+     },
+     "vru_recall": {
+      "delta": 0.003355431739163306,
+      "p_worse": 0.5346930613877224
+     }
+    },
+    "VLM margin lookup": {
+     "mAP_front": {
+      "delta": -0.016655813335773817,
+      "p_worse": 0.11457708458308338
+     },
+     "fp_rate": {
+      "delta": 0.017460423113404067,
+      "p_worse": 0.10997800439912017
+     },
+     "recall_far": {
+      "delta": -0.03966003494487824,
+      "p_worse": 0.036192761447710456
+     },
+     "vru_recall": {
+      "delta": -0.010684198427530656,
+      "p_worse": 0.34593081383723256
+     }
+    },
+    "night/rain metadata": {
+     "mAP_front": {
+      "delta": 0.00042975814380113997,
+      "p_worse": 0.5426914617076585
+     },
+     "fp_rate": {
+      "delta": 0.006564865531033359,
+      "p_worse": 0.03199360127974405
+     },
+     "recall_far": {
+      "delta": 0.002283526568065297,
+      "p_worse": 0.6710657868426315
+     },
+     "vru_recall": {
+      "delta": 0.0012840631874839747,
+      "p_worse": 0.5692861427714457
+     }
+    },
+    "zero-shot SigLIP2": {
+     "mAP_front": {
+      "delta": -0.0041627176325061965,
+      "p_worse": 0.3763247350529894
+     },
+     "fp_rate": {
+      "delta": 0.011836068985413617,
+      "p_worse": 0.16896620675864826
+     },
+     "recall_far": {
+      "delta": -0.003627606088033364,
+      "p_worse": 0.4335132973405319
+     },
+     "vru_recall": {
+      "delta": 0.0354183363742403,
+      "p_worse": 0.9220155968806238
+     }
+    },
+    "random": {
+     "mAP_front": {
+      "delta": 0.0005846777127163638,
+      "p_worse": 0.5816836632673466
+     },
+     "fp_rate": {
+      "delta": -0.0033922903544122973,
+      "p_worse": 0.8802239552089582
+     },
+     "recall_far": {
+      "delta": 0.006780016608279649,
+      "p_worse": 0.9482103579284143
+     },
+     "vru_recall": {
+      "delta": 0.0015990006969850423,
+      "p_worse": 0.6214757048590281
+     }
+    }
+   }
+  },
+  "night-or-rain": {
+   "k": 6,
+   "n": 39,
+   "rankers": {
+    "SceneMiner": {
+     "mAP_front": {
+      "delta": 0.04353655132928769,
+      "p_worse": 0.8928214357128574
+     },
+     "fp_rate": {
+      "delta": -0.02499452594641488,
+      "p_worse": 0.6752649470105979
+     },
+     "recall_far": {
+      "delta": 0.05594137484215189,
+      "p_worse": 0.8788242351529694
+     },
+     "vru_recall": {
+      "delta": -0.03169180870042293,
+      "p_worse": 0.33733253349330133
+     }
+    },
+    "VLM margin lookup": {
+     "mAP_front": {
+      "delta": -0.014617116773286143,
+      "p_worse": 0.35272945410917816
+     },
+     "fp_rate": {
+      "delta": 0.03351063755167749,
+      "p_worse": 0.22535492901419715
+     },
+     "recall_far": {
+      "delta": 0.02714668635799178,
+      "p_worse": 0.7110577884423115
+     },
+     "vru_recall": {
+      "delta": 0.0034271312753718086,
+      "p_worse": 0.5318936212757448
+     }
+    },
+    "night/rain metadata": {
+     "mAP_front": {
+      "delta": -0.00557590310564382,
+      "p_worse": 0.28334333133373324
+     },
+     "fp_rate": {
+      "delta": 0.0012474478942323675,
+      "p_worse": 0.4359128174365127
+     },
+     "recall_far": {
+      "delta": -0.01916062378002842,
+      "p_worse": 0.07478504299140172
+     },
+     "vru_recall": {
+      "delta": -0.045215057621694865,
+      "p_worse": 0.01859628074385123
+     }
+    },
+    "zero-shot SigLIP2": {
+     "mAP_front": {
+      "delta": 0.06650544205511111,
+      "p_worse": 0.9946010797840432
+     },
+     "fp_rate": {
+      "delta": -0.04561290980258276,
+      "p_worse": 0.9296140771845631
+     },
+     "recall_far": {
+      "delta": 0.05869901526740706,
+      "p_worse": 0.9554089182163568
+     },
+     "vru_recall": {
+      "delta": 0.027913802981801628,
+      "p_worse": 0.6824635072985403
+     }
+    },
+    "random": {
+     "mAP_front": {
+      "delta": 0.005318823194448041,
+      "p_worse": 0.7780443911217756
+     },
+     "fp_rate": {
+      "delta": -0.0052449867237354675,
+      "p_worse": 0.7124575084983004
+     },
+     "recall_far": {
+      "delta": 0.018921144670956624,
+      "p_worse": 0.9758048390321936
+     },
+     "vru_recall": {
+      "delta": -0.0037726963207228015,
+      "p_worse": 0.41771645670865826
+     }
+    }
+   }
+  }
+ },
+ "D_paired": {
+  "SceneMiner - night/rain metadata": {
+   "global": {
+    "mAP_front": {
+     "delta": 0.008884849366998682,
+     "p_two_sided": 0.4393121375724855
+    },
+    "fp_rate": {
+     "delta": -0.02742828181753587,
+     "p_two_sided": 0.03279344131173765
+    },
+    "recall_far": {
+     "delta": 0.014330953027400284,
+     "p_two_sided": 0.380123975204959
+    },
+    "vru_recall": {
+     "delta": -0.02987024957450174,
+     "p_two_sided": 0.19276144771045792
+    }
+   },
+   "stratum-preserving": {
+    "mAP_front": {
+     "delta": 0.008884849366998682,
+     "p_two_sided": 0.5130973805238952
+    },
+    "fp_rate": {
+     "delta": -0.02742828181753587,
+     "p_two_sided": 0.1295740851829634
+    },
+    "recall_far": {
+     "delta": 0.014330953027400284,
+     "p_two_sided": 0.4437112577484503
+    },
+    "vru_recall": {
+     "delta": -0.02987024957450174,
+     "p_two_sided": 0.3125374925014997
+    }
+   },
+   "within day-dry": {
+    "mAP_front": {
+     "delta": -0.016056194067424923,
+     "p_two_sided": 0.23135372925414918
+    },
+    "fp_rate": {
+     "delta": 0.004626103697887685,
+     "p_two_sided": 0.7234553089382123
+    },
+    "recall_far": {
+     "delta": -0.029529833381499393,
+     "p_two_sided": 0.13937212557488501
+    },
+    "vru_recall": {
+     "delta": 0.002071368551679331,
+     "p_two_sided": 0.9374125174965007
+    }
+   },
+   "within night-or-rain": {
+    "mAP_front": {
+     "delta": 0.04911245443493151,
+     "p_two_sided": 0.16196760647870426
+    },
+    "fp_rate": {
+     "delta": -0.026241973840647248,
+     "p_two_sided": 0.5620875824835033
+    },
+    "recall_far": {
+     "delta": 0.07510199862218031,
+     "p_two_sided": 0.11617676464707058
+    },
+    "vru_recall": {
+     "delta": 0.013523248921271935,
+     "p_two_sided": 0.8594281143771246
+    }
+   }
+  },
+  "SceneMiner - zero-shot SigLIP2": {
+   "global": {
+    "mAP_front": {
+     "delta": -0.02525631113373994,
+     "p_two_sided": 0.01739652069586083
+    },
+    "fp_rate": {
+     "delta": 0.005820866550115655,
+     "p_two_sided": 0.6074785042991402
+    },
+    "recall_far": {
+     "delta": -0.013938326207620033,
+     "p_two_sided": 0.3297340531893621
+    },
+    "vru_recall": {
+     "delta": -0.09882197751477406,
+     "p_two_sided": 0.0001999600079984003
+    }
+   },
+   "stratum-preserving": {
+    "mAP_front": {
+     "delta": -0.02525631113373994,
+     "p_two_sided": 0.1943611277744451
+    },
+    "fp_rate": {
+     "delta": 0.005820866550115655,
+     "p_two_sided": 0.7568486302739452
+    },
+    "recall_far": {
+     "delta": -0.013938326207620033,
+     "p_two_sided": 0.5574885022995401
+    },
+    "vru_recall": {
+     "delta": -0.09882197751477406,
+     "p_two_sided": 0.011197760447910418
+    }
+   },
+   "within day-dry": {
+    "mAP_front": {
+     "delta": -0.011463718291117586,
+     "p_two_sided": 0.4393121375724855
+    },
+    "fp_rate": {
+     "delta": -0.0006450997564925731,
+     "p_two_sided": 0.9696060787842431
+    },
+    "recall_far": {
+     "delta": -0.023618700725400732,
+     "p_two_sided": 0.2939412117576485
+    },
+    "vru_recall": {
+     "delta": -0.032062904635076994,
+     "p_two_sided": 0.27974405118976203
+    }
+   },
+   "within night-or-rain": {
+    "mAP_front": {
+     "delta": -0.02296889072582342,
+     "p_two_sided": 0.2907418516296741
+    },
+    "fp_rate": {
+     "delta": 0.020618383856167877,
+     "p_two_sided": 0.46770645870825833
+    },
+    "recall_far": {
+     "delta": -0.00275764042525517,
+     "p_two_sided": 0.9280143971205759
+    },
+    "vru_recall": {
+     "delta": -0.05960561168222456,
+     "p_two_sided": 0.20615876824635074
+    }
+   }
+  },
+  "SceneMiner - VLM margin lookup": {
+   "global": {
+    "mAP_front": {
+     "delta": -0.0032555514231601967,
+     "p_two_sided": 0.3075384923015397
+    },
+    "fp_rate": {
+     "delta": -0.001085793591956985,
+     "p_two_sided": 0.735252949410118
+    },
+    "recall_far": {
+     "delta": 0.0002892785219944516,
+     "p_two_sided": 0.9538092381523695
+    },
+    "vru_recall": {
+     "delta": -0.005671794238032102,
+     "p_two_sided": 0.369126174765047
+    }
+   },
+   "stratum-preserving": {
+    "mAP_front": {
+     "delta": -0.0032555514231601967,
+     "p_two_sided": 0.39372125574885025
+    },
+    "fp_rate": {
+     "delta": -0.001085793591956985,
+     "p_two_sided": 0.8044391121775645
+    },
+    "recall_far": {
+     "delta": 0.0002892785219944516,
+     "p_two_sided": 0.9520095980803839
+    },
+    "vru_recall": {
+     "delta": -0.005671794238032102,
+     "p_two_sided": 0.5158968206358728
+    }
+   },
+   "within day-dry": {
+    "mAP_front": {
+     "delta": 0.0010293774121500343,
+     "p_two_sided": 0.8782243551289742
+    },
+    "fp_rate": {
+     "delta": -0.006269453884483023,
+     "p_two_sided": 0.3323335332933413
+    },
+    "recall_far": {
+     "delta": 0.012413728131444146,
+     "p_two_sided": 0.1967606478704259
+    },
+    "vru_recall": {
+     "delta": 0.014039630166693962,
+     "p_two_sided": 0.27234553089382124
+    }
+   },
+   "within night-or-rain": {
+    "mAP_front": {
+     "delta": 0.05815366810257383,
+     "p_two_sided": 0.046990601879624075
+    },
+    "fp_rate": {
+     "delta": -0.05850516349809237,
+     "p_two_sided": 0.126374725054989
+    },
+    "recall_far": {
+     "delta": 0.028794688484160114,
+     "p_two_sided": 0.48410317936412717
+    },
+    "vru_recall": {
+     "delta": -0.03511893997579474,
+     "p_two_sided": 0.5876824635072986
+    }
+   }
+  }
+ }
+}
